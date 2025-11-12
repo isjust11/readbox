@@ -30,15 +30,43 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  dio: ^4.0.6
+  shared_preferences: ^2.3.2
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  intl:
+  pull_to_refresh: 2.0.0
+  page_transition: ^2.1.0
+  #  in_app_review: ^1.0.4
+#  share: ^2.0.4
+  share_plus: 11.0.0
+  cached_network_image: ^3.4.1
+  scale_size: 0.0.6
+  get_it: ^7.7.0
+  flutter_native_splash: ^2.2.20
+  
+  # Ebook Reader Dependencies
+  # epubx: ^3.0.0  # EPUB reader - temporarily disabled due to dependency conflict
+  pdfx: ^2.0.0  # PDF reader
+  sqflite: ^2.3.0  # Local database
+  path_provider: ^2.1.0  # File path management
+  file_picker: ^6.1.1  # File picker
+  permission_handler: ^11.0.0  # File permissions
+  flutter_cache_manager: ^3.3.1  # Cache management
+  path: ^1.8.3  # Path utilities
+  uuid: ^4.0.0  # UUID generation
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  build_runner:
+  flutter_gen_runner: ^5.6.0
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
