@@ -12,12 +12,14 @@ class AuthRepository {
 
   Future<UserModel> login(Map<String, dynamic> param) async {
     UserModel userModel = await remoteDataSource.login(param);
+    await localDataSource.saveToken(userModel.token ?? '');
     await localDataSource.saveUserInfo(userModel);
     return userModel;
   }
 
-  Future<UserModel> register(Map<String, dynamic> param) {
-    // TODO: implement register
-    throw UnimplementedError();
+  Future<UserModel> register(Map<String, dynamic> param) async {
+    UserModel userModel = await remoteDataSource.register(param);
+    await localDataSource.saveUserInfo(userModel);
+    return userModel;
   }
 }

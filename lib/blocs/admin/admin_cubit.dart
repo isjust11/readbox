@@ -1,0 +1,126 @@
+import 'dart:io';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readbox/blocs/base_bloc/base_state.dart';
+import 'package:readbox/blocs/utils.dart';
+import 'package:readbox/domain/data/datasources/remote/admin_remote_data_source.dart';
+
+class AdminCubit extends Cubit<BaseState> {
+  final AdminRemoteDataSource _adminRemoteDataSource;
+
+  AdminCubit(this._adminRemoteDataSource) : super(InitState());
+
+  String? _ebookFileUrl;
+  String? _coverImageUrl;
+  List<dynamic> _categories = [];
+
+  String? get ebookFileUrl => _ebookFileUrl;
+  String? get coverImageUrl => _coverImageUrl;
+  List<dynamic> get categories => _categories;
+
+  /// Load categories
+  Future<void> loadCategories() async {
+    try {
+      emit(LoadingState());
+      _categories = await _adminRemoteDataSource.getCategories();
+      emit(LoadedState(_categories));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e),));
+    }
+  }
+
+  /// Upload ebook file
+  Future<void> uploadEbook(File file) async {
+    try {
+      emit(LoadingState());
+      final response = await _adminRemoteDataSource.uploadEbook(file);
+      
+      if (response['success'] == true) {
+        _ebookFileUrl = response['fileUrl'];
+        emit(LoadedState(
+          response,
+          msgError: 'Ebook uploaded successfully',
+        ));
+      } else {
+        emit(ErrorState(BlocUtils.getMessageError(response['message'] ?? 'Upload failed'),));
+      }
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e),));
+    }
+  }
+
+  /// Upload cover image
+  Future<void> uploadCoverImage(File file) async {
+    try {
+      emit(LoadingState());
+      final response = await _adminRemoteDataSource.uploadCoverImage(file);
+      
+      if (response['success'] == true) {
+        _coverImageUrl = response['fileUrl'];
+        emit(LoadedState(
+          response,
+          msgError: 'Cover image uploaded successfully',
+        ));
+      } else {
+        emit(ErrorState(BlocUtils.getMessageError(response['message'] ?? 'Upload failed'),));
+      }
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
+
+  /// Create book with all information
+  Future<void> createBook({
+    required String title,
+    required String author,
+    String? description,
+    String? publisher,
+    String? isbn,
+    int? totalPages,
+    String language = 'vi',
+    bool isPublic = true,
+    int? categoryId,
+  }) async {
+    try {
+      if (_ebookFileUrl == null) {
+        emit(ErrorState(BlocUtils.getMessageError('Please upload ebook file first'),));
+        return;
+      }
+
+      emit(LoadingState());
+
+      final bookData = {
+        'title': title,
+        'author': author,
+        'description': description,
+        'fileUrl': _ebookFileUrl,
+        'coverImageUrl': _coverImageUrl,
+        'publisher': publisher,
+        'isbn': isbn,
+        'totalPages': totalPages,
+        'language': language,
+        'isPublic': isPublic,
+        if (categoryId != null) 'category': {'id': categoryId},
+      };
+
+      final response = await _adminRemoteDataSource.createBook(bookData);
+      
+      // Reset uploaded files
+      _ebookFileUrl = null;
+      _coverImageUrl = null;
+      
+      emit(LoadedState(
+        response,
+        msgError: 'Book created successfully',
+      ));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e),));
+    }
+  }
+
+  /// Reset state
+  void reset() {
+    _ebookFileUrl = null;
+    _coverImageUrl = null;
+    emit(InitState());
+  }
+}

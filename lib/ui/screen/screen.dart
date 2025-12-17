@@ -1,4 +1,8 @@
 export 'auth/login_screen.dart';
+export 'auth/register_screen.dart';
 export 'main_screen.dart';
 export 'splash_screen.dart';
 export 'library/library_screen.dart';
+export 'admin/admin_upload_screen.dart';
+export 'book/book_detail_screen.dart';
+export 'book/pdf_viewer_screen.dart';

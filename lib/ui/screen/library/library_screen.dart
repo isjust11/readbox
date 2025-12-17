@@ -58,10 +58,7 @@ class _LibraryBodyState extends State<LibraryBody> {
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: () {
-            // TODO: Navigate to add book screen
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Add book feature coming soon')),
-            );
+            Navigator.pushNamed(context, '/adminUploadScreen');
           },
         ),
       ],
@@ -186,9 +183,9 @@ class _BookCard extends StatelessWidget {
                   color: Colors.grey[300],
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
                 ),
-                child: book.coverImagePath != null
+                child: book.coverImageUrl != null
                     ? Image.asset(
-                        book.coverImagePath!,
+                        book.coverImageUrl!,
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => _buildPlaceholder(),
                       )

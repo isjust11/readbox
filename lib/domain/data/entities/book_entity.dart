@@ -3,12 +3,12 @@ import 'base_entity.dart';
 enum BookType { epub, pdf, unknown }
 
 class BookEntity extends BaseEntity {
-  String? id;
+  int? id;
   String? title;
   String? author;
   String? description;
-  String? coverImagePath;
-  String? filePath;
+  String? coverImageUrl;
+  String? fileUrl;
   BookType? fileType;
   int? fileSize; // in bytes
   List<String>? categories;
@@ -28,8 +28,8 @@ class BookEntity extends BaseEntity {
     this.title,
     this.author,
     this.description,
-    this.coverImagePath,
-    this.filePath,
+    this.coverImageUrl,
+    this.fileUrl,
     this.fileType,
     this.fileSize,
     this.categories,
@@ -50,8 +50,8 @@ class BookEntity extends BaseEntity {
     title = json['title'];
     author = json['author'];
     description = json['description'];
-    coverImagePath = json['coverImagePath'];
-    filePath = json['filePath'];
+    coverImageUrl = json['coverImageUrl'];
+    fileUrl = json['fileUrl'];
     fileType = json['fileType'] != null
         ? BookType.values.firstWhere(
             (e) => e.toString() == 'BookType.${json['fileType']}',
@@ -84,8 +84,8 @@ class BookEntity extends BaseEntity {
     data['title'] = title;
     data['author'] = author;
     data['description'] = description;
-    data['coverImagePath'] = coverImagePath;
-    data['filePath'] = filePath;
+    data['coverImageUrl'] = coverImageUrl;
+    data['fileUrl'] = fileUrl;
     data['fileType'] = fileType?.toString().split('.').last;
     data['fileSize'] = fileSize;
     data['categories'] = categories;

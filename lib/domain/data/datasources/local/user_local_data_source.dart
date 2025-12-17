@@ -12,4 +12,19 @@ class UserLocalDataSource {
     } catch (e) {}
     return false;
   }
+
+  Future<bool> saveToken(String token) async {
+    try {
+      return await SharedPreferenceUtil.saveToken(token);
+    } catch (e) {}
+    return false;
+  }
+
+  Future<String?> getToken() async {
+    try {
+      return await SharedPreferenceUtil.getToken();
+    } catch (e) {
+      return '';
+    }
+  }
 }

@@ -56,11 +56,12 @@ dependencies:
   pdfx: ^2.0.0  # PDF reader
   sqflite: ^2.3.0  # Local database
   path_provider: ^2.1.0  # File path management
-  file_picker: ^6.1.1  # File picker
+  
   permission_handler: ^11.0.0  # File permissions
   flutter_cache_manager: ^3.3.1  # Cache management
   path: ^1.8.3  # Path utilities
   uuid: ^4.0.0  # UUID generation
+  file_picker: ^10.3.7
 
 dev_dependencies:
   flutter_test:

@@ -8,9 +8,9 @@ class SearchBooksUseCase {
 
   Future<List<BookModel>> call(String query) async {
     if (query.isEmpty) {
-      return await repository.getAllBooks();
+      return await repository.getPublicBooks();
     }
-    return await repository.getAllBooks(searchQuery: query);
+    return await repository.getPublicBooks(searchQuery: query);
   }
 }
 

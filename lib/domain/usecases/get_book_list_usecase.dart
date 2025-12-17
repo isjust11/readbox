@@ -11,7 +11,7 @@ class GetBookListUseCase {
     bool? isArchived,
     String? searchQuery,
   }) async {
-    return await repository.getAllBooks(
+    return await repository.getPublicBooks(
       isFavorite: isFavorite,
       isArchived: isArchived,
       searchQuery: searchQuery,

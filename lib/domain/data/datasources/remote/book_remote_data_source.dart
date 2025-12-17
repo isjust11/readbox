@@ -1,13 +1,12 @@
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/network.dart';
-import 'package:readbox/domain/network/api_constant.dart';
 
 class BookRemoteDataSource {
   final Network network;
 
   BookRemoteDataSource({required this.network});
 
-  Future<List<BookModel>> getAllBooks({
+  Future<List<BookModel>> getPublicBooks({
     bool? isFavorite,
     bool? isArchived,
     String? searchQuery,
@@ -20,7 +19,7 @@ class BookRemoteDataSource {
     }
 
     ApiResponse apiResponse = await network.get(
-      url: ApiConstant.getBooks,
+      url: '${ApiConstant.apiHost}${ApiConstant.getBooksPublic}',
       params: params,
     );
 
@@ -37,7 +36,7 @@ class BookRemoteDataSource {
 
   Future<BookModel> getBookById(String id) async {
     ApiResponse apiResponse = await network.get(
-      url: '${ApiConstant.getBooks}/$id',
+      url: '${ApiConstant.apiHost}${ApiConstant.getBooks}/$id',
     );
 
     if (apiResponse.isSuccess) {
@@ -48,7 +47,7 @@ class BookRemoteDataSource {
 
   Future<BookModel> addBook(BookModel book) async {
     ApiResponse apiResponse = await network.post(
-      url: ApiConstant.addBook,
+      url: '${ApiConstant.apiHost}${ApiConstant.addBook}',
       body: book.toJson(),
     );
 
@@ -60,7 +59,7 @@ class BookRemoteDataSource {
 
   Future<BookModel> updateBook(BookModel book) async {
     ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.updateBook}/${book.id}',
+      url: '${ApiConstant.apiHost}${ApiConstant.updateBook}/${book.id}',
       body: book.toJson(),
     );
 
@@ -72,7 +71,7 @@ class BookRemoteDataSource {
 
   Future<bool> deleteBook(String id) async {
     ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.deleteBook}/$id',
+      url: '${ApiConstant.apiHost}${ApiConstant.deleteBook}/$id',
     );
 
     if (apiResponse.isSuccess) {
@@ -83,7 +82,7 @@ class BookRemoteDataSource {
 
   Future<bool> toggleFavorite(String id, bool isFavorite) async {
     ApiResponse apiResponse = await network.post(
-      url: ApiConstant.toggleFavorite,
+      url: '${ApiConstant.apiHost}${ApiConstant.toggleFavorite}',
       body: {'bookId': id, 'isFavorite': isFavorite},
     );
 
@@ -96,7 +95,7 @@ class BookRemoteDataSource {
   // Chapter methods
   Future<List<ChapterModel>> getChaptersByBookId(String bookId) async {
     ApiResponse apiResponse = await network.get(
-      url: '${ApiConstant.getChapters}/$bookId',
+      url: '${ApiConstant.apiHost}${ApiConstant.getChapters}/$bookId',
     );
 
     if (apiResponse.isSuccess) {
@@ -113,7 +112,7 @@ class BookRemoteDataSource {
   // Bookmark methods
   Future<List<BookmarkModel>> getBookmarksByBookId(String bookId) async {
     ApiResponse apiResponse = await network.get(
-      url: '${ApiConstant.getBookmarks}/$bookId',
+      url: '${ApiConstant.apiHost}${ApiConstant.getBookmarks}/$bookId',
     );
 
     if (apiResponse.isSuccess) {
@@ -129,7 +128,7 @@ class BookRemoteDataSource {
 
   Future<BookmarkModel> addBookmark(BookmarkModel bookmark) async {
     ApiResponse apiResponse = await network.post(
-      url: ApiConstant.addBookmark,
+      url: '${ApiConstant.apiHost}${ApiConstant.addBookmark}',
       body: bookmark.toJson(),
     );
 
@@ -141,7 +140,7 @@ class BookRemoteDataSource {
 
   Future<bool> deleteBookmark(String id) async {
     ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.deleteBookmark}/$id',
+      url: '${ApiConstant.apiHost}${ApiConstant.deleteBookmark}/$id',
     );
 
     if (apiResponse.isSuccess) {
@@ -153,7 +152,7 @@ class BookRemoteDataSource {
   // Reading progress methods
   Future<ReadingProgressModel> saveReadingProgress(ReadingProgressModel progress) async {
     ApiResponse apiResponse = await network.post(
-      url: ApiConstant.saveReadingProgress,
+      url: '${ApiConstant.apiHost}${ApiConstant.saveReadingProgress}',
       body: progress.toJson(),
     );
 
@@ -165,7 +164,7 @@ class BookRemoteDataSource {
 
   Future<ReadingProgressModel?> getReadingProgressByBookId(String bookId) async {
     ApiResponse apiResponse = await network.get(
-      url: '${ApiConstant.getReadingProgress}/$bookId',
+      url: '${ApiConstant.apiHost}${ApiConstant.getReadingProgress}/$bookId',
     );
 
     if (apiResponse.isSuccess) {

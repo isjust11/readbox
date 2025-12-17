@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:readbox/domain/network/network.dart';
@@ -12,14 +13,16 @@ class Network {
   static final Dio _dio = Dio(options);
 
   Network._internal() {
+    // Bypass SSL certificate validation in debug mode only
     if (kDebugMode) {
+
       _dio.interceptors.add(LogInterceptor(responseBody: true, requestHeader: true));
     }
     _dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions myOption, RequestInterceptorHandler handler) async {
       String token = await SharedPreferenceUtil.getToken();
       if (token.isNotEmpty) {
-        myOption.headers["Authorization"] = "Bearer " + token;
+        myOption.headers["Authorization"] = "Bearer $token";
       }
       return handler.next(myOption);
     }));
@@ -29,11 +32,13 @@ class Network {
     return Network._internal();
   }
 
+  Dio get dio => _dio;
+
   Future<ApiResponse> get({required String url, Map<String, dynamic>? params}) async {
     try {
       Response response = await _dio.get(
         url,
-        queryParameters: await BaseParamRequest.request(params),
+        queryParameters: BaseParamRequest.request(params),
         options: Options(responseType: ResponseType.json),
       );
       return getApiResponse(response);
@@ -52,13 +57,29 @@ class Network {
     try {
       Response response = await _dio.post(
         url,
-        data: await BaseParamRequest.request(body),
-        queryParameters: params,
+        data: body,
         options: Options(responseType: ResponseType.json, contentType: contentType),
       );
       return getApiResponse(response);
     } catch (e) {
       print("===post =====${e}");
+      return getError(e as DioError);
+    }
+  }
+  Future<ApiResponse> postWithFormData(
+      {required String url,
+      FormData? formData,
+      Map<String, dynamic> params = const {},
+      String contentType = Headers.jsonContentType}) async {
+    try {
+      Response response = await _dio.post(
+        url,
+        data: formData,
+        options: Options(responseType: ResponseType.json, contentType: contentType),
+      );
+      return getApiResponse(response);
+    } catch (e) {
+      print("===postWithFormData =====${e}");
       return getError(e as DioError);
     }
   }
@@ -85,8 +106,8 @@ class Network {
     return ApiResponse.success(
         data: response.data,
         code: response.statusCode,
-        status: response.data is Map<String, dynamic> ? response.data["Status"] : null,
-        errMessage: response.data is Map<String, dynamic> ? response.data["ErrMsg"] : null);
+        status: response.statusCode,
+        errMessage: response.statusMessage ?? '');
   }
 
   void handleTokenExpired() async {

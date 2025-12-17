@@ -35,9 +35,7 @@ User
 
 */
 Future<void> init({GetIt? getIt}) async {
-  if (getIt == null) {
-    getIt = GetIt.instance;
-  }
+  getIt ??= GetIt.instance;
   // network
   registerNetwork(getIt);
   // data source
@@ -55,6 +53,12 @@ void registerCubit(GetIt getIt) {
     () => UserInfoCubit(repository: getIt.get<UserRepository>()),
   );
   getIt.registerFactory(
+    () => RegisterCubit(repository: getIt.get<AuthRepository>()),
+  );
+  getIt.registerFactory(
+    () => LoginCubit(repository: getIt.get<AuthRepository>()),
+  );
+  getIt.registerFactory(
     () => LibraryCubit(
       getBookListUseCase: getIt.get<GetBookListUseCase>(),
       addBookUseCase: getIt.get<AddBookUseCase>(),
@@ -65,6 +69,10 @@ void registerCubit(GetIt getIt) {
   getIt.registerFactory(
     () => BookDetailCubit(repository: getIt.get<BookRepository>()),
   );
+  getIt.registerFactory(
+    () => AdminCubit(getIt.get<AdminRemoteDataSource>()),
+  );
+ 
 }
 
 void registerRepositories(GetIt getIt) {
@@ -95,6 +103,7 @@ void registerDataSource(GetIt getIt) {
   getIt.registerLazySingleton(() => UserLocalDataSource());
   getIt.registerLazySingleton(() => UserRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => BookRemoteDataSource(network: getIt.get()));
+  getIt.registerLazySingleton(() => AdminRemoteDataSource(network: getIt.get()));
 }
 
 void registerNetwork(GetIt getIt) {

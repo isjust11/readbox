@@ -14,13 +14,13 @@ class BookRepository {
     }
   }
 
-  Future<List<BookModel>> getAllBooks({
+  Future<List<BookModel>> getPublicBooks({
     bool? isFavorite,
     bool? isArchived,
     String? searchQuery,
   }) async {
     try {
-      return await remoteDataSource.getAllBooks(
+      return await remoteDataSource.getPublicBooks(
         isFavorite: isFavorite,
         isArchived: isArchived,
         searchQuery: searchQuery,

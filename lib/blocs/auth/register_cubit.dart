@@ -9,12 +9,14 @@ class RegisterCubit extends Cubit<BaseState> {
 
   RegisterCubit({required this.repository}) : super(InitState());
 
-  doRegister({String? userName, String? password}) async {
+  doRegister({String? userName, String? password, String? email, String? fullName}) async {
     try {
       emit(LoadingState());
-      UserModel userModel = await repository.login({
+      UserModel userModel = await repository.register({
         "userName": userName,
         "password": password,
+        "email": email,
+        "name": fullName,
       });
       emit(LoadedState(userModel));
     } catch (e) {

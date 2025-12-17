@@ -1,10 +1,14 @@
 class ApiConstant {
-  static final apiHost = "https://1.2.3:8888/api/";
-  static final login = "";
+  static final apiHost = "http://10.59.91.142:8088/api/";
+  static final apiHostStorage = "http://10.59.91.142:3005";
+  static final storageServiceUrl = "http://localhost:3005"; // Storage service URL
+  static final login = "auth/login";
+  static final register = "auth/register";
   static final getUserInfo = "";
   
   // Book endpoints
-  static final getBooks = "books";
+  static final getBooksPublic =  "books/public";
+  static final getBooks =  "books/search";
   static final addBook = "books";
   static final updateBook = "books";
   static final deleteBook = "books";
@@ -21,4 +25,9 @@ class ApiConstant {
   // Reading progress endpoints
   static final saveReadingProgress = "reading-progress";
   static final getReadingProgress = "reading-progress";
+
+  // Admin endpoints
+  static final uploadEbook = "files/upload-ebook";
+  static final uploadCover = "files/upload-cover";
+  static final getCategories = "categories";
 }

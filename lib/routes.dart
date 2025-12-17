@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:readbox/ui/screen/screen.dart';
+import 'package:readbox/domain/data/models/models.dart';
 import 'package:page_transition/page_transition.dart';
 
 class Routes {
@@ -8,8 +9,12 @@ class Routes {
   //screen name
   static const String splashScreen = "/splashScreen";
   static const String loginScreen = "/loginScreen";
+  static const String registerScreen = "/registerScreen";
   static const String mainScreen = "/mainScreen";
   static const String libraryScreen = "/libraryScreen";
+  static const String adminUploadScreen = "/adminUploadScreen";
+  static const String bookDetailScreen = "/bookDetailScreen";
+  static const String pdfViewerScreen = "/pdfViewerScreen";
 
   //init screen name
   static String initScreen() => splashScreen;
@@ -22,8 +27,27 @@ class Routes {
         return PageTransition(child: SplashScreen(), type: PageTransitionType.fade);
       case loginScreen:
         return PageTransition(child: LoginScreen(), type: PageTransitionType.fade);
+      case registerScreen:
+        return PageTransition(child: RegisterScreen(), type: PageTransitionType.fade);
       case libraryScreen:
         return PageTransition(child: LibraryScreen(), type: PageTransitionType.fade);
+      case adminUploadScreen:
+        return PageTransition(child: AdminUploadScreen(), type: PageTransitionType.fade);
+      case bookDetailScreen:
+        final book = settings.arguments;
+        return PageTransition(
+          child: BookDetailScreen(book: book as BookModel),
+          type: PageTransitionType.rightToLeft,
+        );
+      case pdfViewerScreen:
+        final args = settings.arguments as Map<String, dynamic>;
+        return PageTransition(
+          child: PdfViewerScreen(
+            fileUrl: args['fileUrl'] as String,
+            title: args['title'] as String,
+          ),
+          type: PageTransitionType.rightToLeft,
+        );
       default:
         return MaterialPageRoute(builder: (context) => Container());
     }
