@@ -1,6 +1,6 @@
 class ApiConstant {
-  static final apiHost = "http://10.59.91.142:8088/api/";
-  static final apiHostStorage = "http://10.59.91.142:3005";
+  static final apiHost = "http://192.168.1.8:4000/api/";
+  static final apiHostStorage = "http://192.168.1.8:3005";
   static final storageServiceUrl = "http://localhost:3005"; // Storage service URL
   static final login = "auth/login";
   static final register = "auth/register";
@@ -27,7 +27,7 @@ class ApiConstant {
   static final getReadingProgress = "reading-progress";
 
   // Admin endpoints
-  static final uploadEbook = "files/upload-ebook";
-  static final uploadCover = "files/upload-cover";
+  static final uploadEbook = "upload/ebook";
+  static final uploadCover = "upload/image";
   static final getCategories = "categories";
 }
