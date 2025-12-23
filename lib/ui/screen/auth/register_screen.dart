@@ -9,7 +9,7 @@ import 'package:readbox/injection_container.dart';
 import 'package:readbox/routes.dart';
 
 class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +21,8 @@ class RegisterScreen extends StatelessWidget {
 }
 
 class RegisterBody extends StatefulWidget {
+  const RegisterBody({super.key});
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -78,8 +80,12 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       body: BlocListener<RegisterCubit, BaseState>(
         listener: (context, state) {
           if (state is LoadedState) {
-            getIt.get<UserInfoCubit>().getUserInfo();
-            Navigator.pushReplacementNamed(context, Routes.mainScreen);
+            // Navigate to confirm PIN screen with email
+            Navigator.pushReplacementNamed(
+              context, 
+              Routes.confirmPinScreen,
+              arguments: _emailController.text.trim(),
+            );
           } else if (state is ErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

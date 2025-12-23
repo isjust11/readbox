@@ -22,4 +22,11 @@ class AuthRepository {
     await localDataSource.saveUserInfo(userModel);
     return userModel;
   }
+
+  Future<UserModel> verifyPin(Map<String, dynamic> param) async {
+    UserModel userModel = await remoteDataSource.verifyPin(param);
+    await localDataSource.saveToken(userModel.token ?? '');
+    await localDataSource.saveUserInfo(userModel);
+    return userModel;
+  }
 }

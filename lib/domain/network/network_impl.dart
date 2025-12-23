@@ -85,7 +85,7 @@ class Network {
 
   ApiResponse getError(DioError e) {
     if (e.response?.statusCode == 401) {
-      handleTokenExpired();
+      // handleTokenExpired();
     }
     switch (e.type) {
       case DioErrorType.cancel:

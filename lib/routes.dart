@@ -10,6 +10,7 @@ class Routes {
   static const String splashScreen = "/splashScreen";
   static const String loginScreen = "/loginScreen";
   static const String registerScreen = "/registerScreen";
+  static const String confirmPinScreen = "/confirmPinScreen";
   static const String mainScreen = "/mainScreen";
   static const String libraryScreen = "/libraryScreen";
   static const String adminUploadScreen = "/adminUploadScreen";
@@ -29,6 +30,12 @@ class Routes {
         return PageTransition(child: LoginScreen(), type: PageTransitionType.fade);
       case registerScreen:
         return PageTransition(child: RegisterScreen(), type: PageTransitionType.fade);
+      case confirmPinScreen:
+        final email = settings.arguments as String?;
+        return PageTransition(
+          child: ConfirmPinScreen(email: email ?? ''),
+          type: PageTransitionType.rightToLeft,
+        );
       case libraryScreen:
         return PageTransition(child: LibraryScreen(), type: PageTransitionType.fade);
       case adminUploadScreen:

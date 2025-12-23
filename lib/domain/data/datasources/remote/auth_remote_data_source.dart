@@ -21,4 +21,12 @@ class AuthRemoteDataSource {
     }
     return Future.error(apiResponse.data?['message']);
   }
+
+  Future<UserModel> verifyPin(Map<String, dynamic> param) async {
+    ApiResponse apiResponse = await network.post(url: '${ApiConstant.apiHost}${ApiConstant.verifyPin}', body: param);
+    if (apiResponse.isSuccess) {
+      return UserModel.fromJson(apiResponse.data);
+    }
+    return Future.error(apiResponse.data?['message']);
+  }
 }

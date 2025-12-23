@@ -1,0 +1,411 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readbox/blocs/auth/verify_pin_cubit.dart';
+import 'package:readbox/blocs/base_bloc/base_state.dart';
+import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/blocs/utils.dart';
+import 'package:readbox/domain/repositories/repositories.dart';
+import 'package:readbox/injection_container.dart';
+import 'package:readbox/routes.dart';
+
+class ConfirmPinScreen extends StatelessWidget {
+  final String email;
+  
+  const ConfirmPinScreen({super.key, required this.email});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<VerifyPinCubit>(
+      create: (_) => VerifyPinCubit(repository: getIt.get<AuthRepository>()),
+      child: ConfirmPinBody(email: email),
+    );
+  }
+}
+
+class ConfirmPinBody extends StatefulWidget {
+  final String email;
+  
+  const ConfirmPinBody({super.key, required this.email});
+
+  @override
+  _ConfirmPinBodyState createState() => _ConfirmPinBodyState();
+}
+
+class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProviderStateMixin {
+  final List<TextEditingController> _pinControllers = List.generate(4, (_) => TextEditingController());
+  final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 1000),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+    _animationController.forward();
+    
+    // Auto focus first field
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNodes[0].requestFocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    for (var controller in _pinControllers) {
+      controller.dispose();
+    }
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
+    super.dispose();
+  }
+
+  void _handlePinChanged(int index, String value) {
+    if (value.length == 1 && index < 3) {
+      _focusNodes[index + 1].requestFocus();
+    } else if (value.isEmpty && index > 0) {
+      _focusNodes[index - 1].requestFocus();
+    }
+    
+    // Auto submit when all 4 digits are entered
+    if (index == 3 && value.length == 1) {
+      _verifyPin();
+    }
+  }
+
+  void _verifyPin() {
+    String pin = _pinControllers.map((c) => c.text).join();
+    if (pin.length == 4) {
+      BlocProvider.of<VerifyPinCubit>(context).verifyPin(
+        email: widget.email,
+        pin: pin,
+      );
+    }
+  }
+
+  void _clearPin() {
+    for (var controller in _pinControllers) {
+      controller.clear();
+    }
+    _focusNodes[0].requestFocus();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BlocListener<VerifyPinCubit, BaseState>(
+        listener: (context, state) {
+          if (state is LoadedState) {
+            getIt.get<UserInfoCubit>().getUserInfo();
+            Navigator.pushReplacementNamed(context, Routes.mainScreen);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Xác thực thành công!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          } else if (state is ErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(BlocUtils.getMessageError(state.data)),
+                backgroundColor: Colors.red,
+              ),
+            );
+            _clearPin();
+          }
+        },
+        child: Stack(
+          children: [
+            // Gradient Background
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF667eea),
+                    Color(0xFF764ba2),
+                    Color(0xFFf093fb),
+                  ],
+                ),
+              ),
+            ),
+            
+            // Main Content
+            SafeArea(
+              child: Column(
+                children: [
+                  // Back Button
+                  Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ),
+                  ),
+                  
+                  // Scrollable Content
+                  Expanded(
+                    child: Center(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(horizontal: 24),
+                        child: FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Header
+                              _buildHeader(),
+                              SizedBox(height: 50),
+                              
+                              // PIN Input Card
+                              _buildPinCard(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            // Loading Overlay
+            BlocBuilder<VerifyPinCubit, BaseState>(
+              builder: (context, state) {
+                if (state is LoadingState) {
+                  return Container(
+                    color: Colors.black45,
+                    child: Center(
+                      child: Card(
+                        elevation: 8,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(32),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(0xFF667eea),
+                                ),
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                'Đang xác thực...',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return SizedBox.shrink();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Column(
+      children: [
+        // Icon
+        Container(
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 20,
+                offset: Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Icon(
+            Icons.lock_rounded,
+            size: 50,
+            color: Color(0xFF667eea),
+          ),
+        ),
+        SizedBox(height: 20),
+        
+        // Title
+        Text(
+          'Xác thực mã PIN',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            letterSpacing: 1.0,
+          ),
+        ),
+        SizedBox(height: 12),
+        Text(
+          'Nhập mã PIN 4 chữ số đã được gửi đến email của bạn',
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.white.withOpacity(0.9),
+            fontWeight: FontWeight.w300,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 8),
+        Text(
+          widget.email,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.white.withOpacity(0.8),
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPinCard() {
+    return Card(
+      elevation: 12,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Container(
+        padding: EdgeInsets.all(32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // PIN Input Fields
+            _buildPinInputs(),
+            SizedBox(height: 32),
+            
+            // Verify Button
+            _buildVerifyButton(),
+            SizedBox(height: 16),
+            
+            // Clear Button
+            _buildClearButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPinInputs() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: List.generate(4, (index) {
+        return Container(
+          width: 60,
+          height: 60,
+          child: TextField(
+            controller: _pinControllers[index],
+            focusNode: _focusNodes[index],
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            maxLength: 1,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF667eea),
+            ),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            decoration: InputDecoration(
+              counterText: '',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 2),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 2),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.red.shade300, width: 2),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(color: Colors.red, width: 2),
+              ),
+              filled: true,
+              fillColor: Colors.grey.shade50,
+            ),
+            onChanged: (value) => _handlePinChanged(index, value),
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildVerifyButton() {
+    return ElevatedButton(
+      onPressed: _verifyPin,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color(0xFF667eea),
+        foregroundColor: Colors.white,
+        elevation: 4,
+        padding: EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        shadowColor: Color(0xFF667eea).withOpacity(0.5),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Xác thực',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
+          ),
+          SizedBox(width: 8),
+          Icon(Icons.check_circle_outline, size: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClearButton() {
+    return TextButton(
+      onPressed: _clearPin,
+      child: Text(
+        'Xóa và nhập lại',
+        style: TextStyle(
+          color: Colors.grey.shade600,
+          fontSize: 14,
+        ),
+      ),
+    );
+  }
+}

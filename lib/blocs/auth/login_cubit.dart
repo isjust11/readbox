@@ -9,11 +9,11 @@ class LoginCubit extends Cubit<BaseState> {
 
   LoginCubit({required this.repository}) : super(InitState());
 
-  doLogin({String? userName, String? password}) async {
+  doLogin({String? username, String? password}) async {
     try {
       emit(LoadingState());
       UserModel userModel = await repository.login({
-        "userName": userName,
+        "username": username,
         "password": password,
       });
       emit(LoadedState(userModel));

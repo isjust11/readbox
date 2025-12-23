@@ -4,13 +4,11 @@ import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
-import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/routes.dart';
-import 'package:readbox/ui/widget/widget.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +20,8 @@ class LoginScreen extends StatelessWidget {
 }
 
 class LoginBody extends StatefulWidget {
+  const LoginBody({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
   void _handleLogin() {
     if (_formKey.currentState?.validate() ?? false) {
       BlocProvider.of<LoginCubit>(context).doLogin(
-        userName: _usernameController.text.trim(),
+        username: _usernameController.text.trim().toLowerCase(),
         password: _passwordController.text,
       );
     }
@@ -66,7 +66,6 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
 
     return Scaffold(
