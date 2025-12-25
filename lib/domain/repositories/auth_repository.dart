@@ -10,11 +10,11 @@ class AuthRepository {
     required this.localDataSource,
   });
 
-  Future<UserModel> login(Map<String, dynamic> param) async {
-    UserModel userModel = await remoteDataSource.login(param);
-    await localDataSource.saveToken(userModel.token ?? '');
-    await localDataSource.saveUserInfo(userModel);
-    return userModel;
+  Future<AuthenModel> login(Map<String, dynamic> param) async {
+    AuthenModel authenModel = await remoteDataSource.login(param);
+    await localDataSource.saveToken(authenModel.accessToken ?? '');
+    await localDataSource.saveUserInfo(authenModel.user ?? UserModel.fromJson({}));
+    return authenModel;
   }
 
   Future<UserModel> register(Map<String, dynamic> param) async {
@@ -23,10 +23,10 @@ class AuthRepository {
     return userModel;
   }
 
-  Future<UserModel> verifyPin(Map<String, dynamic> param) async {
-    UserModel userModel = await remoteDataSource.verifyPin(param);
-    await localDataSource.saveToken(userModel.token ?? '');
-    await localDataSource.saveUserInfo(userModel);
-    return userModel;
+  Future<AuthenModel> verifyPin(Map<String, dynamic> param) async {
+    AuthenModel authenModel = await remoteDataSource.verifyPin(param);
+    await localDataSource.saveToken(authenModel.accessToken ?? '');
+    await localDataSource.saveUserInfo(authenModel.user ?? UserModel.fromJson({}));
+    return authenModel;
   }
 }

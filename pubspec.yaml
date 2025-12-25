@@ -62,6 +62,7 @@ dependencies:
   path: ^1.8.3  # Path utilities
   uuid: ^4.0.0  # UUID generation
   file_picker: ^10.3.7
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:

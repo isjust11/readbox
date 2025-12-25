@@ -31,4 +31,6 @@ class ApiConstant {
   static final uploadEbook = "upload/ebook";
   static final uploadCover = "upload/image";
   static final getCategories = "categories";
+  //upload medial
+  static final uploadMedia = "media/upload";
 }

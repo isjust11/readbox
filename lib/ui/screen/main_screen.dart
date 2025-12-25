@@ -9,6 +9,7 @@ import 'package:readbox/routes.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
 class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return BlocProvider<LibraryCubit>(
@@ -19,6 +20,7 @@ class MainScreen extends StatelessWidget {
 }
 
 class MainBody extends StatefulWidget {
+  const MainBody({super.key});
   @override
   _MainBodyState createState() => _MainBodyState();
 }
@@ -202,7 +204,7 @@ class _MainBodyState extends State<MainBody> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Theme.of(context).primaryColor.withOpacity(0.05),
+              Theme.of(context).primaryColor.withValues(alpha: 0.05),
               Colors.white,
             ],
           ),
@@ -216,7 +218,7 @@ class _MainBodyState extends State<MainBody> {
                 gradient: LinearGradient(
                   colors: [
                     Theme.of(context).primaryColor,
-                    Theme.of(context).primaryColor.withOpacity(0.8),
+                    Theme.of(context).primaryColor.withValues(alpha: 0.8),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -231,7 +233,7 @@ class _MainBodyState extends State<MainBody> {
                       border: Border.all(color: Colors.white, width: 3),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.withValues(alpha: 0.2),
                           blurRadius: 12,
                           offset: Offset(0, 4),
                         ),
@@ -249,7 +251,7 @@ class _MainBodyState extends State<MainBody> {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    _currentUser?.userName ?? 'User',
+                    _currentUser?.username ?? 'User',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -260,7 +262,7 @@ class _MainBodyState extends State<MainBody> {
                   Text(
                     _currentUser?.address ?? '',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       fontSize: 14,
                     ),
                   ),
@@ -328,15 +330,15 @@ class _MainBodyState extends State<MainBody> {
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.1) : null,
+        color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : null,
       ),
       child: ListTile(
         leading: Container(
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: isSelected
-                ? Theme.of(context).primaryColor.withOpacity(0.15)
-                : (iconColor?.withOpacity(0.1) ?? Colors.grey[100]),
+                ? Theme.of(context).primaryColor.withValues(alpha: 0.15)
+                : (iconColor?.withValues(alpha: 0.1) ?? Colors.grey[100]),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(
@@ -557,11 +559,11 @@ class _MainBodyState extends State<MainBody> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         decoration: BoxDecoration(
-          color: isOutlined ? Colors.white : color.withOpacity(0.1),
+          color: isOutlined ? Colors.white : color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
           border: isOutlined 
               ? Border.all(color: Colors.grey[300]!, width: 1.5)
-              : Border.all(color: color.withOpacity(0.3), width: 1),
+              : Border.all(color: color.withValues(alpha: 0.3), width: 1),
         ),
         child: Row(
           children: [
@@ -570,7 +572,7 @@ class _MainBodyState extends State<MainBody> {
               decoration: BoxDecoration(
                 color: isOutlined 
                     ? Colors.grey[100]
-                    : color.withOpacity(0.2),
+                    : color.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -592,7 +594,7 @@ class _MainBodyState extends State<MainBody> {
             ),
             Icon(
               Icons.arrow_forward_ios_rounded,
-              color: isOutlined ? Colors.grey[400] : color.withOpacity(0.5),
+              color: isOutlined ? Colors.grey[400] : color.withValues(alpha: 0.5),
               size: 16,
             ),
           ],
@@ -607,7 +609,7 @@ class _MainBodyState extends State<MainBody> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 12,
             offset: Offset(0, 4),
           ),
@@ -669,11 +671,11 @@ class _MainBodyState extends State<MainBody> {
                         child: Container(
                           padding: EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.9),
+                            color: Colors.red.withValues(alpha: 0.9),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.red.withOpacity(0.3),
+                                color: Colors.red.withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: Offset(0, 2),
                               ),
@@ -730,7 +732,7 @@ class _MainBodyState extends State<MainBody> {
                             Container(
                               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Colors.amber.withOpacity(0.15),
+                                color: Colors.amber.withValues(alpha: 0.15),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(

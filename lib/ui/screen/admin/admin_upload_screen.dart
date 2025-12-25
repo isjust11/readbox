@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:readbox/blocs/admin/admin_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/injection_container.dart';
@@ -17,6 +18,8 @@ import 'package:readbox/injection_container.dart';
 // }
 
 class AdminUploadScreen extends StatelessWidget {
+  const AdminUploadScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AdminCubit>(
@@ -80,14 +83,15 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
 
   Future<void> _pickCoverImage() async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'webp'],
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
       );
 
-      if (result != null && result.files.single.path != null) {
+      if (image != null) {
         setState(() {
-          _coverImageFile = File(result.files.single.path!);
+          _coverImageFile = File(image.path);
         });
       }
     } catch (e) {
@@ -197,7 +201,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
             gradient: LinearGradient(
               colors: [
                 Theme.of(context).primaryColor,
-                Theme.of(context).primaryColor.withOpacity(0.8),
+                Theme.of(context).primaryColor.withValues(alpha: 0.8),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -207,7 +211,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
         leading: Container(
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
           ),
           child: IconButton(
@@ -220,7 +224,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
             Container(
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(Icons.upload_file_rounded, color: Colors.white, size: 24),
@@ -241,7 +245,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                   'Thêm sách mới vào thư viện',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
               ],
@@ -277,7 +281,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.06),
+                            color: Colors.black.withValues(alpha: 0.06),
                             blurRadius: 12,
                             offset: Offset(0, 4),
                           ),
@@ -295,8 +299,8 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
-                                        Theme.of(context).primaryColor.withOpacity(0.1),
-                                        Theme.of(context).primaryColor.withOpacity(0.05),
+                                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                                        Theme.of(context).primaryColor.withValues(alpha: 0.05),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(12),
@@ -357,12 +361,12 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                                   padding: EdgeInsets.all(24),
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                      color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                                       width: 2,
                                       style: BorderStyle.solid,
                                     ),
                                     borderRadius: BorderRadius.circular(16),
-                                    color: Theme.of(context).primaryColor.withOpacity(0.02),
+                                    color: Theme.of(context).primaryColor.withValues(alpha: 0.02),
                                   ),
                                   child: Column(
                                     children: [
@@ -455,7 +459,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                                       ],
                                     ),
                                     SizedBox(height: 16),
-                                    Container(
+                                    SizedBox(
                                       width: double.infinity,
                                       child: ElevatedButton(
                                         onPressed: _isUploadingEbook ? null : _uploadEbookFile,
@@ -502,7 +506,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                                   gradient: LinearGradient(
                                     colors: [
                                       Colors.green[50]!,
-                                      Colors.green[50]!.withOpacity(0.3),
+                                      Colors.green[50]!.withValues(alpha: 0.3),
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(16),
@@ -567,7 +571,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.06),
+                            color: Colors.black.withValues(alpha: 0.06),
                             blurRadius: 12,
                             offset: Offset(0, 4),
                           ),
@@ -585,8 +589,8 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
-                                        Colors.purple.withOpacity(0.1),
-                                        Colors.purple.withOpacity(0.05),
+                                        Colors.purple.withValues(alpha: 0.1),
+                                        Colors.purple.withValues(alpha: 0.05),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(12),
@@ -647,12 +651,12 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                                   height: 200,
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Colors.purple.withOpacity(0.3),
+                                      color: Colors.purple.withValues(alpha: 0.3),
                                       width: 2,
                                       style: BorderStyle.solid,
                                     ),
                                     borderRadius: BorderRadius.circular(16),
-                                    color: Colors.purple.withOpacity(0.02),
+                                    color: Colors.purple.withValues(alpha: 0.02),
                                   ),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -791,7 +795,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.06),
+                            color: Colors.black.withValues(alpha: 0.06),
                             blurRadius: 12,
                             offset: Offset(0, 4),
                           ),
@@ -809,8 +813,8 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
-                                        Colors.blue.withOpacity(0.1),
-                                        Colors.blue.withOpacity(0.05),
+                                        Colors.blue.withValues(alpha: 0.1),
+                                        Colors.blue.withValues(alpha: 0.05),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(12),
@@ -1083,12 +1087,12 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                             Container(
                               decoration: BoxDecoration(
                                 color: _isPublic 
-                                    ? Theme.of(context).primaryColor.withOpacity(0.05)
+                                    ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
                                     : Colors.grey[100],
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: _isPublic
-                                      ? Theme.of(context).primaryColor.withOpacity(0.3)
+                                      ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
                                       : Colors.grey[300]!,
                                   width: 1,
                                 ),
@@ -1108,7 +1112,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                                   style: TextStyle(fontSize: 12),
                                 ),
                                 value: _isPublic,
-                                activeColor: Theme.of(context).primaryColor,
+                                activeThumbColor: Theme.of(context).primaryColor,
                                 onChanged: (value) {
                                   setState(() {
                                     _isPublic = value;
@@ -1142,7 +1146,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.green.withOpacity(0.3),
+                            color: Colors.green.withValues(alpha: 0.3),
                             blurRadius: 12,
                             offset: Offset(0, 6),
                           ),
@@ -1186,7 +1190,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                                   Container(
                                     padding: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.2),
+                                      color: Colors.white.withValues(alpha: 0.2),
                                       shape: BoxShape.circle,
                                     ),
                                     child: Icon(

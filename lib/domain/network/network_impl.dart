@@ -78,7 +78,6 @@ class Network {
       );
       return getApiResponse(response);
     } catch (e) {
-      print("===postWithFormData =====${e}");
       return getError(e as DioError);
     }
   }

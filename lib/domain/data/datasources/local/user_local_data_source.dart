@@ -16,8 +16,9 @@ class UserLocalDataSource {
   Future<bool> saveToken(String token) async {
     try {
       return await SharedPreferenceUtil.saveToken(token);
-    } catch (e) {}
-    return false;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<String?> getToken() async {

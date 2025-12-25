@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -6,12 +6,12 @@ class AuthRemoteDataSource {
 
   AuthRemoteDataSource({required this.network});
 
-  Future<UserModel> login(Map<String, dynamic> param) async {
+  Future<AuthenModel> login(Map<String, dynamic> param) async {
     ApiResponse apiResponse = await network.post(url: '${ApiConstant.apiHost}${ApiConstant.login}', body: param);
     if (apiResponse.isSuccess) {
-      return UserModel.fromJson(apiResponse.data);
+      return AuthenModel.fromJson(apiResponse.data);
     }
-    return Future.error(apiResponse.data?['message']);
+    return Future.error(apiResponse.errMessage);
   }
 
   Future<UserModel> register(Map<String, dynamic> param) async {
@@ -19,14 +19,14 @@ class AuthRemoteDataSource {
     if (apiResponse.isSuccess) {
       return UserModel.fromJson(apiResponse.data);
     }
-    return Future.error(apiResponse.data?['message']);
+    return Future.error(apiResponse.errMessage);
   }
 
-  Future<UserModel> verifyPin(Map<String, dynamic> param) async {
+  Future<AuthenModel> verifyPin(Map<String, dynamic> param) async {
     ApiResponse apiResponse = await network.post(url: '${ApiConstant.apiHost}${ApiConstant.verifyPin}', body: param);
     if (apiResponse.isSuccess) {
-      return UserModel.fromJson(apiResponse.data);
+      return AuthenModel.fromJson(apiResponse.data);
     }
-    return Future.error(apiResponse.data?['message']);
+    return Future.error(apiResponse.errMessage);
   }
 }

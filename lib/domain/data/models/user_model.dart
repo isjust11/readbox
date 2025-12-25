@@ -4,11 +4,11 @@ class UserModel extends UserEntity {
   UserModel.fromJson(Map<String, dynamic> json) : super.fromJson(json);
 
   get getSortName {
-    int length = userName?.length ?? 0;
+    int length = username?.length ?? 0;
     if (length <= 1) {
-      return userName ?? "";
+      return username ?? "";
     } else {
-      return "${userName![0]}${userName![length - 1]}";
+      return "${username![0]}${username![length - 1]}";
     }
   }
 }

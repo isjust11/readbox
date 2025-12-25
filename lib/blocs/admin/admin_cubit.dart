@@ -34,14 +34,14 @@ class AdminCubit extends Cubit<BaseState> {
       emit(LoadingState());
       final response = await _adminRemoteDataSource.uploadEbook(file);
       
-      if (response['success'] == true) {
-        _ebookFileUrl = response['fileUrl'];
+      if (response.isSuccess) {
+        _ebookFileUrl = response.data['publicRelativePath'];
         emit(LoadedState(
           response,
           msgError: 'Ebook uploaded successfully',
         ));
       } else {
-        emit(ErrorState(BlocUtils.getMessageError(response['message'] ?? 'Upload failed'),));
+        emit(ErrorState(BlocUtils.getMessageError(response.errMessage ?? 'Upload failed'),));
       }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e),));
@@ -54,14 +54,14 @@ class AdminCubit extends Cubit<BaseState> {
       emit(LoadingState());
       final response = await _adminRemoteDataSource.uploadCoverImage(file);
       
-      if (response['success'] == true) {
-        _coverImageUrl = response['fileUrl'];
+      if (response.isSuccess) {
+        _coverImageUrl = response.data['publicRelativePath'];
         emit(LoadedState(
           response,
           msgError: 'Cover image uploaded successfully',
         ));
       } else {
-        emit(ErrorState(BlocUtils.getMessageError(response['message'] ?? 'Upload failed'),));
+        emit(ErrorState(BlocUtils.getMessageError(response.errMessage ?? 'Upload failed'),));
       }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));

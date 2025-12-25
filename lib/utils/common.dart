@@ -55,7 +55,7 @@ class Common {
     }
     try {
       final numberFormat = NumberFormat("#,###");
-      return numberFormat.format(double.parse(price.toString()).round()) + "${showPrefix ? " đ" : ""}";
+      return "${numberFormat.format(double.parse(price.toString()).round())}${showPrefix ? " đ" : ""}";
     } catch (e) {
       return price?.toString() ?? "";
     }

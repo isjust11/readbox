@@ -12,11 +12,11 @@ class LoginCubit extends Cubit<BaseState> {
   doLogin({String? username, String? password}) async {
     try {
       emit(LoadingState());
-      UserModel userModel = await repository.login({
+      AuthenModel authenModel = await repository.login({
         "username": username,
         "password": password,
       });
-      emit(LoadedState(userModel));
+      emit(LoadedState(authenModel));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }

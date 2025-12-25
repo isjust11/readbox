@@ -12,11 +12,11 @@ class VerifyPinCubit extends Cubit<BaseState> {
   verifyPin({String? email, String? pin}) async {
     try {
       emit(LoadingState());
-      UserModel userModel = await repository.verifyPin({
+      AuthenModel authenModel = await repository.verifyPin({
         "email": email,
         "pin": pin,
       });
-      emit(LoadedState(userModel));
+      emit(LoadedState(authenModel));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
