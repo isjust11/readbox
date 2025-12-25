@@ -30,4 +30,11 @@ class ApiConstant {
   static final uploadEbook = "files/upload-ebook";
   static final uploadCover = "files/upload-cover";
   static final getCategories = "categories";
+
+  // News endpoints
+  static final getNewsList = "news/published";
+  static final getNews = "news";
+  static final createNews = "news";
+  static final updateNews = "news";
+  static final deleteNews = "news";
 }

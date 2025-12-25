@@ -8,7 +8,7 @@ class ApiResponse<T> {
 
   ApiResponse.error(this.errMessage, {this.data, this.code});
 
-  bool get isSuccess => code != null && code == 200;
+  bool get isSuccess => code != null && (code == 200 || code == 201);
 
   bool get isStatusSuccess => status == 200;
 }

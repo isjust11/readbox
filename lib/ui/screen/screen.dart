@@ -6,3 +6,6 @@ export 'library/library_screen.dart';
 export 'admin/admin_upload_screen.dart';
 export 'book/book_detail_screen.dart';
 export 'book/pdf_viewer_screen.dart';
+export 'news/news_list_screen.dart';
+export 'news/news_detail_screen.dart';
+export 'news/news_create_edit_screen.dart';

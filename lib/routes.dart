@@ -15,6 +15,9 @@ class Routes {
   static const String adminUploadScreen = "/adminUploadScreen";
   static const String bookDetailScreen = "/bookDetailScreen";
   static const String pdfViewerScreen = "/pdfViewerScreen";
+  static const String newsListScreen = "/newsListScreen";
+  static const String newsDetailScreen = "/newsDetailScreen";
+  static const String newsCreateEditScreen = "/newsCreateEditScreen";
 
   //init screen name
   static String initScreen() => splashScreen;
@@ -46,6 +49,20 @@ class Routes {
             fileUrl: args['fileUrl'] as String,
             title: args['title'] as String,
           ),
+          type: PageTransitionType.rightToLeft,
+        );
+      case newsListScreen:
+        return PageTransition(child: NewsListScreen(), type: PageTransitionType.fade);
+      case newsDetailScreen:
+        final news = settings.arguments;
+        return PageTransition(
+          child: NewsDetailScreen(news: news as NewsModel),
+          type: PageTransitionType.rightToLeft,
+        );
+      case newsCreateEditScreen:
+        final news = settings.arguments;
+        return PageTransition(
+          child: NewsCreateEditScreen(news: news as NewsModel?),
           type: PageTransitionType.rightToLeft,
         );
       default:

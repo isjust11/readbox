@@ -7,6 +7,11 @@ import 'package:readbox/domain/usecases/get_book_list_usecase.dart';
 import 'package:readbox/domain/usecases/delete_book_usecase.dart';
 import 'package:readbox/domain/usecases/search_books_usecase.dart';
 import 'package:readbox/domain/usecases/save_reading_progress_usecase.dart';
+import 'package:readbox/domain/usecases/get_news_list_usecase.dart';
+import 'package:readbox/domain/usecases/add_news_usecase.dart';
+import 'package:readbox/domain/usecases/update_news_usecase.dart';
+import 'package:readbox/domain/usecases/delete_news_usecase.dart';
+import 'package:readbox/domain/usecases/search_news_usecase.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -72,7 +77,15 @@ void registerCubit(GetIt getIt) {
   getIt.registerFactory(
     () => AdminCubit(getIt.get<AdminRemoteDataSource>()),
   );
- 
+  getIt.registerFactory(
+    () => NewsCubit(
+      getNewsListUseCase: getIt.get<GetNewsListUseCase>(),
+      addNewsUseCase: getIt.get<AddNewsUseCase>(),
+      updateNewsUseCase: getIt.get<UpdateNewsUseCase>(),
+      deleteNewsUseCase: getIt.get<DeleteNewsUseCase>(),
+      searchNewsUseCase: getIt.get<SearchNewsUseCase>(),
+    ),
+  );
 }
 
 void registerRepositories(GetIt getIt) {
@@ -88,6 +101,9 @@ void registerRepositories(GetIt getIt) {
   getIt.registerLazySingleton(
     () => BookRepository(remoteDataSource: getIt.get<BookRemoteDataSource>()),
   );
+  getIt.registerLazySingleton(
+    () => NewsRepository(remoteDataSource: getIt.get<NewsRemoteDataSource>()),
+  );
 }
 
 void registerUseCases(GetIt getIt) {
@@ -96,6 +112,11 @@ void registerUseCases(GetIt getIt) {
   getIt.registerLazySingleton(() => DeleteBookUseCase(getIt.get<BookRepository>()));
   getIt.registerLazySingleton(() => SearchBooksUseCase(getIt.get<BookRepository>()));
   getIt.registerLazySingleton(() => SaveReadingProgressUseCase(getIt.get<BookRepository>()));
+  getIt.registerLazySingleton(() => GetNewsListUseCase(getIt.get<NewsRepository>()));
+  getIt.registerLazySingleton(() => AddNewsUseCase(getIt.get<NewsRepository>()));
+  getIt.registerLazySingleton(() => UpdateNewsUseCase(getIt.get<NewsRepository>()));
+  getIt.registerLazySingleton(() => DeleteNewsUseCase(getIt.get<NewsRepository>()));
+  getIt.registerLazySingleton(() => SearchNewsUseCase(getIt.get<NewsRepository>()));
 }
 
 void registerDataSource(GetIt getIt) {
@@ -104,6 +125,7 @@ void registerDataSource(GetIt getIt) {
   getIt.registerLazySingleton(() => UserRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => BookRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => AdminRemoteDataSource(network: getIt.get()));
+  getIt.registerLazySingleton(() => NewsRemoteDataSource(network: getIt.get()));
 }
 
 void registerNetwork(GetIt getIt) {
