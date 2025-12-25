@@ -11,8 +11,8 @@ import 'package:readbox/utils/shared_preference.dart';
 class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<LibraryCubit>(
-      create: (_) => getIt.get<LibraryCubit>()..getBooks(),
+    return BlocProvider<NewsCubit>(
+      create: (_) => getIt.get<NewsCubit>()..getNews(),
       child: MainBody(),
     );
   }
@@ -28,7 +28,7 @@ class _MainBodyState extends State<MainBody> {
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
   UserModel? _currentUser;
-  String _currentFilter = 'all'; // 'all', 'favorite', 'archived'
+  String? _currentCategory; // Filter theo category
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _MainBodyState extends State<MainBody> {
   }
 
   void _onSearchChanged(String query) {
-    context.read<LibraryCubit>().searchBooks(query);
+    context.read<NewsCubit>().searchNews(query);
   }
 
   void _toggleSearch() {
@@ -58,27 +58,16 @@ class _MainBodyState extends State<MainBody> {
       _isSearching = !_isSearching;
       if (!_isSearching) {
         _searchController.clear();
-        context.read<LibraryCubit>().getBooks();
+        context.read<NewsCubit>().getNews(category: _currentCategory);
       }
     });
   }
 
-  void _filterBooks(String filter) {
+  void _filterNews(String? category) {
     setState(() {
-      _currentFilter = filter;
+      _currentCategory = category;
     });
-    
-    switch (filter) {
-      case 'all':
-        context.read<LibraryCubit>().getBooks();
-        break;
-      case 'favorite':
-        context.read<LibraryCubit>().getBooks(isFavorite: true);
-        break;
-      case 'archived':
-        context.read<LibraryCubit>().getBooks(isArchived: true);
-        break;
-    }
+    context.read<NewsCubit>().getNews(category: category);
     Navigator.pop(context); // Close drawer
   }
 
@@ -107,7 +96,7 @@ class _MainBodyState extends State<MainBody> {
                 style: TextStyle(color: Colors.white),
                 onChanged: _onSearchChanged,
               )
-            : Text('Thư viện của tôi'),
+            : Text('Tin tức'),
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search),
@@ -118,9 +107,9 @@ class _MainBodyState extends State<MainBody> {
       drawer: _buildDrawer(),
       body: RefreshIndicator(
         onRefresh: () async {
-          context.read<LibraryCubit>().refreshBooks();
+          context.read<NewsCubit>().refreshNews();
         },
-        child: BlocBuilder<LibraryCubit, BaseState>(
+        child: BlocBuilder<NewsCubit, BaseState>(
           builder: (context, state) {
             if (state is LoadingState) {
               return Center(child: CircularProgressIndicator());
@@ -140,7 +129,7 @@ class _MainBodyState extends State<MainBody> {
                     ),
                     SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () => context.read<LibraryCubit>().getBooks(),
+                      onPressed: () => context.read<NewsCubit>().getNews(category: _currentCategory),
                       child: Text('Thử lại'),
                     ),
                   ],
@@ -149,22 +138,22 @@ class _MainBodyState extends State<MainBody> {
             }
 
             if (state is LoadedState) {
-              final books = context.read<LibraryCubit>().books;
+              final newsList = state.data as List<NewsModel>;
 
-              if (books.isEmpty) {
+              if (newsList.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.book_outlined, size: 64, color: Colors.grey),
+                      Icon(Icons.article_outlined, size: 64, color: Colors.grey),
                       SizedBox(height: 16),
                       Text(
-                        'Chưa có sách nào',
+                        'Chưa có tin tức nào',
                         style: TextStyle(fontSize: 18, color: Colors.grey),
                       ),
                       SizedBox(height: 8),
                       Text(
-                        'Thêm sách để bắt đầu đọc',
+                        'Tin tức sẽ được hiển thị ở đây',
                         style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
                     ],
@@ -172,22 +161,16 @@ class _MainBodyState extends State<MainBody> {
                 );
               }
 
-              return GridView.builder(
+              return ListView.builder(
                 padding: EdgeInsets.all(16),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.65,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: books.length,
+                itemCount: newsList.length,
                 itemBuilder: (context, index) {
-                  return _buildBookCard(books[index]);
+                  return _buildNewsCard(newsList[index]);
                 },
               );
             }
 
-            return Center(child: Text('Tải danh sách sách...'));
+            return Center(child: Text('Tải danh sách tin tức...'));
           },
         ),
       ),
@@ -269,34 +252,30 @@ class _MainBodyState extends State<MainBody> {
             ),
             SizedBox(height: 8),
             _buildDrawerItem(
-              icon: Icons.library_books,
-              title: 'Tất cả sách',
-              isSelected: _currentFilter == 'all',
-              onTap: () => _filterBooks('all'),
+              icon: Icons.article,
+              title: 'Tất cả tin tức',
+              isSelected: _currentCategory == null,
+              onTap: () => _filterNews(null),
             ),
             _buildDrawerItem(
-              icon: Icons.favorite,
-              title: 'Sách yêu thích',
-              isSelected: _currentFilter == 'favorite',
-              onTap: () => _filterBooks('favorite'),
-              iconColor: Colors.red,
-            ),
-            _buildDrawerItem(
-              icon: Icons.archive,
-              title: 'Đã lưu trữ',
-              isSelected: _currentFilter == 'archived',
-              onTap: () => _filterBooks('archived'),
+              icon: Icons.category,
+              title: 'Theo danh mục',
+              isSelected: false,
+              onTap: () {
+                // Có thể mở dialog chọn category
+                Navigator.pop(context);
+              },
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Divider(height: 1),
             ),
             _buildDrawerItem(
-              icon: Icons.upload_file,
-              title: 'Upload sách',
+              icon: Icons.add_circle_outline,
+              title: 'Tạo tin tức mới',
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, Routes.adminUploadScreen);
+                Navigator.pushNamed(context, Routes.newsCreateEditScreen);
               },
             ),
             Padding(
@@ -366,35 +345,24 @@ class _MainBodyState extends State<MainBody> {
   String _getImageUrl(String? imagePath) {
     if (imagePath == null || imagePath.isEmpty) return '';
     
-    // Otherwise, it's from our backend
+    // Nếu đã là URL đầy đủ thì trả về luôn
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+    
+    // Nếu không, thêm base URL
     return '${ApiConstant.apiHostStorage}$imagePath';
   }
 
-  void _openPdfViewer(BookModel book) {
-    if (book.fileUrl != null) {
-      Navigator.pushNamed(
-        context,
-        Routes.pdfViewerScreen,
-        arguments: {
-          'fileUrl': '${ApiConstant.apiHostStorage}${book.fileUrl}',
-          'title': book.displayTitle,
-        },
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('File ebook không tồn tại'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      );
-    }
+  void _openNewsDetail(NewsModel news) {
+    Navigator.pushNamed(
+      context,
+      Routes.newsDetailScreen,
+      arguments: news,
+    );
   }
 
-  void _showBookOptions(BookModel book) {
+  void _showNewsOptions(NewsModel news) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -419,7 +387,7 @@ class _MainBodyState extends State<MainBody> {
               ),
               SizedBox(height: 20),
               
-              // Book info
+              // News info
               Row(
                 children: [
                   Container(
@@ -429,18 +397,18 @@ class _MainBodyState extends State<MainBody> {
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.grey[200],
                     ),
-                    child: book.coverImageUrl != null
+                    child: news.hasImage
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
-                              _getImageUrl(book.coverImageUrl),
+                              _getImageUrl(news.imageUrl),
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
-                                return Icon(Icons.book, color: Colors.grey);
+                                return Icon(Icons.article, color: Colors.grey);
                               },
                             ),
                           )
-                        : Icon(Icons.book, color: Colors.grey),
+                        : Icon(Icons.article, color: Colors.grey),
                   ),
                   SizedBox(width: 16),
                   Expanded(
@@ -448,7 +416,7 @@ class _MainBodyState extends State<MainBody> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          book.displayTitle,
+                          news.displayTitle,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -458,7 +426,7 @@ class _MainBodyState extends State<MainBody> {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          book.displayAuthor,
+                          news.displayAuthor,
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[600],
@@ -476,53 +444,12 @@ class _MainBodyState extends State<MainBody> {
               
               // Action buttons
               _buildActionButton(
-                icon: Icons.menu_book_rounded,
-                label: 'Đọc sách',
+                icon: Icons.info_outline_rounded,
+                label: 'Xem chi tiết',
                 color: Theme.of(context).primaryColor,
                 onTap: () {
                   Navigator.pop(context);
-                  _openPdfViewer(book);
-                },
-              ),
-              
-              SizedBox(height: 12),
-              
-              _buildActionButton(
-                icon: Icons.info_outline_rounded,
-                label: 'Xem chi tiết',
-                color: Colors.blue,
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, Routes.bookDetailScreen, arguments: book);
-                },
-              ),
-              
-              SizedBox(height: 12),
-              
-              _buildActionButton(
-                icon: book.isFavorite == true 
-                    ? Icons.favorite_rounded 
-                    : Icons.favorite_border_rounded,
-                label: book.isFavorite == true 
-                    ? 'Bỏ yêu thích' 
-                    : 'Yêu thích',
-                color: Colors.red,
-                onTap: () {
-                  Navigator.pop(context);
-                  // TODO: Implement toggle favorite
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        book.isFavorite == true 
-                            ? 'Đã bỏ khỏi yêu thích' 
-                            : 'Đã thêm vào yêu thích',
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  );
+                  _openNewsDetail(news);
                 },
               ),
               
@@ -601,8 +528,9 @@ class _MainBodyState extends State<MainBody> {
     );
   }
 
-  Widget _buildBookCard(BookModel book) {
+  Widget _buildNewsCard(NewsModel news) {
     return Container(
+      margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
@@ -618,80 +546,43 @@ class _MainBodyState extends State<MainBody> {
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           onTap: () {
-            // Tap thường: Đọc ebook trực tiếp
-            _openPdfViewer(book);
+            _openNewsDetail(news);
           },
           onLongPress: () {
-            // Long press: Hiển thị menu options
-            _showBookOptions(book);
+            _showNewsOptions(news);
           },
           borderRadius: BorderRadius.circular(16),
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Book Cover
-              Expanded(
-                flex: 3,
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                        gradient: LinearGradient(
-                          colors: [Colors.grey[300]!, Colors.grey[100]!],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      child: book.coverImageUrl != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                              child: Image.network(
-                                _getImageUrl(book.coverImageUrl),
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Center(
-                                    child: Icon(Icons.book, size: 48, color: Colors.grey[400]),
-                                  );
-                                },
-                              ),
-                            )
-                          : Center(
-                              child: Icon(Icons.book, size: 48, color: Colors.grey[400]),
-                            ),
-                    ),
-                    // Favorite badge
-                    if (book.isFavorite == true)
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          padding: EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.9),
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.red.withOpacity(0.3),
-                                blurRadius: 8,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            Icons.favorite,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                  ],
+              // News Image
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
+                  color: Colors.grey[200],
                 ),
+                child: news.hasImage
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
+                        child: Image.network(
+                          _getImageUrl(news.imageUrl),
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Center(
+                              child: Icon(Icons.article, size: 32, color: Colors.grey[400]),
+                            );
+                          },
+                        ),
+                      )
+                    : Center(
+                        child: Icon(Icons.article, size: 32, color: Colors.grey[400]),
+                      ),
               ),
-              // Book Info
+              // News Info
               Expanded(
-                flex: 2,
                 child: Padding(
                   padding: EdgeInsets.all(12),
                   child: Column(
@@ -702,71 +593,81 @@ class _MainBodyState extends State<MainBody> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            book.displayTitle,
+                            news.displayTitle,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                              fontSize: 15,
                               height: 1.3,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(height: 4),
+                          SizedBox(height: 6),
+                          if (news.summary != null && news.summary!.isNotEmpty)
+                            Text(
+                              news.summary!,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                                height: 1.4,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Icon(Icons.person_outline, size: 14, color: Colors.grey[600]),
+                                SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    news.displayAuthor,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.grey[600],
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                          SizedBox(width: 4),
                           Text(
-                            book.displayAuthor,
+                            news.publishedDateFormatted,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 11,
                               color: Colors.grey[600],
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
-                      // Rating
-                      Row(
-                        children: [
-                          if (book.rating != null && book.rating! > 0) ...[
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.amber.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.star, size: 14, color: Colors.amber[700]),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    book.rating!.toStringAsFixed(1),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.amber[900],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                      if (news.category != null) ...[
+                        SizedBox(height: 6),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            news.displayCategory,
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w600,
                             ),
-                          ] else ...[
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[100],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                'Mới',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
