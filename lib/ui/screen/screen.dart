@@ -4,6 +4,7 @@ export 'auth/confirm_pin_screen.dart';
 export 'main_screen.dart';
 export 'splash_screen.dart';
 export 'library/library_screen.dart';
+export 'local_library/local_library_screen.dart';
 export 'admin/admin_upload_screen.dart';
 export 'book/book_detail_screen.dart';
 export 'book/pdf_viewer_screen.dart';

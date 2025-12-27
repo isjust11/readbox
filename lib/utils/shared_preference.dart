@@ -10,6 +10,7 @@ class SPrefCache {
   static const String PREF_KEY_LANGUAGE = "pref_key_language";
   static const String PREF_KEY_USER_INFO = "pref_key_user_info";
   static const String PREF_KEY_IS_KEEP_LOGIN = "pref_key_is_keep_login";
+  static const String PREF_KEY_LOCAL_BOOKS = "pref_key_local_books";
 }
 
 class SharedPreferenceUtil {
@@ -61,5 +62,36 @@ class SharedPreferenceUtil {
   static Future clearData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
+  }
+
+  // Local Books - lưu danh sách file paths
+  static Future<bool> saveLocalBooks(List<String> filePaths) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setStringList(SPrefCache.PREF_KEY_LOCAL_BOOKS, filePaths);
+  }
+
+  static Future<List<String>> getLocalBooks() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList(SPrefCache.PREF_KEY_LOCAL_BOOKS) ?? [];
+  }
+
+  static Future<bool> addLocalBook(String filePath) async {
+    final books = await getLocalBooks();
+    if (!books.contains(filePath)) {
+      books.add(filePath);
+      return await saveLocalBooks(books);
+    }
+    return false; // Already exists
+  }
+
+  static Future<bool> removeLocalBook(String filePath) async {
+    final books = await getLocalBooks();
+    books.remove(filePath);
+    return await saveLocalBooks(books);
+  }
+
+  static Future<bool> isBookAdded(String filePath) async {
+    final books = await getLocalBooks();
+    return books.contains(filePath);
   }
 }

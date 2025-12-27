@@ -13,10 +13,11 @@ class Routes {
   static const String confirmPinScreen = "/confirmPinScreen";
   static const String mainScreen = "/mainScreen";
   static const String libraryScreen = "/libraryScreen";
+  static const String localLibraryScreen = "/localLibraryScreen";
   static const String adminUploadScreen = "/adminUploadScreen";
   static const String bookDetailScreen = "/bookDetailScreen";
   static const String pdfViewerScreen = "/pdfViewerScreen";
-
+  static const String adminPdfScannerScreen = "/adminPdfScannerScreen";
   //init screen name
   static String initScreen() => splashScreen;
 
@@ -38,6 +39,8 @@ class Routes {
         );
       case libraryScreen:
         return PageTransition(child: LibraryScreen(), type: PageTransitionType.fade);
+      case localLibraryScreen:
+        return PageTransition(child: LocalLibraryScreen(), type: PageTransitionType.fade);
       case adminUploadScreen:
         return PageTransition(child: AdminUploadScreen(), type: PageTransitionType.fade);
       case bookDetailScreen:

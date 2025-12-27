@@ -294,6 +294,15 @@ class _MainBodyState extends State<MainBody> {
               child: Divider(height: 1),
             ),
             _buildDrawerItem(
+              icon: Icons.phone_android,
+              title: 'Thư viện Local',
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, Routes.localLibraryScreen);
+              },
+              iconColor: Colors.green,
+            ),
+            _buildDrawerItem(
               icon: Icons.upload_file,
               title: 'Upload sách',
               onTap: () {

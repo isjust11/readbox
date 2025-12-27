@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:readbox/blocs/admin/admin_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
 
 // void showCustomSnackBar(BuildContext context, String message, {bool isError = false}) {
 //   ScaffoldMessenger.of(context).showSnackBar(
@@ -30,6 +31,7 @@ class AdminUploadScreen extends StatelessWidget {
 }
 
 class AdminUploadBody extends StatefulWidget {
+  const AdminUploadBody({super.key});
   @override
   _AdminUploadBodyState createState() => _AdminUploadBodyState();
 }
@@ -78,6 +80,34 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
       }
     } catch (e) {
       // showCustomSnackBar(context, 'Error picking file: $e', isError: true);
+    }
+  }
+
+  Future<void> _scanAndPickEbookFile() async {
+    try {
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const PdfScannerScreen(),
+        ),
+      );
+
+      if (result == true) {
+        // Files were added to SharedPreferences
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Sách đã được thêm vào thư viện local'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Lỗi: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -353,49 +383,99 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
                             ),
                             SizedBox(height: 16),
                             
-                            if (_ebookFile == null)
-                              InkWell(
-                                onTap: _pickEbookFile,
-                                borderRadius: BorderRadius.circular(16),
-                                child: Container(
-                                  padding: EdgeInsets.all(24),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                                      width: 2,
-                                      style: BorderStyle.solid,
+                            if (_ebookFile == null) ...[
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: _pickEbookFile,
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Container(
+                                        padding: EdgeInsets.all(20),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                                            width: 2,
+                                          ),
+                                          borderRadius: BorderRadius.circular(16),
+                                          color: Theme.of(context).primaryColor.withValues(alpha: 0.02),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Icon(
+                                              Icons.folder_open_rounded,
+                                              size: 40,
+                                              color: Theme.of(context).primaryColor,
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              'Chọn file',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                                color: Theme.of(context).primaryColor,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              'Từ file picker',
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                    borderRadius: BorderRadius.circular(16),
-                                    color: Theme.of(context).primaryColor.withValues(alpha: 0.02),
                                   ),
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.cloud_upload_rounded,
-                                        size: 48,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                      SizedBox(height: 12),
-                                      Text(
-                                        'Chọn file ebook',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          color: Theme.of(context).primaryColor,
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: _scanAndPickEbookFile,
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Container(
+                                        padding: EdgeInsets.all(20),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.green.withValues(alpha: 0.3),
+                                            width: 2,
+                                          ),
+                                          borderRadius: BorderRadius.circular(16),
+                                          color: Colors.green.withValues(alpha: 0.02),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Icon(
+                                              Icons.search_rounded,
+                                              size: 40,
+                                              color: Colors.green,
+                                            ),
+                                            SizedBox(height: 8),
+                                            Text(
+                                              'Tìm kiếm',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              'Trong bộ nhớ',
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        'PDF, EPUB, MOBI (tối đa 50MB)',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              )
+                                ],
+                              ),
+                            ]
                             else if (cubit.ebookFileUrl == null)
                               Container(
                                 padding: EdgeInsets.all(16),
