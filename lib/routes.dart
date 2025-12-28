@@ -17,6 +17,8 @@ class Routes {
   static const String adminUploadScreen = "/adminUploadScreen";
   static const String bookDetailScreen = "/bookDetailScreen";
   static const String pdfViewerScreen = "/pdfViewerScreen";
+  static const String pdfViewerWithSelectionScreen = "/pdfViewerWithSelectionScreen";
+  static const String pdfViewerAdvancedScreen = "/pdfViewerAdvancedScreen";
   static const String adminPdfScannerScreen = "/adminPdfScannerScreen";
   //init screen name
   static String initScreen() => splashScreen;
@@ -53,6 +55,24 @@ class Routes {
         final args = settings.arguments as Map<String, dynamic>;
         return PageTransition(
           child: PdfViewerScreen(
+            fileUrl: args['fileUrl'] as String,
+            title: args['title'] as String,
+          ),
+          type: PageTransitionType.rightToLeft,
+        );
+      case pdfViewerWithSelectionScreen:
+        final args = settings.arguments as Map<String, dynamic>;
+        return PageTransition(
+          child: PdfViewerWithSelectionScreen(
+            fileUrl: args['fileUrl'] as String,
+            title: args['title'] as String,
+          ),
+          type: PageTransitionType.rightToLeft,
+        );
+      case pdfViewerAdvancedScreen:
+        final args = settings.arguments as Map<String, dynamic>;
+        return PageTransition(
+          child: PdfViewerAdvancedScreen(
             fileUrl: args['fileUrl'] as String,
             title: args['title'] as String,
           ),

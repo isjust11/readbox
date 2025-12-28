@@ -54,6 +54,7 @@ dependencies:
   # Ebook Reader Dependencies
   # epubx: ^3.0.0  # EPUB reader - temporarily disabled due to dependency conflict
   pdfx: ^2.0.0  # PDF reader
+  syncfusion_flutter_pdfviewer: ^28.1.33  # PDF viewer with text selection
   sqflite: ^2.3.0  # Local database
   path_provider: ^2.1.0  # File path management
   
