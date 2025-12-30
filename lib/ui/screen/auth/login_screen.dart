@@ -86,16 +86,16 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
         },
         child: Stack(
           children: [
-            // Gradient Background
+            // Gradient Background - News Theme
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF667eea),
-                    Color(0xFF764ba2),
-                    Color(0xFFf093fb),
+                    Color(0xFF1976D2), // Blue
+                    Color(0xFF1565C0), // Darker Blue
+                    Color(0xFF0D47A1), // Deep Blue
                   ],
                 ),
               ),
@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
                             children: [
                               CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  Color(0xFF667eea),
+                                  Color(0xFF1976D2),
                                 ),
                               ),
                               SizedBox(height: 16),
@@ -173,7 +173,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
   Widget _buildHeader() {
     return Column(
       children: [
-        // App Icon/Logo
+        // App Icon/Logo - News Theme
         Container(
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
@@ -188,16 +188,16 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
             ],
           ),
           child: Icon(
-            Icons.menu_book_rounded,
+            Icons.newspaper_rounded,
             size: 60,
-            color: Color(0xFF667eea),
+            color: Color(0xFF1E88E5),
           ),
         ),
         SizedBox(height: 12),
         
         // App Title
         Text(
-          'ReadBox',
+          'Tin Tức',
           style: TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.bold,
@@ -207,7 +207,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
         ),
         SizedBox(height: 8),
         Text(
-          'Đăng nhập để tiếp tục',
+          'Đăng nhập để đọc tin tức mới nhất',
           style: TextStyle(
             fontSize: 16,
             color: Colors.white.withOpacity(0.9),
@@ -237,7 +237,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF667eea),
+                  color: Color(0xFF1976D2),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -270,7 +270,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
       decoration: InputDecoration(
         labelText: 'Tên đăng nhập',
         hintText: 'Nhập tên đăng nhập',
-        prefixIcon: Icon(Icons.person_outline, color: Color(0xFF667eea)),
+        prefixIcon: Icon(Icons.person_outline, color: Color(0xFF1976D2)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -281,7 +281,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(color: Color(0xFF1976D2), width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -334,7 +334,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(color: Color(0xFF1976D2), width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -365,14 +365,14 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
     return ElevatedButton(
       onPressed: _handleLogin,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF667eea),
+        backgroundColor: Color(0xFF1976D2),
         foregroundColor: Colors.white,
         elevation: 4,
         padding: EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        shadowColor: Color(0xFF667eea).withOpacity(0.5),
+        shadowColor: Color(0xFF1976D2).withOpacity(0.5),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -411,7 +411,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
           child: Text(
             'Đăng ký ngay',
             style: TextStyle(
-              color: Color(0xFF667eea),
+              color: Color(0xFF1976D2),
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),

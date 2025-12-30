@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/routes.dart';
-import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
 class NewsListScreen extends StatelessWidget {
@@ -178,7 +178,7 @@ class _NewsCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: Image.network(
-                  news.imageUrl!,
+                  '${ApiConstant.apiHost}${news.imageUrl!}',
                   width: 120,
                   height: 120,
                   fit: BoxFit.cover,

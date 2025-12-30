@@ -171,7 +171,7 @@ class _NewsCreateEditBodyState extends State<NewsCreateEditBody> {
     );
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -191,6 +191,8 @@ class _NewsCreateEditBodyState extends State<NewsCreateEditBody> {
       // Tạm thời lưu file path, trong thực tế cần upload lên server và lấy URL về
       finalImageUrl = _selectedImage!.path;
       // TODO: Upload file lên server và lấy URL về
+      final response = await context.read<NewsCubit>().uploadImage(_selectedImage!);
+      finalImageUrl = response['fileUrl'];
     }
 
     final newsData = NewsModel.fromJson({
@@ -222,7 +224,11 @@ class _NewsCreateEditBodyState extends State<NewsCreateEditBody> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditMode ? 'Edit News' : 'Create News'),
+        title: Text(
+          isEditMode ? 'Chỉnh sửa tin tức' : 'Tạo tin tức mới',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        elevation: 0,
         actions: [
           BlocListener<NewsCubit, BaseState>(
             listener: (context, state) {
@@ -230,30 +236,42 @@ class _NewsCreateEditBodyState extends State<NewsCreateEditBody> {
                 Navigator.pop(context, true);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(isEditMode ? 'News updated successfully' : 'News created successfully'),
+                    content: Text(isEditMode ? 'Cập nhật tin tức thành công' : 'Tạo tin tức thành công'),
                     backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
                   ),
                 );
               } else if (state is ErrorState) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Error: ${state.data}'),
+                    content: Text('Lỗi: ${state.data}'),
                     backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
                   ),
                 );
               }
             },
             child: BlocBuilder<NewsCubit, BaseState>(
               builder: (context, state) {
-                return IconButton(
-                  icon: state is LoadingState
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.check),
-                  onPressed: state is LoadingState ? null : _submitForm,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: TextButton.icon(
+                    onPressed: state is LoadingState ? null : _submitForm,
+                    icon: state is LoadingState
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Icon(Icons.check, color: Colors.white),
+                    label: Text(
+                      state is LoadingState ? 'Đang lưu...' : 'Lưu',
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 );
               },
             ),
@@ -263,217 +281,364 @@ class _NewsCreateEditBodyState extends State<NewsCreateEditBody> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           children: [
-            // Title
-            TextFormField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Title *',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a title';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            // Summary
-            TextFormField(
-              controller: _summaryController,
-              decoration: const InputDecoration(
-                labelText: 'Summary',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-            const SizedBox(height: 16),
-            // Content
-            TextFormField(
-              controller: _contentController,
-              decoration: const InputDecoration(
-                labelText: 'Content *',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 10,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter content';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            // Author
-            TextFormField(
-              controller: _authorController,
-              decoration: const InputDecoration(
-                labelText: 'Author',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Category
-            TextFormField(
-              controller: _categoryController,
-              decoration: const InputDecoration(
-                labelText: 'Category',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Tags
-            TextFormField(
-              controller: _tagsController,
-              decoration: const InputDecoration(
-                labelText: 'Tags (comma separated)',
-                border: OutlineInputBorder(),
-                hintText: 'e.g., technology, science, health',
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Source
-            TextFormField(
-              controller: _sourceController,
-              decoration: const InputDecoration(
-                labelText: 'Source',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Source URL
-            TextFormField(
-              controller: _sourceUrlController,
-              decoration: const InputDecoration(
-                labelText: 'Source URL',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.url,
-            ),
-            const SizedBox(height: 16),
-            // Upload hình ảnh
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            // Section: Thông tin cơ bản
+            _buildSection(
+              title: 'Thông tin cơ bản',
+              icon: Icons.article,
               children: [
-                const Text(
-                  'Hình ảnh',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Hiển thị hình ảnh đã chọn hoặc URL cũ
-                if (_selectedImage != null || (_imageUrlController.text.isNotEmpty))
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    margin: const EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: _selectedImage != null
-                          ? Image.file(
-                              _selectedImage!,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.network(
-                              _imageUrlController.text,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Center(
-                                  child: Icon(Icons.broken_image, size: 50),
-                                );
-                              },
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              },
-                            ),
-                    ),
-                  ),
-                // Nút chọn hình ảnh
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: _showImageSourceDialog,
-                        icon: const Icon(Icons.add_photo_alternate),
-                        label: const Text('Chọn hình ảnh'),
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                      ),
-                    ),
-                    if (_selectedImage != null || _imageUrlController.text.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _selectedImage = null;
-                              _imageUrlController.clear();
-                            });
-                          },
-                          icon: const Icon(Icons.delete),
-                          color: Colors.red,
-                          tooltip: 'Xóa hình ảnh',
-                        ),
-                      ),
-                  ],
-                ),
-                // TextField để nhập URL hình ảnh (tùy chọn)
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _imageUrlController,
-                  decoration: const InputDecoration(
-                    labelText: 'Hoặc nhập URL hình ảnh',
-                    border: OutlineInputBorder(),
-                    hintText: 'https://example.com/image.jpg',
-                    prefixIcon: Icon(Icons.link),
-                  ),
-                  keyboardType: TextInputType.url,
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      setState(() {
-                        _selectedImage = null; // Reset file khi nhập URL
-                      });
+                _buildTextField(
+                  controller: _titleController,
+                  label: 'Tiêu đề *',
+                  icon: Icons.title,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Vui lòng nhập tiêu đề';
                     }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                _buildTextField(
+                  controller: _summaryController,
+                  label: 'Tóm tắt',
+                  icon: Icons.summarize,
+                  maxLines: 3,
+                  hintText: 'Nhập tóm tắt ngắn gọn về tin tức...',
+                ),
+                const SizedBox(height: 16),
+                _buildTextField(
+                  controller: _contentController,
+                  label: 'Nội dung *',
+                  icon: Icons.description,
+                  maxLines: 12,
+                  hintText: 'Nhập nội dung chi tiết của tin tức...',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Vui lòng nhập nội dung';
+                    }
+                    return null;
                   },
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            // Published
-            SwitchListTile(
-              title: const Text('Published'),
-              value: _isPublished,
-              onChanged: (value) {
-                setState(() {
-                  _isPublished = value;
-                });
-              },
+            
+            // Section: Hình ảnh
+            _buildSection(
+              title: 'Hình ảnh',
+              icon: Icons.image,
+              children: [
+                if (_selectedImage != null || _imageUrlController.text.isNotEmpty)
+                  Container(
+                    height: 220,
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          _selectedImage != null
+                              ? Image.file(
+                                  _selectedImage!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.network(
+                                  _imageUrlController.text,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.grey[200],
+                                      child: const Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.broken_image, size: 60, color: Colors.grey),
+                                            SizedBox(height: 8),
+                                            Text('Không thể tải hình ảnh', style: TextStyle(color: Colors.grey)),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Container(
+                                      color: Colors.grey[200],
+                                      child: const Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Material(
+                              color: Colors.black54,
+                              borderRadius: BorderRadius.circular(20),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(20),
+                                onTap: () {
+                                  setState(() {
+                                    _selectedImage = null;
+                                    _imageUrlController.clear();
+                                  });
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(Icons.close, color: Colors.white, size: 20),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: _showImageSourceDialog,
+                        icon: const Icon(Icons.add_photo_alternate),
+                        label: const Text('Chọn hình ảnh'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                _buildTextField(
+                  controller: _imageUrlController,
+                  label: 'Hoặc nhập URL hình ảnh',
+                  icon: Icons.link,
+                  keyboardType: TextInputType.url,
+                  hintText: 'https://example.com/image.jpg',
+                ),
+              ],
             ),
-            // Featured
-            SwitchListTile(
-              title: const Text('Featured'),
-              value: _isFeatured,
-              onChanged: (value) {
-                setState(() {
-                  _isFeatured = value;
-                });
-              },
+            const SizedBox(height: 24),
+            
+            // Section: Thông tin bổ sung
+            _buildSection(
+              title: 'Thông tin bổ sung',
+              icon: Icons.info_outline,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildTextField(
+                        controller: _authorController,
+                        label: 'Tác giả',
+                        icon: Icons.person,
+                        hintText: 'Nhập tên tác giả...',
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildTextField(
+                        controller: _categoryController,
+                        label: 'Danh mục',
+                        icon: Icons.category,
+                        hintText: 'Nhập danh mục...',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                _buildTextField(
+                  controller: _tagsController,
+                  label: 'Thẻ (phân cách bằng dấu phẩy)',
+                  icon: Icons.tag,
+                  hintText: 'ví dụ: công nghệ, khoa học, sức khỏe',
+                ),
+                const SizedBox(height: 16),
+                _buildTextField(
+                  controller: _sourceController,
+                  label: 'Nguồn',
+                  icon: Icons.source,
+                  hintText: 'Nhập nguồn tin...',
+                ),
+                const SizedBox(height: 16),
+                _buildTextField(
+                  controller: _sourceUrlController,
+                  label: 'Link nguồn',
+                  icon: Icons.link,
+                  keyboardType: TextInputType.url,
+                  hintText: 'https://example.com',
+                ),
+              ],
             ),
+            const SizedBox(height: 24),
+            
+            // Section: Cài đặt
+            _buildSection(
+              title: 'Cài đặt',
+              icon: Icons.settings,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: _isPublished ? Colors.green.shade50 : Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: _isPublished ? Colors.green.shade200 : Colors.grey.shade300,
+                    ),
+                  ),
+                  child: SwitchListTile(
+                    title: const Text(
+                      'Xuất bản',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    subtitle: const Text('Tin tức sẽ hiển thị công khai'),
+                    value: _isPublished,
+                    onChanged: (value) {
+                      setState(() {
+                        _isPublished = value;
+                      });
+                    },
+                    activeColor: Colors.green,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  decoration: BoxDecoration(
+                    color: _isFeatured ? Colors.amber.shade50 : Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: _isFeatured ? Colors.amber.shade200 : Colors.grey.shade300,
+                    ),
+                  ),
+                  child: SwitchListTile(
+                    title: const Text(
+                      'Nổi bật',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    subtitle: const Text('Tin tức sẽ được đánh dấu nổi bật'),
+                    value: _isFeatured,
+                    onChanged: (value) {
+                      setState(() {
+                        _isFeatured = value;
+                      });
+                    },
+                    activeColor: Colors.amber,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSection({
+    required String title,
+    required IconData icon,
+    required List<Widget> children,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: Theme.of(context).primaryColor,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ...children,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    int maxLines = 1,
+    String? hintText,
+    TextInputType? keyboardType,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hintText,
+        prefixIcon: Icon(icon),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.grey.shade50,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      ),
+      maxLines: maxLines,
+      keyboardType: keyboardType,
+      validator: validator,
     );
   }
 }

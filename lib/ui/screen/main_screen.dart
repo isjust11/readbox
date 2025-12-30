@@ -206,6 +206,8 @@ class _MainBodyState extends State<MainBody> {
                 ),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     padding: EdgeInsets.all(4),
@@ -241,7 +243,7 @@ class _MainBodyState extends State<MainBody> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    _currentUser?.address ?? '',
+                    _currentUser?.name ?? '',
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontSize: 14,

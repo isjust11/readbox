@@ -9,9 +9,9 @@ class NewsModel extends NewsEntity {
   String get displayCategory => category ?? 'Uncategorized';
   
   String get publishedDateFormatted {
-    if (publishedDate == null) return 'Unknown date';
+    if (createdAt == null) return 'Unknown date';
     final now = DateTime.now();
-    final difference = now.difference(publishedDate!);
+    final difference = now.difference(createdAt!);
     
     if (difference.inDays == 0) {
       if (difference.inHours == 0) {
@@ -23,7 +23,7 @@ class NewsModel extends NewsEntity {
     } else if (difference.inDays < 7) {
       return '${difference.inDays} days ago';
     } else {
-      return '${publishedDate!.day}/${publishedDate!.month}/${publishedDate!.year}';
+      return '${createdAt!.day}/${createdAt!.month}/${createdAt!.year}';
     }
   }
   

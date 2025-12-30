@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/routes.dart';
 
@@ -91,7 +92,7 @@ class _NewsDetailBodyState extends State<NewsDetailBody> {
                 children: [
                   _news.hasImage
                       ? Image.network(
-                          _news.imageUrl!,
+                          '${ApiConstant.apiHostStorage}${_news.imageUrl!}',
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
@@ -178,42 +179,6 @@ class _NewsDetailBodyState extends State<NewsDetailBody> {
                       ],
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  // Category and Tags
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      if (_news.category != null)
-                        Chip(
-                          label: Text(_news.displayCategory),
-                          backgroundColor: Colors.blue[100],
-                        ),
-                      if (_news.tags != null && _news.tags!.isNotEmpty)
-                        ..._news.tags!.map((tag) => Chip(
-                              label: Text(tag),
-                              labelStyle: const TextStyle(fontSize: 12),
-                            )),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  // Summary
-                  if (_news.summary != null && _news.summary!.isNotEmpty)
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        _news.summary!,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 24),
                   // Content
                   if (_news.content != null && _news.content!.isNotEmpty)
                     Text(
@@ -224,37 +189,6 @@ class _NewsDetailBodyState extends State<NewsDetailBody> {
                       ),
                     ),
                   const SizedBox(height: 24),
-                  // Source
-                  if (_news.source != null || _news.sourceUrl != null)
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey[300]!),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Source:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                          if (_news.source != null)
-                            Text(_news.source!),
-                          if (_news.sourceUrl != null)
-                            Text(
-                              _news.sourceUrl!,
-                              style: TextStyle(
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
                 ],
               ),
             ),

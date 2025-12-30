@@ -12,6 +12,7 @@ import 'package:readbox/domain/usecases/add_news_usecase.dart';
 import 'package:readbox/domain/usecases/update_news_usecase.dart';
 import 'package:readbox/domain/usecases/delete_news_usecase.dart';
 import 'package:readbox/domain/usecases/search_news_usecase.dart';
+import 'package:readbox/domain/usecases/upload_image_usecase.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -84,6 +85,7 @@ void registerCubit(GetIt getIt) {
       updateNewsUseCase: getIt.get<UpdateNewsUseCase>(),
       deleteNewsUseCase: getIt.get<DeleteNewsUseCase>(),
       searchNewsUseCase: getIt.get<SearchNewsUseCase>(),
+      uploadImageUseCase: getIt.get<UploadImageUseCase>(),
     ),
   );
 }
@@ -117,6 +119,7 @@ void registerUseCases(GetIt getIt) {
   getIt.registerLazySingleton(() => UpdateNewsUseCase(getIt.get<NewsRepository>()));
   getIt.registerLazySingleton(() => DeleteNewsUseCase(getIt.get<NewsRepository>()));
   getIt.registerLazySingleton(() => SearchNewsUseCase(getIt.get<NewsRepository>()));
+  getIt.registerLazySingleton(() => UploadImageUseCase(getIt.get<NewsRepository>()));
 }
 
 void registerDataSource(GetIt getIt) {

@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/domain/network/network.dart';
@@ -92,6 +96,28 @@ class NewsRemoteDataSource {
       return true;
     }
     return Future.error(apiResponse.errMessage);
+  }
+
+   /// Upload cover image
+  Future<Map<String, dynamic>> uploadImage(File file) async {
+    try {
+      String fileName = file.path.split('/').last;
+      FormData formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(
+          file.path,
+          filename: fileName,
+        ),
+      });
+
+      final response = await network.postWithFormData(
+        url: '${ApiConstant.apiHost}${ApiConstant.uploadCover}',
+        formData: formData,
+      );
+
+      return response.data;
+    } catch (e) {
+      return Future.error(BlocUtils.getMessageError(e));
+    }
   }
 }
 

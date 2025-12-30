@@ -77,8 +77,8 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
             end: Alignment.bottomRight,
             colors: [
               Color(0xFF667eea),
-              Color(0xFF764ba2),
-              Color(0xFFf093fb),
+              Color.fromARGB(255, 2, 64, 121),
+              Color.fromARGB(255, 13, 133, 242),
             ],
           ),
         ),
@@ -129,7 +129,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                       child: Column(
                         children: [
                           Text(
-                            'ReadBox',
+                            'ReadNews',
                             style: TextStyle(
                               fontSize: 48,
                               fontWeight: FontWeight.bold,
@@ -146,7 +146,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                           ),
                           SizedBox(height: 12),
                           Text(
-                            'Thư viện sách của bạn',
+                            'Tin tức mới nhất',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.white.withOpacity(0.9),

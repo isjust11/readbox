@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/utils.dart';
@@ -7,6 +9,7 @@ import 'package:readbox/domain/usecases/get_news_list_usecase.dart';
 import 'package:readbox/domain/usecases/update_news_usecase.dart';
 import 'package:readbox/domain/usecases/delete_news_usecase.dart';
 import 'package:readbox/domain/usecases/search_news_usecase.dart';
+import 'package:readbox/domain/usecases/upload_image_usecase.dart';
 
 class NewsCubit extends Cubit<BaseState> {
   final GetNewsListUseCase getNewsListUseCase;
@@ -14,6 +17,7 @@ class NewsCubit extends Cubit<BaseState> {
   final UpdateNewsUseCase updateNewsUseCase;
   final DeleteNewsUseCase deleteNewsUseCase;
   final SearchNewsUseCase searchNewsUseCase;
+  final UploadImageUseCase uploadImageUseCase;
 
   NewsCubit({
     required this.getNewsListUseCase,
@@ -21,6 +25,7 @@ class NewsCubit extends Cubit<BaseState> {
     required this.updateNewsUseCase,
     required this.deleteNewsUseCase,
     required this.searchNewsUseCase,
+    required this.uploadImageUseCase,
   }) : super(InitState());
 
   List<NewsModel> _newsList = [];
@@ -66,6 +71,14 @@ class NewsCubit extends Cubit<BaseState> {
       getNews();
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
+  
+  Future<dynamic> uploadImage(File file) async {
+    try {
+      return await uploadImageUseCase(file);
+    } catch (e) {
+      throw Exception(BlocUtils.getMessageError(e));
     }
   }
 

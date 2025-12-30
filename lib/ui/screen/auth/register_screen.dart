@@ -91,16 +91,16 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
         },
         child: Stack(
           children: [
-            // Gradient Background
+            // Gradient Background - News Theme
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF667eea),
-                    Color(0xFF764ba2),
-                    Color(0xFFf093fb),
+                    Color(0xFF1976D2), // Blue
+                    Color(0xFF1565C0), // Darker Blue
+                    Color(0xFF0D47A1), // Deep Blue
                   ],
                 ),
               ),
@@ -167,7 +167,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
                             children: [
                               CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  Color(0xFF667eea),
+                                  Color(0xFF1976D2),
                                 ),
                               ),
                               SizedBox(height: 16),
@@ -197,7 +197,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
   Widget _buildHeader() {
     return Column(
       children: [
-        // Icon
+        // Icon - News Theme
         Container(
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
@@ -212,16 +212,16 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
             ],
           ),
           child: Icon(
-            Icons.person_add_rounded,
+            Icons.article_rounded,
             size: 50,
-            color: Color(0xFF667eea),
+            color: Color(0xFF1976D2),
           ),
         ),
         SizedBox(height: 20),
         
         // Title
         Text(
-          'Tạo tài khoản mới',
+          'Đăng ký tài khoản',
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
@@ -231,7 +231,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
         ),
         SizedBox(height: 8),
         Text(
-          'Điền thông tin để bắt đầu',
+          'Tham gia cùng chúng tôi để đọc tin tức',
           style: TextStyle(
             fontSize: 16,
             color: Colors.white.withOpacity(0.9),
@@ -294,7 +294,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       decoration: InputDecoration(
         labelText: 'Họ và tên',
         hintText: 'Nhập họ và tên',
-        prefixIcon: Icon(Icons.badge_outlined, color: Color(0xFF667eea)),
+        prefixIcon: Icon(Icons.badge_outlined, color: Color(0xFF1976D2)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -305,7 +305,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(color: Color(0xFF1976D2), width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -335,7 +335,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       decoration: InputDecoration(
         labelText: 'Tên đăng nhập',
         hintText: 'Nhập tên đăng nhập',
-        prefixIcon: Icon(Icons.person_outline, color: Color(0xFF667eea)),
+        prefixIcon: Icon(Icons.person_outline, color: Color(0xFF1976D2)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -346,7 +346,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(color: Color(0xFF1976D2), width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -380,7 +380,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       decoration: InputDecoration(
         labelText: 'Email',
         hintText: 'Nhập email',
-        prefixIcon: Icon(Icons.email_outlined, color: Color(0xFF667eea)),
+        prefixIcon: Icon(Icons.email_outlined, color: Color(0xFF1976D2)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -391,7 +391,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(color: Color(0xFF1976D2), width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -425,7 +425,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       decoration: InputDecoration(
         labelText: 'Mật khẩu',
         hintText: 'Nhập mật khẩu',
-        prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
+        prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF1976D2)),
         suffixIcon: IconButton(
           icon: Icon(
             _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
@@ -447,7 +447,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(color: Color(0xFF1976D2), width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -481,7 +481,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       decoration: InputDecoration(
         labelText: 'Xác nhận mật khẩu',
         hintText: 'Nhập lại mật khẩu',
-        prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
+        prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF1976D2)),
         suffixIcon: IconButton(
           icon: Icon(
             _obscureConfirmPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
@@ -503,7 +503,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(color: Color(0xFF1976D2), width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -534,14 +534,14 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
     return ElevatedButton(
       onPressed: _handleRegister,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF667eea),
+        backgroundColor: Color(0xFF1976D2),
         foregroundColor: Colors.white,
         elevation: 4,
         padding: EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        shadowColor: Color(0xFF667eea).withOpacity(0.5),
+        shadowColor: Color(0xFF1976D2).withOpacity(0.5),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -580,7 +580,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
           child: Text(
             'Đăng nhập',
             style: TextStyle(
-              color: Color(0xFF667eea),
+              color: Color(0xFF1976D2),
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
