@@ -3,16 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
-import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/utils/shared_preference.dart';
+import 'package:intl/intl.dart';
 
 class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<NewsCubit>(
-      create: (_) => getIt.get<NewsCubit>()..getNews(),
+    return BlocProvider<ExpenseCubit>(
+      create: (_) => getIt.get<ExpenseCubit>()..getExpenses(),
       child: MainBody(),
     );
   }
@@ -28,7 +28,17 @@ class _MainBodyState extends State<MainBody> {
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
   UserModel? _currentUser;
-  String? _currentCategory; // Filter theo category
+  String? _currentCategory;
+
+  final List<String> _categories = [
+    'Ăn uống',
+    'Di chuyển',
+    'Mua sắm',
+    'Giải trí',
+    'Học tập',
+    'Y tế',
+    'Khác',
+  ];
 
   @override
   void initState() {
@@ -50,7 +60,7 @@ class _MainBodyState extends State<MainBody> {
   }
 
   void _onSearchChanged(String query) {
-    context.read<NewsCubit>().searchNews(query);
+    context.read<ExpenseCubit>().searchExpenses(query);
   }
 
   void _toggleSearch() {
@@ -58,17 +68,17 @@ class _MainBodyState extends State<MainBody> {
       _isSearching = !_isSearching;
       if (!_isSearching) {
         _searchController.clear();
-        context.read<NewsCubit>().getNews(category: _currentCategory);
+        context.read<ExpenseCubit>().getExpenses(category: _currentCategory);
       }
     });
   }
 
-  void _filterNews(String? category) {
+  void _filterByCategory(String? category) {
     setState(() {
       _currentCategory = category;
     });
-    context.read<NewsCubit>().getNews(category: category);
-    Navigator.pop(context); // Close drawer
+    context.read<ExpenseCubit>().getExpenses(category: category);
+    Navigator.pop(context);
   }
 
   void _handleLogout() async {
@@ -89,90 +99,171 @@ class _MainBodyState extends State<MainBody> {
                 controller: _searchController,
                 autofocus: true,
                 decoration: InputDecoration(
-                  hintText: 'Tìm kiếm sách...',
+                  hintText: 'Tìm kiếm chi tiêu...',
                   border: InputBorder.none,
                   hintStyle: TextStyle(color: Colors.white70),
                 ),
                 style: TextStyle(color: Colors.white),
                 onChanged: _onSearchChanged,
               )
-            : Text('Tin tức'),
+            : Text('Quản lý chi tiêu'),
         actions: [
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search),
             onPressed: _toggleSearch,
           ),
+          PopupMenuButton<String>(
+            icon: Icon(Icons.filter_list),
+            onSelected: _filterByCategory,
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                value: null,
+                child: Text('Tất cả'),
+              ),
+              ...(_categories.map((category) => PopupMenuItem<String>(
+                    value: category,
+                    child: Row(
+                      children: [
+                        Icon(
+                          _getCategoryIcon(category),
+                          color: _getCategoryColor(category),
+                          size: 20,
+                        ),
+                        SizedBox(width: 12),
+                        Text(category),
+                      ],
+                    ),
+                  )).toList()),
+            ],
+          ),
         ],
       ),
       drawer: _buildDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          context.read<NewsCubit>().refreshNews();
-        },
-        child: BlocBuilder<NewsCubit, BaseState>(
-          builder: (context, state) {
-            if (state is LoadingState) {
-              return Center(child: CircularProgressIndicator());
-            }
-
-            if (state is ErrorState) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: Column(
+        children: [
+          BlocBuilder<ExpenseCubit, BaseState>(
+            builder: (context, state) {
+              final cubit = context.read<ExpenseCubit>();
+              return Container(
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey.shade300),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.error_outline, size: 64, color: Colors.red),
-                    SizedBox(height: 16),
-                    Text(
-                      state.data?.toString() ?? 'Đã xảy ra lỗi',
-                      style: TextStyle(fontSize: 16),
-                      textAlign: TextAlign.center,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Tổng chi tiêu',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          NumberFormat('#,###', 'vi_VN').format(cubit.totalAmount) + ' đ',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => context.read<NewsCubit>().getNews(category: _currentCategory),
-                      child: Text('Thử lại'),
-                    ),
+                  
                   ],
                 ),
               );
-            }
+            },
+          ),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                context.read<ExpenseCubit>().refreshExpenses();
+              },
+              child: BlocBuilder<ExpenseCubit, BaseState>(
+                builder: (context, state) {
+                  if (state is LoadingState) {
+                    return Center(child: CircularProgressIndicator());
+                  }
 
-            if (state is LoadedState) {
-              final newsList = state.data as List<NewsModel>;
-
-              if (newsList.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.article_outlined, size: 64, color: Colors.grey),
-                      SizedBox(height: 16),
-                      Text(
-                        'Chưa có tin tức nào',
-                        style: TextStyle(fontSize: 18, color: Colors.grey),
+                  if (state is ErrorState) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.error_outline, size: 64, color: Colors.red),
+                          SizedBox(height: 16),
+                          Text(
+                            state.data?.toString() ?? 'Đã xảy ra lỗi',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () => context.read<ExpenseCubit>().getExpenses(category: _currentCategory),
+                            child: Text('Thử lại'),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Tin tức sẽ được hiển thị ở đây',
-                        style: TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                );
-              }
+                    );
+                  }
 
-              return ListView.builder(
-                padding: EdgeInsets.all(16),
-                itemCount: newsList.length,
-                itemBuilder: (context, index) {
-                  return _buildNewsCard(newsList[index]);
+                  if (state is LoadedState) {
+                    final expensesList = state.data as List<ExpenseModel>;
+
+                    if (expensesList.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.money_off, size: 64, color: Colors.grey),
+                            SizedBox(height: 16),
+                            Text(
+                              'Chưa có chi tiêu nào',
+                              style: TextStyle(fontSize: 18, color: Colors.grey),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Nhấn nút + để thêm chi tiêu',
+                              style: TextStyle(fontSize: 14, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      padding: EdgeInsets.all(16),
+                      itemCount: expensesList.length,
+                      itemBuilder: (context, index) {
+                        return _buildExpenseCard(context, expensesList[index]);
+                      },
+                    );
+                  }
+
+                  return Center(child: Text('Tải danh sách chi tiêu...'));
                 },
-              );
-            }
-
-            return Center(child: Text('Tải danh sách tin tức...'));
-          },
-        ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.pushNamed(context, Routes.expenseFormScreen);
+          if (result == true) {
+            context.read<ExpenseCubit>().refreshExpenses();
+          }
+        },
+        child: Icon(Icons.add),
+        tooltip: 'Thêm chi tiêu',
       ),
     );
   }
@@ -205,85 +296,93 @@ class _MainBodyState extends State<MainBody> {
                   end: Alignment.bottomRight,
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 12,
-                          offset: Offset(0, 4),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 3),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 12,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.person,
+                          size: 48,
+                          color: Theme.of(context).primaryColor,
                         ),
-                      ],
-                    ),
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.person,
-                        size: 48,
-                        color: Theme.of(context).primaryColor,
                       ),
                     ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    _currentUser?.userName ?? 'User',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                    SizedBox(height: 16),
+                    Text(
+                      _currentUser?.userName ?? 'User',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    _currentUser?.name ?? '',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 14,
+                    SizedBox(height: 4),
+                    Text(
+                      _currentUser?.name ?? '',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 14,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 8),
             _buildDrawerItem(
-              icon: Icons.article,
-              title: 'Tất cả tin tức',
+              icon: Icons.account_balance_wallet,
+              title: 'Tất cả chi tiêu',
               isSelected: _currentCategory == null,
-              onTap: () => _filterNews(null),
+              onTap: () => _filterByCategory(null),
             ),
-            _buildDrawerItem(
-              icon: Icons.category,
-              title: 'Theo danh mục',
-              isSelected: false,
-              onTap: () {
-                // Có thể mở dialog chọn category
-                Navigator.pop(context);
-              },
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            //   child: Text(
+            //     'Danh mục',
+            //     style: TextStyle(
+            //       fontSize: 12,
+            //       fontWeight: FontWeight.bold,
+            //       color: Colors.grey[600],
+            //     ),
+            //   ),
+            // ),
+            // ...(_categories.map((category) => _buildDrawerItem(
+            //       icon: _getCategoryIcon(category),
+            //       title: category,
+            //       isSelected: _currentCategory == category,
+            //       onTap: () => _filterByCategory(category),
+            //       iconColor: _getCategoryColor(category),
+            //     )).toList()),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Divider(height: 1),
             ),
-            _buildDrawerItem(
-              icon: Icons.add_circle_outline,
-              title: 'Tạo tin tức mới',
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, Routes.newsCreateEditScreen);
-              },
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Divider(height: 1),
-            ),
+            // _buildDrawerItem(
+            //   icon: Icons.library_books,
+            //   title: 'Thư viện sách',
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.pushNamed(context, Routes.libraryScreen);
+            //   },
+            // ),
             _buildDrawerItem(
               icon: Icons.logout,
               title: 'Đăng xuất',
@@ -344,340 +443,214 @@ class _MainBodyState extends State<MainBody> {
     );
   }
 
-  String _getImageUrl(String? imagePath) {
-    if (imagePath == null || imagePath.isEmpty) return '';
-    
-    // Nếu đã là URL đầy đủ thì trả về luôn
-    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-      return imagePath;
-    }
-    
-    // Nếu không, thêm base URL
-    return '${ApiConstant.apiHostStorage}$imagePath';
-  }
-
-  void _openNewsDetail(NewsModel news) {
-    Navigator.pushNamed(
-      context,
-      Routes.newsDetailScreen,
-      arguments: news,
-    );
-  }
-
-  void _showNewsOptions(NewsModel news) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+  Widget _buildExpenseCard(BuildContext context, ExpenseModel expense) {
+    return Card(
+      margin: EdgeInsets.only(bottom: 12),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () {},
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Handle bar
               Container(
-                width: 40,
-                height: 4,
+                padding: EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
+                  color: _getCategoryColor(expense.category).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  _getCategoryIcon(expense.category),
+                  color: _getCategoryColor(expense.category),
+                  size: 28,
                 ),
               ),
-              SizedBox(height: 20),
-              
-              // News info
-              Row(
-                children: [
-                  Container(
-                    width: 60,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.grey[200],
-                    ),
-                    child: news.hasImage
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              _getImageUrl(news.imageUrl),
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(Icons.article, color: Colors.grey);
-                              },
-                            ),
-                          )
-                        : Icon(Icons.article, color: Colors.grey),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          news.displayTitle,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Text(
+                            expense.displayDescription,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: 4),
                         Text(
-                          news.displayAuthor,
+                          expense.displayAmount,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: _getCategoryColor(expense.category).withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            expense.displayCategory,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _getCategoryColor(expense.category),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Icon(Icons.calendar_today, size: 14, color: Colors.grey),
+                        SizedBox(width: 4),
+                        Text(
+                          expense.expenseDateFormatted,
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[600],
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                         ),
+                      ],
+                    ),
+                    if (expense.hasNote) ...[
+                      SizedBox(height: 8),
+                      Text(
+                        expense.note ?? '',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              SizedBox(width: 8),
+              PopupMenuButton<String>(
+                onSelected: (value) async {
+                  if (value == 'edit') {
+                    final result = await Navigator.pushNamed(
+                      context,
+                      Routes.expenseFormScreen,
+                      arguments: expense,
+                    );
+                    if (result == true) {
+                      context.read<ExpenseCubit>().refreshExpenses();
+                    }
+                  } else if (value == 'delete') {
+                    _showDeleteConfirmDialog(context, expense);
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 'edit',
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit, size: 20),
+                        SizedBox(width: 8),
+                        Text('Chỉnh sửa'),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete, size: 20, color: Colors.red),
+                        SizedBox(width: 8),
+                        Text('Xóa', style: TextStyle(color: Colors.red)),
                       ],
                     ),
                   ),
                 ],
               ),
-              
-              SizedBox(height: 24),
-              
-              // Action buttons
-              _buildActionButton(
-                icon: Icons.info_outline_rounded,
-                label: 'Xem chi tiết',
-                color: Theme.of(context).primaryColor,
-                onTap: () {
-                  Navigator.pop(context);
-                  _openNewsDetail(news);
-                },
-              ),
-              
-              SizedBox(height: 12),
-              
-              _buildActionButton(
-                icon: Icons.close_rounded,
-                label: 'Đóng',
-                color: Colors.grey[700]!,
-                onTap: () => Navigator.pop(context),
-                isOutlined: true,
-              ),
-              
-              SizedBox(height: MediaQuery.of(context).padding.bottom),
             ],
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-    bool isOutlined = false,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-        decoration: BoxDecoration(
-          color: isOutlined ? Colors.white : color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(16),
-          border: isOutlined 
-              ? Border.all(color: Colors.grey[300]!, width: 1.5)
-              : Border.all(color: color.withOpacity(0.3), width: 1),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: isOutlined 
-                    ? Colors.grey[100]
-                    : color.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 24,
-              ),
-            ),
-            SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: isOutlined ? Colors.grey[700] : color,
-                ),
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: isOutlined ? Colors.grey[400] : color.withOpacity(0.5),
-              size: 16,
-            ),
-          ],
         ),
       ),
     );
   }
 
-  Widget _buildNewsCard(NewsModel news) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 12,
-            offset: Offset(0, 4),
+  void _showDeleteConfirmDialog(BuildContext context, ExpenseModel expense) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('Xác nhận xóa'),
+        content: Text('Bạn có chắc chắn muốn xóa chi tiêu "${expense.displayDescription}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text('Hủy'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              context.read<ExpenseCubit>().deleteExpense(expense.id.toString());
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Đã xóa chi tiêu')),
+              );
+            },
+            child: Text('Xóa', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),
-      child: Material(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        child: InkWell(
-          onTap: () {
-            _openNewsDetail(news);
-          },
-          onLongPress: () {
-            _showNewsOptions(news);
-          },
-          borderRadius: BorderRadius.circular(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // News Image
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
-                  color: Colors.grey[200],
-                ),
-                child: news.hasImage
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.horizontal(left: Radius.circular(16)),
-                        child: Image.network(
-                          _getImageUrl(news.imageUrl),
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Center(
-                              child: Icon(Icons.article, size: 32, color: Colors.grey[400]),
-                            );
-                          },
-                        ),
-                      )
-                    : Center(
-                        child: Icon(Icons.article, size: 32, color: Colors.grey[400]),
-                      ),
-              ),
-              // News Info
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            news.displayTitle,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              height: 1.3,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 6),
-                          if (news.summary != null && news.summary!.isNotEmpty)
-                            Text(
-                              news.summary!,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
-                                height: 1.4,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Row(
-                              children: [
-                                Icon(Icons.person_outline, size: 14, color: Colors.grey[600]),
-                                SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    news.displayAuthor,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey[600],
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
-                          SizedBox(width: 4),
-                          Text(
-                            news.publishedDateFormatted,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (news.category != null) ...[
-                        SizedBox(height: 6),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            news.displayCategory,
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
+  }
+
+  Color _getCategoryColor(String? category) {
+    switch (category) {
+      case 'Ăn uống':
+        return Colors.orange;
+      case 'Di chuyển':
+        return Colors.blue;
+      case 'Mua sắm':
+        return Colors.purple;
+      case 'Giải trí':
+        return Colors.pink;
+      case 'Học tập':
+        return Colors.green;
+      case 'Y tế':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  IconData _getCategoryIcon(String? category) {
+    switch (category) {
+      case 'Ăn uống':
+        return Icons.restaurant;
+      case 'Di chuyển':
+        return Icons.directions_car;
+      case 'Mua sắm':
+        return Icons.shopping_bag;
+      case 'Giải trí':
+        return Icons.movie;
+      case 'Học tập':
+        return Icons.school;
+      case 'Y tế':
+        return Icons.local_hospital;
+      default:
+        return Icons.attach_money;
+    }
   }
 }

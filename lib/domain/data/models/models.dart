@@ -6,3 +6,4 @@ export 'chapter_model.dart';
 export 'bookmark_model.dart';
 export 'reading_progress_model.dart';
 export 'news_model.dart';
+export 'expense_model.dart';

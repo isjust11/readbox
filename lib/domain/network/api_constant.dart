@@ -37,4 +37,11 @@ class ApiConstant {
   static final createNews = "news";
   static final updateNews = "news";
   static final deleteNews = "news";
+
+  // Expense endpoints
+  static final getExpensesList = "expenses";
+  static final getExpense = "expenses";
+  static final createExpense = "expenses";
+  static final updateExpense = "expenses";
+  static final deleteExpense = "expenses";
 }

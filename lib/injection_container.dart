@@ -13,6 +13,11 @@ import 'package:readbox/domain/usecases/update_news_usecase.dart';
 import 'package:readbox/domain/usecases/delete_news_usecase.dart';
 import 'package:readbox/domain/usecases/search_news_usecase.dart';
 import 'package:readbox/domain/usecases/upload_image_usecase.dart';
+import 'package:readbox/domain/usecases/get_expense_list_usecase.dart';
+import 'package:readbox/domain/usecases/add_expense_usecase.dart';
+import 'package:readbox/domain/usecases/update_expense_usecase.dart';
+import 'package:readbox/domain/usecases/delete_expense_usecase.dart';
+import 'package:readbox/domain/usecases/search_expenses_usecase.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -88,6 +93,15 @@ void registerCubit(GetIt getIt) {
       uploadImageUseCase: getIt.get<UploadImageUseCase>(),
     ),
   );
+  getIt.registerFactory(
+    () => ExpenseCubit(
+      getExpenseListUseCase: getIt.get<GetExpenseListUseCase>(),
+      addExpenseUseCase: getIt.get<AddExpenseUseCase>(),
+      updateExpenseUseCase: getIt.get<UpdateExpenseUseCase>(),
+      deleteExpenseUseCase: getIt.get<DeleteExpenseUseCase>(),
+      searchExpensesUseCase: getIt.get<SearchExpensesUseCase>(),
+    ),
+  );
 }
 
 void registerRepositories(GetIt getIt) {
@@ -106,6 +120,9 @@ void registerRepositories(GetIt getIt) {
   getIt.registerLazySingleton(
     () => NewsRepository(remoteDataSource: getIt.get<NewsRemoteDataSource>()),
   );
+  getIt.registerLazySingleton(
+    () => ExpenseRepository(remoteDataSource: getIt.get<ExpenseRemoteDataSource>()),
+  );
 }
 
 void registerUseCases(GetIt getIt) {
@@ -120,6 +137,11 @@ void registerUseCases(GetIt getIt) {
   getIt.registerLazySingleton(() => DeleteNewsUseCase(getIt.get<NewsRepository>()));
   getIt.registerLazySingleton(() => SearchNewsUseCase(getIt.get<NewsRepository>()));
   getIt.registerLazySingleton(() => UploadImageUseCase(getIt.get<NewsRepository>()));
+  getIt.registerLazySingleton(() => GetExpenseListUseCase(getIt.get<ExpenseRepository>()));
+  getIt.registerLazySingleton(() => AddExpenseUseCase(getIt.get<ExpenseRepository>()));
+  getIt.registerLazySingleton(() => UpdateExpenseUseCase(getIt.get<ExpenseRepository>()));
+  getIt.registerLazySingleton(() => DeleteExpenseUseCase(getIt.get<ExpenseRepository>()));
+  getIt.registerLazySingleton(() => SearchExpensesUseCase(getIt.get<ExpenseRepository>()));
 }
 
 void registerDataSource(GetIt getIt) {
@@ -129,6 +151,7 @@ void registerDataSource(GetIt getIt) {
   getIt.registerLazySingleton(() => BookRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => AdminRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => NewsRemoteDataSource(network: getIt.get()));
+  getIt.registerLazySingleton(() => ExpenseRemoteDataSource(network: getIt.get()));
 }
 
 void registerNetwork(GetIt getIt) {

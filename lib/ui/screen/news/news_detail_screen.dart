@@ -41,7 +41,7 @@ class _NewsDetailBodyState extends State<NewsDetailBody> {
   void _editNews() {
     Navigator.pushNamed(
       context,
-      Routes.newsCreateEditScreen,
+      "Routes.newsCreateEditScreen",
       arguments: _news,
     ).then((value) {
       if (value == true) {

@@ -59,7 +59,7 @@ class _NewsListBodyState extends State<NewsListBody> {
         IconButton(
           icon: const Icon(Icons.add),
           onPressed: () {
-            Navigator.pushNamed(context, Routes.newsCreateEditScreen);
+            Navigator.pushNamed(context, "Routes.newsCreateEdit");
           },
         ),
       ],
@@ -166,7 +166,7 @@ class _NewsCard extends StatelessWidget {
         onTap: () {
           Navigator.pushNamed(
             context,
-            Routes.newsDetailScreen,
+            "Routes.newsDetailScreen",
             arguments: news,
           );
         },
