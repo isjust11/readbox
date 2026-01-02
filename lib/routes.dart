@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:readbox/ui/screen/book/pdf_viewer_demo_screen.dart';
+import 'package:readbox/ui/screen/demo/tts_demo_screen.dart';
 import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:page_transition/page_transition.dart';
@@ -20,6 +22,9 @@ class Routes {
   static const String pdfViewerWithSelectionScreen = "/pdfViewerWithSelectionScreen";
   static const String pdfViewerAdvancedScreen = "/pdfViewerAdvancedScreen";
   static const String adminPdfScannerScreen = "/adminPdfScannerScreen";
+  // PDF text to speech screen
+  static const String pdfTextToSpeechScreen = "/pdfTextToSpeechScreen";
+  static const String ttsDemoScreen = "/ttsDemoScreen";
   //init screen name
   static String initScreen() => splashScreen;
 
@@ -45,6 +50,8 @@ class Routes {
         return PageTransition(child: LocalLibraryScreen(), type: PageTransitionType.fade);
       case adminUploadScreen:
         return PageTransition(child: AdminUploadScreen(), type: PageTransitionType.fade);
+      case pdfTextToSpeechScreen:
+        return PageTransition(child: PdfViewerDemoScreen(), type: PageTransitionType.fade);
       case bookDetailScreen:
         final book = settings.arguments;
         return PageTransition(
@@ -76,6 +83,11 @@ class Routes {
             fileUrl: args['fileUrl'] as String,
             title: args['title'] as String,
           ),
+          type: PageTransitionType.rightToLeft,
+        );
+      case ttsDemoScreen:
+        return PageTransition(
+          child: TTSDemoScreen(),
           type: PageTransitionType.rightToLeft,
         );
       default:

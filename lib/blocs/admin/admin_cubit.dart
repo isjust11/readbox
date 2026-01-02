@@ -61,7 +61,7 @@ class AdminCubit extends Cubit<BaseState> {
           msgError: 'Cover image uploaded successfully',
         ));
       } else {
-        emit(ErrorState(BlocUtils.getMessageError(response.errMessage ?? 'Upload failed'),));
+        emit(ErrorState(BlocUtils.getMessageError(response.errMessage),));
       }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));

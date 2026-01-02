@@ -55,6 +55,7 @@ dependencies:
   # epubx: ^3.0.0  # EPUB reader - temporarily disabled due to dependency conflict
   pdfx: ^2.0.0  # PDF reader
   syncfusion_flutter_pdfviewer: ^28.1.33  # PDF viewer with text selection
+  syncfusion_flutter_pdf: ^28.1.33  # PDF parsing and text extraction
   sqflite: ^2.3.0  # Local database
   path_provider: ^2.1.0  # File path management
   
@@ -64,6 +65,7 @@ dependencies:
   uuid: ^4.0.0  # UUID generation
   file_picker: ^10.3.7
   image_picker: ^1.0.7
+  flutter_tts: ^4.0.2  # Text-to-speech for ebook reading
 
 dev_dependencies:
   flutter_test:

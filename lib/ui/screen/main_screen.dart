@@ -310,6 +310,22 @@ class _MainBodyState extends State<MainBody> {
                 Navigator.pushNamed(context, Routes.adminUploadScreen);
               },
             ),
+            _buildDrawerItem(
+              icon: Icons.book,
+              title: 'Demo PDF Viewer',
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, Routes.pdfTextToSpeechScreen);
+              },
+            ),
+            _buildDrawerItem(
+              icon: Icons.volume_up_rounded,
+              title: 'Demo Text-to-Speech',
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, Routes.ttsDemoScreen);
+              },
+            ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Divider(height: 1),

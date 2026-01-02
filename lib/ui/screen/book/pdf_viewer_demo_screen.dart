@@ -10,7 +10,7 @@ class PdfViewerDemoScreen extends StatelessWidget {
   static const String samplePdf1 = 
       'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
   static const String samplePdf2 = 
-      'https://www.africau.edu/images/default/sample.pdf';
+      'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf';
   static const String samplePdf3 = 
       'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf';
 
@@ -400,5 +400,8 @@ class PdfViewerDemoScreen extends StatelessWidget {
     );
   }
 }
+
+
+
 
 

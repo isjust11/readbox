@@ -26,89 +26,25 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
   Future<void> _requestPermissions() async {
     // Request storage permissions
     if (Platform.isAndroid) {
-      // Check current status first
-      final manageStorageStatus = await Permission.manageExternalStorage.status;
-      debugPrint('Android manageExternalStorage status: $manageStorageStatus');
-      
-      if (manageStorageStatus.isGranted) {
-        setState(() => _hasPermission = true);
-        _scanForPdfFiles();
-        return;
-      }
-      
-      // Request permission
       final status = await Permission.manageExternalStorage.request();
-      debugPrint('Android manageExternalStorage request result: $status');
-      
       if (status.isGranted) {
         setState(() => _hasPermission = true);
         _scanForPdfFiles();
-      } else if (status.isPermanentlyDenied) {
-        // Permission permanently denied, need to open settings
-        setState(() => _hasPermission = false);
-        if (mounted) {
-          _showPermissionDeniedDialog();
-        }
       } else {
-        // Try fallback to regular storage permission (for Android < 13)
-        final storageStatus = await Permission.storage.status;
-        debugPrint('Android storage status: $storageStatus');
-        
+        // Fallback to regular storage permission
+        final storageStatus = await Permission.storage.request();
+        setState(() => _hasPermission = storageStatus.isGranted);
         if (storageStatus.isGranted) {
-          setState(() => _hasPermission = true);
           _scanForPdfFiles();
-        } else {
-          final requestedStorageStatus = await Permission.storage.request();
-          debugPrint('Android storage request result: $requestedStorageStatus');
-          
-          setState(() => _hasPermission = requestedStorageStatus.isGranted);
-          if (requestedStorageStatus.isGranted) {
-            _scanForPdfFiles();
-          } else if (requestedStorageStatus.isPermanentlyDenied && mounted) {
-            _showPermissionDeniedDialog();
-          }
         }
       }
     } else if (Platform.isIOS) {
-      // On iOS, app documents directory doesn't need permission
-      // We can scan files in app's own directories without permission
-      setState(() => _hasPermission = true);
-      _scanForPdfFiles();
-      
-      // Note: If you need to access files outside app directory, use file_picker
-      // which handles permissions automatically
+      final status = await Permission.photos.request();
+      setState(() => _hasPermission = status.isGranted);
+      if (status.isGranted) {
+        _scanForPdfFiles();
+      }
     }
-  }
-
-  Future<void> _showPermissionDeniedDialog() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Cần quyền truy cập'),
-          content: const Text(
-            'Ứng dụng cần quyền truy cập bộ nhớ để tìm kiếm file. '
-            'Vui lòng cấp quyền trong Settings.',
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Hủy'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Mở Settings'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                openAppSettings();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Future<void> _scanForPdfFiles() async {

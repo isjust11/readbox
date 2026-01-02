@@ -53,5 +53,9 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This app needs access to speech recognition for text-to-speech features</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs microphone access for text-to-speech features</string>
 </dict>
 </plist>

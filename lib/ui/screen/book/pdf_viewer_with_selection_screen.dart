@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:readbox/ui/widget/tts_control_widget.dart';
+import 'package:readbox/utils/text_to_speech_service.dart';
+import 'package:readbox/utils/pdf_text_extractor.dart';
+import 'dart:async';
+import 'dart:typed_data';
 
 /// PDF Viewer với tính năng chọn text, copy và annotations
 /// Sử dụng Syncfusion PDF Viewer
@@ -29,9 +34,91 @@ class _PdfViewerWithSelectionScreenState
   bool _isSearchVisible = false;
   bool _showToolbar = true;
   String? _selectedText;
+  
+  // TTS related
+  final TextToSpeechService _ttsService = TextToSpeechService();
+  bool _isTTSActive = false;
+  bool _showTTSControls = false;
+  bool _isReadingContinuous = false;
+  Timer? _ttsProgressTimer;
+  
+  // PDF data for text extraction
+  Uint8List? _pdfBytes;
+  bool _isLoadingPdf = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeTTS();
+    _loadPdfBytes();
+  }
+
+  /// Load PDF bytes để sử dụng cho text extraction
+  Future<void> _loadPdfBytes() async {
+    setState(() {
+      _isLoadingPdf = true;
+    });
+
+    try {
+      final bytes = await PdfTextExtractorService.downloadPdf(widget.fileUrl);
+      setState(() {
+        _pdfBytes = bytes;
+        _isLoadingPdf = false;
+      });
+      debugPrint('PDF bytes loaded: ${bytes?.length} bytes');
+    } catch (e) {
+      debugPrint('Error loading PDF bytes: $e');
+      setState(() {
+        _isLoadingPdf = false;
+      });
+    }
+  }
+
+  Future<void> _initializeTTS() async {
+    await _ttsService.initialize();
+    _setupTTSCallbacks();
+  }
+
+  void _setupTTSCallbacks() {
+    _ttsService.onSpeechStart = (_) {
+      setState(() {
+        _isTTSActive = true;
+      });
+    };
+
+    _ttsService.onSpeechComplete = (_) {
+      setState(() {
+        _isTTSActive = false;
+      });
+      
+      // Nếu đang đọc liên tục, chuyển sang trang tiếp theo
+      if (_isReadingContinuous && _currentPage < _totalPages) {
+        _readNextPage();
+      } else {
+        _isReadingContinuous = false;
+        _ttsProgressTimer?.cancel();
+      }
+    };
+
+    _ttsService.onSpeechError = (error) {
+      setState(() {
+        _isTTSActive = false;
+        _isReadingContinuous = false;
+      });
+      _ttsProgressTimer?.cancel();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Lỗi đọc: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    };
+  }
 
   @override
   void dispose() {
+    _ttsService.stop();
+    _ttsProgressTimer?.cancel();
     _pdfViewerController.dispose();
     super.dispose();
   }
@@ -108,6 +195,9 @@ class _PdfViewerWithSelectionScreenState
       // Floating action buttons
       floatingActionButton: _buildFloatingButtons(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      
+      // TTS Controls (hiện ở bottom khi đang đọc)
+      bottomSheet: _showTTSControls ? _buildTTSControls() : null,
     );
   }
 
@@ -222,6 +312,19 @@ class _PdfViewerWithSelectionScreenState
                 'Ẩn thanh công cụ',
                 Colors.purple,
               ),
+              PopupMenuDivider(),
+              _buildMenuItem(
+                'read_page',
+                Icons.volume_up,
+                'Đọc trang này',
+                Colors.orange,
+              ),
+              _buildMenuItem(
+                'read_continuous',
+                Icons.play_circle_outline,
+                'Đọc liên tục',
+                Colors.teal,
+              ),
             ],
           ),
         ),
@@ -274,6 +377,12 @@ class _PdfViewerWithSelectionScreenState
         setState(() {
           _showToolbar = false;
         });
+        break;
+      case 'read_page':
+        _readCurrentPage();
+        break;
+      case 'read_continuous':
+        _readContinuousPages();
         break;
     }
   }
@@ -415,6 +524,21 @@ class _PdfViewerWithSelectionScreenState
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // TTS button - đọc text đã chọn hoặc trang hiện tại
+        Padding(
+          padding: EdgeInsets.only(bottom: 16),
+          child: FloatingActionButton(
+            heroTag: 'tts',
+            onPressed: _toggleTTS,
+            backgroundColor: _isTTSActive ? Colors.red : Colors.green,
+            child: Icon(
+              _isTTSActive ? Icons.stop : Icons.volume_up,
+              color: Colors.white,
+            ),
+            tooltip: _isTTSActive ? 'Dừng đọc' : 'Đọc text',
+          ),
+        ),
+        
         // Copy selected text button (hiện khi có text được chọn)
         if (_selectedText != null && _selectedText!.isNotEmpty)
           Padding(
@@ -563,6 +687,223 @@ class _PdfViewerWithSelectionScreenState
             ),
           ],
         );
+      },
+    );
+  }
+
+  // ========== TTS Functions ==========
+
+  /// Toggle TTS - đọc text đã chọn hoặc dừng
+  Future<void> _toggleTTS() async {
+    if (_isTTSActive) {
+      await _ttsService.stop();
+      setState(() {
+        _isTTSActive = false;
+        _isReadingContinuous = false;
+        _showTTSControls = false;
+      });
+      _ttsProgressTimer?.cancel();
+    } else {
+      // Nếu có text đã chọn, đọc text đó
+      if (_selectedText != null && _selectedText!.isNotEmpty) {
+        await _ttsService.speak(_selectedText!);
+        setState(() {
+          _showTTSControls = true;
+        });
+      } else {
+        // Nếu không có text chọn, đọc trang hiện tại
+        await _readCurrentPage();
+      }
+    }
+  }
+
+
+  /// Đọc trang hiện tại
+  Future<void> _readCurrentPage() async {
+    try {
+      // Ưu tiên dùng text đã chọn nếu có
+      String? textToRead = _selectedText;
+      
+      // Nếu không có text chọn, thử trích xuất từ trang
+      if (textToRead == null || textToRead.isEmpty) {
+        textToRead = await _extractPageText(_currentPage);
+      }
+      
+      if (textToRead != null && textToRead.isNotEmpty) {
+        await _ttsService.speak(textToRead);
+        setState(() {
+          _showTTSControls = true;
+        });
+        
+        // Hiển thị thông báo thành công
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text('Đang đọc ${textToRead.length} ký tự từ trang $_currentPage'),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Không thể trích xuất text từ trang này'),
+                SizedBox(height: 4),
+                Text(
+                  'Vui lòng chọn text bằng tay để đọc',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 3),
+            action: SnackBarAction(
+              label: 'OK',
+              textColor: Colors.white,
+              onPressed: () {},
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Lỗi khi đọc trang: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  /// Đọc trang tiếp theo (dùng cho đọc liên tục)
+  Future<void> _readNextPage() async {
+    if (_currentPage >= _totalPages) {
+      setState(() {
+        _isReadingContinuous = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Đã đọc hết tài liệu'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      return;
+    }
+
+    // Chuyển sang trang tiếp theo
+    _pdfViewerController.nextPage();
+    
+    // Đợi một chút để trang load
+    await Future.delayed(const Duration(milliseconds: 500));
+    
+    // Đọc trang mới
+    try {
+      final pageText = await _extractPageText(_currentPage + 1);
+      if (pageText != null && pageText.isNotEmpty) {
+        await _ttsService.speak(pageText);
+      } else {
+        // Nếu trang không có text, chuyển tiếp
+        if (_currentPage < _totalPages) {
+          _readNextPage();
+        }
+      }
+    } catch (e) {
+      debugPrint('Error reading next page: $e');
+      if (_currentPage < _totalPages) {
+        _readNextPage();
+      }
+    }
+  }
+
+  /// Đọc liên tục từ trang hiện tại
+  Future<void> _readContinuousPages() async {
+    setState(() {
+      _isReadingContinuous = true;
+      _showTTSControls = true;
+    });
+
+    // Bắt đầu đọc từ trang hiện tại
+    await _readCurrentPage();
+  }
+
+  /// Trích xuất text từ một trang PDF
+  Future<String?> _extractPageText(int pageNumber) async {
+    // Nếu có text đã chọn, ưu tiên dùng text đó
+    if (_selectedText != null && _selectedText!.isNotEmpty) {
+      return _selectedText;
+    }
+
+    // Nếu chưa load PDF bytes, thử load
+    if (_pdfBytes == null) {
+      if (_isLoadingPdf) {
+        // Đang load, đợi một chút
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (_pdfBytes == null) {
+          return null;
+        }
+      } else {
+        // Chưa load, load ngay
+        await _loadPdfBytes();
+        if (_pdfBytes == null) {
+          return null;
+        }
+      }
+    }
+
+    try {
+      // Sử dụng PdfTextExtractorService để trích xuất text
+      // Page number trong Syncfusion bắt đầu từ 1, nhưng extractor dùng 0-based
+      final text = await PdfTextExtractorService.extractTextFromPage(
+        _pdfBytes!,
+        pageNumber - 1, // Convert to 0-based index
+      );
+      
+      if (text != null && text.isNotEmpty) {
+        debugPrint('Extracted ${text.length} characters from page $pageNumber');
+        return text;
+      }
+      
+      return null;
+    } catch (e) {
+      debugPrint('Error extracting page text: $e');
+      return null;
+    }
+  }
+
+  /// Build TTS Controls widget
+  Widget? _buildTTSControls() {
+    if (!_showTTSControls) return null;
+
+    String textToRead = '';
+    if (_selectedText != null && _selectedText!.isNotEmpty) {
+      textToRead = _selectedText!;
+    }
+
+    return TTSControlWidget(
+      textToRead: textToRead,
+      onStart: () {
+        setState(() {
+          _isTTSActive = true;
+        });
+      },
+      onStop: () {
+        setState(() {
+          _isTTSActive = false;
+          _isReadingContinuous = false;
+          _showTTSControls = false;
+        });
+        _ttsProgressTimer?.cancel();
       },
     );
   }
