@@ -29,4 +29,8 @@ class AuthRepository {
     await localDataSource.saveUserInfo(authenModel.user ?? UserModel.fromJson({}));
     return authenModel;
   }
+
+  Future<Map<String, dynamic>> resendPin(Map<String, dynamic> param) async {
+    return await remoteDataSource.resendPin(param);
+  }
 }

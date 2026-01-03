@@ -91,13 +91,16 @@ class Network {
       case DioErrorType.connectTimeout:
       case DioErrorType.receiveTimeout:
       case DioErrorType.sendTimeout:
-      case DioErrorType.other:
         return ApiResponse.error(
           AppLocalizations.current.error_connection
         );
-      default:
-        return ApiResponse.error(e.message, data: getDataReplace(e.response?.data), code: e.response?.statusCode);
-    }
+      case DioErrorType.other:
+        return ApiResponse.error(
+          AppLocalizations.current.error_common
+        );
+      case DioErrorType.response:
+        return ApiResponse.error(e.response?.data['message'] ?? '', data: getDataReplace(e.response?.data), code: e.response?.statusCode);
+      }
   }
 
   ApiResponse getApiResponse(Response response) {

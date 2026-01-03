@@ -5,6 +5,7 @@ class ApiConstant {
   static final login = "auth/login";
   static final register = "auth/register";
   static final verifyPin = "auth/verify-pin";
+  static final resendPin = "auth/resend-pin";
   static final getUserInfo = "";
   
   // Book endpoints

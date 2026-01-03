@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:readbox/ui/screen/book/pdf_viewer_demo_screen.dart';
-import 'package:readbox/ui/screen/demo/tts_demo_screen.dart';
 import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:page_transition/page_transition.dart';
@@ -83,11 +82,6 @@ class Routes {
             fileUrl: args['fileUrl'] as String,
             title: args['title'] as String,
           ),
-          type: PageTransitionType.rightToLeft,
-        );
-      case ttsDemoScreen:
-        return PageTransition(
-          child: TTSDemoScreen(),
           type: PageTransitionType.rightToLeft,
         );
       default:

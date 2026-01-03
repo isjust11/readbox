@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readbox/blocs/auth/resend_pin_cubit.dart';
 import 'package:readbox/blocs/auth/verify_pin_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
@@ -16,8 +18,15 @@ class ConfirmPinScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<VerifyPinCubit>(
-      create: (_) => VerifyPinCubit(repository: getIt.get<AuthRepository>()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<VerifyPinCubit>(
+          create: (_) => VerifyPinCubit(repository: getIt.get<AuthRepository>()),
+        ),
+        BlocProvider<ResendPinCubit>(
+          create: (_) => ResendPinCubit(repository: getIt.get<AuthRepository>()),
+        ),
+      ],
       child: ConfirmPinBody(email: email),
     );
   }
@@ -37,6 +46,11 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  
+  // Resend PIN timer variables
+  Timer? _resendTimer;
+  int _resendCountdown = 60;
+  bool _canResend = false;
 
   @override
   void initState() {
@@ -54,10 +68,14 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNodes[0].requestFocus();
     });
+    
+    // Start resend timer
+    _startResendTimer();
   }
 
   @override
   void dispose() {
+    _resendTimer?.cancel();
     _animationController.dispose();
     for (var controller in _pinControllers) {
       controller.dispose();
@@ -98,30 +116,84 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
     _focusNodes[0].requestFocus();
   }
 
+  void _startResendTimer() {
+    setState(() {
+      _resendCountdown = 60;
+      _canResend = false;
+    });
+    
+    _resendTimer?.cancel();
+    _resendTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_resendCountdown > 0) {
+          _resendCountdown--;
+        } else {
+          _canResend = true;
+          timer.cancel();
+        }
+      });
+    });
+  }
+
+  void _resendPin() {
+    if (_canResend) {
+      BlocProvider.of<ResendPinCubit>(context).resendPin(email: widget.email);
+      _startResendTimer();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<VerifyPinCubit, BaseState>(
-        listener: (context, state) {
-          if (state is LoadedState) {
-            getIt.get<UserInfoCubit>().getUserInfo();
-            Navigator.pushReplacementNamed(context, Routes.mainScreen);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Xác thực thành công!'),
-                backgroundColor: Colors.green,
-              ),
-            );
-          } else if (state is ErrorState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(BlocUtils.getMessageError(state.data)),
-                backgroundColor: Colors.red,
-              ),
-            );
-            _clearPin();
-          }
-        },
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<VerifyPinCubit, BaseState>(
+            listener: (context, state) {
+              if (state is LoadedState) {
+                getIt.get<UserInfoCubit>().getUserInfo();
+                Navigator.pushReplacementNamed(context, Routes.mainScreen);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Xác thực thành công!'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              } else if (state is ErrorState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(BlocUtils.getMessageError(state.data)),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                _clearPin();
+              }
+            },
+          ),
+          BlocListener<ResendPinCubit, BaseState>(
+            listener: (context, state) {
+              if (state is LoadedState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Mã PIN đã được gửi lại thành công!'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              } else if (state is ErrorState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(BlocUtils.getMessageError(state.data)),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                // Reset timer even on error so user can try again
+                setState(() {
+                  _canResend = true;
+                  _resendCountdown = 0;
+                });
+              }
+            },
+          ),
+        ],
         child: Stack(
           children: [
             // Gradient Background
@@ -306,6 +378,10 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
             
             // Clear Button
             _buildClearButton(),
+            SizedBox(height: 8),
+            
+            // Resend PIN Button
+            _buildResendButton(),
           ],
         ),
       ),
@@ -317,14 +393,17 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(4, (index) {
         return Container(
-          width: 60,
+          width: 50,
           height: 60,
+          margin: EdgeInsets.only(right: 4),
           child: TextField(
             controller: _pinControllers[index],
             focusNode: _focusNodes[index],
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             maxLength: 1,
+            cursorColor: Color(0xFF667eea),
+            textAlignVertical: TextAlignVertical.center,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -336,27 +415,28 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
             decoration: InputDecoration(
               counterText: '',
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.grey.shade300, width: 2),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.grey.shade300, width: 2),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Color(0xFF667eea), width: 1),
               ),
               errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.red.shade300, width: 2),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.red.shade300, width: 1),
               ),
               focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.red, width: 1),
               ),
               filled: true,
               fillColor: Colors.grey.shade50,
+              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             ),
             onChanged: (value) => _handlePinChanged(index, value),
           ),
@@ -372,9 +452,9 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
         backgroundColor: Color(0xFF667eea),
         foregroundColor: Colors.white,
         elevation: 4,
-        padding: EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: 8),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(8),
         ),
         shadowColor: Color(0xFF667eea).withOpacity(0.5),
       ),
@@ -405,6 +485,55 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
           color: Colors.grey.shade600,
           fontSize: 14,
         ),
+      ),
+    );
+  }
+
+  Widget _buildResendButton() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (!_canResend)
+            Text(
+              'Gửi lại sau $_resendCountdown giây',
+              style: TextStyle(
+                color: Colors.grey.shade500,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            )
+          else
+            InkWell(
+              onTap: _resendPin,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Color(0xFF667eea).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.refresh,
+                      size: 16,
+                      color: Color(0xFF667eea),
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      'Gửi lại',
+                      style: TextStyle(
+                        color: Color(0xFF667eea),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
