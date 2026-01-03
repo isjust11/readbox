@@ -9,7 +9,7 @@ import 'package:readbox/routes.dart';
 class BookDetailScreen extends StatelessWidget {
   final BookModel book;
 
-  const BookDetailScreen({Key? key, required this.book}) : super(key: key);
+  const BookDetailScreen({super.key, required this.book});
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +23,13 @@ class BookDetailScreen extends StatelessWidget {
 class BookDetailBody extends StatefulWidget {
   final BookModel book;
 
-  const BookDetailBody({Key? key, required this.book}) : super(key: key);
+  const BookDetailBody({super.key, required this.book});
 
   @override
-  _BookDetailBodyState createState() => _BookDetailBodyState();
+  BookDetailBodyState createState() => BookDetailBodyState();
 }
 
-class _BookDetailBodyState extends State<BookDetailBody> {
+class BookDetailBodyState extends State<BookDetailBody> {
   late BookModel _book;
 
   @override

@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:readbox/constants.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/utils/common.dart';
@@ -104,7 +103,7 @@ class TextFieldState extends State<CustomTextInput> {
     super.initState();
     textController = widget.textController ?? TextEditingController();
     if (widget.initData != null) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         textController.text =
             widget.formatCurrency ? Common.formatPrice(widget.initData, showPrefix: false) : widget.initData.toString();
       });
