@@ -401,7 +401,7 @@ class _MainBodyState extends State<MainBody> {
     if (book.fileUrl != null) {
       Navigator.pushNamed(
         context,
-        Routes.pdfViewerScreen,
+        Routes.pdfViewerWithSelectionScreen,
         arguments: {
           'fileUrl': '${ApiConstant.apiHostStorage}${book.fileUrl}',
           'title': book.displayTitle,

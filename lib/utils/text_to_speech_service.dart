@@ -1,6 +1,5 @@
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 /// Service để quản lý Text-to-Speech cho ebook reading
 class TextToSpeechService {
@@ -75,7 +74,7 @@ class TextToSpeechService {
       }
 
       // Kiểm tra ngôn ngữ có sẵn
-      final languages = await _flutterTts!.getLanguages;
+      final languages = await _flutterTts!.getLanguages; 
       debugPrint('Available languages: $languages');
       
       // Thử set tiếng Việt, nếu không có thì fallback sang tiếng Anh

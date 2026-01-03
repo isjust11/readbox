@@ -12,10 +12,10 @@ class PdfViewerAdvancedScreen extends StatefulWidget {
   final String title;
 
   const PdfViewerAdvancedScreen({
-    Key? key,
+    super.key,
     required this.fileUrl,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
   _PdfViewerAdvancedScreenState createState() =>
@@ -33,7 +33,7 @@ class _PdfViewerAdvancedScreenState extends State<PdfViewerAdvancedScreen> {
   String? _selectedText;
 
   // Annotation mode
-  PdfInteractionMode _interactionMode = PdfInteractionMode.selection;
+  final PdfInteractionMode _interactionMode = PdfInteractionMode.selection;
   
   // Lưu trữ annotations (trong thực tế nên lưu vào database)
   List<Annotation> _annotations = [];

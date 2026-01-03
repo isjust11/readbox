@@ -5,7 +5,6 @@ import 'package:readbox/ui/widget/tts_control_widget.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 import 'package:readbox/utils/pdf_text_extractor.dart';
 import 'dart:async';
-import 'dart:typed_data';
 
 /// PDF Viewer với tính năng chọn text, copy và annotations
 /// Sử dụng Syncfusion PDF Viewer
@@ -531,11 +530,11 @@ class _PdfViewerWithSelectionScreenState
             heroTag: 'tts',
             onPressed: _toggleTTS,
             backgroundColor: _isTTSActive ? Colors.red : Colors.green,
+            tooltip: _isTTSActive ? 'Dừng đọc' : 'Đọc text',
             child: Icon(
               _isTTSActive ? Icons.stop : Icons.volume_up,
               color: Colors.white,
             ),
-            tooltip: _isTTSActive ? 'Dừng đọc' : 'Đọc text',
           ),
         ),
         
