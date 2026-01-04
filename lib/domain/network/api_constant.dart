@@ -1,6 +1,6 @@
 class ApiConstant {
-  static final apiHost = "http://192.168.1.9:4000/";
-  static final apiHostStorage = "http://192.168.1.9:3005";
+  static final apiHost = "http://192.168.1.4:4000/";
+  static final apiHostStorage = "http://192.168.1.4:3005";
   static final storageServiceUrl = "http://localhost:3005"; // Storage service URL
   static final login = "auth/login";
   static final register = "auth/register";

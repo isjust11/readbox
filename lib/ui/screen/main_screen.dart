@@ -5,6 +5,7 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/routes.dart';
+import 'package:readbox/res/colors.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
@@ -104,9 +105,9 @@ class _MainBodyState extends State<MainBody> {
                 decoration: InputDecoration(
                   hintText: 'Tìm kiếm sách...',
                   border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.white70),
+                  hintStyle: TextStyle(color: AppColors.hintTextColor),
                 ),
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: AppColors.secondaryTextDark),
                 onChanged: _onSearchChanged,
               )
             : Text('Thư viện của tôi'),
