@@ -1,7 +1,38 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+
 class ApiConstant {
-  static final apiHost = "http://192.168.1.4:4000/";
-  static final apiHostStorage = "http://192.168.1.4:3005";
-  static final storageServiceUrl = "http://localhost:3005"; // Storage service URL
+  // Tự động detect địa chỉ IP dựa trên platform
+  // Android emulator: 10.0.2.2 trỏ về localhost của máy host
+  // iOS simulator: localhost hoạt động bình thường
+  // Web: localhost hoạt động bình thường
+  // Thiết bị thật: Cần thay bằng IP của máy chạy server (ví dụ: 192.168.1.100)
+  static String get _baseHost {
+    if (kIsWeb) {
+      // Web platform
+      return 'localhost';
+    } else if (Platform.isAndroid) {
+      // Android emulator: dùng 10.0.2.2 để trỏ về localhost của máy host
+      // Nếu là thiết bị thật, cần thay bằng IP của máy host
+      return '10.59.91.142';
+    } else if (Platform.isIOS) {
+      // iOS simulator: localhost hoạt động bình thường
+      return 'localhost';
+    } else {
+      // Desktop platforms
+      return 'localhost';
+    }
+  }
+
+  // Port của API server 
+  // Server mặc định chạy port 4000 (theo main.ts: process.env.PORT ?? 4200)
+  // Nếu server chạy port khác, sửa giá trị này hoặc set biến môi trường PORT
+  static const int apiPort = 4000;
+  static const int storagePort = 3005;
+
+  static String get apiHost => "http://$_baseHost:$apiPort/";
+  static String get apiHostStorage => "http://$_baseHost:$storagePort";
+  static String get storageServiceUrl => "http://$_baseHost:$storagePort";
   static final login = "auth/login";
   static final register = "auth/register";
   static final verifyPin = "auth/verify-pin";

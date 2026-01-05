@@ -28,19 +28,19 @@ class AuthRemoteDataSource {
     return Future.error(apiResponse.errMessage);
   }
 
-  Future<AuthenModel> verifyPin(Map<String, dynamic> param) async {
+  Future<bool> verifyPin(Map<String, dynamic> param) async {
     ApiResponse apiResponse = await network.post(url: '${ApiConstant.apiHost}${ApiConstant.verifyPin}', body: param);
     if (apiResponse.isSuccess) {
-      return AuthenModel.fromJson(apiResponse.data);
+      return true;
     }
-    return Future.error(apiResponse.errMessage);
+    return false;
   }
 
-  Future<Map<String, dynamic>> resendPin(Map<String, dynamic> param) async {
+  Future<bool> resendPin(Map<String, dynamic> param) async {
     ApiResponse apiResponse = await network.post(url: '${ApiConstant.apiHost}${ApiConstant.resendPin}', body: param);
     if (apiResponse.isSuccess) {
-      return apiResponse.data ?? {'message': 'PIN đã được gửi lại'};
+      return true;
     }
-    return Future.error(apiResponse.errMessage);
+    return false;
   }
 }

@@ -151,7 +151,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
             listener: (context, state) {
               if (state is LoadedState) {
                 getIt.get<UserInfoCubit>().getUserInfo();
-                Navigator.pushReplacementNamed(context, Routes.mainScreen);
+                Navigator.pushReplacementNamed(context, Routes.loginScreen);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Xác thực thành công!'),
