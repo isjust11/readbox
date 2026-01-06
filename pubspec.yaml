@@ -66,6 +66,8 @@ dependencies:
   file_picker: ^10.3.7
   image_picker: ^1.0.7
   flutter_tts: ^4.0.2  # Text-to-speech for ebook reading
+  flutter_svg: ^2.2.2
+  intl_utils: ^2.8.13
 
 dev_dependencies:
   flutter_test:
@@ -81,10 +83,11 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
+flutter_gen:
+  output: lib/gen/
 # The following section is specific to Flutter packages.
 flutter:
-
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -120,3 +123,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_intl:
+  enabled: true
+  arb_dir: lib/gen/i18n/locales/
+  output_dir: lib/gen/i18n/generated_locales
+  class_name: AppLocalizations
+  main_locale: vi

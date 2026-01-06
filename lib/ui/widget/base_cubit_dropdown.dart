@@ -6,7 +6,8 @@ import 'package:readbox/ui/widget/base_dropdown.dart';
 
 typedef ValueChanged<T> = void Function(int index, T value);
 
-class BaseCubitDropDown<T extends BaseDropdownModel, C extends Cubit<BaseState>> extends StatelessWidget {
+class BaseCubitDropDown<T extends BaseDropdownModel, C extends Cubit<BaseState>>
+    extends StatelessWidget {
   final C cubit;
   final EdgeInsets margin;
   final String title;
@@ -18,6 +19,7 @@ class BaseCubitDropDown<T extends BaseDropdownModel, C extends Cubit<BaseState>>
   final String? errorRequired;
 
   const BaseCubitDropDown({
+    super.key,
     this.baseCubitDropDownKey,
     required this.cubit,
     this.margin = EdgeInsets.zero,
@@ -27,13 +29,14 @@ class BaseCubitDropDown<T extends BaseDropdownModel, C extends Cubit<BaseState>>
     this.isRequired = false,
     this.initData,
     this.errorRequired,
-  }) : super();
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<C>(
-        create: (_) => cubit,
-        child: BlocBuilder<C, BaseState>(builder: (_, state) {
+      create: (_) => cubit,
+      child: BlocBuilder<C, BaseState>(
+        builder: (_, state) {
           List<T>? listData;
           String hintText = this.hintText;
           if (state is LoadedState<List<T>>) {
@@ -48,24 +51,26 @@ class BaseCubitDropDown<T extends BaseDropdownModel, C extends Cubit<BaseState>>
           int? selectedIndex;
           try {
             selectedIndex = listData?.indexOf(initData!);
-          } catch (e) {
-          }
+          } catch (_) {}
           return CustomDropDown(
-              key: baseCubitDropDownKey,
-              errorRequired: errorRequired,
-              selectedIndex: selectedIndex,
-              isRequired: isRequired,
-              didSelected: (int index) {
-                try {
-                  didSelected?.call(index, listData![index]);
-                } catch (e) {
-                  print("===build =====${e}");
-                }
-              },
-              hintText: hintText,
-              title: title,
-              margin: margin,
-              listValues: listData?.map((e) => e.name?.toString() ?? "").toList());
-        }));
+            key: baseCubitDropDownKey,
+            errorRequired: errorRequired,
+            selectedIndex: selectedIndex,
+            isRequired: isRequired,
+            didSelected: (int index) {
+              try {
+                didSelected?.call(index, listData![index]);
+              } catch (e) {
+                print("===build =====$e");
+              }
+            },
+            hintText: hintText,
+            title: title,
+            margin: margin,
+            listValues: listData?.map((e) => e.name?.toString() ?? "").toList(),
+          );
+        },
+      ),
+    );
   }
 }

@@ -33,3 +33,4 @@ class ErrorState<T> extends BaseState {
   @override
   List<Object> get props => [data?.toString() ?? "", timeEmit];
 }
+class EmptyState extends BaseState {}

@@ -19,7 +19,7 @@ class BaseButton extends StatelessWidget {
 
   const BaseButton({
     this.child,
-    Key? key,
+    super.key,
     this.decoration,
     this.onTap,
     this.backgroundColor,
@@ -32,7 +32,16 @@ class BaseButton extends StatelessWidget {
     this.height,
     this.wrapChild = false,
     this.title,
-  }) : super(key: key);
+  });
+
+
+
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +59,7 @@ class BaseButton extends StatelessWidget {
               border: Border.all(color: borderColor!),
               borderRadius: BorderRadius.circular(borderRadius ?? 10)),
       child: Material(
+        color: Colors.transparent,
         child: InkWell(
           borderRadius: borderRadiusInWell,
           onTap: () {
@@ -63,7 +73,6 @@ class BaseButton extends StatelessWidget {
               padding: padding ?? EdgeInsets.symmetric(vertical: 12, horizontal: 10),
               child: renderChild()),
         ),
-        color: Colors.transparent,
       ),
     );
   }

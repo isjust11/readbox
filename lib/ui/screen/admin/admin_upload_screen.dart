@@ -71,6 +71,7 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf', 'epub', 'mobi'],
+        initialDirectory: '/storage/emulated/0/Download',
       );
 
       if (result != null && result.files.single.path != null) {

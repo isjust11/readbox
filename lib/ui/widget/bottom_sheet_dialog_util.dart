@@ -21,12 +21,12 @@ class BottomSheetDialogUtil {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
         ),
-        builder: (BuildContext _context) => Padding(
+        builder: (BuildContext context) => Padding(
               padding: EdgeInsets.only(
                   // top: 80,
                   bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Container(
-                decoration: const BoxDecoration(borderRadius: const BorderRadius.vertical(top: Radius.circular(30))),
+                decoration: const BoxDecoration(borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -34,7 +34,7 @@ class BottomSheetDialogUtil {
                       children: [
                         InkWell(
                           onTap: () {
-                            Navigator.pop(_context);
+                            Navigator.pop(context);
                           },
                           child: Container(
                               padding: EdgeInsets.only(top: 15, right: 20, left: 20, bottom: 15),
@@ -51,7 +51,7 @@ class BottomSheetDialogUtil {
                         )),
                       ],
                     ),
-                    builder.call(_context)
+                    builder.call(context)
                   ],
                 ),
               ),
@@ -65,7 +65,7 @@ class BottomSheetDialogUtil {
     AssetGenImage? icon,
     Color? colorIcon,
   }) {
-    return showBaseBottomSheetDialog(context, isDismissible: isDismissible, builder: (_context) {
+    return showBaseBottomSheetDialog(context, isDismissible: isDismissible, builder: (context) {
       return Container(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
@@ -81,7 +81,7 @@ class BottomSheetDialogUtil {
   }
 
   static Future showDialogSuccess(BuildContext context, {required String content}) {
-    return showBaseBottomSheetDialog(context, builder: (_context) {
+    return showBaseBottomSheetDialog(context, builder: (context) {
       return Container(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(

@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:readbox/res/colors.dart';
+import 'package:readbox/res/resources.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/utils/common.dart';
 import 'package:intl/intl.dart';
@@ -46,9 +46,13 @@ class CustomTextInput extends StatefulWidget {
   final CustomTextFieldValidator? validator;
   final Function? onTapTextField;
   final bool autoFocus;
+  final Color? hintTextColor;
+  final double? hintTextFontSize;
+  final FontWeight? hintTextFontWeight;
+  final BorderRadius? borderRadius;
 
-  CustomTextInput({
-    Key? key,
+  const CustomTextInput({
+    super.key,
     this.getTextFieldValue,
     this.onSubmitted,
     this.keyboardType = TextInputType.text,
@@ -84,7 +88,11 @@ class CustomTextInput extends StatefulWidget {
     this.onTapTextField,
     this.autoFocus = false,
     this.fontSize,
-  }) : super(key: key);
+    this.hintTextFontSize,
+    this.hintTextColor,
+    this.hintTextFontWeight,
+    this.borderRadius,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -104,12 +112,15 @@ class TextFieldState extends State<CustomTextInput> {
     textController = widget.textController ?? TextEditingController();
     if (widget.initData != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        textController.text =
-            widget.formatCurrency ? Common.formatPrice(widget.initData, showPrefix: false) : widget.initData.toString();
+        textController.text = widget.formatCurrency
+            ? Common.formatPrice(widget.initData, showPrefix: false)
+            : widget.initData.toString();
       });
     }
     if (widget.formatNumber || widget.formatCurrency || widget.formatPercent) {
-      inputFormatters = [NumericTextFormatter(widget.formatCurrency, widget.formatPercent)];
+      inputFormatters = [
+        NumericTextFormatter(widget.formatCurrency, widget.formatPercent),
+      ];
     } else if (widget.formatDecimal) {
       inputFormatters = [DecimalTextInputFormatter(decimalRange: 5)];
     } else {
@@ -130,66 +141,104 @@ class TextFieldState extends State<CustomTextInput> {
               padding: EdgeInsets.only(bottom: 5),
               child: CustomTextLabel(
                 widget.title,
-                color: AppColors.ff828282,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
+                color: widget.titleStyle?.color ?? AppColors.ff828282,
+                fontSize: widget.titleStyle?.fontSize ?? 16,
+                fontWeight: widget.titleStyle?.fontWeight ?? FontWeight.w400,
               ),
             ),
           Container(
             height: widget.heightTextInput,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-                color: widget.enabled ? widget.colorBgTextField : widget.colorBgTextFieldDisable,
-                borderRadius: BorderRadius.circular(widget.enabled ? 5 : 0)),
+              color: widget.enabled
+                  ? widget.colorBgTextField
+                  : widget.colorBgTextFieldDisable,
+              borderRadius:
+                  widget.borderRadius ??
+                  BorderRadius.circular(widget.enabled ? 10 : 0),
+            ),
             child: Stack(
               children: [
                 TextField(
                   inputFormatters: inputFormatters,
                   maxLength: widget.maxLength,
-                  cursorColor: AppColors.baseColor,
+                  cursorColor: AppColors.black,
                   autofocus: widget.autoFocus,
                   enabled: widget.enabled,
                   textAlign: widget.align ?? TextAlign.start,
                   textAlignVertical: TextAlignVertical.center,
                   style: TextStyle(
-                      color: widget.colorText,
-                      fontSize: widget.fontSize ?? 14,
-                      fontWeight: widget.fontWeight ?? FontWeight.w400),
+                    color: widget.colorText,
+                    fontSize: widget.fontSize ?? AppDimens.SIZE_14,
+                    fontWeight: widget.fontWeight ?? FontWeight.w600,
+                  ),
                   decoration: InputDecoration(
-                      counterText: "",
-                      suffixIcon: (widget.isPasswordTF == true)
-                          ? IconButton(
-                              icon: Icon(!_showText ? Icons.visibility : Icons.visibility_off, color: Colors.grey),
-                              onPressed: () {
-                                setState(() {
-                                  _showText = !_showText;
-                                });
-                              },
-                            )
-                          : widget.suffixIcon,
-                      prefixIcon: widget.prefixIcon,
-                      focusColor: Colors.white,
-                      border: InputBorder.none,
-                      suffixIconConstraints: BoxConstraints(maxHeight: 35),
-                      prefixIconConstraints: BoxConstraints(maxHeight: 35),
-                      disabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
-                      focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: AppColors.focusBorder)),
-                      enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
-                      hintStyle: TextStyle(color: AppColors.hintTextColor, fontWeight: FontWeight.w400, fontSize: 14),
-                      hintText: widget.hintText,
-                      isDense: true,
-                      contentPadding: widget.padding ?? EdgeInsets.symmetric(horizontal: 10, vertical: 12)),
+                    counterText: "",
+                    suffixIcon: (widget.isPasswordTF == true)
+                        ? IconButton(
+                            icon: Icon(
+                              !_showText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.grey,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _showText = !_showText;
+                              });
+                            },
+                          )
+                        : widget.suffixIcon,
+                    prefixIcon: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppDimens.SIZE_12,
+                      ),
+                      child: widget.prefixIcon,
+                    ),
+                    focusColor: Colors.white,
+                    border: InputBorder.none,
+                    suffixIconConstraints: BoxConstraints(
+                      maxHeight: AppDimens.SIZE_35,
+                    ),
+                    prefixIconConstraints: BoxConstraints(
+                      maxHeight: AppDimens.SIZE_35,
+                      minWidth: AppDimens.SIZE_35,
+                    ),
+                    disabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.border),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.baseColor),
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.border),
+                    ),
+                    hintStyle: TextStyle(
+                      color: widget.hintTextColor ?? AppColors.hintTextColor,
+                      fontWeight: widget.hintTextFontWeight ?? FontWeight.w400,
+                      fontSize: widget.hintTextFontSize ?? 14,
+                    ),
+                    hintText: widget.hintText,
+                    isDense: true,
+                    contentPadding:
+                        widget.padding ??
+                        EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                  ),
                   controller: textController,
-                  obscureText: widget.isPasswordTF == true ? (_showText) : widget.obscureText,
-                  keyboardType: widget.formatCurrency ? TextInputType.number : widget.keyboardType,
+                  obscureText: widget.isPasswordTF == true
+                      ? (_showText)
+                      : widget.obscureText,
+                  keyboardType: widget.formatCurrency
+                      ? TextInputType.number
+                      : widget.keyboardType,
                   textInputAction: widget.textInputAction,
                   onSubmitted: widget.onSubmitted,
                   onEditingComplete: () => FocusScope.of(context).nextFocus(),
                   maxLines: widget.maxLines,
                   minLines: widget.minLines,
-                  onChanged: (String _text) {
+                  onChanged: (String text) {
                     _validate();
-                    String currentText = _text.trim();
+                    String currentText = text.trim();
                     widget.getTextFieldValue?.call(currentText);
                   },
                 ),
@@ -201,7 +250,7 @@ class TextFieldState extends State<CustomTextInput> {
                         bottom: 0,
                         child: InkWell(
                           onTap: () {
-                            if (this.widget.enabled) widget.onTapTextField?.call();
+                            if (widget.enabled) widget.onTapTextField?.call();
                           },
                           child: Container(),
                         ),
@@ -210,7 +259,9 @@ class TextFieldState extends State<CustomTextInput> {
               ],
             ),
           ),
-          errorText.isNotEmpty ? ErrorTextWidget(errorText: errorText) : Container()
+          errorText.isNotEmpty
+              ? ErrorTextWidget(errorText: errorText)
+              : Container(),
         ],
       ),
     );
@@ -226,12 +277,12 @@ class TextFieldState extends State<CustomTextInput> {
 
   bool _validate() {
     if (widget.validator != null) {
-      String _text = textController.text.trim();
-      String? validate = widget.validator!.call(_text);
+      String text = textController.text.trim();
+      String? validate = widget.validator!.call(text);
       setState(() {
-        this.errorText = validate ?? "";
+        errorText = validate ?? "";
       });
-      return this.errorText.isEmpty;
+      return errorText.isEmpty;
     }
     return true;
   }
@@ -244,7 +295,10 @@ class NumericTextFormatter extends TextInputFormatter {
   NumericTextFormatter(this.isFormatCurrency, this.isFormatPercent);
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     if (newValue.text.isEmpty) {
       return newValue.copyWith(text: '');
     } else if (newValue.text.compareTo(oldValue.text) != 0) {
@@ -253,7 +307,10 @@ class NumericTextFormatter extends TextInputFormatter {
       }
 
       if (oldValue.text.length < newValue.text.length) {
-        String s = newValue.text.substring(newValue.selection.baseOffset - 1, newValue.selection.baseOffset);
+        String s = newValue.text.substring(
+          newValue.selection.baseOffset - 1,
+          newValue.selection.baseOffset,
+        );
         if (!RegExp("^[0-9]").hasMatch(s)) return oldValue;
       }
 
@@ -262,21 +319,29 @@ class NumericTextFormatter extends TextInputFormatter {
             '.'.allMatches(newValue.text).length > 1 ||
             double.parse(newValue.text) > 100 ||
             newValue.text[0] == "." ||
-            (newValue.text.length > 1 && newValue.text[0] == "0" && newValue.text[1] != ".") ||
-            newValue.text.split(".").length > 1 && newValue.text.split(".")[1].length > 2) {
+            (newValue.text.length > 1 &&
+                newValue.text[0] == "0" &&
+                newValue.text[1] != ".") ||
+            newValue.text.split(".").length > 1 &&
+                newValue.text.split(".")[1].length > 2) {
           return oldValue;
         } else {
           return newValue;
         }
       }
 
-      final int selectionIndexFromTheRight = newValue.text.length - newValue.selection.end;
+      final int selectionIndexFromTheRight =
+          newValue.text.length - newValue.selection.end;
       final f = isFormatCurrency ? NumberFormat("#,###") : NumberFormat('#');
-      final number = int.parse(newValue.text.replaceAll(f.symbols.GROUP_SEP, ''));
+      final number = int.parse(
+        newValue.text.replaceAll(f.symbols.GROUP_SEP, ''),
+      );
       final newString = f.format(number);
       return TextEditingValue(
         text: newString,
-        selection: TextSelection.collapsed(offset: newString.length - selectionIndexFromTheRight),
+        selection: TextSelection.collapsed(
+          offset: newString.length - selectionIndexFromTheRight,
+        ),
       );
     } else {
       return oldValue;
@@ -285,21 +350,26 @@ class NumericTextFormatter extends TextInputFormatter {
 }
 
 class DecimalTextInputFormatter extends TextInputFormatter {
-  DecimalTextInputFormatter({required this.decimalRange}) : assert(decimalRange == null || decimalRange > 0);
+  DecimalTextInputFormatter({required this.decimalRange})
+    : assert(decimalRange > 0);
 
   final int decimalRange;
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     TextSelection newSelection = newValue.selection;
     String truncated = newValue.text;
 
-    if (newValue.text.contains(' '))
+    if (newValue.text.contains(' ')) {
       return TextEditingValue(
         text: oldValue.text,
         selection: oldValue.selection,
         composing: TextRange.empty,
       );
+    }
 
     if (oldValue.text == '0') {
       truncated = newValue.text.replaceFirst('0', '');
@@ -318,8 +388,11 @@ class DecimalTextInputFormatter extends TextInputFormatter {
       );
     }
 
-    if (truncated.length > oldValue.text.length && newValue.text.substring(0, 1) == '0' && oldValue.text.length > 1) {
-      if (!(newValue.text.length > 2 && newValue.text.substring(0, 2) == '0.')) {
+    if (truncated.length > oldValue.text.length &&
+        newValue.text.substring(0, 1) == '0' &&
+        oldValue.text.length > 1) {
+      if (!(newValue.text.length > 2 &&
+          newValue.text.substring(0, 2) == '0.')) {
         truncated = oldValue.text;
         newSelection = oldValue.selection;
         return TextEditingValue(
@@ -330,26 +403,24 @@ class DecimalTextInputFormatter extends TextInputFormatter {
       }
     }
 
-    if (decimalRange != null) {
-      String value = newValue.text;
-      if (value.contains(".") && value.substring(value.indexOf(".") + 1).length > decimalRange) {
-        truncated = oldValue.text;
-        newSelection = oldValue.selection;
-      } else if (value == ".") {
-        truncated = "0.";
+    String value = newValue.text;
+    if (value.contains(".") &&
+        value.substring(value.indexOf(".") + 1).length > decimalRange) {
+      truncated = oldValue.text;
+      newSelection = oldValue.selection;
+    } else if (value == ".") {
+      truncated = "0.";
 
-        newSelection = newValue.selection.copyWith(
-          baseOffset: math.min(truncated.length, truncated.length + 1),
-          extentOffset: math.min(truncated.length, truncated.length + 1),
-        );
-      }
-
-      return TextEditingValue(
-        text: truncated,
-        selection: newSelection,
-        composing: TextRange.empty,
+      newSelection = newValue.selection.copyWith(
+        baseOffset: math.min(truncated.length, truncated.length + 1),
+        extentOffset: math.min(truncated.length, truncated.length + 1),
       );
     }
-    return newValue;
+
+    return TextEditingValue(
+      text: truncated,
+      selection: newSelection,
+      composing: TextRange.empty,
+    );
   }
 }

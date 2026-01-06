@@ -29,12 +29,11 @@ class CustomDropDown extends StatefulWidget {
       this.isRequired = false,
       this.titleColor,
       this.valueColor,
-      Key? key,
+      super.key,
       this.bgColorDropdownSelect,
       this.enabled = true,
       this.border,
-      this.errorRequired})
-      : super(key: key);
+      this.errorRequired});
 
   @override
   State<StatefulWidget> createState() {
@@ -102,10 +101,10 @@ class CustomDropDownState extends State<CustomDropDown> {
                   items: createListDropdownMenuItem(),
                   value: selectedIndex,
                   onChanged: widget.enabled
-                      ? (int? _index) {
+                      ? (int? index) {
                           setState(() {
-                            selectedIndex = _index;
-                            widget.didSelected?.call(_index);
+                            selectedIndex = index;
+                            widget.didSelected?.call(index);
                             errorText = "";
                           });
                         }
@@ -145,12 +144,12 @@ class CustomDropDownState extends State<CustomDropDown> {
     List<DropdownMenuItem<int>> list = [];
     for (int i = 0; i < (widget.listValues?.length ?? 0); i++) {
       DropdownMenuItem<int> item = DropdownMenuItem<int>(
+        value: i,
         child: CustomTextLabel(
           widget.listValues![i],
           color: widget.valueColor ?? AppColors.colorTitle,
           maxLines: 1,
         ),
-        value: i,
       );
       list.add(item);
     }

@@ -3,7 +3,7 @@ import 'base_entity.dart';
 enum BookType { epub, pdf, unknown }
 
 class BookEntity extends BaseEntity {
-  int? id;
+  String? id;
   String? title;
   String? author;
   String? description;

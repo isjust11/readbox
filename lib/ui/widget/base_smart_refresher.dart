@@ -16,20 +16,20 @@ class CustomSmartRefresher extends StatelessWidget {
   final EdgeInsets padding;
   final EdgeInsets marginSeparator;
 
-  const CustomSmartRefresher(
-      {Key? key,
-      this.refreshController,
-      this.onRefresh,
-      this.onLoadMore,
-      this.enablePullUp = false,
-      this.enablePullDown = true,
-      required this.listData,
-      required this.itemBuilder,
-      this.heightSeparator = AppDimens.SIZE_0,
-      this.colorSeparator = Colors.transparent,
-      this.padding = const EdgeInsets.all(0),
-      this.marginSeparator = const EdgeInsets.all(0)})
-      : super(key: key);
+  const CustomSmartRefresher({
+    super.key,
+    this.refreshController,
+    this.onRefresh,
+    this.onLoadMore,
+    this.enablePullUp = false,
+    this.enablePullDown = true,
+    required this.listData,
+    required this.itemBuilder,
+    this.heightSeparator = AppDimens.SIZE_0,
+    this.colorSeparator = Colors.transparent,
+    this.padding = const EdgeInsets.all(0),
+    this.marginSeparator = const EdgeInsets.all(0),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +44,12 @@ class CustomSmartRefresher extends StatelessWidget {
         builder: (BuildContext context, LoadStatus? mode) {
           Widget body = Container(height: AppDimens.SIZE_0);
           if (mode == LoadStatus.loading) {
-            body = Container(
+            body = SizedBox(
               height: AppDimens.SIZE_55,
               child: Center(child: CupertinoActivityIndicator()),
             );
           } else if (mode == LoadStatus.idle) {
-            body = Container(
-              height: AppDimens.SIZE_0,
-              child: Center(),
-            );
+            body = SizedBox(height: AppDimens.SIZE_0, child: Center());
           }
           return body;
         },
@@ -61,15 +58,12 @@ class CustomSmartRefresher extends StatelessWidget {
         primary: false,
         shrinkWrap: true,
         padding: padding,
-        itemCount: this.listData?.length ?? 0,
+        itemCount: listData.length,
         separatorBuilder: (context, index) => Container(
           margin: marginSeparator,
-          child: Divider(
-            height: heightSeparator,
-            color: colorSeparator,
-          ),
+          child: Divider(height: heightSeparator, color: colorSeparator),
         ),
-        itemBuilder: this.itemBuilder,
+        itemBuilder: itemBuilder,
       ),
     );
   }

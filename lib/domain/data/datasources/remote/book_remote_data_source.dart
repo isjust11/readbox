@@ -7,11 +7,17 @@ class BookRemoteDataSource {
   BookRemoteDataSource({required this.network});
 
   Future<List<BookModel>> getPublicBooks({
+    int? page,
+    int? limit,
     bool? isFavorite,
     bool? isArchived,
+    String? categoryId,
     String? searchQuery,
   }) async {
     Map<String, dynamic> params = {};
+    if (page != null) params['page'] = page;
+    if (limit != null) params['limit'] = limit;
+    if (categoryId != null) params['categoryId'] = categoryId;
     if (isFavorite != null) params['isFavorite'] = isFavorite;
     if (isArchived != null) params['isArchived'] = isArchived;
     if (searchQuery != null && searchQuery.isNotEmpty) {
@@ -24,8 +30,8 @@ class BookRemoteDataSource {
     );
 
     if (apiResponse.isSuccess) {
-      if (apiResponse.data is List) {
-        return (apiResponse.data as List)
+      if (apiResponse.data['data'] is List) {
+        return (apiResponse.data['data'] as List)
             .map((item) => BookModel.fromJson(item as Map<String, dynamic>))
             .toList();
       }

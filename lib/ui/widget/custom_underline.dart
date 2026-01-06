@@ -4,7 +4,7 @@ import 'package:readbox/res/resources.dart';
 class CustomUnderLine extends StatelessWidget {
   final Color color;
 
-  const CustomUnderLine({Key? key, this.color = AppColors.border}) : super(key: key);
+  const CustomUnderLine({super.key, this.color = AppColors.border});
 
   @override
   Widget build(BuildContext context) {

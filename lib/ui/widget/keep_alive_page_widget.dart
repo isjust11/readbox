@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
 class KeepAlivePage extends StatefulWidget {
-  KeepAlivePage({
-    Key? key,
+  const KeepAlivePage({
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
 

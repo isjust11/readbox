@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/resources.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -13,7 +12,7 @@ class CustomDialogUtil {
       context: context,
       builder: (BuildContext context) => CustomDialog(
           title: title,
-          image: image ?? Assets.images.noti.icDialogSuccess.path,
+          image: image ?? "Assets.images.icDialogSuccess",
           content: content,
           onSubmit: onSubmit,
           titleSubmit: titleSubmit ?? AppLocalizations.of(context).agree),
@@ -37,11 +36,11 @@ class CustomDialogUtil {
       builder: (BuildContext context) => CustomDialog(
           content: content,
           autoPopWhenPressSubmit: autoPopWhenPressSubmit,
-          image: image ?? Assets.images.noti.icDialogConfirm.path,
+          image: image ?? "Assets.images.icDialogConfirm",
           titleSubmit: titleSubmit ?? AppLocalizations.of(context).agree,
           onSubmit: onSubmit,
           onCancel: onCancel,
-          titleCancel: hideCancel ? null : (titleCancel ?? AppLocalizations.of(context).close)),
+          titleCancel: hideCancel ? null : (titleCancel ?? AppLocalizations.current.close)),
     );
   }
 
@@ -52,9 +51,9 @@ class CustomDialogUtil {
       context: context,
       builder: (BuildContext context) => CustomDialog(
           content: content,
-          image: image ?? Assets.images.noti.icDialogFail.path,
+          image: image ?? "Assets.images.icDialogFail",
           onCancel: onCancel,
-          titleCancel: titleCancel ?? AppLocalizations.of(context).close),
+          titleCancel: titleCancel ?? AppLocalizations.current.close),
     );
   }
 
@@ -83,7 +82,7 @@ class CustomDialogUtil {
         builder: (_) => Container(
               decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(10))),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(10))),
               height: 500,
               child: Column(
                 children: [
@@ -101,7 +100,7 @@ class CustomDialogUtil {
                   ),
                   CupertinoButton(
                     child: CustomTextLabel(
-                      AppLocalizations.of(context).done,
+                      AppLocalizations.current.done,
                       fontSize: 16,
                     ),
                     onPressed: () {
@@ -135,7 +134,6 @@ class CustomDialogUtil {
                     ),
                     Center(
                       child: BaseButton(
-                        child: CustomTextLabel("OK", fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15),
                         decoration: BoxDecoration(
                             color: AppColors.baseColor,
                             borderRadius: BorderRadius.circular(15),
@@ -150,6 +148,7 @@ class CustomDialogUtil {
                         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                         alignment: Alignment.center,
                         onTap: () => Navigator.of(context).pop(),
+                        child: CustomTextLabel("OK", fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15),
                       ),
                     ),
                     SizedBox(
@@ -169,8 +168,7 @@ class OptionItem extends StatelessWidget {
   final String? textKey;
   final Function? onTap;
 
-  const OptionItem({Key? key, this.width, this.height, this.imageSize, this.imageKey, this.textKey, this.onTap})
-      : super(key: key);
+  const OptionItem({super.key, this.width, this.height, this.imageSize, this.imageKey, this.textKey, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -182,8 +180,8 @@ class OptionItem extends StatelessWidget {
         }
       },
       child: Container(
-        width: width == null ? 300.0 : width,
-        height: height == null ? 60.0 : height,
+        width: width ?? 300.0,
+        height: height ?? 60.0,
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8), boxShadow: [
           BoxShadow(
             color: Colors.black.withAlpha((0.08 * 255).round()),
@@ -196,14 +194,14 @@ class OptionItem extends StatelessWidget {
             imageKey == null
                 ? Container()
                 : Container(
-                    width: height == null ? 60.0 : height,
-                    height: height == null ? 60.0 : height,
+                    width: height ?? 60.0,
+                    height: height ?? 60.0,
                     decoration: BoxDecoration(color: AppColors.gray, borderRadius: BorderRadius.circular(8)),
                     alignment: Alignment.center,
                     child: Image.asset(
                       imageKey!,
-                      width: imageSize == null ? 24 : imageSize,
-                      height: imageSize == null ? 24 : imageSize,
+                      width: imageSize ?? 24,
+                      height: imageSize ?? 24,
                     ),
                   ),
             Expanded(
@@ -247,7 +245,7 @@ class CustomDialog extends StatelessWidget {
   final bool autoPopWhenPressSubmit;
 
   const CustomDialog(
-      {Key? key,
+      {super.key,
       this.onSubmit,
       this.titleSubmit,
       this.image,
@@ -257,8 +255,8 @@ class CustomDialog extends StatelessWidget {
       this.contentWidget,
       this.keyInputValue,
       this.onCancel,
-      this.autoPopWhenPressSubmit = true})
-      : super(key: key);
+      this.autoPopWhenPressSubmit = true,
+      });
 
   @override
   Widget build(BuildContext context) {
