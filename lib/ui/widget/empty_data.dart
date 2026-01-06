@@ -28,7 +28,7 @@ class EmptyData extends StatelessWidget {
           ),
           const SizedBox(height: AppDimens.SIZE_4),
           CustomTextLabel(
-            AppLocalizations.current.noDataAvailable,
+            AppLocalizations.current.empty,
             fontSize: AppDimens.SIZE_12,
             fontWeight: FontWeight.w500,
             color: AppColors.colorTitle,

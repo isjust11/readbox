@@ -15,8 +15,8 @@ class HeaderTypingWidget extends StatefulWidget {
 }
 
 class _HeaderTypingWidgetState extends State<HeaderTypingWidget> {
-  final String _typewriterFullText = AppLocalizations.current.todayYouFeel;
-  final String _typewriterDescription = AppLocalizations.current.youCanSearch;
+  final String _typewriterFullText = "Tìm kiếm";
+  final String _typewriterDescription = "Tìm kiếm";
   late final List<String> _typewriterMessages = [
     _typewriterFullText,
     _typewriterDescription,
@@ -86,11 +86,11 @@ class _HeaderTypingWidgetState extends State<HeaderTypingWidget> {
       children: [
         InkWell(
           onTap: () {
-            Navigator.pushNamed(context, Routes.searchScreen);
+            Navigator.pushNamed(context, Routes.search);
           },
           child: Container(
             width: double.infinity,
-            height: AppDimens.SIZE_64,
+            height: AppDimens.SIZE_48,
             decoration: BoxDecoration(
               color: AppColors.primaryBlue.withValues(alpha: 0.2),
             ),
@@ -124,7 +124,6 @@ class _HeaderTypingWidgetState extends State<HeaderTypingWidget> {
                     Icons.search,
                     color: AppColors.primaryBlue,
                     size: AppDimens.SIZE_18,
-                    fontWeight: FontWeight.bold,
                   ),
                 ],
               ),

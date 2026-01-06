@@ -203,6 +203,51 @@ class AppLocalizations {
   String get tryAgain {
     return Intl.message('Thử lại', name: 'tryAgain', desc: '', args: []);
   }
+
+  /// `Đã xảy ra lỗi, vui lòng thử lại sau`
+  String get error_common {
+    return Intl.message(
+      'Đã xảy ra lỗi, vui lòng thử lại sau',
+      name: 'error_common',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đồng ý`
+  String get agree {
+    return Intl.message('Đồng ý', name: 'agree', desc: '', args: []);
+  }
+
+  /// `Không đồng ý`
+  String get disagree {
+    return Intl.message('Không đồng ý', name: 'disagree', desc: '', args: []);
+  }
+
+  /// `Hoàn thành`
+  String get done {
+    return Intl.message('Hoàn thành', name: 'done', desc: '', args: []);
+  }
+
+  /// `Trang chủ`
+  String get home {
+    return Intl.message('Trang chủ', name: 'home', desc: '', args: []);
+  }
+
+  /// `Tin tức`
+  String get news {
+    return Intl.message('Tin tức', name: 'news', desc: '', args: []);
+  }
+
+  /// `Hồ sơ`
+  String get profile {
+    return Intl.message('Hồ sơ', name: 'profile', desc: '', args: []);
+  }
+
+  /// `Cài đặt`
+  String get settings {
+    return Intl.message('Cài đặt', name: 'settings', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -22,5 +22,13 @@
   "verifyCode": "Xác thực mã",
   "empty": "Không có dữ liệu",
   "pullToRefresh": "Kéo xuống để làm mới",
-  "tryAgain": "Thử lại"
+  "tryAgain": "Thử lại",
+  "error_common": "Đã xảy ra lỗi, vui lòng thử lại sau",
+  "agree": "Đồng ý",
+  "disagree": "Không đồng ý",
+  "done": "Hoàn thành",
+  "home": "Trang chủ",
+  "news": "Tin tức",
+  "profile": "Hồ sơ",
+  "settings": "Cài đặt"
 }

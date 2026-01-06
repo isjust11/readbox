@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:scale_size/scale_size.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
@@ -8,7 +9,6 @@ import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/res/resources.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
-import 'package:readbox/ui/widget/loading_template.dart';
 
 class CustomLoading<T extends Cubit<BaseState>> extends StatelessWidget {
   final String? message;
@@ -16,7 +16,6 @@ class CustomLoading<T extends Cubit<BaseState>> extends StatelessWidget {
   final Color? backgroundColor;
   final Color? indicatorColor;
   final double? size;
-  final LoadingType loadingType;
   final bool Function(BaseState state)? loadingState;
   final bool Function(BaseState state)? errorState;
   final bool Function(BaseState state)? emptyState;
@@ -29,7 +28,6 @@ class CustomLoading<T extends Cubit<BaseState>> extends StatelessWidget {
     this.backgroundColor = const Color.fromRGBO(0, 0, 0, 0.4),
     this.indicatorColor = AppColors.baseColor,
     this.size,
-    this.loadingType = LoadingType.threeArchedCircle,
     this.loadingState,
     this.errorState,
     this.emptyState,
@@ -44,7 +42,6 @@ class CustomLoading<T extends Cubit<BaseState>> extends StatelessWidget {
       backgroundColor: backgroundColor,
       indicatorColor: indicatorColor,
       size: size,
-      loadingType: loadingType,
       loadingState: (state) => state is LoadingState,
       errorState: (state) => state is ErrorState,
       emptyState: (state) => state is EmptyState,
@@ -74,7 +71,6 @@ class CustomBlocResult<B extends StateStreamable<S>, S>
   final Color? backgroundColor;
   final Color? indicatorColor;
   final double? size;
-  final LoadingType loadingType;
   final bool Function(S state) loadingState;
   final bool Function(S state)? errorState;
   final bool Function(S state)? emptyState;
@@ -86,7 +82,6 @@ class CustomBlocResult<B extends StateStreamable<S>, S>
     this.backgroundColor,
     this.indicatorColor,
     this.size,
-    this.loadingType = LoadingType.bouncingBall,
     required this.loadingState,
     this.errorState,
     this.emptyState,
@@ -98,12 +93,9 @@ class CustomBlocResult<B extends StateStreamable<S>, S>
     return BlocBuilder<B, S>(
       builder: (_, state) {
         if (loadingState(state)) {
-          return LoadingTemplate(
-            message: message,
-            loadingType: loadingType,
-            backgroundColor: backgroundColor,
-            indicatorColor: indicatorColor,
-            size: size,
+          return LoadingAnimationWidget.threeArchedCircle(
+            color: indicatorColor ?? AppColors.baseColor,
+            size: size ?? AppDimens.SIZE_32,
           );
         }
         if (errorState != null && errorState!(state)) {

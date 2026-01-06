@@ -22,5 +22,13 @@
   "verifyCode": "Verify code",
   "empty": "No data",
   "pullToRefresh": "Pull down to refresh",
-  "tryAgain": "Try again"
+  "tryAgain": "Try again",
+  "error_common": "Something went wrong, please try again later",
+  "agree": "Agree",
+  "disagree": "Disagree",
+  "done": "Done",
+  "home": "Home",
+  "news": "News",
+  "profile": "Profile",
+  "settings": "Settings"
 }

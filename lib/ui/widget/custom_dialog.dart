@@ -37,7 +37,7 @@ class CustomDialogUtil {
           content: content,
           autoPopWhenPressSubmit: autoPopWhenPressSubmit,
           image: image ?? "Assets.images.icDialogConfirm",
-          titleSubmit: titleSubmit ?? AppLocalizations.of(context).agree,
+          titleSubmit: titleSubmit ?? AppLocalizations.current.agree,
           onSubmit: onSubmit,
           onCancel: onCancel,
           titleCancel: hideCancel ? null : (titleCancel ?? AppLocalizations.current.close)),

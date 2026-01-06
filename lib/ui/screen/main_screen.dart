@@ -6,6 +6,7 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/ui/widget/app_widgets/app_drawer.dart';
+import 'package:readbox/ui/widget/app_widgets/book_card.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
 class MainScreen extends StatelessWidget {

@@ -1,3 +1,5 @@
+// dart format width=80
+
 /// GENERATED CODE - DO NOT MODIFY BY HAND
 /// *****************************************************
 ///  FlutterGen
@@ -5,9 +7,109 @@
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
+// ignore_for_file: deprecated_member_use,directives_ordering,implicit_dynamic_list_literal,unnecessary_import
 
 import 'package:flutter/widgets.dart';
+
+class $AssetsIconsGen {
+  const $AssetsIconsGen();
+
+  /// File path: assets/icons/box_empty.svg
+  String get boxEmpty => 'assets/icons/box_empty.svg';
+
+  /// File path: assets/icons/ic_avatar.svg
+  String get icAvatar => 'assets/icons/ic_avatar.svg';
+
+  /// File path: assets/icons/ic_baithuoc.svg
+  String get icBaithuoc => 'assets/icons/ic_baithuoc.svg';
+
+  /// File path: assets/icons/ic_calendar.svg
+  String get icCalendar => 'assets/icons/ic_calendar.svg';
+
+  /// File path: assets/icons/ic_caythuoc.svg
+  String get icCaythuoc => 'assets/icons/ic_caythuoc.svg';
+
+  /// File path: assets/icons/ic_certificate.svg
+  String get icCertificate => 'assets/icons/ic_certificate.svg';
+
+  /// File path: assets/icons/ic_close_circle.svg
+  String get icCloseCircle => 'assets/icons/ic_close_circle.svg';
+
+  /// File path: assets/icons/ic_complant.svg
+  String get icComplant => 'assets/icons/ic_complant.svg';
+
+  /// File path: assets/icons/ic_dot_horizontal.svg
+  String get icDotHorizontal => 'assets/icons/ic_dot_horizontal.svg';
+
+  /// File path: assets/icons/ic_email.svg
+  String get icEmail => 'assets/icons/ic_email.svg';
+
+  /// File path: assets/icons/ic_face_id.svg
+  String get icFaceId => 'assets/icons/ic_face_id.svg';
+
+  /// File path: assets/icons/ic_facebook.svg
+  String get icFacebook => 'assets/icons/ic_facebook.svg';
+
+  /// File path: assets/icons/ic_folder_empty.svg
+  String get icFolderEmpty => 'assets/icons/ic_folder_empty.svg';
+
+  /// File path: assets/icons/ic_google.svg
+  String get icGoogle => 'assets/icons/ic_google.svg';
+
+  /// File path: assets/icons/ic_history.svg
+  String get icHistory => 'assets/icons/ic_history.svg';
+
+  /// File path: assets/icons/ic_home.svg
+  String get icHome => 'assets/icons/ic_home.svg';
+
+  /// File path: assets/icons/ic_library.svg
+  String get icLibrary => 'assets/icons/ic_library.svg';
+
+  /// File path: assets/icons/ic_lock_password.svg
+  String get icLockPassword => 'assets/icons/ic_lock_password.svg';
+
+  /// File path: assets/icons/ic_news.svg
+  String get icNews => 'assets/icons/ic_news.svg';
+
+  /// File path: assets/icons/ic_qrcode.svg
+  String get icQrcode => 'assets/icons/ic_qrcode.svg';
+
+  /// File path: assets/icons/ic_ring.svg
+  String get icRing => 'assets/icons/ic_ring.svg';
+
+  /// File path: assets/icons/ic_setting.svg
+  String get icSetting => 'assets/icons/ic_setting.svg';
+
+  /// File path: assets/icons/ic_time.svg
+  String get icTime => 'assets/icons/ic_time.svg';
+
+  /// List of all assets
+  List<String> get values => [
+    boxEmpty,
+    icAvatar,
+    icBaithuoc,
+    icCalendar,
+    icCaythuoc,
+    icCertificate,
+    icCloseCircle,
+    icComplant,
+    icDotHorizontal,
+    icEmail,
+    icFaceId,
+    icFacebook,
+    icFolderEmpty,
+    icGoogle,
+    icHistory,
+    icHome,
+    icLibrary,
+    icLockPassword,
+    icNews,
+    icQrcode,
+    icRing,
+    icSetting,
+    icTime,
+  ];
+}
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
@@ -16,43 +118,106 @@ class $AssetsImagesGen {
   AssetGenImage get appBarBackground =>
       const AssetGenImage('assets/images/app_bar_background.png');
 
+  /// File path: assets/images/background.jpg
+  AssetGenImage get background =>
+      const AssetGenImage('assets/images/background.jpg');
+
+  /// File path: assets/images/camera.png
+  AssetGenImage get camera => const AssetGenImage('assets/images/camera.png');
+
+  /// File path: assets/images/checkered_pattern.svg
+  String get checkeredPattern => 'assets/images/checkered_pattern.svg';
+
   /// File path: assets/images/ic_back.png
   AssetGenImage get icBack => const AssetGenImage('assets/images/ic_back.png');
 
-  /// File path: assets/images/ic_bg_splash.png
-  AssetGenImage get icBgSplash =>
-      const AssetGenImage('assets/images/ic_bg_splash.png');
+  /// File path: assets/images/ic_back_svg.svg
+  String get icBackSvg => 'assets/images/ic_back_svg.svg';
 
-  /// Directory path: assets/images/noti
-  $AssetsImagesNotiGen get noti => const $AssetsImagesNotiGen();
+  /// File path: assets/images/ic_gallery.png
+  AssetGenImage get icGallery =>
+      const AssetGenImage('assets/images/ic_gallery.png');
+
+  /// File path: assets/images/ic_intro_1.png
+  AssetGenImage get icIntro1 =>
+      const AssetGenImage('assets/images/ic_intro_1.png');
+
+  /// File path: assets/images/ic_intro_2.png
+  AssetGenImage get icIntro2 =>
+      const AssetGenImage('assets/images/ic_intro_2.png');
+
+  /// File path: assets/images/ic_qr_code.png
+  AssetGenImage get icQrCode =>
+      const AssetGenImage('assets/images/ic_qr_code.png');
+
+  /// File path: assets/images/ic_scan_qr.png
+  AssetGenImage get icScanQr =>
+      const AssetGenImage('assets/images/ic_scan_qr.png');
+
+  /// File path: assets/images/ic_search.svg
+  String get icSearch => 'assets/images/ic_search.svg';
+
+  /// File path: assets/images/ic_splash.png
+  AssetGenImage get icSplash =>
+      const AssetGenImage('assets/images/ic_splash.png');
+
+  /// File path: assets/images/ic_suspected.svg
+  String get icSuspected => 'assets/images/ic_suspected.svg';
+
+  /// File path: assets/images/ic_verified.svg
+  String get icVerified => 'assets/images/ic_verified.svg';
+
+  /// File path: assets/images/ic_vneid.png
+  AssetGenImage get icVneid =>
+      const AssetGenImage('assets/images/ic_vneid.png');
+
+  /// File path: assets/images/logo.png
+  AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
+
+  /// File path: assets/images/sample-medicine.jpg
+  AssetGenImage get sampleMedicine =>
+      const AssetGenImage('assets/images/sample-medicine.jpg');
+
+  /// File path: assets/images/sample-product.png
+  AssetGenImage get sampleProduct =>
+      const AssetGenImage('assets/images/sample-product.png');
+
+  /// File path: assets/images/video.png
+  AssetGenImage get video => const AssetGenImage('assets/images/video.png');
+
+  /// File path: assets/images/welcome.png
+  AssetGenImage get welcome => const AssetGenImage('assets/images/welcome.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [appBarBackground, icBack, icBgSplash];
-}
-
-class $AssetsImagesNotiGen {
-  const $AssetsImagesNotiGen();
-
-  /// File path: assets/images/noti/ic_dialog_confirm.png
-  AssetGenImage get icDialogConfirm =>
-      const AssetGenImage('assets/images/noti/ic_dialog_confirm.png');
-
-  /// File path: assets/images/noti/ic_dialog_fail.png
-  AssetGenImage get icDialogFail =>
-      const AssetGenImage('assets/images/noti/ic_dialog_fail.png');
-
-  /// File path: assets/images/noti/ic_dialog_success.png
-  AssetGenImage get icDialogSuccess =>
-      const AssetGenImage('assets/images/noti/ic_dialog_success.png');
-
-  /// List of all assets
-  List<AssetGenImage> get values =>
-      [icDialogConfirm, icDialogFail, icDialogSuccess];
+  List<dynamic> get values => [
+    appBarBackground,
+    background,
+    camera,
+    checkeredPattern,
+    icBack,
+    icBackSvg,
+    icGallery,
+    icIntro1,
+    icIntro2,
+    icQrCode,
+    icScanQr,
+    icSearch,
+    icSplash,
+    icSuspected,
+    icVerified,
+    icVneid,
+    logo,
+    sampleMedicine,
+    sampleProduct,
+    video,
+    welcome,
+  ];
 }
 
 class Assets {
-  Assets._();
+  const Assets._();
 
+  static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 
@@ -61,12 +226,14 @@ class AssetGenImage {
     this._assetName, {
     this.size,
     this.flavors = const {},
+    this.animation,
   });
 
   final String _assetName;
 
   final Size? size;
   final Set<String> flavors;
+  final AssetGenImageAnimation? animation;
 
   Image image({
     Key? key,
@@ -86,10 +253,10 @@ class AssetGenImage {
     ImageRepeat repeat = ImageRepeat.noRepeat,
     Rect? centerSlice,
     bool matchTextDirection = false,
-    bool gaplessPlayback = false,
+    bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = FilterQuality.low,
+    FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) {
@@ -121,18 +288,23 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({
-    AssetBundle? bundle,
-    String? package,
-  }) {
-    return AssetImage(
-      _assetName,
-      bundle: bundle,
-      package: package,
-    );
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;
 
   String get keyName => _assetName;
+}
+
+class AssetGenImageAnimation {
+  const AssetGenImageAnimation({
+    required this.isAnimation,
+    required this.duration,
+    required this.frames,
+  });
+
+  final bool isAnimation;
+  final Duration duration;
+  final int frames;
 }

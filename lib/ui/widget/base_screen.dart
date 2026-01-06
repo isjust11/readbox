@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readbox/blocs/user_interaction_cubit.dart';
-import 'package:readbox/domain/data/enums/enums.dart';
+// import 'package:readbox/blocs/user_interaction_cubit.dart';
+// import 'package:readbox/domain/data/enums/enums.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/res/resources.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
@@ -37,7 +37,7 @@ class BaseScreen extends StatelessWidget {
   final Widget? bottomNavigationBar;
 
   // phần liên quan tới action
-  final InteractionTarget? interactionTarget;
+  // final InteractionTarget? interactionTarget;
   final String? interactionId;
 
   // nếu true => sẽ ẩn backIcon , mặc định là true
@@ -67,13 +67,13 @@ class BaseScreen extends StatelessWidget {
     this.colorBg = AppColors.white,
     this.systemUiOverlayStyle = SystemUiOverlayStyle.dark,
     this.bottomNavigationBar,
-    this.interactionTarget,
+    // this.interactionTarget,
     this.interactionId,
   });
 
   @override
   Widget build(BuildContext context) {
-    _handleInteraction(context, interactionTarget, interactionId);
+    // _handleInteraction(context, interactionTarget, interactionId);
 
     final scaffold = Scaffold(
       appBar: hideAppBar ? null : (customAppBar ?? baseAppBar(context)),
@@ -160,52 +160,52 @@ class BaseScreen extends StatelessWidget {
   }
 
   // handle interaction
-  void _handleInteraction(
-    BuildContext context,
-    InteractionTarget? interactionTarget,
-    String? interactionId,
-  ) {
-    if (interactionTarget == InteractionTarget.article ||
-        interactionTarget == InteractionTarget.herbal ||
-        interactionTarget == InteractionTarget.folkMedicine ||
-        interactionTarget == InteractionTarget.author) {
-      _processGetStatsInteraction(context, interactionTarget!, interactionId);
-      _processAutoIncrementView(context, interactionTarget, interactionId);
-      _processGetStatusInteraction(context, interactionTarget, interactionId);
-      return;
-    }
-  }
+  // void _handleInteraction(
+  //   BuildContext context,
+  //   InteractionTarget? interactionTarget,
+  //   String? interactionId,
+  // ) {
+  //   if (interactionTarget == InteractionTarget.article ||
+  //       interactionTarget == InteractionTarget.herbal ||
+  //       interactionTarget == InteractionTarget.folkMedicine ||
+  //       interactionTarget == InteractionTarget.author) {
+  //     _processGetStatsInteraction(context, interactionTarget!, interactionId);
+  //     _processAutoIncrementView(context, interactionTarget, interactionId);
+  //     _processGetStatusInteraction(context, interactionTarget, interactionId);
+  //     return;
+  //   }
+  // }
 
-  void _processGetStatusInteraction(
-    BuildContext context,
-    InteractionTarget interactionTarget,
-    String? interactionId,
-  ) {
-    context.read<UserInteractionCubit>().getStatus(
-      targetType: interactionTarget.value,
-      targetId: interactionId,
-    );
-  }
+  // void _processGetStatusInteraction(
+  //   BuildContext context,
+  //   InteractionTarget interactionTarget,
+  //   String? interactionId,
+  // ) {
+  //   context.read<UserInteractionCubit>().getStatus(
+  //     targetType: interactionTarget.value,
+  //     targetId: interactionId,
+  //   );
+  // }
 
-  void _processGetStatsInteraction(
-    BuildContext context,
-    InteractionTarget interactionTarget,
-    String? interactionId,
-  ) {
-    context.read<UserInteractionCubit>().getStats(
-      targetType: interactionTarget.value,
-      targetId: interactionId,
-    );
-  }
+  // void _processGetStatsInteraction(
+  //   BuildContext context,
+  //   InteractionTarget interactionTarget,
+  //   String? interactionId,
+  // ) {
+  //   context.read<UserInteractionCubit>().getStats(
+  //     targetType: interactionTarget.value,
+  //     targetId: interactionId,
+  //   );
+  // }
 
-  void _processAutoIncrementView(
-    BuildContext context,
-    InteractionTarget interactionTarget,
-    String? interactionId,
-  ) {
-    context.read<UserInteractionCubit>().view(
-      targetType: interactionTarget.value,
-      targetId: interactionId,
-    );
-  }
+  // void _processAutoIncrementView(
+  //   BuildContext context,
+  //   InteractionTarget interactionTarget,
+  //   String? interactionId,
+  // ) {
+  //   context.read<UserInteractionCubit>().view(
+  //     targetType: interactionTarget.value,
+  //     targetId: interactionId,
+  //   );
+  // }
 }

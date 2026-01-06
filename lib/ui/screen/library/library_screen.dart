@@ -40,7 +40,7 @@ class _LibraryBodyState extends State<LibraryBody> {
   Widget build(BuildContext context) {
     return BaseScreen(
       title: 'My Library',
-      loadingWidget: CustomLoading<LibraryCubit>(),
+      stateWidget: CustomLoading<LibraryCubit>(),
       messageNotify: CustomSnackBar<LibraryCubit>(),
       rightWidgets: [
         IconButton(

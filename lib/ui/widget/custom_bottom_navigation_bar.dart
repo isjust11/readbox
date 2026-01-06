@@ -64,36 +64,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
-              Assets.icons.icBaithuoc,
-              color: unselectedColor,
-              width: AppDimens.SIZE_24,
-              height: AppDimens.SIZE_24,
-            ),
-            activeIcon: SvgPicture.asset(
-              Assets.icons.icBaithuoc,
-              color: selectedColor,
-              width: AppDimens.SIZE_24,
-              height: AppDimens.SIZE_24,
-            ),
-            label: AppLocalizations.current.medicine,
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              Assets.icons.icLibrary,
-              color: unselectedColor,
-              width: AppDimens.SIZE_24,
-              height: AppDimens.SIZE_24,
-            ),
-            activeIcon: SvgPicture.asset(
-              Assets.icons.icLibrary,
-              color: selectedColor,
-              width: AppDimens.SIZE_24,
-              height: AppDimens.SIZE_24,
-            ),
-            label: AppLocalizations.current.library,
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
               Assets.icons.icSetting,
               color: unselectedColor,
               width: AppDimens.SIZE_24,

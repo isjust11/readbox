@@ -22,20 +22,29 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "agree": MessageLookupByLibrary.simpleMessage("Đồng ý"),
     "cancel": MessageLookupByLibrary.simpleMessage("Hủy"),
     "close": MessageLookupByLibrary.simpleMessage("Đóng"),
     "confirm": MessageLookupByLibrary.simpleMessage("Xác nhận"),
+    "disagree": MessageLookupByLibrary.simpleMessage("Không đồng ý"),
+    "done": MessageLookupByLibrary.simpleMessage("Hoàn thành"),
     "empty": MessageLookupByLibrary.simpleMessage("Không có dữ liệu"),
     "error": MessageLookupByLibrary.simpleMessage("Lỗi"),
+    "error_common": MessageLookupByLibrary.simpleMessage(
+      "Đã xảy ra lỗi, vui lòng thử lại sau",
+    ),
     "forgotPassword": MessageLookupByLibrary.simpleMessage("Quên mật khẩu"),
+    "home": MessageLookupByLibrary.simpleMessage("Trang chủ"),
     "info": MessageLookupByLibrary.simpleMessage("Thông tin"),
     "inputUserName": MessageLookupByLibrary.simpleMessage("Nhập tên đăng nhập"),
     "loading": MessageLookupByLibrary.simpleMessage("Đang tải..."),
     "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
     "logout": MessageLookupByLibrary.simpleMessage("Đăng xuất"),
+    "news": MessageLookupByLibrary.simpleMessage("Tin tức"),
     "plsInputUserName": MessageLookupByLibrary.simpleMessage(
       "Vui lòng nhập tên đăng nhập",
     ),
+    "profile": MessageLookupByLibrary.simpleMessage("Hồ sơ"),
     "pullToRefresh": MessageLookupByLibrary.simpleMessage(
       "Kéo xuống để làm mới",
     ),
@@ -44,6 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetPassword": MessageLookupByLibrary.simpleMessage("Đặt lại mật khẩu"),
     "retry": MessageLookupByLibrary.simpleMessage("Thử lại"),
     "search": MessageLookupByLibrary.simpleMessage("Tìm kiếm"),
+    "settings": MessageLookupByLibrary.simpleMessage("Cài đặt"),
     "success": MessageLookupByLibrary.simpleMessage("Thành công"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Thử lại"),
     "userName": MessageLookupByLibrary.simpleMessage("Tên đăng nhập"),

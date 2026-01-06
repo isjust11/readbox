@@ -22,20 +22,29 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "agree": MessageLookupByLibrary.simpleMessage("Agree"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
     "close": MessageLookupByLibrary.simpleMessage("Close"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+    "disagree": MessageLookupByLibrary.simpleMessage("Disagree"),
+    "done": MessageLookupByLibrary.simpleMessage("Done"),
     "empty": MessageLookupByLibrary.simpleMessage("No data"),
     "error": MessageLookupByLibrary.simpleMessage("Error"),
+    "error_common": MessageLookupByLibrary.simpleMessage(
+      "Something went wrong, please try again later",
+    ),
     "forgotPassword": MessageLookupByLibrary.simpleMessage("Forgot password"),
+    "home": MessageLookupByLibrary.simpleMessage("Home"),
     "info": MessageLookupByLibrary.simpleMessage("Info"),
     "inputUserName": MessageLookupByLibrary.simpleMessage("Enter username"),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "login": MessageLookupByLibrary.simpleMessage("Login"),
     "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+    "news": MessageLookupByLibrary.simpleMessage("News"),
     "plsInputUserName": MessageLookupByLibrary.simpleMessage(
       "Please enter username",
     ),
+    "profile": MessageLookupByLibrary.simpleMessage("Profile"),
     "pullToRefresh": MessageLookupByLibrary.simpleMessage(
       "Pull down to refresh",
     ),
@@ -44,6 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "resetPassword": MessageLookupByLibrary.simpleMessage("Reset password"),
     "retry": MessageLookupByLibrary.simpleMessage("Retry"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
+    "settings": MessageLookupByLibrary.simpleMessage("Settings"),
     "success": MessageLookupByLibrary.simpleMessage("Success"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Try again"),
     "userName": MessageLookupByLibrary.simpleMessage("Username"),

@@ -22,7 +22,7 @@ class CustomSnackBar<T extends Cubit<BaseState>> extends StatelessWidget {
         if (state is LoadedState) {
           mess = state.data?.message ?? AppLocalizations.current.success;
         } else if (state is ErrorState) {
-          mess = state.message;
+          mess = "Error";
         } else if (state is LoadingState) {
           return;
         }

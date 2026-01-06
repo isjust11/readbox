@@ -24,6 +24,8 @@ class Routes {
   // PDF text to speech screen
   static const String pdfTextToSpeechScreen = "/pdfTextToSpeechScreen";
   static const String ttsDemoScreen = "/ttsDemoScreen";
+
+  static const String search = "/search";
   //init screen name
   static String initScreen() => splashScreen;
 

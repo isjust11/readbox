@@ -27,21 +27,4 @@ class NavigationService {
     navigatorKey.currentState?.pop(param);
   }
 
-  showDialogTokenExpired() {
-    BuildContext? context = navigatorKey.currentState?.overlay?.context;
-    if (context == null) {
-      return;
-    }
-    String? message = AppLocalizations.of(context).tokenExpiredMessage;
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) => CustomDialog(
-        content: message,
-        onSubmit: () {
-          pushReplacement(Routes.loginScreen);
-        },
-      ),
-    );
-  }
 }

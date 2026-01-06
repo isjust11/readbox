@@ -24,6 +24,25 @@ class Common {
     }
   }
 
+static String formatDate(dynamic dateValue, {String? format}) {
+    try {
+      DateTime dateTime;
+
+      if (dateValue is String) {
+        // Parse ISO 8601 format string
+        dateTime = DateTime.parse(dateValue);
+      } else if (dateValue is DateTime) {
+        dateTime = dateValue;
+      } else {
+        return 'N/A';
+      }
+
+      return DateFormat(format ?? 'dd/MM/yyyy').format(dateTime);
+    } catch (e) {
+      return 'N/A';
+    }
+  }
+
   static int strToInt(String data, {int defaultValue = 0}) {
     try {
       if (data.isEmpty) return defaultValue;
