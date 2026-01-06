@@ -1,5 +1,6 @@
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/res/enum.dart';
 
 class GetBookListUseCase {
   final BookRepository repository;
@@ -7,14 +8,18 @@ class GetBookListUseCase {
   GetBookListUseCase(this.repository);
 
   Future<List<BookModel>> call({
-    bool? isFavorite,
-    bool? isArchived,
+    FilterType? filterType,
     String? searchQuery,
+    int? page,
+    int? limit,
+    String? categoryId,
   }) async {
     return await repository.getPublicBooks(
-      isFavorite: isFavorite,
-      isArchived: isArchived,
+      filterType: filterType,
       searchQuery: searchQuery,
+      page: page,
+      limit: limit,
+      categoryId: categoryId,
     );
   }
 }

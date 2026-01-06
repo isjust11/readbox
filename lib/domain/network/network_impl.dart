@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:readbox/domain/network/network.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-import 'package:readbox/utils/navigator.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
 class Network {
@@ -111,9 +110,15 @@ class Network {
         errMessage: response.statusMessage ?? '');
   }
 
-  void handleTokenExpired() async {
-    NavigationService.instance.showDialogTokenExpired();
-  }
+  // void handleTokenExpired() async {
+  //   NavigationService.instance.showDialog(
+  //     title: AppLocalizations.current.error,
+  //     message: AppLocalizations.current.error_connection,
+  //     onPressed: () {
+  //       NavigationService.instance.pop();ß
+  //     },
+  //   );
+  // }
 
   getDataReplace(data) {
     if (data is String) {

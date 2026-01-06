@@ -1,5 +1,6 @@
 import 'package:readbox/domain/data/datasources/datasource.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/res/res.dart';
 
 class BookRepository {
   final BookRemoteDataSource remoteDataSource;
@@ -15,15 +16,19 @@ class BookRepository {
   }
 
   Future<List<BookModel>> getPublicBooks({
-    bool? isFavorite,
-    bool? isArchived,
+    FilterType? filterType,
     String? searchQuery,
+    int? page,
+    int? limit,
+    String? categoryId,
   }) async {
     try {
       return await remoteDataSource.getPublicBooks(
-        isFavorite: isFavorite,
-        isArchived: isArchived,
+        filterType: filterType,
         searchQuery: searchQuery,
+        page: page,
+        limit: limit,
+        categoryId: categoryId,
       );
     } catch (e) {
       throw Exception('Failed to get books: $e');

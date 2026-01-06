@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
-import '../../../blocs/cubit.dart';
 import '../../../domain/data/models/models.dart';
 
 class AppDrawer extends StatefulWidget {
-  const AppDrawer({super.key});
+  final Function(String) onSelected;
+  const AppDrawer({super.key, required this.onSelected});
 
   @override
   State<AppDrawer> createState() => _AppDrawerState();
@@ -34,13 +33,13 @@ class _AppDrawerState extends State<AppDrawer> {
 
     switch (filter) {
       case 'all':
-        context.read<LibraryCubit>().getBooks();
+        widget.onSelected('all');
         break;
       case 'favorite':
-        context.read<LibraryCubit>().getBooks(isFavorite: true);
+        widget.onSelected('favorite');
         break;
       case 'archived':
-        context.read<LibraryCubit>().getBooks(isArchived: true);
+        widget.onSelected('archived');
         break;
     }
     Navigator.pop(context); // Close drawer
@@ -199,9 +198,11 @@ class _AppDrawerState extends State<AppDrawer> {
 
   void _handleLogout() async {
     await SharedPreferenceUtil.clearData();
-    Navigator.of(
-      context,
-    ).pushNamedAndRemoveUntil(Routes.loginScreen, (route) => false);
+    if (context.mounted) {
+      Navigator.of(
+        context,
+      ).pushNamedAndRemoveUntil(Routes.loginScreen, (route) => false);
+    }
   }
 
   Widget _buildDrawerItem({

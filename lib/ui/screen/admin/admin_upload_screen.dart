@@ -5,18 +5,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:readbox/blocs/admin/admin_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
+import 'package:readbox/blocs/book_refresh/book_refresh_cubit.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
-
-// void showCustomSnackBar(BuildContext context, String message, {bool isError = false}) {
-//   ScaffoldMessenger.of(context).showSnackBar(
-//     SnackBar(
-//       content: Text(message),
-//       backgroundColor: isError ? Colors.red : Colors.green,
-//       duration: Duration(seconds: 2),
-//     ),
-//   );
-// }
 
 class AdminUploadScreen extends StatelessWidget {
   const AdminUploadScreen({super.key});
@@ -33,10 +24,10 @@ class AdminUploadScreen extends StatelessWidget {
 class AdminUploadBody extends StatefulWidget {
   const AdminUploadBody({super.key});
   @override
-  _AdminUploadBodyState createState() => _AdminUploadBodyState();
+  AdminUploadBodyState createState() => AdminUploadBodyState();
 }
 
-class _AdminUploadBodyState extends State<AdminUploadBody> {
+class AdminUploadBodyState extends State<AdminUploadBody> {
   final _formKey = GlobalKey<FormState>();
   
   final _titleController = TextEditingController();
@@ -64,6 +55,12 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
     _isbnController.dispose();
     _totalPagesController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<BookRefreshCubit>().reset();
   }
 
   Future<void> _pickEbookFile() async {
@@ -220,6 +217,10 @@ class _AdminUploadBodyState extends State<AdminUploadBody> {
     });
     
     context.read<AdminCubit>().reset();
+    
+    // Notify toàn app rằng danh sách sách đã thay đổi
+    context.read<BookRefreshCubit>().notifyBookListChanged();
+    
     Navigator.pop(context);
   }
 

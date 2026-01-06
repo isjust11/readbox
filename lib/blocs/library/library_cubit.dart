@@ -6,6 +6,7 @@ import 'package:readbox/domain/usecases/add_book_usecase.dart';
 import 'package:readbox/domain/usecases/get_book_list_usecase.dart';
 import 'package:readbox/domain/usecases/delete_book_usecase.dart';
 import 'package:readbox/domain/usecases/search_books_usecase.dart';
+import 'package:readbox/res/res.dart';
 
 class LibraryCubit extends Cubit<BaseState> {
   final GetBookListUseCase getBookListUseCase;
@@ -22,33 +23,93 @@ class LibraryCubit extends Cubit<BaseState> {
 
   List<BookModel> _books = [];
   List<BookModel> get books => _books;
+  bool _hasMore = true;
+  bool get hasMore => _hasMore;
+  bool _isLoadingMore = false;
+  bool get isLoadingMore => _isLoadingMore;
 
-  void getBooks({
-    bool? isFavorite,
-    bool? isArchived,
+  Future<void> getBooks({
+    FilterType? filterType,
+    String? searchQuery,
+    int? page,
+    int? limit,
+    String? categoryId,
+    bool isLoadMore = false,
   }) async {
     try {
-      emit(LoadingState());
-      _books = await getBookListUseCase(
-        isFavorite: isFavorite,
-        isArchived: isArchived,
+      
+      if (!isLoadMore) {
+        emit(LoadingState());
+        _books = [];
+        _hasMore = true;
+      } else {
+        _isLoadingMore = true;
+      }
+
+      final newBooks = await getBookListUseCase(
+        filterType: filterType,
+        searchQuery: searchQuery,
+        page: page,
+        limit: limit,
+        categoryId: categoryId,
       );
-      emit(LoadedState(_books));
+
+
+      if (isLoadMore) {
+        _books.addAll(newBooks);
+        _hasMore = newBooks.length >= (limit ?? 10);
+        _isLoadingMore = false;
+      } else {
+        _books = newBooks;
+        _hasMore = newBooks.length >= (limit ?? 10);
+      }
+
+      // Emit với list mới để trigger rebuild
+      emit(LoadedState(List.from(_books)));
     } catch (e) {
+      _isLoadingMore = false;
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
 
-  void searchBooks(String query) async {
+  Future<void> searchBooks({
+    FilterType? filterType,
+    String? searchQuery,
+    int? page,
+    int? limit,
+    String? categoryId,
+    bool isLoadMore = false,
+  }) async {
     try {
-      if (query.isEmpty) {
-        getBooks();
-        return;
+      if (!isLoadMore) {
+        emit(LoadingState());
+        _books = [];
+        _hasMore = true;
+      } else {
+        _isLoadingMore = true;
       }
-      emit(LoadingState());
-      _books = await searchBooksUseCase(query);
-      emit(LoadedState(_books));
+
+      final newBooks = await searchBooksUseCase(
+        filterType: filterType,
+        searchQuery: searchQuery,
+        page: page,
+        limit: limit,
+        categoryId: categoryId,
+      );
+
+      if (isLoadMore) {
+        _books.addAll(newBooks);
+        _hasMore = newBooks.length >= (limit ?? 10);
+        _isLoadingMore = false;
+      } else {
+        _books = newBooks;
+        _hasMore = newBooks.length >= (limit ?? 10);
+      }
+
+      // Emit với list mới để trigger rebuild
+      emit(LoadedState(List.from(_books)));
     } catch (e) {
+      _isLoadingMore = false;
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
@@ -76,8 +137,21 @@ class LibraryCubit extends Cubit<BaseState> {
     }
   }
 
-  void refreshBooks() {
-    getBooks();
+  Future<void> refreshBooks({
+    FilterType? filterType,
+    String? searchQuery,
+    int? page,
+    int? limit,
+    String? categoryId,
+  }) async {
+    await getBooks(
+      filterType: filterType,
+      searchQuery: searchQuery,
+      page: page ?? 1,
+      limit: limit,
+      categoryId: categoryId,
+      isLoadMore: false,
+    );
   }
 }
 

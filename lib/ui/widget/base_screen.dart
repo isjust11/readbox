@@ -51,6 +51,8 @@ class BaseScreen extends StatelessWidget {
   // base bg color
   final Color colorBg;
 
+  final Widget? drawer;
+
   const BaseScreen({
     super.key,
     this.body,
@@ -69,6 +71,7 @@ class BaseScreen extends StatelessWidget {
     this.bottomNavigationBar,
     // this.interactionTarget,
     this.interactionId,
+    this.drawer,
   });
 
   @override
@@ -78,6 +81,7 @@ class BaseScreen extends StatelessWidget {
     final scaffold = Scaffold(
       appBar: hideAppBar ? null : (customAppBar ?? baseAppBar(context)),
       backgroundColor: colorBg,
+      drawer: drawer,
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {

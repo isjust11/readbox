@@ -137,7 +137,7 @@ class CustomBlocResult<B extends StateStreamable<S>, S>
                 ),
                 SizedBox(height: AppDimens.SIZE_8),
                 CustomTextLabel(
-                  AppLocalizations.current.pullToRefresh,
+                  AppLocalizations.current.pull_to_refresh,
                   fontSize: AppDimens.SIZE_14,
                   color: AppColors.textDark.withValues(alpha: 0.4),
                 ),
@@ -184,7 +184,7 @@ class CustomBlocResult<B extends StateStreamable<S>, S>
                     onRefresh?.call();
                   },
                   child: CustomTextLabel(
-                    AppLocalizations.current.tryAgain,
+                    AppLocalizations.current.try_again,
                     fontSize: AppDimens.SIZE_14,
                     color: AppColors.colorTitle,
                   ),

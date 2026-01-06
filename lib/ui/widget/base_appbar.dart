@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:scale_size/scale_size.dart';
 
 import '../../res/resources.dart';
 import 'custom_text_label.dart';
 
-class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
+class BaseAppBar extends StatefulWidget {
   final String? title;
   final bool showBackButton;
   final Widget? customLeading;
@@ -13,7 +16,9 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color? backgroundColor;
   final VoidCallback? onBackTap;
   final bool? centerTitle;
-
+  final bool? showSearch;
+  final Function(String)? onSearchChanged;
+  final String? searchHint;
   const BaseAppBar({
     super.key,
     this.title,
@@ -24,30 +29,52 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.customTitle,
     this.onBackTap,
     this.centerTitle = true,
+    this.showSearch = false,
+    this.onSearchChanged,
+    this.searchHint,
   });
+
+  @override
+  State<BaseAppBar> createState() => _BaseAppBarState();
+}
+
+class _BaseAppBarState extends State<BaseAppBar> {
+  bool _isSearching = false;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: _buildTitle(context),
-      centerTitle: centerTitle,
-      backgroundColor: backgroundColor ?? AppColors.secondaryBrand,
+      title: _buildTitle(context, _isSearching),
+      centerTitle: widget.centerTitle,
+      backgroundColor: widget.backgroundColor ?? AppColors.baseColor,
       elevation: 0,
       automaticallyImplyLeading: false,
       leadingWidth: AppDimens.SIZE_40,
       leading: _buildLeading(context),
-      actions: actions,
+      actions: [ if (widget.showSearch ?? false) _buildSearchAction(),...(widget.actions ?? []), ],
     );
   }
 
-  Widget? _buildTitle(BuildContext context) {
-    if (customTitle != null) {
-      return customTitle;
+  Widget? _buildTitle(BuildContext context, bool showSearch) {
+    if (widget.customTitle != null) {
+      return widget.customTitle;
     }
     return SizedBox(
       width: 250.sw,
-      child: CustomTextLabel(
-        title,
+      child: showSearch ? TextField(
+        controller: TextEditingController(),
+        autofocus: true,
+        decoration: InputDecoration(
+          hintText: widget.searchHint ?? AppLocalizations.current.search,
+          hintStyle: TextStyle(color: AppColors.hintTextColor),
+          border: InputBorder.none,
+        ),
+        style: TextStyle(color: AppColors.secondaryTextDark),
+        onChanged: (value) {
+          widget.onSearchChanged?.call(value);
+        },
+      ) : CustomTextLabel(
+        widget.title,
         color: AppColors.white,
         fontSize: AppDimens.SIZE_14,
         fontWeight: FontWeight.w700,
@@ -57,17 +84,17 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget? _buildLeading(BuildContext context) {
-    if (customLeading != null) {
-      return customLeading;
+    if (widget.customLeading != null) {
+      return widget.customLeading;
     }
 
-    if (showBackButton) {
+    if (widget.showBackButton) {
       return InkWell(
         borderRadius: BorderRadius.circular(AppDimens.SIZE_10),
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
         onTap:
-            onBackTap ??
+            widget.onBackTap ??
             () {
               Navigator.pop(context);
             },
@@ -85,35 +112,14 @@ class BaseAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
     return null;
   }
-
-  @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
-}
-
-class SearchAction extends StatelessWidget {
-  final VoidCallback? onPressed;
-
-  const SearchAction({super.key, this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      // color: Colors.green,
-      padding: EdgeInsets.only(
-        bottom: AppDimens.SIZE_16,
-        right: AppDimens.SIZE_16,
-      ),
-      child: InkWell(
-        onTap: () {
-          onPressed?.call();
-        },
-        child: Icon(
-          Icons.search,
-          color: AppColors.white,
-          size: AppDimens.SIZE_16,
-        ),
-      ),
+  Widget _buildSearchAction() {
+    return IconButton(
+      icon: Icon(_isSearching ? Icons.close : Icons.search),
+      onPressed: () {
+        setState(() {
+          _isSearching = !_isSearching;
+        });
+      },
     );
   }
 }

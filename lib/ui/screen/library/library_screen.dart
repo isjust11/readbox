@@ -4,7 +4,7 @@ import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/injection_container.dart';
-import 'package:readbox/ui/widget/base_screen.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
 class LibraryScreen extends StatelessWidget {
@@ -29,6 +29,15 @@ class LibraryBody extends StatefulWidget {
 class _LibraryBodyState extends State<LibraryBody> {
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
+  int page = 1;
+  int limit = 10;
+  String categoryId = "";
+  FilterType filterType = FilterType.all;
+  @override
+  void initState() {
+    super.initState();
+    context.read<LibraryCubit>().getBooks(filterType: filterType, page: page, limit: limit, categoryId: categoryId);
+  }
 
   @override
   void dispose() {
@@ -50,7 +59,7 @@ class _LibraryBodyState extends State<LibraryBody> {
               _isSearching = !_isSearching;
               if (!_isSearching) {
                 _searchController.clear();
-                context.read<LibraryCubit>().getBooks();
+                context.read<LibraryCubit>().getBooks(filterType: filterType, page: page, limit: limit, categoryId: categoryId);
               }
             });
           },
@@ -75,12 +84,19 @@ class _LibraryBodyState extends State<LibraryBody> {
                   border: OutlineInputBorder(),
                 ),
                 onChanged: (value) {
-                  context.read<LibraryCubit>().searchBooks(value);
+                  context.read<LibraryCubit>().searchBooks(searchQuery: value, filterType: filterType);
                 },
               ),
             ),
           Expanded(
-            child: BlocBuilder<LibraryCubit, BaseState>(
+            child: BlocListener<BookRefreshCubit, int>(
+              listener: (context, state) {
+                // Lắng nghe sự thay đổi từ BookRefreshCubit
+                if (state > 0) {
+                  context.read<LibraryCubit>().getBooks(filterType: filterType, page: page, limit: limit, categoryId: categoryId);
+                }
+              },
+              child: BlocBuilder<LibraryCubit, BaseState>(
               builder: (context, state) {
                 if (state is LoadingState) {
                   return const Center(child: CircularProgressIndicator());
@@ -94,7 +110,7 @@ class _LibraryBodyState extends State<LibraryBody> {
                         Text('Error: ${state.data}'),
                         ElevatedButton(
                           onPressed: () {
-                            context.read<LibraryCubit>().getBooks();
+                            context.read<LibraryCubit>().getBooks(filterType: filterType, page: page, limit: limit, categoryId: categoryId);
                           },
                           child: const Text('Retry'),
                         ),
@@ -149,6 +165,7 @@ class _LibraryBodyState extends State<LibraryBody> {
 
                 return const SizedBox.shrink();
               },
+              ),
             ),
           ),
         ],

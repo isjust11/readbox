@@ -1,5 +1,6 @@
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/network.dart';
+import 'package:readbox/res/res.dart';
 
 class BookRemoteDataSource {
   final Network network;
@@ -9,8 +10,7 @@ class BookRemoteDataSource {
   Future<List<BookModel>> getPublicBooks({
     int? page,
     int? limit,
-    bool? isFavorite,
-    bool? isArchived,
+    FilterType? filterType,
     String? categoryId,
     String? searchQuery,
   }) async {
@@ -18,8 +18,7 @@ class BookRemoteDataSource {
     if (page != null) params['page'] = page;
     if (limit != null) params['limit'] = limit;
     if (categoryId != null) params['categoryId'] = categoryId;
-    if (isFavorite != null) params['isFavorite'] = isFavorite;
-    if (isArchived != null) params['isArchived'] = isArchived;
+    if (filterType != null) params['filterType'] = filterType.name;
     if (searchQuery != null && searchQuery.isNotEmpty) {
       params['search'] = searchQuery;
     }
@@ -30,12 +29,13 @@ class BookRemoteDataSource {
     );
 
     if (apiResponse.isSuccess) {
-      if (apiResponse.data['data'] is List) {
+      if (apiResponse.data != null && apiResponse.data.isNotEmpty) {
         return (apiResponse.data['data'] as List)
             .map((item) => BookModel.fromJson(item as Map<String, dynamic>))
             .toList();
+      } else {
+        return [];
       }
-      return [];
     }
     return Future.error(apiResponse.errMessage);
   }

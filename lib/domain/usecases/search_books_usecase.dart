@@ -1,16 +1,14 @@
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/res/res.dart';
 
 class SearchBooksUseCase {
   final BookRepository repository;
 
   SearchBooksUseCase(this.repository);
 
-  Future<List<BookModel>> call(String query) async {
-    if (query.isEmpty) {
-      return await repository.getPublicBooks();
-    }
-    return await repository.getPublicBooks(searchQuery: query);
+  Future<List<BookModel>> call({FilterType? filterType, String? searchQuery, int? page, int? limit, String? categoryId}) async {
+    return await repository.getPublicBooks(filterType: filterType, searchQuery: searchQuery, page: page, limit: limit, categoryId: categoryId);
   }
 }
 

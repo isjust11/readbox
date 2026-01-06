@@ -103,7 +103,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.black.withOpacity(0.7),
+                          Colors.black.withValues(alpha:0.7),
                         ],
                       ),
                     ),
@@ -160,10 +160,10 @@ class BookDetailBodyState extends State<BookDetailBody> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
-                        color: Colors.amber.withOpacity(0.1),
+                        color: Colors.amber.withValues(alpha:0.1),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: Colors.amber.withOpacity(0.3),
+                          color: Colors.amber.withValues(alpha:0.3),
                           width: 1,
                         ),
                       ),
@@ -320,7 +320,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha:0.05),
                 blurRadius: 10,
                 offset: Offset(0, -5),
               ),
@@ -331,7 +331,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
               gradient: LinearGradient(
                 colors: [
                   Theme.of(context).primaryColor,
-                  Theme.of(context).primaryColor.withOpacity(0.8),
+                  Theme.of(context).primaryColor.withValues(alpha:0.8),
                 ],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
@@ -339,7 +339,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).primaryColor.withOpacity(0.3),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: Offset(0, 6),
                 ),
@@ -361,7 +361,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                   Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -385,7 +385,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -417,20 +417,20 @@ class BookDetailBodyState extends State<BookDetailBody> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Theme.of(context).primaryColor.withOpacity(0.05),
-            Theme.of(context).primaryColor.withOpacity(0.02),
+            Theme.of(context).primaryColor.withValues(alpha: 0.05),
+            Theme.of(context).primaryColor.withValues(alpha: 0.02),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Theme.of(context).primaryColor.withOpacity(0.1),
+          color: Theme.of(context).primaryColor.withValues(alpha:0.1),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha:0.04),
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -441,7 +441,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha:0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
