@@ -7,12 +7,14 @@ class GoogleSignInConfig {
   // Sử dụng client ID từ google-services.json
 
   // Web Client ID (dùng cho server-side verification)
+  // Lấy từ Google Cloud Console → OAuth 2.0 Client IDs → Web application
   static const String webClientId =
-      '228679159711-906v3nfof3sibkre59r394gv44al416o.apps.googleusercontent.com';
+      '534175741610-np09i3oqbgpintqosdikvh6o5tl5od01.apps.googleusercontent.com';
 
   // Android Client ID (từ google-services.json)
+  // Lấy từ google-services.json → oauth_client → client_id
   static const String androidClientId =
-      '228679159711-k41tgofkrglamkn6khb79ttp772ej4ir.apps.googleusercontent.com';
+      '534175741610-np09i3oqbgpintqosdikvh6o5tl5od01.apps.googleusercontent.com';
 
   // Cấu hình GoogleSignIn instance
   static GoogleSignIn get googleSignIn => GoogleSignIn(

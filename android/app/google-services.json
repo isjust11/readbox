@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "541095232626",
-    "project_id": "readbox-910a2",
-    "storage_bucket": "readbox-910a2.firebasestorage.app"
+    "project_number": "534175741610",
+    "project_id": "readbox-3c692",
+    "storage_bucket": "readbox-3c692.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:541095232626:android:89be02eede531dae502eeb",
+        "mobilesdk_app_id": "1:534175741610:android:b873b13c6a5d001b3c42d3",
         "android_client_info": {
-          "package_name": "com.example.readbox"
+          "package_name": "com.hungvv.readbox"
         }
       },
       "oauth_client": [
         {
-          "client_id": "541095232626-eorijca5jp3noefo2j2enmlmflrsnjmm.apps.googleusercontent.com",
+          "client_id": "534175741610-ibd40ea4u2ju5cbuu4ts47a2h9kqtp83.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hungvv.readbox",
+            "certificate_hash": "da86a90be758b3dceb87f3cd3e210a9dc4d6e502"
+          }
+        },
+        {
+          "client_id": "534175741610-np09i3oqbgpintqosdikvh6o5tl5od01.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAh1Pge2gOdM8puGDYEcISRKuH2kCWTs6U"
+          "current_key": "AIzaSyD8EPrTx9N5DPGh4F9iJ7IclvIHMmb1Lso"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "541095232626-eorijca5jp3noefo2j2enmlmflrsnjmm.apps.googleusercontent.com",
+              "client_id": "534175741610-np09i3oqbgpintqosdikvh6o5tl5od01.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

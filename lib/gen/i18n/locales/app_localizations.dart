@@ -421,6 +421,726 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading more books no data'**
   String get loading_more_books_no_data;
+
+  /// No description provided for @local_library.
+  ///
+  /// In en, this message translates to:
+  /// **'Local library'**
+  String get local_library;
+
+  /// No description provided for @upload_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload book'**
+  String get upload_book;
+
+  /// No description provided for @feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get feedback;
+
+  /// No description provided for @google_play_services_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Play Services not available'**
+  String get google_play_services_not_available;
+
+  /// No description provided for @user_cancelled_google_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'User cancelled Google sign in'**
+  String get user_cancelled_google_sign_in;
+
+  /// No description provided for @user_cancelled_facebook_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'User cancelled Facebook sign in'**
+  String get user_cancelled_facebook_sign_in;
+
+  /// No description provided for @user_cancelled_apple_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'User cancelled Apple sign in'**
+  String get user_cancelled_apple_sign_in;
+
+  /// No description provided for @user_cancelled_twitter_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'User cancelled Twitter sign in'**
+  String get user_cancelled_twitter_sign_in;
+
+  /// No description provided for @user_cancelled_linkedin_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'User cancelled LinkedIn sign in'**
+  String get user_cancelled_linkedin_sign_in;
+
+  /// No description provided for @user_cancelled_github_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'User cancelled GitHub sign in'**
+  String get user_cancelled_github_sign_in;
+
+  /// No description provided for @user_cancelled_gitlab_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'User cancelled GitLab sign in'**
+  String get user_cancelled_gitlab_sign_in;
+
+  /// No description provided for @user_cancelled_bitbucket_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'User cancelled Bitbucket sign in'**
+  String get user_cancelled_bitbucket_sign_in;
+
+  /// No description provided for @user_cancelled_sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'User cancelled sign in'**
+  String get user_cancelled_sign_in;
+
+  /// No description provided for @google_signin_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google signin failed'**
+  String get google_signin_failed;
+
+  /// No description provided for @google_network_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Google network error'**
+  String get google_network_error;
+
+  /// No description provided for @google_invalid_client.
+  ///
+  /// In en, this message translates to:
+  /// **'Google invalid client'**
+  String get google_invalid_client;
+
+  /// No description provided for @google_developer_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Google developer error'**
+  String get google_developer_error;
+
+  /// No description provided for @google_timeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Google timeout'**
+  String get google_timeout;
+
+  /// No description provided for @facebook_access_token_is_null.
+  ///
+  /// In en, this message translates to:
+  /// **'Facebook access token is null'**
+  String get facebook_access_token_is_null;
+
+  /// No description provided for @facebook_login_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Facebook login failed'**
+  String get facebook_login_failed;
+
+  /// No description provided for @facebook_network_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Facebook network error'**
+  String get facebook_network_error;
+
+  /// No description provided for @facebook_invalid_client.
+  ///
+  /// In en, this message translates to:
+  /// **'Facebook invalid client'**
+  String get facebook_invalid_client;
+
+  /// No description provided for @noName.
+  ///
+  /// In en, this message translates to:
+  /// **'No name'**
+  String get noName;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get editProfile;
+
+  /// No description provided for @updateYourInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your information'**
+  String get updateYourInfo;
+
+  /// No description provided for @security.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get security;
+
+  /// No description provided for @privacySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy settings'**
+  String get privacySettings;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @changeAppLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Change app language'**
+  String get changeAppLanguage;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @chooseAppAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose app appearance'**
+  String get chooseAppAppearance;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @manageNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage notifications'**
+  String get manageNotifications;
+
+  /// No description provided for @biometricLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric login'**
+  String get biometricLogin;
+
+  /// No description provided for @biometricNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric not available'**
+  String get biometricNotAvailable;
+
+  /// No description provided for @useFingerprintOrFaceID.
+  ///
+  /// In en, this message translates to:
+  /// **'Use fingerprint or Face ID'**
+  String get useFingerprintOrFaceID;
+
+  /// No description provided for @helpCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Help center'**
+  String get helpCenter;
+
+  /// No description provided for @getHelpAndSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Get help and support'**
+  String get getHelpAndSupport;
+
+  /// No description provided for @sendFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Send feedback'**
+  String get sendFeedback;
+
+  /// No description provided for @shareYourThoughts.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your thoughts'**
+  String get shareYourThoughts;
+
+  /// No description provided for @aboutApp.
+  ///
+  /// In en, this message translates to:
+  /// **'About app'**
+  String get aboutApp;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @light.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get light;
+
+  /// No description provided for @dark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get dark;
+
+  /// No description provided for @noLoginInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'No login information'**
+  String get noLoginInfo;
+
+  /// No description provided for @biometricSetupSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric setup successful'**
+  String get biometricSetupSuccess;
+
+  /// No description provided for @biometricDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric disabled'**
+  String get biometricDisabled;
+
+  /// No description provided for @feedbackSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback sent successfully'**
+  String get feedbackSuccess;
+
+  /// No description provided for @feedbackContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact information'**
+  String get feedbackContact;
+
+  /// No description provided for @feedbackDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'We would love to hear your feedback to improve the app'**
+  String get feedbackDescription;
+
+  /// No description provided for @feedbackType.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback type'**
+  String get feedbackType;
+
+  /// No description provided for @feedbackPriority.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get feedbackPriority;
+
+  /// No description provided for @feedbackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get feedbackTitle;
+
+  /// No description provided for @feedbackTitleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a title'**
+  String get feedbackTitleRequired;
+
+  /// No description provided for @feedbackTitleMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Title must be at least 5 characters'**
+  String get feedbackTitleMinLength;
+
+  /// No description provided for @feedbackContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get feedbackContent;
+
+  /// No description provided for @feedbackContentRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter content'**
+  String get feedbackContentRequired;
+
+  /// No description provided for @feedbackContentMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Content must be at least 10 characters'**
+  String get feedbackContentMinLength;
+
+  /// No description provided for @feedbackName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get feedbackName;
+
+  /// No description provided for @feedbackEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email'**
+  String get feedbackEmailInvalid;
+
+  /// No description provided for @feedbackPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get feedbackPhone;
+
+  /// No description provided for @feedbackPhoneInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid phone number'**
+  String get feedbackPhoneInvalid;
+
+  /// No description provided for @feedbackOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Options'**
+  String get feedbackOptions;
+
+  /// No description provided for @feedbackAnonymous.
+  ///
+  /// In en, this message translates to:
+  /// **'Send anonymously'**
+  String get feedbackAnonymous;
+
+  /// No description provided for @feedbackAnonymousDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Send feedback without displaying personal information'**
+  String get feedbackAnonymousDescription;
+
+  /// No description provided for @feedbackSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send feedback'**
+  String get feedbackSend;
+
+  /// No description provided for @login_to_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Login to continue'**
+  String get login_to_continue;
+
+  /// No description provided for @register_to_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Register to continue'**
+  String get register_to_continue;
+
+  /// No description provided for @register_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Register now'**
+  String get register_now;
+
+  /// No description provided for @login_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Login now'**
+  String get login_now;
+
+  /// No description provided for @login_with_google.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Google'**
+  String get login_with_google;
+
+  /// No description provided for @login_with_facebook.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Facebook'**
+  String get login_with_facebook;
+
+  /// No description provided for @login_with_apple.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Apple'**
+  String get login_with_apple;
+
+  /// No description provided for @login_with_twitter.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Twitter'**
+  String get login_with_twitter;
+
+  /// No description provided for @login_with_linkedin.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with LinkedIn'**
+  String get login_with_linkedin;
+
+  /// No description provided for @login_with_github.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with GitHub'**
+  String get login_with_github;
+
+  /// No description provided for @login_with_gitlab.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with GitLab'**
+  String get login_with_gitlab;
+
+  /// No description provided for @login_with_bitbucket.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Bitbucket'**
+  String get login_with_bitbucket;
+
+  /// No description provided for @login_with_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with email'**
+  String get login_with_email;
+
+  /// No description provided for @login_with_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with phone'**
+  String get login_with_phone;
+
+  /// No description provided for @login_with_username.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with username'**
+  String get login_with_username;
+
+  /// No description provided for @login_with_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with password'**
+  String get login_with_password;
+
+  /// No description provided for @login_with_otp.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with OTP'**
+  String get login_with_otp;
+
+  /// No description provided for @login_with_pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with PIN'**
+  String get login_with_pin;
+
+  /// No description provided for @login_with_face_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Face ID'**
+  String get login_with_face_id;
+
+  /// No description provided for @login_with_fingerprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with fingerprint'**
+  String get login_with_fingerprint;
+
+  /// No description provided for @login_with_biometric.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with biometric'**
+  String get login_with_biometric;
+
+  /// No description provided for @welcome_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back!'**
+  String get welcome_back;
+
+  /// No description provided for @enter_username.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter username'**
+  String get enter_username;
+
+  /// No description provided for @enter_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter password'**
+  String get enter_password;
+
+  /// No description provided for @please_enter_username.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter username'**
+  String get please_enter_username;
+
+  /// No description provided for @please_enter_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter password'**
+  String get please_enter_password;
+
+  /// No description provided for @password_must_be_at_least_6_characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get password_must_be_at_least_6_characters;
+
+  /// No description provided for @no_account.
+  ///
+  /// In en, this message translates to:
+  /// **'No account? '**
+  String get no_account;
+
+  /// No description provided for @have_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Have account? '**
+  String get have_account;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get phone;
+
+  /// No description provided for @full_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get full_name;
+
+  /// No description provided for @confirm_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get confirm_password;
+
+  /// No description provided for @enter_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter email'**
+  String get enter_email;
+
+  /// No description provided for @enter_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter phone number'**
+  String get enter_phone;
+
+  /// No description provided for @enter_full_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter full name'**
+  String get enter_full_name;
+
+  /// No description provided for @enter_confirm_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter confirm password'**
+  String get enter_confirm_password;
+
+  /// No description provided for @please_enter_confirm_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter confirm password'**
+  String get please_enter_confirm_password;
+
+  /// No description provided for @passwords_do_not_match.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwords_do_not_match;
+
+  /// No description provided for @creating_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating account...'**
+  String get creating_account;
+
+  /// No description provided for @create_new_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new account'**
+  String get create_new_account;
+
+  /// No description provided for @enter_information_to_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter information to start'**
+  String get enter_information_to_start;
+
+  /// No description provided for @please_enter_full_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter full name'**
+  String get please_enter_full_name;
+
+  /// No description provided for @please_enter_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter email'**
+  String get please_enter_email;
+
+  /// No description provided for @invalid_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email'**
+  String get invalid_email;
+
+  /// No description provided for @remember_me.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember me'**
+  String get remember_me;
+
+  /// No description provided for @logging_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Logging in...'**
+  String get logging_in;
+
+  /// No description provided for @resend_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get resend_code;
+
+  /// No description provided for @back_to_login.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to login'**
+  String get back_to_login;
+
+  /// No description provided for @email_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Email invalid'**
+  String get email_invalid;
+
+  /// No description provided for @please_enter_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter phone number'**
+  String get please_enter_phone;
+
+  /// No description provided for @please_enter_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter code'**
+  String get please_enter_code;
+
+  /// No description provided for @please_enter_confirm_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter confirm code'**
+  String get please_enter_confirm_code;
 }
 
 class _AppLocalizationsDelegate

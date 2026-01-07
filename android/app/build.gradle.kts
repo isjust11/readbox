@@ -3,14 +3,15 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.example.readbox"
+    namespace = "com.hungvv.readbox"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
- compileOptions {
+    compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
@@ -22,10 +23,10 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.readbox"
+        applicationId = "com.hungvv.readbox"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 23  // Required by firebase_messaging
+        minSdk = flutter.minSdkVersion  // Required by firebase_messaging
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

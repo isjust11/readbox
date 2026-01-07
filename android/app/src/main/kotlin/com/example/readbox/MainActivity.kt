@@ -1,4 +1,4 @@
-package com.example.readbox
+package com.hungvv.readbox
 
 import io.flutter.embedding.android.FlutterActivity
 

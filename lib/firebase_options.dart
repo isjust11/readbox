@@ -39,11 +39,11 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBRt1APWlAgfOiVynIhzmJqO4N2aZnJ204',
-    appId: '1:541095232626:android:89be02eede531dae502eeb',
-    messagingSenderId: '541095232626',
-    projectId: 'readbox-910a2',
-    storageBucket: 'readbox-910a2.firebasestorage.app',
+    apiKey: 'AIzaSyD8EPrTx9N5DPGh4F9iJ7IclvIHMmb1Lso',
+    appId: '1:534175741610:android:b873b13c6a5d001b3c42d3',
+    messagingSenderId: '534175741610',
+    projectId: 'readbox-3c692',
+    storageBucket: 'readbox-3c692.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -53,6 +53,6 @@ class DefaultFirebaseOptions {
     projectId: 'readbox-910a2',
     storageBucket: 'readbox-910a2.firebasestorage.app',
     iosClientId: '541095232626-0n5ecovgkvhvopc2jk7in06sbuf9d5rv.apps.googleusercontent.com',
-    iosBundleId: 'com.example.readbox',
+    iosBundleId: 'com.hungvv.readbox',
   );
 }

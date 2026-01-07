@@ -75,19 +75,41 @@ class SocialLoginService {
         'accessToken': googleAuth.accessToken,
       };
     } catch (error) {
-      // Xử lý các loại lỗi cụ thể
+      // Log chi tiết lỗi để debug
+      print('❌ Google Sign-In Error: $error');
+      print('❌ Error type: ${error.runtimeType}');
+      
+      // Xử lý ApiException 8 (INTERNAL_ERROR)
+      if (error.toString().contains('8:') || 
+          error.toString().contains('INTERNAL_ERROR') ||
+          error.toString().contains('ApiException: 8')) {
+        print('⚠️ INTERNAL_ERROR (8) - Có thể do:');
+        print('   1. Google Play Services chưa được cập nhật');
+        print('   2. SHA-1 fingerprint chưa được thêm vào Google Cloud Console');
+        print('   3. Package name không khớp: com.hungvv.readbox');
+        print('   4. google-services.json chưa đúng hoặc chưa được sync');
+        print('   5. Google Sign-In API chưa được enable');
+        throw Exception(AppLocalizations.current.google_signin_failed);
+      }
+      
+      // Xử lý ApiException 12500 (DEVELOPER_ERROR)
+      if (error.toString().contains('12500') || 
+          error.toString().contains('DEVELOPER_ERROR') ||
+          error.toString().contains('developer_error')) {
+        print('⚠️ DEVELOPER_ERROR (12500) - Cấu hình OAuth không đúng');
+        throw Exception(AppLocalizations.current.google_developer_error);
+      }
+      
+      // Xử lý các loại lỗi khác
       if (error.toString().contains('sign_in_failed')) {
         throw Exception(AppLocalizations.current.google_signin_failed);
       } else if (error.toString().contains('network_error') ||
           error.toString().contains('SocketException') ||
           error.toString().contains('Network is unreachable')) {
         throw Exception(AppLocalizations.current.google_network_error);
-      } else if (error.toString().contains('invalid_client')) {
+      } else if (error.toString().contains('invalid_client') ||
+          error.toString().contains('10:')) {
         throw Exception(AppLocalizations.current.google_invalid_client);
-      } else if (error.toString().contains('developer_error')) {
-        throw Exception(AppLocalizations.current.google_developer_error);
-      } else if (error.toString().contains('timeout')) {
-        throw Exception(AppLocalizations.current.google_timeout);
       } else if (error.toString().contains('timeout')) {
         throw Exception(AppLocalizations.current.google_timeout);
       } else if (error.toString().contains('SERVICE_DISABLED') ||
@@ -96,11 +118,10 @@ class SocialLoginService {
         throw Exception(
           AppLocalizations.current.google_play_services_not_available,
         );
-      } else if (error.toString().contains('developer_error')) {
-        throw Exception(AppLocalizations.current.google_developer_error);
       }
 
-      rethrow;
+      // Re-throw với message chi tiết
+      throw Exception('Google Sign-In Error: $error');
     }
   }
 
