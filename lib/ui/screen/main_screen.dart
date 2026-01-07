@@ -44,7 +44,7 @@ class MainBodyState extends State<MainBody> {
   @override
   void initState() {
     super.initState();
-    title = AppLocalizations.current.my_library;
+    title = AppLocalizations.current.my_library;  
     // Load initial data after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getBooks();

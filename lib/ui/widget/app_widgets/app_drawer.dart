@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
@@ -59,8 +60,7 @@ class _AppDrawerState extends State<AppDrawer> {
             ],
           ),
         ),
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
           children: [
             Container(
               padding: EdgeInsets.only(
@@ -77,118 +77,142 @@ class _AppDrawerState extends State<AppDrawer> {
                   end: Alignment.bottomRight,
                 ),
               ),
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 12,
-                          offset: Offset(0, 4),
+              child: Expanded(
+                flex: 1,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 3),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.2),
+                              blurRadius: 12,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.person,
-                        size: 48,
-                        color: Theme.of(context).primaryColor,
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.person,
+                            size: 48,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 16),
+                      Text(
+                        _currentUser?.username ?? 'User',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        _currentUser?.address ?? '',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.9),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 16),
-                  Text(
-                    _currentUser?.username ?? 'User',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+              ),
+            ),
+            SizedBox(height: 8),
+            Expanded(
+              flex: 8,
+              child: ListView(
+                children: [
+                  _buildDrawerItem(
+                    icon: Icons.library_books,
+                    title: AppLocalizations.current.all_books,
+                    isSelected: _currentFilter == 'all',
+                    onTap: () => _filterBooks('all'),
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    _currentUser?.address ?? '',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.9),
-                      fontSize: 14,
-                    ),
+                  _buildDrawerItem(
+                    icon: Icons.favorite,
+                    title: AppLocalizations.current.favorite_books,
+                    isSelected: _currentFilter == 'favorite',
+                    onTap: () => _filterBooks('favorite'),
+                    iconColor: Colors.red,
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.archive,
+                    title: AppLocalizations.current.archived_books,
+                    isSelected: _currentFilter == 'archived',
+                    onTap: () => _filterBooks('archived'),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Divider(height: 1),
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.phone_android,
+                    title: AppLocalizations.current.local_library,
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, Routes.localLibraryScreen);
+                    },
+                    iconColor: Colors.green,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Divider(height: 1),
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.upload_file,
+                    title: AppLocalizations.current.upload_book,
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, Routes.adminUploadScreen);
+                    },
+                  ),
+                   _buildDrawerItem(
+                    icon: Icons.feedback,
+                    title: AppLocalizations.current.feedback,
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, Routes.feedbackScreen);
+                    },
+                    iconColor: Colors.blue,
+                    textColor: Colors.blue,
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.settings,
+                    title: AppLocalizations.current.settings,
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, Routes.settingsScreen);
+                    },
+                    iconColor: Colors.blueGrey,
+                    textColor: Colors.blueGrey,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Divider(height: 1),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 8),
-            _buildDrawerItem(
-              icon: Icons.library_books,
-              title: 'Tất cả sách',
-              isSelected: _currentFilter == 'all',
-              onTap: () => _filterBooks('all'),
-            ),
-            _buildDrawerItem(
-              icon: Icons.favorite,
-              title: 'Sách yêu thích',
-              isSelected: _currentFilter == 'favorite',
-              onTap: () => _filterBooks('favorite'),
-              iconColor: Colors.red,
-            ),
-            _buildDrawerItem(
-              icon: Icons.archive,
-              title: 'Đã lưu trữ',
-              isSelected: _currentFilter == 'archived',
-              onTap: () => _filterBooks('archived'),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Divider(height: 1),
-            ),
-            _buildDrawerItem(
-              icon: Icons.phone_android,
-              title: 'Thư viện Local',
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, Routes.localLibraryScreen);
-              },
-              iconColor: Colors.green,
-            ),
-            _buildDrawerItem(
-              icon: Icons.upload_file,
-              title: 'Upload sách',
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, Routes.adminUploadScreen);
-              },
-            ),
-            _buildDrawerItem(
-              icon: Icons.book,
-              title: 'Demo PDF Viewer',
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, Routes.pdfTextToSpeechScreen);
-              },
-            ),
-            _buildDrawerItem(
-              icon: Icons.volume_up_rounded,
-              title: 'Demo Text-to-Speech',
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, Routes.ttsDemoScreen);
-              },
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Divider(height: 1),
-            ),
-            _buildDrawerItem(
-              icon: Icons.logout,
-              title: 'Đăng xuất',
-              onTap: _handleLogout,
-              iconColor: Colors.red,
-              textColor: Colors.red,
+            Expanded(
+              flex: 1,
+              child: _buildDrawerItem(
+                icon: Icons.logout,
+                title: 'Đăng xuất',
+                onTap: _handleLogout,
+                iconColor: Colors.red,
+                textColor: Colors.red,
+              ),
             ),
           ],
         ),

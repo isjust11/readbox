@@ -53,10 +53,7 @@ void registerCubit(GetIt getIt) {
     () => UserInfoCubit(repository: getIt.get<UserRepository>()),
   );
   getIt.registerFactory(
-    () => RegisterCubit(repository: getIt.get<AuthRepository>()),
-  );
-  getIt.registerFactory(
-    () => LoginCubit(repository: getIt.get<AuthRepository>()),
+    () => AuthCubit(repository: getIt.get<AuthRepository>()),
   );
   getIt.registerFactory(
     () => LibraryCubit(

@@ -7,3 +7,5 @@ export 'bookmark_model.dart';
 export 'reading_progress_model.dart';
 export 'authen_model.dart';
 export 'user_register_model.dart';
+export 'feedback_model.dart';
+export 'fcm_token_model.dart';

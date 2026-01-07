@@ -43,4 +43,45 @@ class AuthRemoteDataSource {
     }
     return false;
   }
+
+  Future<dynamic> forgotPassword(Map<String, dynamic> param) async {
+    ApiResponse apiResponse = await network.post(url: '${ApiConstant.apiHost}${ApiConstant.forgotPassword}', body: param);
+    if (apiResponse.isSuccess) {
+      return apiResponse.data;
+    }
+    return Future.error(apiResponse.errMessage);
+  }
+
+  Future<AuthenModel> mobileSocialLogin(Map<String, dynamic> param) async {
+    ApiResponse apiResponse = await network.post(
+      url: ApiConstant.mobileSocialLogin,
+      body: param,
+    );
+    if (apiResponse.isSuccess) {
+      return AuthenModel.fromJson(apiResponse.data);
+    }
+    return Future.error(apiResponse.errMessage);
+  }
+
+  Future<FcmTokenModel> registerFcm(Map<String, dynamic> param) async {
+    ApiResponse apiResponse = await network.post(
+      url: '${ApiConstant.apiHost}${ApiConstant.registerFcmToken}',
+      body: param,
+    );
+    if (apiResponse.isSuccess) {
+      return FcmTokenModel.fromJson(apiResponse.data ?? {});
+    }
+    return Future.error(apiResponse.errMessage);
+  }
+
+  Future<UserModel> updateProfile(Map<String, dynamic> param) async {
+    ApiResponse apiResponse = await network.post(
+      url: '${ApiConstant.apiHost}${ApiConstant.updateProfile}',
+      body: param,
+    );
+    if (apiResponse.isSuccess) {
+      return UserModel.fromJson(apiResponse.data);
+    }
+    return Future.error(apiResponse.errMessage);
+  }
 }

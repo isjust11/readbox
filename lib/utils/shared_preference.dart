@@ -11,6 +11,7 @@ class SPrefCache {
   static const String PREF_KEY_USER_INFO = "pref_key_user_info";
   static const String PREF_KEY_IS_KEEP_LOGIN = "pref_key_is_keep_login";
   static const String PREF_KEY_LOCAL_BOOKS = "pref_key_local_books";
+  static const String PREF_KEY_REMEMBER_PASSWORD = "pref_key_remember_password";
 }
 
 class SharedPreferenceUtil {
@@ -93,5 +94,15 @@ class SharedPreferenceUtil {
   static Future<bool> isBookAdded(String filePath) async {
     final books = await getLocalBooks();
     return books.contains(filePath);
+  }
+  
+  static Future setRememberPassword(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(SPrefCache.PREF_KEY_REMEMBER_PASSWORD, value);
+  }
+
+  static Future<bool> getRememberPassword() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(SPrefCache.PREF_KEY_REMEMBER_PASSWORD) ?? false;
   }
 }

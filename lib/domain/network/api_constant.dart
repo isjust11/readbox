@@ -38,7 +38,12 @@ class ApiConstant {
   static final verifyPin = "auth/verify-pin";
   static final resendPin = "auth/resend-pin";
   static final getUserInfo = "";
-  
+  static final mobileSocialLogin = "auth/mobile/social-login";
+  static final registerFcmToken = "fcm-tokens/register";
+  static final updateProfile = "auth/update-profile";
+  static final refreshToken = "auth/refresh-token";
+  static final forgotPassword = "auth/forgot-password";
+
   // Book endpoints
   static final getBooksPublic =  "books/public";
   static final getBooks =  "books/search";

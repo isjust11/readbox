@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "541095232626",
+    "project_id": "readbox-910a2",
+    "storage_bucket": "readbox-910a2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541095232626:android:89be02eede531dae502eeb",
+        "android_client_info": {
+          "package_name": "com.example.readbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "541095232626-eorijca5jp3noefo2j2enmlmflrsnjmm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAh1Pge2gOdM8puGDYEcISRKuH2kCWTs6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "541095232626-eorijca5jp3noefo2j2enmlmflrsnjmm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

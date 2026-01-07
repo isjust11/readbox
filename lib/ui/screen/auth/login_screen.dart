@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:readbox/blocs/auth/auth_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
+import 'package:readbox/gen/assets.gen.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/res/colors.dart';
+import 'package:readbox/res/dimens.dart';
 import 'package:readbox/routes.dart';
+import 'package:readbox/services/services.dart';
+import 'package:readbox/ui/widget/custom_text_label.dart';
+import 'package:readbox/utils/shared_preference.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<LoginCubit>(
-      create: (_) => LoginCubit(repository: getIt.get<AuthRepository>()),
+    return BlocProvider<AuthCubit>(
+      create: (_) => AuthCubit(repository: getIt.get<AuthRepository>()),
       child: LoginBody(),
     );
   }
@@ -23,16 +33,21 @@ class LoginBody extends StatefulWidget {
   const LoginBody({super.key});
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateMixin {
+class LoginScreenState extends State<LoginBody>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  bool _biometricAvailable = false;
+  bool _biometricEnabled = false;
+  bool _rememberMe = false;
+  BiometricType _biometricType = BiometricType.fingerprint;
 
   @override
   void initState() {
@@ -45,6 +60,31 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.forward();
+    _getRememberPassword();
+    _checkBiometricAvailability();
+  }
+
+ Future<void> _getRememberPassword() async {
+    _rememberMe = await SharedPreferenceUtil.getRememberPassword();
+    if (_rememberMe) {
+      final credentials = await BiometricAuthService.getStoredCredentials();
+      _usernameController.text = credentials?["username"] ?? "";
+      _passwordController.text = credentials?["password"] ?? "";
+    }
+    setState(() {});
+  }
+
+  Future<void> _checkBiometricAvailability() async {
+    final capability = await BiometricAuthService.checkBiometricCapability();
+    final enabled = await BiometricAuthService.isBiometricEnabledInApp();
+    final biometricType = await BiometricAuthService.getAvailableBiometrics();
+    if (biometricType.isNotEmpty) {
+      _biometricType = biometricType.first;
+    }
+    setState(() {
+      _biometricAvailable = capability == BiometricCapability.available;
+      _biometricEnabled = enabled;
+    });
   }
 
   @override
@@ -57,7 +97,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
 
   void _handleLogin() {
     if (_formKey.currentState?.validate() ?? false) {
-      BlocProvider.of<LoginCubit>(context).doLogin(
+      BlocProvider.of<AuthCubit>(context).doLogin(
         username: _usernameController.text.trim().toLowerCase(),
         password: _passwordController.text,
       );
@@ -69,7 +109,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: BlocListener<LoginCubit, BaseState>(
+      body: BlocListener<AuthCubit, BaseState>(
         listener: (context, state) {
           if (state is LoadedState) {
             getIt.get<UserInfoCubit>().getUserInfo();
@@ -99,12 +139,12 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
                 ),
               ),
             ),
-            
+
             // Main Content
             SafeArea(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 18),
                   child: FadeTransition(
                     opacity: _fadeAnimation,
                     child: Column(
@@ -113,7 +153,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
                         // Logo/Title Section
                         _buildHeader(),
                         SizedBox(height: 50),
-                        
+
                         // Login Card
                         _buildLoginCard(theme),
                       ],
@@ -122,9 +162,9 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
                 ),
               ),
             ),
-            
+
             // Loading Overlay
-            BlocBuilder<LoginCubit, BaseState>(
+            BlocBuilder<AuthCubit, BaseState>(
               builder: (context, state) {
                 if (state is LoadingState) {
                   return Container(
@@ -147,7 +187,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
                               ),
                               SizedBox(height: 16),
                               Text(
-                                'Đang đăng nhập...',
+                                AppLocalizations.current.logging_in,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -193,7 +233,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
           ),
         ),
         SizedBox(height: 12),
-        
+
         // App Title
         Text(
           'ReadBox',
@@ -206,10 +246,10 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
         ),
         SizedBox(height: 8),
         Text(
-          'Đăng nhập để tiếp tục',
+          AppLocalizations.current.login_to_continue,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             fontWeight: FontWeight.w300,
           ),
         ),
@@ -220,11 +260,9 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
   Widget _buildLoginCard(ThemeData theme) {
     return Card(
       elevation: 12,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: Container(
-        padding: EdgeInsets.all(32),
+        padding: EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
@@ -232,7 +270,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
             children: [
               // Title
               Text(
-                'Chào mừng trở lại!',
+                AppLocalizations.current.welcome_back,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -241,19 +279,35 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 32),
-              
+
               // Username Field
               _buildUsernameField(),
               SizedBox(height: 20),
-              
+
               // Password Field
               _buildPasswordField(),
               SizedBox(height: 20),
-              
+
+          
+
               // Login Button
-              _buildLoginButton(),
+              _biometricAvailable && _biometricEnabled
+                  ? Row(
+                    children: [
+                      Expanded(child: _buildLoginButton()),
+                      SizedBox(width: AppDimens.SIZE_12),
+                      _buildBiometricLoginButton(),
+                    ],
+                  )
+                  : _buildLoginButton(),
+                      // Remember and Forgot Password
+              _buildRememberAndForgotPassword(),
               SizedBox(height: 12),
-              
+
+              // Social Login
+              _buildSocialLogin(),
+              SizedBox(height: 12),
+
               // Register Link
               _buildRegisterLink(),
             ],
@@ -263,12 +317,63 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
     );
   }
 
+  Widget _buildRememberAndForgotPassword() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Checkbox(
+              value: _rememberMe,
+              activeColor: AppColors.baseColor,
+              checkColor: AppColors.white,
+              onChanged: (value) {
+                setState(() {
+                  _rememberMe = value ?? false;
+                  SharedPreferenceUtil.setRememberPassword(_rememberMe);
+                });
+              },
+            ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _rememberMe = !_rememberMe;
+                  SharedPreferenceUtil.setRememberPassword(_rememberMe);
+                });
+              },
+              child: CustomTextLabel(
+                AppLocalizations.current.remember_me,
+                fontSize: AppDimens.SIZE_14,
+                fontWeight: FontWeight.w500,
+                color: AppColors.textMediumGrey,
+              ),
+            ),
+          ],
+        ),
+        Flexible(
+          child: InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, Routes.forgotPassword);
+            },
+            child: CustomTextLabel(
+              AppLocalizations.current.forgot_password,
+              fontSize: AppDimens.SIZE_14,
+              fontWeight: FontWeight.w500,
+              color: AppColors.baseColor,
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildUsernameField() {
     return TextFormField(
       controller: _usernameController,
       decoration: InputDecoration(
-        labelText: 'Tên đăng nhập',
-        hintText: 'Nhập tên đăng nhập',
+        labelText: AppLocalizations.current.username,
+        hintText: AppLocalizations.current.enter_username,
         prefixIcon: Icon(Icons.person_outline, color: Color(0xFF667eea)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -296,7 +401,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
-          return 'Vui lòng nhập tên đăng nhập';
+          return AppLocalizations.current.please_enter_username;
         }
         return null;
       },
@@ -309,12 +414,14 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
       controller: _passwordController,
       obscureText: _obscurePassword,
       decoration: InputDecoration(
-        labelText: 'Mật khẩu',
-        hintText: 'Nhập mật khẩu',
+        labelText: AppLocalizations.current.password,
+        hintText: AppLocalizations.current.enter_password,
         prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
         suffixIcon: IconButton(
           icon: Icon(
-            _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+            _obscurePassword
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
             color: Colors.grey.shade600,
           ),
           onPressed: () {
@@ -349,10 +456,12 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Vui lòng nhập mật khẩu';
+          return AppLocalizations.current.please_enter_password;
         }
         if (value.length < 6) {
-          return 'Mật khẩu phải có ít nhất 6 ký tự';
+          return AppLocalizations
+              .current
+              .password_must_be_at_least_6_characters;
         }
         return null;
       },
@@ -367,17 +476,15 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
         backgroundColor: Color(0xFF667eea),
         foregroundColor: Colors.white,
         elevation: 4,
-        padding: EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        shadowColor: Color(0xFF667eea).withOpacity(0.5),
+        padding: EdgeInsets.symmetric(vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shadowColor: Color(0xFF667eea).withValues(alpha: 0.5),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Đăng nhập',
+            AppLocalizations.current.login,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -396,11 +503,8 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Chưa có tài khoản? ',
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 14,
-          ),
+          '${AppLocalizations.current.no_account} ',
+          style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
         ),
         TextButton(
           onPressed: () => Navigator.pushNamed(context, Routes.registerScreen),
@@ -408,7 +512,7 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
             padding: EdgeInsets.symmetric(horizontal: 4),
           ),
           child: Text(
-            'Đăng ký ngay',
+            AppLocalizations.current.register_now,
             style: TextStyle(
               color: Color(0xFF667eea),
               fontSize: 14,
@@ -417,6 +521,120 @@ class _LoginScreenState extends State<LoginBody> with SingleTickerProviderStateM
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildSocialLogin() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Nút đăng nhập Google
+        _buildSocialLoginButton(
+          text: "Google",
+          backgroundColor: AppColors.white,
+          textColor: AppColors.textDark,
+          borderColor: AppColors.inputBorderLight,
+          iconPath: Assets.icons.icGoogle,
+          onPressed: () {
+            context.read<AuthCubit>().doGoogleLogin();
+          },
+        ),
+        SizedBox(width: AppDimens.SIZE_12),
+        // Nút đăng nhập Facebook
+        _buildSocialLoginButton(
+          text: "Facebook",
+          backgroundColor: Color.fromARGB(255, 38, 93, 164), // Facebook blue
+          textColor: AppColors.white,
+          borderColor: Color.fromARGB(255, 6, 38, 77),
+          iconPath: Assets.icons.icFacebook,
+          onPressed: () {
+            context.read<AuthCubit>().doFacebookLogin();
+          },
+        ),
+        SizedBox(height: AppDimens.SIZE_24),
+      ],
+    );
+  }
+
+  Widget _buildSocialLoginButton({
+    required String text,
+    required Color backgroundColor,
+    required Color textColor,
+    required Color borderColor,
+    required String iconPath,
+    required VoidCallback onPressed,
+  }) {
+    return SizedBox(
+      height: AppDimens.SIZE_40,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          foregroundColor: textColor,
+          side: BorderSide(color: borderColor, width: 1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
+          ),
+          elevation: 0,
+        ),
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // SVG Icon
+            SvgPicture.asset(
+              iconPath,
+              width: AppDimens.SIZE_20,
+              height: AppDimens.SIZE_20,
+            ),
+            SizedBox(width: AppDimens.SIZE_12),
+            CustomTextLabel(
+              text,
+              fontSize: AppDimens.SIZE_14,
+              fontWeight: FontWeight.w600,
+              color: textColor,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBiometricLoginButton() {
+    return InkWell(
+      onTap: () {
+        context.read<AuthCubit>().doBiometricLogin();
+      },
+      child: Container(
+        height: AppDimens.SIZE_48,
+        width: AppDimens.SIZE_48,
+        decoration: BoxDecoration(
+          color: AppColors.lightBackgroundAlt,
+          borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.secondaryBrand.withValues(alpha: 0.2),
+              blurRadius: AppDimens.SIZE_4,
+              offset: Offset(0, AppDimens.SIZE_2),
+            ),
+          ],
+        ),
+        child: Center(child: _buildBiometricIcon()),
+      ),
+    );
+  }
+
+  Widget _buildBiometricIcon() {
+    if (_biometricType == BiometricType.face) {
+      return SvgPicture.asset(
+        Assets.icons.icFaceId,
+        width: AppDimens.SIZE_20,
+        height: AppDimens.SIZE_20,
+      );
+    }
+    return Icon(
+      Icons.fingerprint,
+      size: AppDimens.SIZE_20,
+      color: AppColors.gray,
     );
   }
 }

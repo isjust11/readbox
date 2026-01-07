@@ -18,10 +18,8 @@ class AppLocalizations {
   static AppLocalizations? _current;
 
   static AppLocalizations get current {
-    assert(
-      _current != null,
-      'No instance of AppLocalizations was loaded. Try to initialize the AppLocalizations delegate before accessing AppLocalizations.current.',
-    );
+    assert(_current != null,
+        'No instance of AppLocalizations was loaded. Try to initialize the AppLocalizations delegate before accessing AppLocalizations.current.');
     return _current!;
   }
 
@@ -43,10 +41,8 @@ class AppLocalizations {
 
   static AppLocalizations of(BuildContext context) {
     final instance = AppLocalizations.maybeOf(context);
-    assert(
-      instance != null,
-      'No instance of AppLocalizations present in the widget tree. Did you add AppLocalizations.delegate in localizationsDelegates?',
-    );
+    assert(instance != null,
+        'No instance of AppLocalizations present in the widget tree. Did you add AppLocalizations.delegate in localizationsDelegates?');
     return instance!;
   }
 
@@ -56,57 +52,112 @@ class AppLocalizations {
 
   /// `Đang tải...`
   String get loading {
-    return Intl.message('Đang tải...', name: 'loading', desc: '', args: []);
+    return Intl.message(
+      'Đang tải...',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Lỗi`
   String get error {
-    return Intl.message('Lỗi', name: 'error', desc: '', args: []);
+    return Intl.message(
+      'Lỗi',
+      name: 'error',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Thành công`
   String get success {
-    return Intl.message('Thành công', name: 'success', desc: '', args: []);
+    return Intl.message(
+      'Thành công',
+      name: 'success',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Cảnh báo`
   String get warning {
-    return Intl.message('Cảnh báo', name: 'warning', desc: '', args: []);
+    return Intl.message(
+      'Cảnh báo',
+      name: 'warning',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Thông tin`
   String get info {
-    return Intl.message('Thông tin', name: 'info', desc: '', args: []);
+    return Intl.message(
+      'Thông tin',
+      name: 'info',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Xác nhận`
   String get confirm {
-    return Intl.message('Xác nhận', name: 'confirm', desc: '', args: []);
+    return Intl.message(
+      'Xác nhận',
+      name: 'confirm',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Hủy`
   String get cancel {
-    return Intl.message('Hủy', name: 'cancel', desc: '', args: []);
+    return Intl.message(
+      'Hủy',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Đóng`
   String get close {
-    return Intl.message('Đóng', name: 'close', desc: '', args: []);
+    return Intl.message(
+      'Đóng',
+      name: 'close',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Thử lại`
   String get retry {
-    return Intl.message('Thử lại', name: 'retry', desc: '', args: []);
+    return Intl.message(
+      'Thử lại',
+      name: 'retry',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Làm mới`
   String get refresh {
-    return Intl.message('Làm mới', name: 'refresh', desc: '', args: []);
+    return Intl.message(
+      'Làm mới',
+      name: 'refresh',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Tìm kiếm`
   String get search {
-    return Intl.message('Tìm kiếm', name: 'search', desc: '', args: []);
+    return Intl.message(
+      'Tìm kiếm',
+      name: 'search',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Nhập tên đăng nhập`
@@ -121,7 +172,12 @@ class AppLocalizations {
 
   /// `Tên đăng nhập`
   String get username {
-    return Intl.message('Tên đăng nhập', name: 'username', desc: '', args: []);
+    return Intl.message(
+      'Tên đăng nhập',
+      name: 'username',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Vui lòng nhập tên đăng nhập`
@@ -136,17 +192,32 @@ class AppLocalizations {
 
   /// `Đăng nhập`
   String get login {
-    return Intl.message('Đăng nhập', name: 'login', desc: '', args: []);
+    return Intl.message(
+      'Đăng nhập',
+      name: 'login',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Đăng xuất`
   String get logout {
-    return Intl.message('Đăng xuất', name: 'logout', desc: '', args: []);
+    return Intl.message(
+      'Đăng xuất',
+      name: 'logout',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Đăng ký`
   String get register {
-    return Intl.message('Đăng ký', name: 'register', desc: '', args: []);
+    return Intl.message(
+      'Đăng ký',
+      name: 'register',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Quên mật khẩu`
@@ -181,12 +252,22 @@ class AppLocalizations {
 
   /// `Xác thực mã`
   String get verify_code {
-    return Intl.message('Xác thực mã', name: 'verify_code', desc: '', args: []);
+    return Intl.message(
+      'Xác thực mã',
+      name: 'verify_code',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Không có dữ liệu`
   String get empty {
-    return Intl.message('Không có dữ liệu', name: 'empty', desc: '', args: []);
+    return Intl.message(
+      'Không có dữ liệu',
+      name: 'empty',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Kéo xuống để làm mới`
@@ -201,7 +282,12 @@ class AppLocalizations {
 
   /// `Thử lại`
   String get try_again {
-    return Intl.message('Thử lại', name: 'try_again', desc: '', args: []);
+    return Intl.message(
+      'Thử lại',
+      name: 'try_again',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Đã xảy ra lỗi, vui lòng thử lại sau`
@@ -216,37 +302,72 @@ class AppLocalizations {
 
   /// `Đồng ý`
   String get agree {
-    return Intl.message('Đồng ý', name: 'agree', desc: '', args: []);
+    return Intl.message(
+      'Đồng ý',
+      name: 'agree',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Không đồng ý`
   String get disagree {
-    return Intl.message('Không đồng ý', name: 'disagree', desc: '', args: []);
+    return Intl.message(
+      'Không đồng ý',
+      name: 'disagree',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Hoàn thành`
   String get done {
-    return Intl.message('Hoàn thành', name: 'done', desc: '', args: []);
+    return Intl.message(
+      'Hoàn thành',
+      name: 'done',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Trang chủ`
   String get home {
-    return Intl.message('Trang chủ', name: 'home', desc: '', args: []);
+    return Intl.message(
+      'Trang chủ',
+      name: 'home',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Tin tức`
   String get news {
-    return Intl.message('Tin tức', name: 'news', desc: '', args: []);
+    return Intl.message(
+      'Tin tức',
+      name: 'news',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Hồ sơ`
   String get profile {
-    return Intl.message('Hồ sơ', name: 'profile', desc: '', args: []);
+    return Intl.message(
+      'Hồ sơ',
+      name: 'profile',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Cài đặt`
   String get settings {
-    return Intl.message('Cài đặt', name: 'settings', desc: '', args: []);
+    return Intl.message(
+      'Cài đặt',
+      name: 'settings',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Không có kết nối internet`
@@ -301,7 +422,12 @@ class AppLocalizations {
 
   /// `Tất cả sách`
   String get all_books {
-    return Intl.message('Tất cả sách', name: 'all_books', desc: '', args: []);
+    return Intl.message(
+      'Tất cả sách',
+      name: 'all_books',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Sách công khai`
@@ -326,22 +452,42 @@ class AppLocalizations {
 
   /// `Sách của tôi`
   String get my_books {
-    return Intl.message('Sách của tôi', name: 'my_books', desc: '', args: []);
+    return Intl.message(
+      'Sách của tôi',
+      name: 'my_books',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Thêm sách`
   String get add_book {
-    return Intl.message('Thêm sách', name: 'add_book', desc: '', args: []);
+    return Intl.message(
+      'Thêm sách',
+      name: 'add_book',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Sửa sách`
   String get edit_book {
-    return Intl.message('Sửa sách', name: 'edit_book', desc: '', args: []);
+    return Intl.message(
+      'Sửa sách',
+      name: 'edit_book',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Xóa sách`
   String get delete_book {
-    return Intl.message('Xóa sách', name: 'delete_book', desc: '', args: []);
+    return Intl.message(
+      'Xóa sách',
+      name: 'delete_book',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Đã tải hết dữ liệu`
@@ -439,6 +585,1206 @@ class AppLocalizations {
     return Intl.message(
       'Không có dữ liệu để tải thêm',
       name: 'loading_more_books_no_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thư viện Local`
+  String get local_library {
+    return Intl.message(
+      'Thư viện Local',
+      name: 'local_library',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tải sách lên`
+  String get upload_book {
+    return Intl.message(
+      'Tải sách lên',
+      name: 'upload_book',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phản hồi`
+  String get feedback {
+    return Intl.message(
+      'Phản hồi',
+      name: 'feedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Google Play Services không khả dụng`
+  String get google_play_services_not_available {
+    return Intl.message(
+      'Google Play Services không khả dụng',
+      name: 'google_play_services_not_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Người dùng đã hủy đăng nhập Google`
+  String get user_cancelled_google_sign_in {
+    return Intl.message(
+      'Người dùng đã hủy đăng nhập Google',
+      name: 'user_cancelled_google_sign_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Người dùng đã hủy đăng nhập Facebook`
+  String get user_cancelled_facebook_sign_in {
+    return Intl.message(
+      'Người dùng đã hủy đăng nhập Facebook',
+      name: 'user_cancelled_facebook_sign_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Người dùng đã hủy đăng nhập Apple`
+  String get user_cancelled_apple_sign_in {
+    return Intl.message(
+      'Người dùng đã hủy đăng nhập Apple',
+      name: 'user_cancelled_apple_sign_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Người dùng đã hủy đăng nhập Twitter`
+  String get user_cancelled_twitter_sign_in {
+    return Intl.message(
+      'Người dùng đã hủy đăng nhập Twitter',
+      name: 'user_cancelled_twitter_sign_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Người dùng đã hủy đăng nhập LinkedIn`
+  String get user_cancelled_linkedin_sign_in {
+    return Intl.message(
+      'Người dùng đã hủy đăng nhập LinkedIn',
+      name: 'user_cancelled_linkedin_sign_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Người dùng đã hủy đăng nhập GitHub`
+  String get user_cancelled_github_sign_in {
+    return Intl.message(
+      'Người dùng đã hủy đăng nhập GitHub',
+      name: 'user_cancelled_github_sign_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Người dùng đã hủy đăng nhập GitLab`
+  String get user_cancelled_gitlab_sign_in {
+    return Intl.message(
+      'Người dùng đã hủy đăng nhập GitLab',
+      name: 'user_cancelled_gitlab_sign_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Người dùng đã hủy đăng nhập Bitbucket`
+  String get user_cancelled_bitbucket_sign_in {
+    return Intl.message(
+      'Người dùng đã hủy đăng nhập Bitbucket',
+      name: 'user_cancelled_bitbucket_sign_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Người dùng đã hủy đăng nhập`
+  String get user_cancelled_sign_in {
+    return Intl.message(
+      'Người dùng đã hủy đăng nhập',
+      name: 'user_cancelled_sign_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập Google thất bại`
+  String get google_signin_failed {
+    return Intl.message(
+      'Đăng nhập Google thất bại',
+      name: 'google_signin_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi mạng Google`
+  String get google_network_error {
+    return Intl.message(
+      'Lỗi mạng Google',
+      name: 'google_network_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Client Google không hợp lệ`
+  String get google_invalid_client {
+    return Intl.message(
+      'Client Google không hợp lệ',
+      name: 'google_invalid_client',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi phát triển Google`
+  String get google_developer_error {
+    return Intl.message(
+      'Lỗi phát triển Google',
+      name: 'google_developer_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thời gian đăng nhập Google hết hạn`
+  String get google_timeout {
+    return Intl.message(
+      'Thời gian đăng nhập Google hết hạn',
+      name: 'google_timeout',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Token Facebook là null`
+  String get facebook_access_token_is_null {
+    return Intl.message(
+      'Token Facebook là null',
+      name: 'facebook_access_token_is_null',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập Facebook thất bại`
+  String get facebook_login_failed {
+    return Intl.message(
+      'Đăng nhập Facebook thất bại',
+      name: 'facebook_login_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi mạng Facebook`
+  String get facebook_network_error {
+    return Intl.message(
+      'Lỗi mạng Facebook',
+      name: 'facebook_network_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Client Facebook không hợp lệ`
+  String get facebook_invalid_client {
+    return Intl.message(
+      'Client Facebook không hợp lệ',
+      name: 'facebook_invalid_client',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không có tên`
+  String get noName {
+    return Intl.message(
+      'Không có tên',
+      name: 'noName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chỉnh sửa hồ sơ`
+  String get editProfile {
+    return Intl.message(
+      'Chỉnh sửa hồ sơ',
+      name: 'editProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cập nhật thông tin của bạn`
+  String get updateYourInfo {
+    return Intl.message(
+      'Cập nhật thông tin của bạn',
+      name: 'updateYourInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bảo mật`
+  String get security {
+    return Intl.message(
+      'Bảo mật',
+      name: 'security',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cài đặt quyền riêng tư`
+  String get privacySettings {
+    return Intl.message(
+      'Cài đặt quyền riêng tư',
+      name: 'privacySettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ngôn ngữ`
+  String get language {
+    return Intl.message(
+      'Ngôn ngữ',
+      name: 'language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thay đổi ngôn ngữ ứng dụng`
+  String get changeAppLanguage {
+    return Intl.message(
+      'Thay đổi ngôn ngữ ứng dụng',
+      name: 'changeAppLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Giao diện`
+  String get theme {
+    return Intl.message(
+      'Giao diện',
+      name: 'theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn giao diện ứng dụng`
+  String get chooseAppAppearance {
+    return Intl.message(
+      'Chọn giao diện ứng dụng',
+      name: 'chooseAppAppearance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông báo`
+  String get notifications {
+    return Intl.message(
+      'Thông báo',
+      name: 'notifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quản lý thông báo`
+  String get manageNotifications {
+    return Intl.message(
+      'Quản lý thông báo',
+      name: 'manageNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập sinh trắc học`
+  String get biometricLogin {
+    return Intl.message(
+      'Đăng nhập sinh trắc học',
+      name: 'biometricLogin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sinh trắc học không khả dụng`
+  String get biometricNotAvailable {
+    return Intl.message(
+      'Sinh trắc học không khả dụng',
+      name: 'biometricNotAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sử dụng vân tay hoặc Face ID`
+  String get useFingerprintOrFaceID {
+    return Intl.message(
+      'Sử dụng vân tay hoặc Face ID',
+      name: 'useFingerprintOrFaceID',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trung tâm trợ giúp`
+  String get helpCenter {
+    return Intl.message(
+      'Trung tâm trợ giúp',
+      name: 'helpCenter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhận trợ giúp và hỗ trợ`
+  String get getHelpAndSupport {
+    return Intl.message(
+      'Nhận trợ giúp và hỗ trợ',
+      name: 'getHelpAndSupport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gửi phản hồi`
+  String get sendFeedback {
+    return Intl.message(
+      'Gửi phản hồi',
+      name: 'sendFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chia sẻ suy nghĩ của bạn`
+  String get shareYourThoughts {
+    return Intl.message(
+      'Chia sẻ suy nghĩ của bạn',
+      name: 'shareYourThoughts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Về ứng dụng`
+  String get aboutApp {
+    return Intl.message(
+      'Về ứng dụng',
+      name: 'aboutApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phiên bản`
+  String get version {
+    return Intl.message(
+      'Phiên bản',
+      name: 'version',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sáng`
+  String get light {
+    return Intl.message(
+      'Sáng',
+      name: 'light',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tối`
+  String get dark {
+    return Intl.message(
+      'Tối',
+      name: 'dark',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không có thông tin đăng nhập`
+  String get noLoginInfo {
+    return Intl.message(
+      'Không có thông tin đăng nhập',
+      name: 'noLoginInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thiết lập sinh trắc học thành công`
+  String get biometricSetupSuccess {
+    return Intl.message(
+      'Thiết lập sinh trắc học thành công',
+      name: 'biometricSetupSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã tắt sinh trắc học`
+  String get biometricDisabled {
+    return Intl.message(
+      'Đã tắt sinh trắc học',
+      name: 'biometricDisabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gửi phản hồi thành công`
+  String get feedbackSuccess {
+    return Intl.message(
+      'Gửi phản hồi thành công',
+      name: 'feedbackSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông tin liên hệ`
+  String get feedbackContact {
+    return Intl.message(
+      'Thông tin liên hệ',
+      name: 'feedbackContact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chúng tôi rất mong nhận được phản hồi từ bạn để cải thiện ứng dụng`
+  String get feedbackDescription {
+    return Intl.message(
+      'Chúng tôi rất mong nhận được phản hồi từ bạn để cải thiện ứng dụng',
+      name: 'feedbackDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loại phản hồi`
+  String get feedbackType {
+    return Intl.message(
+      'Loại phản hồi',
+      name: 'feedbackType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mức độ ưu tiên`
+  String get feedbackPriority {
+    return Intl.message(
+      'Mức độ ưu tiên',
+      name: 'feedbackPriority',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tiêu đề`
+  String get feedbackTitle {
+    return Intl.message(
+      'Tiêu đề',
+      name: 'feedbackTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập tiêu đề`
+  String get feedbackTitleRequired {
+    return Intl.message(
+      'Vui lòng nhập tiêu đề',
+      name: 'feedbackTitleRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tiêu đề phải có ít nhất 5 ký tự`
+  String get feedbackTitleMinLength {
+    return Intl.message(
+      'Tiêu đề phải có ít nhất 5 ký tự',
+      name: 'feedbackTitleMinLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nội dung`
+  String get feedbackContent {
+    return Intl.message(
+      'Nội dung',
+      name: 'feedbackContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập nội dung`
+  String get feedbackContentRequired {
+    return Intl.message(
+      'Vui lòng nhập nội dung',
+      name: 'feedbackContentRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nội dung phải có ít nhất 10 ký tự`
+  String get feedbackContentMinLength {
+    return Intl.message(
+      'Nội dung phải có ít nhất 10 ký tự',
+      name: 'feedbackContentMinLength',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tên`
+  String get feedbackName {
+    return Intl.message(
+      'Tên',
+      name: 'feedbackName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email không hợp lệ`
+  String get feedbackEmailInvalid {
+    return Intl.message(
+      'Email không hợp lệ',
+      name: 'feedbackEmailInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Số điện thoại`
+  String get feedbackPhone {
+    return Intl.message(
+      'Số điện thoại',
+      name: 'feedbackPhone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Số điện thoại không hợp lệ`
+  String get feedbackPhoneInvalid {
+    return Intl.message(
+      'Số điện thoại không hợp lệ',
+      name: 'feedbackPhoneInvalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tùy chọn`
+  String get feedbackOptions {
+    return Intl.message(
+      'Tùy chọn',
+      name: 'feedbackOptions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gửi ẩn danh`
+  String get feedbackAnonymous {
+    return Intl.message(
+      'Gửi ẩn danh',
+      name: 'feedbackAnonymous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gửi phản hồi mà không hiển thị thông tin cá nhân`
+  String get feedbackAnonymousDescription {
+    return Intl.message(
+      'Gửi phản hồi mà không hiển thị thông tin cá nhân',
+      name: 'feedbackAnonymousDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gửi phản hồi`
+  String get feedbackSend {
+    return Intl.message(
+      'Gửi phản hồi',
+      name: 'feedbackSend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập để tiếp tục`
+  String get login_to_continue {
+    return Intl.message(
+      'Đăng nhập để tiếp tục',
+      name: 'login_to_continue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng ký để tiếp tục`
+  String get register_to_continue {
+    return Intl.message(
+      'Đăng ký để tiếp tục',
+      name: 'register_to_continue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng ký ngay`
+  String get register_now {
+    return Intl.message(
+      'Đăng ký ngay',
+      name: 'register_now',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập ngay`
+  String get login_now {
+    return Intl.message(
+      'Đăng nhập ngay',
+      name: 'login_now',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với Google`
+  String get login_with_google {
+    return Intl.message(
+      'Đăng nhập với Google',
+      name: 'login_with_google',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với Facebook`
+  String get login_with_facebook {
+    return Intl.message(
+      'Đăng nhập với Facebook',
+      name: 'login_with_facebook',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với Apple`
+  String get login_with_apple {
+    return Intl.message(
+      'Đăng nhập với Apple',
+      name: 'login_with_apple',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với Twitter`
+  String get login_with_twitter {
+    return Intl.message(
+      'Đăng nhập với Twitter',
+      name: 'login_with_twitter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với LinkedIn`
+  String get login_with_linkedin {
+    return Intl.message(
+      'Đăng nhập với LinkedIn',
+      name: 'login_with_linkedin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với GitHub`
+  String get login_with_github {
+    return Intl.message(
+      'Đăng nhập với GitHub',
+      name: 'login_with_github',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với GitLab`
+  String get login_with_gitlab {
+    return Intl.message(
+      'Đăng nhập với GitLab',
+      name: 'login_with_gitlab',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với Bitbucket`
+  String get login_with_bitbucket {
+    return Intl.message(
+      'Đăng nhập với Bitbucket',
+      name: 'login_with_bitbucket',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với email`
+  String get login_with_email {
+    return Intl.message(
+      'Đăng nhập với email',
+      name: 'login_with_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với số điện thoại`
+  String get login_with_phone {
+    return Intl.message(
+      'Đăng nhập với số điện thoại',
+      name: 'login_with_phone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với tên đăng nhập`
+  String get login_with_username {
+    return Intl.message(
+      'Đăng nhập với tên đăng nhập',
+      name: 'login_with_username',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với mật khẩu`
+  String get login_with_password {
+    return Intl.message(
+      'Đăng nhập với mật khẩu',
+      name: 'login_with_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với mã OTP`
+  String get login_with_otp {
+    return Intl.message(
+      'Đăng nhập với mã OTP',
+      name: 'login_with_otp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với mã PIN`
+  String get login_with_pin {
+    return Intl.message(
+      'Đăng nhập với mã PIN',
+      name: 'login_with_pin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với Face ID`
+  String get login_with_face_id {
+    return Intl.message(
+      'Đăng nhập với Face ID',
+      name: 'login_with_face_id',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với vân tay`
+  String get login_with_fingerprint {
+    return Intl.message(
+      'Đăng nhập với vân tay',
+      name: 'login_with_fingerprint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập với sinh trắc học`
+  String get login_with_biometric {
+    return Intl.message(
+      'Đăng nhập với sinh trắc học',
+      name: 'login_with_biometric',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chào mừng trở lại!`
+  String get welcome_back {
+    return Intl.message(
+      'Chào mừng trở lại!',
+      name: 'welcome_back',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhập tên đăng nhập`
+  String get enter_username {
+    return Intl.message(
+      'Nhập tên đăng nhập',
+      name: 'enter_username',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhập mật khẩu`
+  String get enter_password {
+    return Intl.message(
+      'Nhập mật khẩu',
+      name: 'enter_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập tên đăng nhập`
+  String get please_enter_username {
+    return Intl.message(
+      'Vui lòng nhập tên đăng nhập',
+      name: 'please_enter_username',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập mật khẩu`
+  String get please_enter_password {
+    return Intl.message(
+      'Vui lòng nhập mật khẩu',
+      name: 'please_enter_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mật khẩu phải có ít nhất 6 ký tự`
+  String get password_must_be_at_least_6_characters {
+    return Intl.message(
+      'Mật khẩu phải có ít nhất 6 ký tự',
+      name: 'password_must_be_at_least_6_characters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chưa có tài khoản? `
+  String get no_account {
+    return Intl.message(
+      'Chưa có tài khoản? ',
+      name: 'no_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã có tài khoản? `
+  String get have_account {
+    return Intl.message(
+      'Đã có tài khoản? ',
+      name: 'have_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mật khẩu`
+  String get password {
+    return Intl.message(
+      'Mật khẩu',
+      name: 'password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get email {
+    return Intl.message(
+      'Email',
+      name: 'email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Số điện thoại`
+  String get phone {
+    return Intl.message(
+      'Số điện thoại',
+      name: 'phone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Họ và tên`
+  String get full_name {
+    return Intl.message(
+      'Họ và tên',
+      name: 'full_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xác nhận mật khẩu`
+  String get confirm_password {
+    return Intl.message(
+      'Xác nhận mật khẩu',
+      name: 'confirm_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhập email`
+  String get enter_email {
+    return Intl.message(
+      'Nhập email',
+      name: 'enter_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhập số điện thoại`
+  String get enter_phone {
+    return Intl.message(
+      'Nhập số điện thoại',
+      name: 'enter_phone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhập họ và tên`
+  String get enter_full_name {
+    return Intl.message(
+      'Nhập họ và tên',
+      name: 'enter_full_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhập lại mật khẩu`
+  String get enter_confirm_password {
+    return Intl.message(
+      'Nhập lại mật khẩu',
+      name: 'enter_confirm_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập lại mật khẩu`
+  String get please_enter_confirm_password {
+    return Intl.message(
+      'Vui lòng nhập lại mật khẩu',
+      name: 'please_enter_confirm_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mật khẩu không khớp`
+  String get passwords_do_not_match {
+    return Intl.message(
+      'Mật khẩu không khớp',
+      name: 'passwords_do_not_match',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đang tạo tài khoản...`
+  String get creating_account {
+    return Intl.message(
+      'Đang tạo tài khoản...',
+      name: 'creating_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tạo tài khoản mới`
+  String get create_new_account {
+    return Intl.message(
+      'Tạo tài khoản mới',
+      name: 'create_new_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Điền thông tin để bắt đầu`
+  String get enter_information_to_start {
+    return Intl.message(
+      'Điền thông tin để bắt đầu',
+      name: 'enter_information_to_start',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập họ và tên`
+  String get please_enter_full_name {
+    return Intl.message(
+      'Vui lòng nhập họ và tên',
+      name: 'please_enter_full_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập email`
+  String get please_enter_email {
+    return Intl.message(
+      'Vui lòng nhập email',
+      name: 'please_enter_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email không hợp lệ`
+  String get invalid_email {
+    return Intl.message(
+      'Email không hợp lệ',
+      name: 'invalid_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhớ tài khoản`
+  String get remember_me {
+    return Intl.message(
+      'Nhớ tài khoản',
+      name: 'remember_me',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đang đăng nhập...`
+  String get logging_in {
+    return Intl.message(
+      'Đang đăng nhập...',
+      name: 'logging_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gửi lại mã`
+  String get resend_code {
+    return Intl.message(
+      'Gửi lại mã',
+      name: 'resend_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quay lại đăng nhập`
+  String get back_to_login {
+    return Intl.message(
+      'Quay lại đăng nhập',
+      name: 'back_to_login',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email không hợp lệ`
+  String get email_invalid {
+    return Intl.message(
+      'Email không hợp lệ',
+      name: 'email_invalid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập số điện thoại`
+  String get please_enter_phone {
+    return Intl.message(
+      'Vui lòng nhập số điện thoại',
+      name: 'please_enter_phone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập mã`
+  String get please_enter_code {
+    return Intl.message(
+      'Vui lòng nhập mã',
+      name: 'please_enter_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập mã xác nhận`
+  String get please_enter_confirm_code {
+    return Intl.message(
+      'Vui lòng nhập mã xác nhận',
+      name: 'please_enter_confirm_code',
       desc: '',
       args: [],
     );

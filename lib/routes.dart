@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readbox/ui/screen/auth/forgot_password_screen.dart';
 import 'package:readbox/ui/screen/book/pdf_viewer_demo_screen.dart';
 import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/domain/data/models/models.dart';
@@ -21,6 +22,10 @@ class Routes {
   static const String pdfViewerWithSelectionScreen = "/pdfViewerWithSelectionScreen";
   static const String pdfViewerAdvancedScreen = "/pdfViewerAdvancedScreen";
   static const String adminPdfScannerScreen = "/adminPdfScannerScreen";
+  static const String settingsScreen = "/settingsScreen";
+  static const String feedbackScreen = "/feedbackScreen";
+  static const String forgotPassword = "/forgotPassword";
+
   // PDF text to speech screen
   static const String pdfTextToSpeechScreen = "/pdfTextToSpeechScreen";
   static const String ttsDemoScreen = "/ttsDemoScreen";
@@ -39,6 +44,11 @@ class Routes {
         return PageTransition(child: LoginScreen(), type: PageTransitionType.fade);
       case registerScreen:
         return PageTransition(child: RegisterScreen(), type: PageTransitionType.fade);
+      case forgotPassword:
+        return PageTransition(
+          child: ForgotPasswordScreen(),
+          type: PageTransitionType.rightToLeft,
+        );
       case confirmPinScreen:
         final email = settings.arguments as String?;
         return PageTransition(

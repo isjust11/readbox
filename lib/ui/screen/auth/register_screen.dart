@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readbox/blocs/auth/register_cubit.dart';
+import 'package:readbox/blocs/auth/auth_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/routes.dart';
 
@@ -13,8 +14,8 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<RegisterCubit>(
-      create: (_) => RegisterCubit(repository: getIt.get<AuthRepository>()),
+    return BlocProvider<AuthCubit>(
+      create: (_) => AuthCubit(repository: getIt.get<AuthRepository>()),
       child: RegisterBody(),
     );
   }
@@ -24,10 +25,10 @@ class RegisterBody extends StatefulWidget {
   const RegisterBody({super.key});
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  RegisterScreenState createState() => RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterBody> with SingleTickerProviderStateMixin {
+class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -65,8 +66,8 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
 
   void _handleRegister() {
     if (_formKey.currentState?.validate() ?? false) {
-      BlocProvider.of<RegisterCubit>(context).doRegister(
-        userName: _usernameController.text.trim(),
+      BlocProvider.of<AuthCubit>(context).doRegister(
+        username: _usernameController.text.trim(),
         email: _emailController.text.trim(),
         fullName: _fullNameController.text.trim(),
         password: _passwordController.text,
@@ -77,7 +78,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<RegisterCubit, BaseState>(
+      body: BlocListener<AuthCubit, BaseState>(
         listener: (context, state) {
           if (state is LoadedState) {
             // Navigate to confirm PIN screen with email
@@ -155,7 +156,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
             ),
             
             // Loading Overlay
-            BlocBuilder<RegisterCubit, BaseState>(
+            BlocBuilder<AuthCubit, BaseState>(
               builder: (context, state) {
                 if (state is LoadingState) {
                   return Container(
@@ -178,7 +179,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
                               ),
                               SizedBox(height: 16),
                               Text(
-                                'Đang tạo tài khoản...',
+                                AppLocalizations.current.creating_account,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -227,7 +228,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
         
         // Title
         Text(
-          'Tạo tài khoản mới',
+          AppLocalizations.current.create_new_account,
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
@@ -237,10 +238,10 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
         ),
         SizedBox(height: 8),
         Text(
-          'Điền thông tin để bắt đầu',
+          AppLocalizations.current.enter_information_to_start,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             fontWeight: FontWeight.w300,
           ),
         ),
@@ -298,8 +299,8 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
     return TextFormField(
       controller: _fullNameController,
       decoration: InputDecoration(
-        labelText: 'Họ và tên',
-        hintText: 'Nhập họ và tên',
+        labelText: AppLocalizations.current.full_name,
+        hintText: AppLocalizations.current.enter_full_name,
         prefixIcon: Icon(Icons.badge_outlined, color: Color(0xFF667eea)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -327,7 +328,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
-          return 'Vui lòng nhập họ và tên';
+          return AppLocalizations.current.please_enter_full_name;
         }
         return null;
       },
@@ -339,8 +340,8 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
     return TextFormField(
       controller: _usernameController,
       decoration: InputDecoration(
-        labelText: 'Tên đăng nhập',
-        hintText: 'Nhập tên đăng nhập',
+        labelText: AppLocalizations.current.username,
+        hintText: AppLocalizations.current.enter_username,
         prefixIcon: Icon(Icons.person_outline, color: Color(0xFF667eea)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -384,8 +385,8 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
-        labelText: 'Email',
-        hintText: 'Nhập email',
+        labelText: AppLocalizations.current.email,
+        hintText: AppLocalizations.current.enter_email,
         prefixIcon: Icon(Icons.email_outlined, color: Color(0xFF667eea)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -413,10 +414,10 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
-          return 'Vui lòng nhập email';
+          return AppLocalizations.current.please_enter_email;
         }
         if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-          return 'Email không hợp lệ';
+          return AppLocalizations.current.invalid_email;
         }
         return null;
       },
@@ -429,8 +430,8 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       controller: _passwordController,
       obscureText: _obscurePassword,
       decoration: InputDecoration(
-        labelText: 'Mật khẩu',
-        hintText: 'Nhập mật khẩu',
+        labelText: AppLocalizations.current.password,
+        hintText: AppLocalizations.current.enter_password,
         prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
         suffixIcon: IconButton(
           icon: Icon(
@@ -469,10 +470,10 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Vui lòng nhập mật khẩu';
+          return AppLocalizations.current.please_enter_password;
         }
         if (value.length < 6) {
-          return 'Mật khẩu phải có ít nhất 6 ký tự';
+          return AppLocalizations.current.password_must_be_at_least_6_characters;
         }
         return null;
       },
@@ -485,8 +486,8 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       controller: _confirmPasswordController,
       obscureText: _obscureConfirmPassword,
       decoration: InputDecoration(
-        labelText: 'Xác nhận mật khẩu',
-        hintText: 'Nhập lại mật khẩu',
+        labelText: AppLocalizations.current.confirm_password,
+        hintText: AppLocalizations.current.enter_confirm_password,
         prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
         suffixIcon: IconButton(
           icon: Icon(
@@ -525,10 +526,10 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Vui lòng xác nhận mật khẩu';
+          return AppLocalizations.current.please_enter_confirm_password;
         }
         if (value != _passwordController.text) {
-          return 'Mật khẩu không khớp';
+          return AppLocalizations.current.passwords_do_not_match;
         }
         return null;
       },
@@ -547,13 +548,13 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        shadowColor: Color(0xFF667eea).withOpacity(0.5),
+        shadowColor: Color(0xFF667eea).withValues(alpha: 0.5),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Đăng ký',
+            AppLocalizations.current.register,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -572,7 +573,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Đã có tài khoản? ',
+          '${AppLocalizations.current.have_account} ',
           style: TextStyle(
             color: Colors.grey.shade600,
             fontSize: 14,
@@ -584,7 +585,7 @@ class _RegisterScreenState extends State<RegisterBody> with SingleTickerProvider
             padding: EdgeInsets.symmetric(horizontal: 4),
           ),
           child: Text(
-            'Đăng nhập',
+            AppLocalizations.current.login,
             style: TextStyle(
               color: Color(0xFF667eea),
               fontSize: 14,

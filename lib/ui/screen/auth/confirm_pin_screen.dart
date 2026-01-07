@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readbox/blocs/auth/resend_pin_cubit.dart';
-import 'package:readbox/blocs/auth/verify_pin_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/blocs/utils.dart';
@@ -13,29 +11,26 @@ import 'package:readbox/routes.dart';
 
 class ConfirmPinScreen extends StatelessWidget {
   final String email;
-  
-  const ConfirmPinScreen({super.key, required this.email});
+  final String? phone;
+  const ConfirmPinScreen({super.key, required this.email, this.phone});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<VerifyPinCubit>(
-          create: (_) => VerifyPinCubit(repository: getIt.get<AuthRepository>()),
-        ),
-        BlocProvider<ResendPinCubit>(
-          create: (_) => ResendPinCubit(repository: getIt.get<AuthRepository>()),
+        BlocProvider<AuthCubit>(
+          create: (_) => AuthCubit(repository: getIt.get<AuthRepository>()),
         ),
       ],
-      child: ConfirmPinBody(email: email),
+      child: ConfirmPinBody(email: email, phone: phone),
     );
   }
 }
 
 class ConfirmPinBody extends StatefulWidget {
   final String email;
-  
-  const ConfirmPinBody({super.key, required this.email});
+  final String? phone;
+  const ConfirmPinBody({super.key, required this.email, this.phone});
 
   @override
   _ConfirmPinBodyState createState() => _ConfirmPinBodyState();
@@ -102,7 +97,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
   void _verifyPin() {
     String pin = _pinControllers.map((c) => c.text).join();
     if (pin.length == 4) {
-      BlocProvider.of<VerifyPinCubit>(context).verifyPin(
+      BlocProvider.of<AuthCubit>(context).verifyPin(
         email: widget.email,
         pin: pin,
       );
@@ -137,7 +132,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
 
   void _resendPin() {
     if (_canResend) {
-      BlocProvider.of<ResendPinCubit>(context).resendPin(email: widget.email);
+      BlocProvider.of<AuthCubit>(context).resendPin(email: widget.email);
       _startResendTimer();
     }
   }
@@ -147,7 +142,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
     return Scaffold(
       body: MultiBlocListener(
         listeners: [
-          BlocListener<VerifyPinCubit, BaseState>(
+          BlocListener<AuthCubit, BaseState>(
             listener: (context, state) {
               if (state is LoadedState) {
                 getIt.get<UserInfoCubit>().getUserInfo();
@@ -169,7 +164,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
               }
             },
           ),
-          BlocListener<ResendPinCubit, BaseState>(
+          BlocListener<AuthCubit, BaseState>(
             listener: (context, state) {
               if (state is LoadedState) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -254,7 +249,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
             ),
             
             // Loading Overlay
-            BlocBuilder<VerifyPinCubit, BaseState>(
+            BlocBuilder<AuthCubit, BaseState>(
               builder: (context, state) {
                 if (state is LoadingState) {
                   return Container(
