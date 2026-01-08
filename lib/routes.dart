@@ -24,7 +24,8 @@ class Routes {
   static const String adminPdfScannerScreen = "/adminPdfScannerScreen";
   static const String settingsScreen = "/settingsScreen";
   static const String feedbackScreen = "/feedbackScreen";
-  static const String forgotPassword = "/forgotPassword";
+  static const String forgotPassword = "/forgotPassword"; 
+  static const String editProfile = "/editProfile";
 
   // PDF text to speech screen
   static const String pdfTextToSpeechScreen = "/pdfTextToSpeechScreen";
@@ -69,6 +70,10 @@ class Routes {
           child: BookDetailScreen(book: book as BookModel),
           type: PageTransitionType.rightToLeft,
         );
+      case settingsScreen:
+        return PageTransition(child: SettingScreen(), type: PageTransitionType.rightToLeft);
+      case feedbackScreen:
+        return PageTransition(child: FeedbackScreen(), type: PageTransitionType.rightToLeft);
       case pdfViewerScreen:
         final args = settings.arguments as Map<String, dynamic>;
         return PageTransition(
@@ -96,6 +101,8 @@ class Routes {
           ),
           type: PageTransitionType.rightToLeft,
         );
+      case editProfile:
+        return PageTransition(child: UpdateProfileScreen(), type: PageTransitionType.rightToLeft);
       default:
         return MaterialPageRoute(builder: (context) => Container());
     }

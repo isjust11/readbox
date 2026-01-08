@@ -118,6 +118,10 @@ class $AssetsImagesGen {
   AssetGenImage get appBarBackground =>
       const AssetGenImage('assets/images/app_bar_background.png');
 
+  /// File path: assets/images/app_logo.png
+  AssetGenImage get appLogo =>
+      const AssetGenImage('assets/images/app_logo.png');
+
   /// File path: assets/images/background.jpg
   AssetGenImage get background =>
       const AssetGenImage('assets/images/background.jpg');
@@ -174,6 +178,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
+  /// File path: assets/images/profile_background.png
+  AssetGenImage get profileBackground =>
+      const AssetGenImage('assets/images/profile_background.png');
+
   /// File path: assets/images/sample-medicine.jpg
   AssetGenImage get sampleMedicine =>
       const AssetGenImage('assets/images/sample-medicine.jpg');
@@ -191,6 +199,7 @@ class $AssetsImagesGen {
   /// List of all assets
   List<dynamic> get values => [
     appBarBackground,
+    appLogo,
     background,
     camera,
     checkeredPattern,
@@ -207,6 +216,7 @@ class $AssetsImagesGen {
     icVerified,
     icVneid,
     logo,
+    profileBackground,
     sampleMedicine,
     sampleProduct,
     video,
@@ -217,8 +227,12 @@ class $AssetsImagesGen {
 class Assets {
   const Assets._();
 
+  static const String aEnv = '.env';
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
+
+  /// List of all assets
+  static List<String> get values => [aEnv];
 }
 
 class AssetGenImage {

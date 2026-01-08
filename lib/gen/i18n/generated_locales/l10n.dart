@@ -830,10 +830,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Cập nhật thông tin của bạn`
+  /// `Cập nhật thông tin`
   String get updateYourInfo {
     return Intl.message(
-      'Cập nhật thông tin của bạn',
+      'Cập nhật thông tin',
       name: 'updateYourInfo',
       desc: '',
       args: [],
@@ -1785,6 +1785,446 @@ class AppLocalizations {
     return Intl.message(
       'Vui lòng nhập mã xác nhận',
       name: 'please_enter_confirm_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ngày tạo`
+  String get created_at {
+    return Intl.message(
+      'Ngày tạo',
+      name: 'created_at',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ngày cập nhật`
+  String get updated_at {
+    return Intl.message(
+      'Ngày cập nhật',
+      name: 'updated_at',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập gần nhất`
+  String get last_login {
+    return Intl.message(
+      'Đăng nhập gần nhất',
+      name: 'last_login',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không có thông tin`
+  String get no_info {
+    return Intl.message(
+      'Không có thông tin',
+      name: 'no_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vai trò`
+  String get roles {
+    return Intl.message(
+      'Vai trò',
+      name: 'roles',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quyền`
+  String get permissions {
+    return Intl.message(
+      'Quyền',
+      name: 'permissions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ngày sinh`
+  String get birth_date {
+    return Intl.message(
+      'Ngày sinh',
+      name: 'birth_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Địa chỉ`
+  String get address {
+    return Intl.message(
+      'Địa chỉ',
+      name: 'address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Số điện thoại`
+  String get phone_number {
+    return Intl.message(
+      'Số điện thoại',
+      name: 'phone_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết Facebook`
+  String get facebook_link {
+    return Intl.message(
+      'Liên kết Facebook',
+      name: 'facebook_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết Instagram`
+  String get instagram_link {
+    return Intl.message(
+      'Liên kết Instagram',
+      name: 'instagram_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết Twitter`
+  String get twitter_link {
+    return Intl.message(
+      'Liên kết Twitter',
+      name: 'twitter_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết LinkedIn`
+  String get linkedin_link {
+    return Intl.message(
+      'Liên kết LinkedIn',
+      name: 'linkedin_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập số điện thoại`
+  String get please_enter_phone_number {
+    return Intl.message(
+      'Vui lòng nhập số điện thoại',
+      name: 'please_enter_phone_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email không hợp lệ`
+  String get please_enter_valid_email {
+    return Intl.message(
+      'Email không hợp lệ',
+      name: 'please_enter_valid_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đang lưu...`
+  String get saving {
+    return Intl.message(
+      'Đang lưu...',
+      name: 'saving',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lưu`
+  String get save {
+    return Intl.message(
+      'Lưu',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sửa`
+  String get edit {
+    return Intl.message(
+      'Sửa',
+      name: 'edit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Máy ảnh`
+  String get camera {
+    return Intl.message(
+      'Máy ảnh',
+      name: 'camera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thư viện ảnh`
+  String get gallery {
+    return Intl.message(
+      'Thư viện ảnh',
+      name: 'gallery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cập nhật`
+  String get update {
+    return Intl.message(
+      'Cập nhật',
+      name: 'update',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cập nhật hồ sơ`
+  String get update_profile {
+    return Intl.message(
+      'Cập nhật hồ sơ',
+      name: 'update_profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cập nhật hồ sơ thành công`
+  String get update_profile_success {
+    return Intl.message(
+      'Cập nhật hồ sơ thành công',
+      name: 'update_profile_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cập nhật hồ sơ thất bại`
+  String get update_profile_failed {
+    return Intl.message(
+      'Cập nhật hồ sơ thất bại',
+      name: 'update_profile_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cập nhật thông tin của bạn`
+  String get update_profile_description {
+    return Intl.message(
+      'Cập nhật thông tin của bạn',
+      name: 'update_profile_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cập nhật thông tin thành công`
+  String get update_profile_description_success {
+    return Intl.message(
+      'Cập nhật thông tin thành công',
+      name: 'update_profile_description_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cập nhật thông tin thất bại`
+  String get update_profile_description_failed {
+    return Intl.message(
+      'Cập nhật thông tin thất bại',
+      name: 'update_profile_description_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập liên kết Instagram`
+  String get please_enter_instagram_link {
+    return Intl.message(
+      'Vui lòng nhập liên kết Instagram',
+      name: 'please_enter_instagram_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập liên kết Twitter`
+  String get please_enter_twitter_link {
+    return Intl.message(
+      'Vui lòng nhập liên kết Twitter',
+      name: 'please_enter_twitter_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập liên kết LinkedIn`
+  String get please_enter_linkedin_link {
+    return Intl.message(
+      'Vui lòng nhập liên kết LinkedIn',
+      name: 'please_enter_linkedin_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập liên kết GitHub`
+  String get please_enter_github_link {
+    return Intl.message(
+      'Vui lòng nhập liên kết GitHub',
+      name: 'please_enter_github_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập liên kết GitLab`
+  String get please_enter_gitlab_link {
+    return Intl.message(
+      'Vui lòng nhập liên kết GitLab',
+      name: 'please_enter_gitlab_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập liên kết Bitbucket`
+  String get please_enter_bitbucket_link {
+    return Intl.message(
+      'Vui lòng nhập liên kết Bitbucket',
+      name: 'please_enter_bitbucket_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập liên kết Facebook`
+  String get please_enter_facebook_link {
+    return Intl.message(
+      'Vui lòng nhập liên kết Facebook',
+      name: 'please_enter_facebook_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ngày sinh không hợp lệ`
+  String get please_enter_valid_birth_date {
+    return Intl.message(
+      'Ngày sinh không hợp lệ',
+      name: 'please_enter_valid_birth_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Số điện thoại không hợp lệ`
+  String get please_enter_valid_phone_number {
+    return Intl.message(
+      'Số điện thoại không hợp lệ',
+      name: 'please_enter_valid_phone_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Địa chỉ không hợp lệ`
+  String get please_enter_valid_address {
+    return Intl.message(
+      'Địa chỉ không hợp lệ',
+      name: 'please_enter_valid_address',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết Facebook không hợp lệ`
+  String get please_enter_valid_facebook_link {
+    return Intl.message(
+      'Liên kết Facebook không hợp lệ',
+      name: 'please_enter_valid_facebook_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết Instagram không hợp lệ`
+  String get please_enter_valid_instagram_link {
+    return Intl.message(
+      'Liên kết Instagram không hợp lệ',
+      name: 'please_enter_valid_instagram_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết Twitter không hợp lệ`
+  String get please_enter_valid_twitter_link {
+    return Intl.message(
+      'Liên kết Twitter không hợp lệ',
+      name: 'please_enter_valid_twitter_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết LinkedIn không hợp lệ`
+  String get please_enter_valid_linkedin_link {
+    return Intl.message(
+      'Liên kết LinkedIn không hợp lệ',
+      name: 'please_enter_valid_linkedin_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết GitHub không hợp lệ`
+  String get please_enter_valid_github_link {
+    return Intl.message(
+      'Liên kết GitHub không hợp lệ',
+      name: 'please_enter_valid_github_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết GitLab không hợp lệ`
+  String get please_enter_valid_gitlab_link {
+    return Intl.message(
+      'Liên kết GitLab không hợp lệ',
+      name: 'please_enter_valid_gitlab_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết Bitbucket không hợp lệ`
+  String get please_enter_valid_bitbucket_link {
+    return Intl.message(
+      'Liên kết Bitbucket không hợp lệ',
+      name: 'please_enter_valid_bitbucket_link',
       desc: '',
       args: [],
     );

@@ -41,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Biometric not available"),
         "biometricSetupSuccess":
             MessageLookupByLibrary.simpleMessage("Biometric setup successful"),
+        "camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "changeAppLanguage":
             MessageLookupByLibrary.simpleMessage("Change app language"),
@@ -127,6 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Forgot password"),
         "full_name": MessageLookupByLibrary.simpleMessage("Full name"),
+        "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
         "getHelpAndSupport":
             MessageLookupByLibrary.simpleMessage("Get help and support"),
         "google_developer_error":
@@ -220,6 +222,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "passwords_do_not_match":
             MessageLookupByLibrary.simpleMessage("Passwords do not match"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone number"),
+        "please_enter_bitbucket_link":
+            MessageLookupByLibrary.simpleMessage("Please enter Bitbucket link"),
         "please_enter_code":
             MessageLookupByLibrary.simpleMessage("Please enter code"),
         "please_enter_confirm_code":
@@ -228,14 +232,50 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please enter confirm password"),
         "please_enter_email":
             MessageLookupByLibrary.simpleMessage("Please enter email"),
+        "please_enter_facebook_link":
+            MessageLookupByLibrary.simpleMessage("Please enter Facebook link"),
         "please_enter_full_name":
             MessageLookupByLibrary.simpleMessage("Please enter full name"),
+        "please_enter_github_link":
+            MessageLookupByLibrary.simpleMessage("Please enter GitHub link"),
+        "please_enter_gitlab_link":
+            MessageLookupByLibrary.simpleMessage("Please enter GitLab link"),
+        "please_enter_instagram_link":
+            MessageLookupByLibrary.simpleMessage("Please enter Instagram link"),
+        "please_enter_linkedin_link":
+            MessageLookupByLibrary.simpleMessage("Please enter LinkedIn link"),
         "please_enter_password":
             MessageLookupByLibrary.simpleMessage("Please enter password"),
         "please_enter_phone":
             MessageLookupByLibrary.simpleMessage("Please enter phone number"),
+        "please_enter_twitter_link":
+            MessageLookupByLibrary.simpleMessage("Please enter Twitter link"),
         "please_enter_username":
             MessageLookupByLibrary.simpleMessage("Please enter username"),
+        "please_enter_valid_address":
+            MessageLookupByLibrary.simpleMessage("Please enter valid address"),
+        "please_enter_valid_birth_date": MessageLookupByLibrary.simpleMessage(
+            "Please enter valid birth date"),
+        "please_enter_valid_bitbucket_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Please enter valid Bitbucket link"),
+        "please_enter_valid_facebook_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Please enter valid Facebook link"),
+        "please_enter_valid_github_link": MessageLookupByLibrary.simpleMessage(
+            "Please enter valid GitHub link"),
+        "please_enter_valid_gitlab_link": MessageLookupByLibrary.simpleMessage(
+            "Please enter valid GitLab link"),
+        "please_enter_valid_instagram_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Please enter valid Instagram link"),
+        "please_enter_valid_linkedin_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Please enter valid LinkedIn link"),
+        "please_enter_valid_phone_number": MessageLookupByLibrary.simpleMessage(
+            "Please enter valid phone number"),
+        "please_enter_valid_twitter_link": MessageLookupByLibrary.simpleMessage(
+            "Please enter valid Twitter link"),
         "pls_input_username":
             MessageLookupByLibrary.simpleMessage("Please enter username"),
         "privacySettings":
@@ -267,8 +307,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "success": MessageLookupByLibrary.simpleMessage("Success"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "try_again": MessageLookupByLibrary.simpleMessage("Try again"),
+        "update": MessageLookupByLibrary.simpleMessage("Update"),
         "updateYourInfo":
             MessageLookupByLibrary.simpleMessage("Update your information"),
+        "update_profile":
+            MessageLookupByLibrary.simpleMessage("Update profile"),
+        "update_profile_description":
+            MessageLookupByLibrary.simpleMessage("Update your information"),
+        "update_profile_description_failed":
+            MessageLookupByLibrary.simpleMessage(
+                "Update your information failed"),
+        "update_profile_description_success":
+            MessageLookupByLibrary.simpleMessage(
+                "Update your information successfully"),
+        "update_profile_failed":
+            MessageLookupByLibrary.simpleMessage("Update profile failed"),
+        "update_profile_success":
+            MessageLookupByLibrary.simpleMessage("Update profile successfully"),
         "upload_book": MessageLookupByLibrary.simpleMessage("Upload book"),
         "useFingerprintOrFaceID":
             MessageLookupByLibrary.simpleMessage("Use fingerprint or Face ID"),

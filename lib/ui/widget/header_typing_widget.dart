@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/routes.dart';

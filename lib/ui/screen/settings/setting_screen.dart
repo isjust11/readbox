@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:readbox/blocs/base_bloc/base_state.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:readbox/domain/data/models/user_model.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
-import 'package:readbox/ui/widget/base_loading.dart';
+import 'package:readbox/services/services.dart';
+import 'package:readbox/ui/widget/app_widgets/app_profile.dart';
 import 'package:readbox/ui/widget/base_network_image.dart';
 import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/blocs/cubit.dart';
-import 'package:readbox/services/biometric_auth_service.dart';
-import 'package:readbox/services/fcm_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:readbox/services/biometric_test_helper.dart';
-import 'package:readbox/utils/shared_preference.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -31,13 +29,13 @@ class _SettingScreenState extends State<SettingScreen> {
   bool _notificationsEnabled = true;
   bool _biometricEnabled = false;
   bool _biometricAvailable = false;
-
+  String _appVersion = '';
   @override
   void initState() {
     super.initState();
-    context.read<UserInfoCubit>().getUserInfo();
     _loadBiometricStatus();
     _loadNotificationStatus();
+    _loadAppVersion();
   }
 
   Future<void> _loadBiometricStatus() async {
@@ -57,22 +55,16 @@ class _SettingScreenState extends State<SettingScreen> {
     });
   }
 
-  void _onLogout() async {
-    await SharedPreferenceUtil.clearData();
-    if (!mounted) return;
-    Navigator.of(
-      context,
-    ).pushNamedAndRemoveUntil(Routes.loginScreen, (route) => false);
+  Future<void> _loadAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      _appVersion = '${packageInfo.version} ${packageInfo.buildNumber}';
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
-      stateWidget: CustomLoading<UserInfoCubit>(
-        loadingState: (state) => state is LoadingState,
-        message: AppLocalizations.current.loading,
-        size: AppDimens.SIZE_32,
-      ),
       hideAppBar: true,
       colorBg: AppColors.lightBackground,
       body: _buildLayoutSection(context),
@@ -80,18 +72,11 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Widget _buildLayoutSection(BuildContext context) {
-    return BlocBuilder<UserInfoCubit, BaseState>(
-      bloc: context.read<UserInfoCubit>(),
-      builder: (context, state) {
-        UserModel? user;
-        if (state is LoadedState) {
-          user = state.data;
-        }
-        return SingleChildScrollView(
+    return SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildHeader(user),
+              AppProfile(),
               const SizedBox(height: AppDimens.SIZE_12),
               _buildQuickActions(),
               const SizedBox(height: AppDimens.SIZE_12),
@@ -99,13 +84,10 @@ class _SettingScreenState extends State<SettingScreen> {
               const SizedBox(height: AppDimens.SIZE_12),
               _buildSupportSection(),
               const SizedBox(height: AppDimens.SIZE_12),
-              _buildLogoutButton(context),
-              const SizedBox(height: AppDimens.SIZE_12),
             ],
           ),
         );
-      },
-    );
+    
   }
 
   Widget _buildHeader(UserModel? user) {
@@ -116,13 +98,13 @@ class _SettingScreenState extends State<SettingScreen> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.secondaryBrand,
-            AppColors.secondaryBrand.withValues(alpha: 0.8),
+            Theme.of(context).primaryColor,
+            Theme.of(context).primaryColor.withValues(alpha: 0.8),
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.secondaryBrand.withValues(alpha: 0.3),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
             blurRadius: AppDimens.SIZE_20,
             offset: const Offset(0, 10),
           ),
@@ -201,8 +183,7 @@ class _SettingScreenState extends State<SettingScreen> {
               subtitle: AppLocalizations.current.updateYourInfo,
               color: Colors.blue,
               onTap: () {
-                // TODO: Navigate to update profile screen when route is available
-                // Navigator.of(context).pushNamed(Routes.updateProfileScreen);
+                Navigator.of(context).pushNamed(Routes.editProfile);
               },
             ),
           ),
@@ -318,7 +299,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 });
                 await FCMService().toggleNotifications(value);
               },
-              activeColor: AppColors.secondaryBrand,
+              activeColor: Theme.of(context).primaryColor,
             ),
           ),
           _buildDivider(),
@@ -329,7 +310,7 @@ class _SettingScreenState extends State<SettingScreen> {
             trailing: Switch(
               value: _biometricEnabled,
               onChanged: _biometricAvailable ? _onBiometricToggle : null,
-              activeColor: AppColors.secondaryBrand,
+              activeColor: Theme.of(context).primaryColor,
             ),
           ),
           // Debug section chỉ hiển thị trong debug mode
@@ -341,7 +322,7 @@ class _SettingScreenState extends State<SettingScreen> {
               subtitle:
                   'Test flutter_secure_storage and biometric capabilities',
               trailing: IconButton(
-                icon: Icon(Icons.play_arrow, color: AppColors.secondaryBrand),
+                icon: Icon(Icons.play_arrow, color: Theme.of(context).primaryColor),
                 onPressed: () async {
                   await BiometricTestHelper.runAllTests();
                   _showSuccessMessage(
@@ -358,7 +339,7 @@ class _SettingScreenState extends State<SettingScreen> {
               trailing: IconButton(
                 icon: Icon(
                   Icons.arrow_forward_ios,
-                  color: AppColors.secondaryBrand,
+                  color: Theme.of(context).primaryColor,
                 ),
                 onPressed: () async {
                   // TODO: Navigate to FCM test screen when route is available
@@ -418,15 +399,8 @@ class _SettingScreenState extends State<SettingScreen> {
           _buildSettingItem(
             icon: Icons.info_outline,
             title: AppLocalizations.current.aboutApp,
-            subtitle: AppLocalizations.current.version,
-            trailing: const Icon(
-              Icons.arrow_forward_ios,
-              size: AppDimens.SIZE_16,
-            ),
-            onTap: () {
-              // TODO: Navigate to about app screen when route is available
-              // Navigator.of(context).pushNamed(Routes.aboutAppScreen);
-            },
+            subtitle: '${AppLocalizations.current.version} $_appVersion',
+            trailing: SizedBox(),
           ),
         ],
       ),
@@ -453,12 +427,12 @@ class _SettingScreenState extends State<SettingScreen> {
             Container(
               padding: const EdgeInsets.all(AppDimens.SIZE_8),
               decoration: BoxDecoration(
-                color: AppColors.secondaryBrand.withValues(alpha: 0.1),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
               ),
               child: Icon(
                 icon,
-                color: AppColors.secondaryBrand,
+                color: Theme.of(context).primaryColor,
                 size: AppDimens.SIZE_20,
               ),
             ),
@@ -503,10 +477,10 @@ class _SettingScreenState extends State<SettingScreen> {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
           decoration: BoxDecoration(
-            color: AppColors.secondaryBrand.withValues(alpha: 0.1),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
             border: Border.all(
-              color: AppColors.secondaryBrand.withValues(alpha: 0.3),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
             ),
           ),
           child: DropdownButton<String>(
@@ -514,7 +488,7 @@ class _SettingScreenState extends State<SettingScreen> {
             underline: const SizedBox(),
             icon: Icon(
               Icons.keyboard_arrow_down,
-              color: AppColors.secondaryBrand,
+              color: Theme.of(context).primaryColor,
             ),
             items: const [
               DropdownMenuItem(value: 'vi', child: Text('Tiếng Việt')),
@@ -565,30 +539,6 @@ class _SettingScreenState extends State<SettingScreen> {
   //   );
   // }
 
-  Widget _buildLogoutButton(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
-      child: ElevatedButton.icon(
-        onPressed: _onLogout,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.errorRed,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
-          ),
-          elevation: 0,
-          shadowColor: Colors.red.withValues(alpha: 0.3),
-        ),
-        icon: const Icon(Icons.logout, size: AppDimens.SIZE_18),
-        label: CustomTextLabel(
-          AppLocalizations.current.logout,
-          fontSize: AppDimens.SIZE_14,
-          fontWeight: FontWeight.bold,
-          color: AppColors.white,
-        ),
-      ),
-    );
-  }
 
   String _getBiometricSubtitle() {
     if (!_biometricAvailable) {

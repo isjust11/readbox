@@ -10,3 +10,6 @@ export 'book/book_detail_screen.dart';
 export 'book/pdf_viewer_screen.dart';
 export 'book/pdf_viewer_with_selection_screen.dart';
 export 'book/pdf_viewer_advanced_screen.dart';
+export 'settings/setting_screen.dart';
+export 'settings/page/feedback_screen.dart';
+export 'settings/page/update_profile_screen.dart';
