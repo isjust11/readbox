@@ -1,81 +1,83 @@
-import 'dart:convert';
-
-import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Utility class để quản lý SharedPreferences
+/// CHỈ LƯU DỮ LIỆU KHÔNG NHẠY CẢM (non-sensitive data)
+/// 
+/// Dữ liệu nhạy cảm (token, password, user info) được lưu trong SecureStorageService
 class SPrefCache {
-  // share preference key
-  static const String KEY_TOKEN = "auth_token";
+  // SharedPreferences keys - CHỈ cho dữ liệu không nhạy cảm
   static const String PREF_KEY_LANGUAGE = "pref_key_language";
-  static const String PREF_KEY_USER_INFO = "pref_key_user_info";
   static const String PREF_KEY_IS_KEEP_LOGIN = "pref_key_is_keep_login";
   static const String PREF_KEY_LOCAL_BOOKS = "pref_key_local_books";
   static const String PREF_KEY_REMEMBER_PASSWORD = "pref_key_remember_password";
+  
+  // DEPRECATED - Đã chuyển sang SecureStorage
+  @Deprecated('Use SecureStorageService.saveToken() instead')
+  static const String KEY_TOKEN = "auth_token";
+  @Deprecated('Use SecureStorageService.saveUserInfo() instead')
+  static const String PREF_KEY_USER_INFO = "pref_key_user_info";
 }
 
 class SharedPreferenceUtil {
-  static Future saveToken(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(SPrefCache.KEY_TOKEN, token);
-  }
-
-  static Future<String> getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(SPrefCache.KEY_TOKEN) ?? '';
-  }
-
+  // ==================== APP PREFERENCES ====================
+  
+  /// Lưu trạng thái "Keep me logged in"
   static Future saveKeepLogin(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(SPrefCache.PREF_KEY_IS_KEEP_LOGIN, value);
   }
 
+  /// Kiểm tra trạng thái "Keep me logged in"
   static Future<bool> isKeepLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(SPrefCache.PREF_KEY_IS_KEEP_LOGIN) ?? false;
   }
 
-  static Future<bool> saveUserInfo(UserModel user) async {
+  // ==================== LANGUAGE SETTINGS ====================
+  
+  /// Lưu ngôn ngữ hiện tại
+  static Future setCurrentLanguage(String languageCode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setString(SPrefCache.PREF_KEY_USER_INFO, json.encode(user.toJson()));
+    await prefs.setString(SPrefCache.PREF_KEY_LANGUAGE, languageCode);
   }
 
-  static Future<UserModel?> getUserInfo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var data = prefs.getString(SPrefCache.PREF_KEY_USER_INFO);
-    if (data == null) {
-      return null;
-    }
-    return UserModel.fromJson(json.decode(data));
-  }
-
-  static Future setCurrentLanguage(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(SPrefCache.PREF_KEY_LANGUAGE, token);
-  }
-
+  /// Lấy ngôn ngữ hiện tại
   static Future<String> getCurrentLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(SPrefCache.PREF_KEY_LANGUAGE) ??
         AppLocalizationDelegate().supportedLocales.first.languageCode;
   }
 
-  static Future clearData() async {
+  // ==================== PASSWORD SETTINGS ====================
+  
+  /// Lưu trạng thái "Remember password"
+  static Future setRememberPassword(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await prefs.setBool(SPrefCache.PREF_KEY_REMEMBER_PASSWORD, value);
   }
 
-  // Local Books - lưu danh sách file paths
+  /// Lấy trạng thái "Remember password"
+  static Future<bool> getRememberPassword() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(SPrefCache.PREF_KEY_REMEMBER_PASSWORD) ?? false;
+  }
+
+  // ==================== LOCAL BOOKS MANAGEMENT ====================
+  
+  /// Lưu danh sách file paths của sách local
   static Future<bool> saveLocalBooks(List<String> filePaths) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.setStringList(SPrefCache.PREF_KEY_LOCAL_BOOKS, filePaths);
   }
 
+  /// Lấy danh sách sách local
   static Future<List<String>> getLocalBooks() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getStringList(SPrefCache.PREF_KEY_LOCAL_BOOKS) ?? [];
   }
 
+  /// Thêm một sách local
   static Future<bool> addLocalBook(String filePath) async {
     final books = await getLocalBooks();
     if (!books.contains(filePath)) {
@@ -85,24 +87,30 @@ class SharedPreferenceUtil {
     return false; // Already exists
   }
 
+  /// Xóa một sách local
   static Future<bool> removeLocalBook(String filePath) async {
     final books = await getLocalBooks();
     books.remove(filePath);
     return await saveLocalBooks(books);
   }
 
+  /// Kiểm tra sách đã được thêm chưa
   static Future<bool> isBookAdded(String filePath) async {
     final books = await getLocalBooks();
     return books.contains(filePath);
   }
-  
-  static Future setRememberPassword(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(SPrefCache.PREF_KEY_REMEMBER_PASSWORD, value);
-  }
 
-  static Future<bool> getRememberPassword() async {
+  // ==================== CLEAR DATA ====================
+  
+  /// Xóa tất cả dữ liệu trong SharedPreferences
+  /// 
+  /// LƯU Ý: Method này CHỈ xóa dữ liệu không nhạy cảm trong SharedPreferences
+  /// Để xóa dữ liệu nhạy cảm (token, password, user info), sử dụng:
+  /// ```dart
+  /// await SecureStorageService().clearAllSecureData();
+  /// ```
+  static Future clearData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(SPrefCache.PREF_KEY_REMEMBER_PASSWORD) ?? false;
+    await prefs.clear();
   }
 }

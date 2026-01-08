@@ -9,6 +9,7 @@ import 'package:readbox/utils/shared_preference.dart';
 
 class AuthCubit extends Cubit<BaseState> {
   final AuthRepository repository;
+  final SecureStorageService _secureStorage = SecureStorageService();
 
   AuthCubit({required this.repository}) : super(InitState());
 
@@ -49,7 +50,13 @@ class AuthCubit extends Cubit<BaseState> {
   Future doLogout() async {
     try {
       emit(LoadingState());
+      
+      // Xóa tất cả dữ liệu nhạy cảm từ secure storage
+      await _secureStorage.clearAllSecureData();
+      
+      // Xóa preferences (non-sensitive data)
       await SharedPreferenceUtil.clearData();
+      
       emit(LoadedState(null));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -323,8 +330,8 @@ class AuthCubit extends Cubit<BaseState> {
   Future updateProfile({required UserModel userModel}) async {
     try {
       emit(LoadingState());
+      // Repository sẽ tự động lưu vào secure storage
       UserModel updatedUserModel = await repository.updateProfile(userModel);
-      await SharedPreferenceUtil.saveUserInfo(updatedUserModel);
       emit(LoadedState(updatedUserModel));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));

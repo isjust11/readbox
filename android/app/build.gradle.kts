@@ -26,7 +26,7 @@ android {
         applicationId = "com.hungvv.readbox"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion  // Required by firebase_messaging
+        minSdk = 23  // Required by firebase_messaging
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

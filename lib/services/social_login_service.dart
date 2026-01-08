@@ -128,6 +128,7 @@ class SocialLoginService {
   /// Đăng nhập bằng Facebook
   static Future<Map<String, dynamic>?> signInWithFacebook() async {
     try {
+      print('Running on platform: ${Platform.operatingSystem}');
       print('Running on simulator: $isSimulator');
 
       // Cảnh báo nếu đang chạy trên simulator
@@ -135,36 +136,48 @@ class SocialLoginService {
         print('⚠️ WARNING: Running on iOS Simulator');
       }
 
-      // Kiểm tra cấu hình Facebook trước khi đăng nhập
-      final status =
-          await AppTrackingTransparency.requestTrackingAuthorization();
-      if (status == TrackingStatus.authorized) {
-        // Gọi FacebookAuth.instance.login() sau đó
-
-        final LoginResult result = await FacebookAuth.instance.login();
-
-        if (result.status == LoginStatus.success) {
-          final userData = await FacebookAuth.instance.getUserData();
-
-          // Debug token chi tiết
-          final accessToken = result.accessToken?.tokenString;
-
-          if (accessToken == null) {
-            throw Exception(AppLocalizations.current.facebook_access_token_is_null);
-          }
-
-          return {
-            'platformId': userData['id'],
-            'email': userData['email'] ?? '',
-            'fullName': userData['name'] ?? '',
-            'picture': userData['picture']?['data']?['url'],
-            'platform': 'facebook',
-            'accessToken': accessToken,
-          };
-        } else {
-          throw Exception(AppLocalizations.current.facebook_login_failed);
+      // Chỉ yêu cầu App Tracking Transparency trên iOS 14+
+      // Android không hỗ trợ và sẽ trả về notSupported
+      if (Platform.isIOS) {
+        print('📱 iOS detected - Requesting tracking authorization...');
+        final status =
+            await AppTrackingTransparency.requestTrackingAuthorization();
+        print('📱 Tracking status: $status');
+        
+        // Trên iOS, nếu user từ chối tracking, vẫn cho phép đăng nhập
+        // nhưng có thể hạn chế một số tính năng analytics
+        if (status == TrackingStatus.denied || status == TrackingStatus.restricted) {
+          print('⚠️ User denied tracking, but login will continue');
         }
       } else {
+        print('🤖 Android detected - Skipping App Tracking Transparency');
+      }
+
+      // Thực hiện đăng nhập Facebook
+      print('🔐 Starting Facebook login...');
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      if (result.status == LoginStatus.success) {
+        final userData = await FacebookAuth.instance.getUserData();
+
+        // Debug token chi tiết
+        final accessToken = result.accessToken?.tokenString;
+
+        if (accessToken == null) {
+          throw Exception(AppLocalizations.current.facebook_access_token_is_null);
+        }
+
+        print('✅ Facebook login successful: ${userData['email']}');
+        return {
+          'platformId': userData['id'],
+          'email': userData['email'] ?? '',
+          'fullName': userData['name'] ?? '',
+          'picture': userData['picture']?['data']?['url'],
+          'platform': 'facebook',
+          'accessToken': accessToken,
+        };
+      } else {
+        print('❌ Facebook login failed with status: ${result.status}');
         throw Exception(AppLocalizations.current.facebook_login_failed);
       }
     } catch (error) {

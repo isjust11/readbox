@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>541095232626-0n5ecovgkvhvopc2jk7in06sbuf9d5rv.apps.googleusercontent.com</string>
+	<string>534175741610-44bsn5bprdk2aahkl86k8ln36ckqe62g.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.541095232626-0n5ecovgkvhvopc2jk7in06sbuf9d5rv</string>
+	<string>com.googleusercontent.apps.534175741610-44bsn5bprdk2aahkl86k8ln36ckqe62g</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>534175741610-ibd40ea4u2ju5cbuu4ts47a2h9kqtp83.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDJbxk732TbG3wZLO4SpS7f3tH4bNb1Dc8</string>
+	<string>AIzaSyCsMWsErHIiOnE57WTyaUBsGpN2n03rR8c</string>
 	<key>GCM_SENDER_ID</key>
-	<string>541095232626</string>
+	<string>534175741610</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.hungvv.readbox</string>
 	<key>PROJECT_ID</key>
-	<string>readbox-910a2</string>
+	<string>readbox-3c692</string>
 	<key>STORAGE_BUCKET</key>
-	<string>readbox-910a2.firebasestorage.app</string>
+	<string>readbox-3c692.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:541095232626:ios:b6d1872641954808502eeb</string>
+	<string>1:534175741610:ios:1624db9508c9f88e3c42d3</string>
 </dict>
 </plist>

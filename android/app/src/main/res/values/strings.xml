@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ReadBox</string>
+    
+    <!-- Facebook Configuration -->
+    <!-- 
+        Lấy Facebook App ID và Client Token từ:
+        https://developers.facebook.com/apps/
+        1. Chọn app của bạn
+        2. Settings > Basic
+        3. Copy App ID và Client Token
+    -->
+    <string name="facebook_app_id">884129041238432</string>
+    <string name="facebook_client_token">fa9a622a5b0786ac54a76767a2118bcb</string>
+    <string name="fb_login_protocol_scheme">fb884129041238432</string>
+    
+    <!-- 
+        Ví dụ nếu Facebook App ID là 1234567890123456:
+        <string name="facebook_app_id">1234567890123456</string>
+        <string name="facebook_client_token">abcdef1234567890abcdef1234567890</string>
+        <string name="fb_login_protocol_scheme">fb1234567890123456</string>
+    -->
+</resources>

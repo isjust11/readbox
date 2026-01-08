@@ -3,7 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:readbox/utils/shared_preference.dart';
+import 'package:readbox/services/secure_storage_service.dart';
 
 /// Background message handler - must be a top-level function
 @pragma('vm:entry-point')
@@ -235,8 +235,10 @@ class FCMService {
   Future<void> sendTokenToServerIfLoggedIn() async {
     try {
       // Kiểm tra xem có access token không (user đã login)
-      final accessToken = await SharedPreferenceUtil.getToken();
-      if (accessToken.isNotEmpty && _fcmToken != null) {
+      final secureStorage = SecureStorageService();
+      final hasToken = await secureStorage.hasToken();
+      
+      if (hasToken && _fcmToken != null) {
         debugPrint('User already logged in, sending FCM token with userId');
         await sendTokenToServer();
       }

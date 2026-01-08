@@ -2,13 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:readbox/domain/network/network.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-import 'package:readbox/utils/shared_preference.dart';
+import 'package:readbox/services/secure_storage_service.dart';
 
 class Network {
   static const int DEFAULT_TIMEOUT = 15000;
   static BaseOptions options =
       BaseOptions(connectTimeout: DEFAULT_TIMEOUT, receiveTimeout: DEFAULT_TIMEOUT, baseUrl: ApiConstant.apiHost);
   static final Dio _dio = Dio(options);
+  static final SecureStorageService _secureStorage = SecureStorageService();
 
   Network._internal() {
     // Bypass SSL certificate validation in debug mode only
@@ -18,8 +19,9 @@ class Network {
     }
     _dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions myOption, RequestInterceptorHandler handler) async {
-      String token = await SharedPreferenceUtil.getToken();
-      if (token.isNotEmpty) {
+      // Lấy token từ secure storage
+      String? token = await _secureStorage.getToken();
+      if (token != null && token.isNotEmpty) {
         myOption.headers["Authorization"] = "Bearer $token";
       }
       return handler.next(myOption);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:readbox/routes.dart';
-import 'package:readbox/utils/shared_preference.dart';
+import 'package:readbox/services/secure_storage_service.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,6 +11,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
+  final SecureStorageService _secureStorage = SecureStorageService();
   late AnimationController _scaleController;
   late AnimationController _fadeController;
   late AnimationController _rotateController;
@@ -257,9 +258,18 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
   }
 
   openScreen(BuildContext context) async {
-    String token = await SharedPreferenceUtil.getToken();
+    // Migrate dữ liệu cũ từ SharedPreferences sang SecureStorage (chỉ chạy 1 lần)
+    try {
+      await _secureStorage.migrateFromSharedPreferences();
+    } catch (e) {
+      print('⚠️ Migration failed, but app will continue: $e');
+    }
+
+    // Kiểm tra token từ secure storage
+    final hasToken = await _secureStorage.hasToken();
     await Future.delayed(Duration(milliseconds: 2500));
-    if (token.isEmpty) {
+    
+    if (!hasToken) {
       Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
     } else {
       Navigator.pushNamedAndRemoveUntil(context, Routes.mainScreen, (route) => false);
