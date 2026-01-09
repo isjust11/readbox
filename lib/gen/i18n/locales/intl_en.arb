@@ -198,5 +198,11 @@
   "please_enter_valid_linkedin_link": "Please enter valid LinkedIn link",
   "please_enter_valid_github_link": "Please enter valid GitHub link",
   "please_enter_valid_gitlab_link": "Please enter valid GitLab link",
-  "please_enter_valid_bitbucket_link": "Please enter valid Bitbucket link"
+  "please_enter_valid_bitbucket_link": "Please enter valid Bitbucket link",
+  "cannot_select_image_message": "Cannot select image",
+  "cannot_access_camera": "Cannot access camera",
+  "please_grant_permission_to_access_camera_or_gallery_in_settings": "Please grant permission to access camera or gallery in settings",
+  "no_available_camera": "No available camera",
+  "no_content_to_display": "No content to display",
+  "privacy_and_security": "Privacy and security"
 }

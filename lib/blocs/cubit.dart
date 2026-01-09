@@ -6,4 +6,7 @@ export 'library/library_cubit.dart';
 export 'book/book_detail_cubit.dart';
 export 'admin/admin_cubit.dart';
 export 'book_refresh/book_refresh_cubit.dart';
-export 'feedback/feedback_cubit.dart';
+export 'media_cubit.dart';
+export 'theme_cubit.dart';
+export 'page_cubit.dart';
+export 'feedback_cubit.dart';

@@ -7,7 +7,7 @@ import 'package:scale_size/scale_size.dart';
 import '../../res/resources.dart';
 import 'custom_text_label.dart';
 
-class BaseAppBar extends StatefulWidget {
+class BaseAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String? title;
   final bool showBackButton;
   final Widget? customLeading;
@@ -36,6 +36,9 @@ class BaseAppBar extends StatefulWidget {
 
   @override
   State<BaseAppBar> createState() => _BaseAppBarState();
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 }
 
 class _BaseAppBarState extends State<BaseAppBar> {
@@ -46,7 +49,7 @@ class _BaseAppBarState extends State<BaseAppBar> {
     return AppBar(
       title: _buildTitle(context, _isSearching),
       centerTitle: widget.centerTitle,
-      backgroundColor: widget.backgroundColor ?? AppColors.baseColor,
+      backgroundColor: widget.backgroundColor ?? Theme.of(context).colorScheme.primary,
       elevation: 0,
       automaticallyImplyLeading: false,
       leadingWidth: AppDimens.SIZE_40,

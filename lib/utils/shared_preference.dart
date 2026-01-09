@@ -11,7 +11,7 @@ class SPrefCache {
   static const String PREF_KEY_IS_KEEP_LOGIN = "pref_key_is_keep_login";
   static const String PREF_KEY_LOCAL_BOOKS = "pref_key_local_books";
   static const String PREF_KEY_REMEMBER_PASSWORD = "pref_key_remember_password";
-  
+  static const String PREF_KEY_THEME = "pref_key_theme";
   // DEPRECATED - Đã chuyển sang SecureStorage
   @Deprecated('Use SecureStorageService.saveToken() instead')
   static const String KEY_TOKEN = "auth_token";
@@ -98,6 +98,16 @@ class SharedPreferenceUtil {
   static Future<bool> isBookAdded(String filePath) async {
     final books = await getLocalBooks();
     return books.contains(filePath);
+  }
+
+  // ==================== THEME SETTINGS ====================
+  static Future<String> getTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(SPrefCache.PREF_KEY_THEME) ?? 'light';
+  }
+  static Future<void> setTheme(String theme) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(SPrefCache.PREF_KEY_THEME, theme);
   }
 
   // ==================== CLEAR DATA ====================

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,15 +14,41 @@ import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/injection_container.dart';
 
-class UpdateProfileScreen extends StatefulWidget {
+class UpdateProfileScreen extends StatelessWidget {
   const UpdateProfileScreen({super.key});
 
   @override
-  State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthCubit>(
+          create: (_) => getIt.get<AuthCubit>(),
+        ),
+        BlocProvider<MediaCubit>(
+          create: (_) => getIt.get<MediaCubit>(),
+        ),
+      ],
+      child: const UpdateProfileBody(),
+    );
+  }
 }
 
-class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
+class UpdateProfileBody extends StatefulWidget {
+  const UpdateProfileBody({super.key});
+
+  @override
+  State<UpdateProfileBody> createState() => _UpdateProfileBodyState();
+}
+
+class _UpdateProfileBodyState extends State<UpdateProfileBody> {
+  @override
+  void didUpdateWidget(UpdateProfileBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _formKey.currentState?.dispose();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -61,12 +88,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     _loadUserProfile();
   }
 
-  @override
-  void didUpdateWidget(UpdateProfileScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _formKey.currentState?.dispose();
-  }
-
   void _loadUserProfile() {
     final authCubit = context.read<AuthCubit>();
     authCubit.getProfile();
@@ -95,7 +116,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     return BaseScreen(
       customAppBar: BaseAppBar(
         title: AppLocalizations.current.updateYourInfo,
-        backgroundColor: AppColors.baseColor,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       messageNotify: CustomSnackBar<AuthCubit>(),
       body: BlocListener<AuthCubit, BaseState>(
@@ -105,9 +126,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               final userModel = state.data as UserModel;
               _fullNameController.text = userModel.fullName ?? '';
               _emailController.text = userModel.email ?? '';
-              _currentAvatarUrl = userModel.isSocialPlatform
-                  ? userModel.picture
-                  : ApiConstant.storageHost + (userModel.picture ?? '');
+              _currentAvatarUrl =
+                  userModel.isSocialPlatform
+                      ? userModel.picture
+                      :userModel.picture != null ? ApiConstant.storageHost + (userModel.picture ?? '') 
+                      :null;
               _pathRelativeAvatar = userModel.picture ?? '';
               _phoneNumberController.text = userModel.phoneNumber ?? '';
               _addressController.text = userModel.address ?? '';
@@ -155,7 +178,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       width: double.infinity,
       height: AppDimens.SIZE_162,
       decoration: BoxDecoration(
-        color: AppColors.baseColor,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
       ),
       padding: const EdgeInsets.all(AppDimens.SIZE_16),
@@ -180,25 +203,24 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: AppColors.baseColor,
+                            color: Theme.of(context).colorScheme.primary,
                             width: 3,
                           ),
                         ),
                         child: ClipOval(
-                          child: _selectedImage != null
-                              ? BaseNetworkImage(
-                                  url: _selectedImage!.path,
-                                  fit: BoxFit.cover,
-                                  showShimmer: true,
-                                )
-                              : _currentAvatarUrl != null &&
-                                    _currentAvatarUrl!.isNotEmpty
-                              ? BaseNetworkImage(
-                                  url: _currentAvatarUrl!,
-                                  fit: BoxFit.cover,
-                                  showShimmer: true,
-                                )
-                              : _buildDefaultAvatar(),
+                          child:
+                              _selectedImage != null
+                                  ? Image.file(
+                                    _selectedImage!,
+                                    fit: BoxFit.cover,
+                                  )
+                                  : _currentAvatarUrl != null &&
+                                      _currentAvatarUrl!.isNotEmpty ?
+                                  CachedNetworkImage(
+                                    imageUrl: _currentAvatarUrl!,
+                                    fit: BoxFit.cover,
+                                  )
+                                  : _buildDefaultAvatar(),
                         ),
                       ),
                     ),
@@ -216,7 +238,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         ),
                         child: Icon(
                           Icons.camera_alt,
-                          color: AppColors.baseColor,
+                          color: Theme.of(context).colorScheme.primary,
                           size: AppDimens.SIZE_16,
                         ),
                       ),
@@ -233,8 +255,19 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   Widget _buildDefaultAvatar() {
     return Container(
-      color: AppColors.gray.withValues(alpha: 0.3),
-      child: Icon(Icons.person, size: AppDimens.SIZE_60, color: AppColors.gray),
+      
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        shape: BoxShape.circle,
+      ),
+      child: Container(
+        margin: const EdgeInsets.all(AppDimens.SIZE_4),
+        decoration: BoxDecoration(
+          color: AppColors.gray.withValues(alpha: 0.3),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(Icons.person, size: AppDimens.SIZE_60, color: AppColors.gray),
+      ),
     );
   }
 
@@ -388,11 +421,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   Widget _buildSaveButton() {
     return BaseButton(
-      title: _isLoading
-          ? AppLocalizations.current.saving
-          : AppLocalizations.current.save,
+      title:
+          _isLoading
+              ? AppLocalizations.current.saving
+              : AppLocalizations.current.save,
       onTap: _isLoading ? null : _saveProfile,
-      backgroundColor: AppColors.baseColor,
+      backgroundColor: _isLoading ? AppColors.gray.withValues(alpha: 0.5) :
+       Theme.of(context).colorScheme.primary,
       width: double.infinity,
     );
   }
@@ -482,12 +517,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       }
     } catch (e) {
       // Handle permission denied or other errors
-      String errorMessage = 'Không thể chọn ảnh';
+      String errorMessage = AppLocalizations.current.cannot_select_image_message;
       if (e.toString().contains('permission')) {
         errorMessage =
-            'Vui lòng cấp quyền truy cập camera/thư viện ảnh trong cài đặt';
+            AppLocalizations.current.please_grant_permission_to_access_camera_or_gallery_in_settings;
       } else if (e.toString().contains('camera')) {
-        errorMessage = 'Không thể truy cập camera';
+        errorMessage = AppLocalizations.current.cannot_access_camera;
+      } else if (e.toString().contains('no_available_camera')) {
+        errorMessage = AppLocalizations.current.no_available_camera;
       }
 
       if (mounted) {
@@ -511,7 +548,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     });
     FocusScope.of(context).unfocus();
     final authCubit = context.read<AuthCubit>();
-
+    final mediaCubit = context.read<MediaCubit>();
     // Convert image to base64 if selected
     String? urlPicture;
     if (_selectedImage != null) {
@@ -522,11 +559,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
     // upload image to server
     if (_selectedImage != null) {
-      // final mediaCubit = context.read<MediaCubit>();
-      // final media = await mediaCubit.uploadMedia(_selectedImage!);
-      // urlPicture = media.publicRelativePath;
+      final media = await mediaCubit.uploadMedia(_selectedImage!);
+      urlPicture = media.publicRelativePath;
     }
-    final userModel = UserModel.fromJson({
+    final userModel = UserModel.simpleFromJson({
       'fullName': _fullNameController.text.trim(),
       'email': _emailController.text.trim(),
       'phoneNumber': _phoneNumberController.text.trim(),

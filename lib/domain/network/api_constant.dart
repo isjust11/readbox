@@ -43,7 +43,8 @@ class ApiConstant {
   static final updateProfile = "auth/update-profile";
   static final refreshToken = "auth/refresh-token";
   static final forgotPassword = "auth/forgot-password";
-
+  static final getMedia = "media";
+  static final getPage = "pages";
   // Book endpoints
   static final getBooksPublic =  "books/public";
   static final getBooks =  "books/search";
@@ -70,4 +71,5 @@ class ApiConstant {
   static final getCategories = "categories";
   //upload medial
   static final uploadMedia = "media/upload";
+  static final createFeedback = "feedback";
 }

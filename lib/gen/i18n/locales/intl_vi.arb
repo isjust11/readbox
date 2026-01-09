@@ -216,5 +216,11 @@
   "please_enter_valid_linkedin_link": "Liên kết LinkedIn không hợp lệ",
   "please_enter_valid_github_link": "Liên kết GitHub không hợp lệ",
   "please_enter_valid_gitlab_link": "Liên kết GitLab không hợp lệ",
-  "please_enter_valid_bitbucket_link": "Liên kết Bitbucket không hợp lệ"
+  "please_enter_valid_bitbucket_link": "Liên kết Bitbucket không hợp lệ",
+  "cannot_select_image_message": "Không thể chọn ảnh",
+  "cannot_access_camera": "Không thể truy cập camera",
+  "please_grant_permission_to_access_camera_or_gallery_in_settings": "Vui lòng cấp quyền truy cập camera/thư viện ảnh trong cài đặt",
+  "no_available_camera": "Không có camera khả dụng",
+  "no_content_to_display": "Không có nội dung để hiển thị",
+  "privacy_and_security": "Quyền riêng tư và bảo mật"
 }

@@ -2229,6 +2229,66 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Không thể chọn ảnh`
+  String get cannot_select_image_message {
+    return Intl.message(
+      'Không thể chọn ảnh',
+      name: 'cannot_select_image_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không thể truy cập camera`
+  String get cannot_access_camera {
+    return Intl.message(
+      'Không thể truy cập camera',
+      name: 'cannot_access_camera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng cấp quyền truy cập camera/thư viện ảnh trong cài đặt`
+  String get please_grant_permission_to_access_camera_or_gallery_in_settings {
+    return Intl.message(
+      'Vui lòng cấp quyền truy cập camera/thư viện ảnh trong cài đặt',
+      name: 'please_grant_permission_to_access_camera_or_gallery_in_settings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không có camera khả dụng`
+  String get no_available_camera {
+    return Intl.message(
+      'Không có camera khả dụng',
+      name: 'no_available_camera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không có nội dung để hiển thị`
+  String get no_content_to_display {
+    return Intl.message(
+      'Không có nội dung để hiển thị',
+      name: 'no_content_to_display',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quyền riêng tư và bảo mật`
+  String get privacy_and_security {
+    return Intl.message(
+      'Quyền riêng tư và bảo mật',
+      name: 'privacy_and_security',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

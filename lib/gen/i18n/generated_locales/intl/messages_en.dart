@@ -43,6 +43,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Biometric setup successful"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "cannot_access_camera":
+            MessageLookupByLibrary.simpleMessage("Cannot access camera"),
+        "cannot_select_image_message":
+            MessageLookupByLibrary.simpleMessage("Cannot select image"),
         "changeAppLanguage":
             MessageLookupByLibrary.simpleMessage("Change app language"),
         "chooseAppAppearance":
@@ -213,7 +217,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No login information"),
         "noName": MessageLookupByLibrary.simpleMessage("No name"),
         "no_account": MessageLookupByLibrary.simpleMessage("No account? "),
+        "no_available_camera":
+            MessageLookupByLibrary.simpleMessage("No available camera"),
         "no_books": MessageLookupByLibrary.simpleMessage("No books"),
+        "no_content_to_display":
+            MessageLookupByLibrary.simpleMessage("No content to display"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "password_must_be_at_least_6_characters":
@@ -276,10 +284,15 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please enter valid phone number"),
         "please_enter_valid_twitter_link": MessageLookupByLibrary.simpleMessage(
             "Please enter valid Twitter link"),
+        "please_grant_permission_to_access_camera_or_gallery_in_settings":
+            MessageLookupByLibrary.simpleMessage(
+                "Please grant permission to access camera or gallery in settings"),
         "pls_input_username":
             MessageLookupByLibrary.simpleMessage("Please enter username"),
         "privacySettings":
             MessageLookupByLibrary.simpleMessage("Privacy settings"),
+        "privacy_and_security":
+            MessageLookupByLibrary.simpleMessage("Privacy and security"),
         "private_books": MessageLookupByLibrary.simpleMessage("Private books"),
         "profile": MessageLookupByLibrary.simpleMessage("Profile"),
         "public_books": MessageLookupByLibrary.simpleMessage("Public books"),

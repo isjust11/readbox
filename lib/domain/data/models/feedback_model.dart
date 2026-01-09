@@ -68,6 +68,22 @@ class FeedbackModel {
     this.isAnonymous = false,
   });
 
+  factory FeedbackModel.fromJson(Map<String, dynamic> json){
+    return FeedbackModel(
+      title: json['title'] ?? '',
+      content: json['content'] ?? '',
+      type: FeedbackType.values.byName(json['type'] ?? ''),
+      priority: FeedbackPriority.values.byName(json['priority'] ?? ''),
+      email: json['email'] ?? '',
+      phone: json['phone'] ?? '',
+      name: json['name'] ?? '',
+      deviceInfo: json['deviceInfo'] ?? '',
+      appVersion: json['appVersion'] ?? '',
+      osVersion: json['osVersion'] ?? '',
+      isAnonymous: json['isAnonymous'] ?? false,
+    );
+  }
+  
   Map<String, dynamic> toJson() {
     return {
       'title': title,

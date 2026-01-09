@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:readbox/domain/data/models/user_model.dart';
-import 'package:readbox/domain/network/api_constant.dart';
-import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/app_widgets/app_profile.dart';
-import 'package:readbox/ui/widget/base_network_image.dart';
 import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/routes.dart';
@@ -90,86 +85,6 @@ class _SettingScreenState extends State<SettingScreen> {
     
   }
 
-  Widget _buildHeader(UserModel? user) {
-    return Container(
-      padding: const EdgeInsets.all(AppDimens.SIZE_18),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withValues(alpha: 0.8),
-          ],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-            blurRadius: AppDimens.SIZE_20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () {
-              // TODO: Navigate to profile screen when route is available
-              // Navigator.of(context).pushNamed(Routes.profileScreen);
-            },
-            child: Container(
-              width: AppDimens.SIZE_60,
-              height: AppDimens.SIZE_60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 3),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: AppDimens.SIZE_10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: ClipOval(
-                child: (user?.picture == null || user!.picture!.isEmpty)
-                    ? SvgPicture.asset(Assets.icons.icAvatar)
-                    : BaseNetworkImage(
-                        url: (user.platformId != null && user.platformId!.isNotEmpty)
-                            ? user.picture
-                            : ApiConstant.storageHost + user.picture!,
-                        fit: BoxFit.cover,
-                      ),
-              ),
-            ),
-          ),
-          const SizedBox(width: AppDimens.SIZE_16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomTextLabel(
-                  user?.fullName ??
-                      user?.username ??
-                      AppLocalizations.current.noName,
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppDimens.SIZE_14,
-                  color: AppColors.white,
-                ),
-                const SizedBox(height: 6),
-                CustomTextLabel(
-                  user?.username ?? AppLocalizations.current.noName,
-                  fontSize: AppDimens.SIZE_12,
-                  color: AppColors.white.withValues(alpha: 0.9),
-                ),
-                const SizedBox(height: AppDimens.SIZE_8),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildQuickActions() {
     return Container(
@@ -195,8 +110,7 @@ class _SettingScreenState extends State<SettingScreen> {
               subtitle: AppLocalizations.current.privacySettings,
               color: Colors.green,
               onTap: () {
-                // TODO: Navigate to privacy security screen when route is available
-                // Navigator.of(context).pushNamed(Routes.privacySecurityScreen);
+                Navigator.of(context).pushNamed(Routes.privacySecurityScreen);
               },
             ),
           ),
@@ -378,8 +292,7 @@ class _SettingScreenState extends State<SettingScreen> {
               size: AppDimens.SIZE_16,
             ),
             onTap: () {
-              // TODO: Navigate to support center screen when route is available
-              // Navigator.of(context).pushNamed(Routes.supportCenterScreen);
+              Navigator.of(context).pushNamed(Routes.supportCenterScreen);
             },
           ),
           _buildDivider(),

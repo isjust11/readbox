@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/assets.gen.dart';
@@ -155,7 +156,9 @@ class _AppProfileState extends State<AppProfile> {
     if (_currentUser?.picture != null && _currentUser!.picture!.isNotEmpty) {
       return CircleAvatar(
         radius: 40,
-        backgroundImage: CachedNetworkImageProvider(_currentUser!.picture!),
+        backgroundImage: CachedNetworkImageProvider( 
+          _isSocialPlatform() ? _currentUser!.picture! :
+           ApiConstant.storageHost + (_currentUser!.picture ?? '')),
         backgroundColor: Colors.white,
         onBackgroundImageError: (_, __) {
           // Fallback sẽ hiển thị initials bên dưới
@@ -201,5 +204,9 @@ class _AppProfileState extends State<AppProfile> {
     // Lấy chữ cái đầu của tên và họ
     return '${parts[0].substring(0, 1)}${parts[parts.length - 1].substring(0, 1)}'
         .toUpperCase();
+  }
+
+  bool _isSocialPlatform() {
+    return _currentUser?.isGoogleUser == true || _currentUser?.isFacebookUser == true || _currentUser?.isAppleUser == true;
   }
 }

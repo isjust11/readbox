@@ -13,18 +13,16 @@ class PdfViewerWithSelectionScreen extends StatefulWidget {
   final String title;
 
   const PdfViewerWithSelectionScreen({
-    Key? key,
+    super.key,
     required this.fileUrl,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
-  _PdfViewerWithSelectionScreenState createState() =>
-      _PdfViewerWithSelectionScreenState();
+  State<PdfViewerWithSelectionScreen> createState() => _PdfViewerWithSelectionScreenState();
 }
 
-class _PdfViewerWithSelectionScreenState
-    extends State<PdfViewerWithSelectionScreen> {
+class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScreen> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   final PdfViewerController _pdfViewerController = PdfViewerController();
   

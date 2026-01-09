@@ -45,6 +45,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "birth_date": MessageLookupByLibrary.simpleMessage("Ngày sinh"),
         "camera": MessageLookupByLibrary.simpleMessage("Máy ảnh"),
         "cancel": MessageLookupByLibrary.simpleMessage("Hủy"),
+        "cannot_access_camera":
+            MessageLookupByLibrary.simpleMessage("Không thể truy cập camera"),
+        "cannot_select_image_message":
+            MessageLookupByLibrary.simpleMessage("Không thể chọn ảnh"),
         "changeAppLanguage":
             MessageLookupByLibrary.simpleMessage("Thay đổi ngôn ngữ ứng dụng"),
         "chooseAppAppearance":
@@ -230,7 +234,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "noName": MessageLookupByLibrary.simpleMessage("Không có tên"),
         "no_account":
             MessageLookupByLibrary.simpleMessage("Chưa có tài khoản? "),
+        "no_available_camera":
+            MessageLookupByLibrary.simpleMessage("Không có camera khả dụng"),
         "no_books": MessageLookupByLibrary.simpleMessage("Chưa có sách nào"),
+        "no_content_to_display": MessageLookupByLibrary.simpleMessage(
+            "Không có nội dung để hiển thị"),
         "no_info": MessageLookupByLibrary.simpleMessage("Không có thông tin"),
         "notifications": MessageLookupByLibrary.simpleMessage("Thông báo"),
         "password": MessageLookupByLibrary.simpleMessage("Mật khẩu"),
@@ -300,10 +308,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Số điện thoại không hợp lệ"),
         "please_enter_valid_twitter_link": MessageLookupByLibrary.simpleMessage(
             "Liên kết Twitter không hợp lệ"),
+        "please_grant_permission_to_access_camera_or_gallery_in_settings":
+            MessageLookupByLibrary.simpleMessage(
+                "Vui lòng cấp quyền truy cập camera/thư viện ảnh trong cài đặt"),
         "pls_input_username":
             MessageLookupByLibrary.simpleMessage("Vui lòng nhập tên đăng nhập"),
         "privacySettings":
             MessageLookupByLibrary.simpleMessage("Cài đặt quyền riêng tư"),
+        "privacy_and_security":
+            MessageLookupByLibrary.simpleMessage("Quyền riêng tư và bảo mật"),
         "private_books": MessageLookupByLibrary.simpleMessage("Sách riêng tư"),
         "profile": MessageLookupByLibrary.simpleMessage("Hồ sơ"),
         "public_books": MessageLookupByLibrary.simpleMessage("Sách công khai"),

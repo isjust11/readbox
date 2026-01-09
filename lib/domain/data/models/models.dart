@@ -9,3 +9,5 @@ export 'authen_model.dart';
 export 'user_register_model.dart';
 export 'feedback_model.dart';
 export 'fcm_token_model.dart';
+export 'media_model.dart';
+export 'page_model.dart';

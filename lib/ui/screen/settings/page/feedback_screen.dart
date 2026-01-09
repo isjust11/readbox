@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/res/dimens.dart';
@@ -12,16 +13,29 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io';
 import 'package:readbox/ui/widget/custom_text_label.dart';
-import 'package:readbox/blocs/feedback/feedback_cubit.dart';
+import 'package:readbox/injection_container.dart';
 
-class FeedbackScreen extends StatefulWidget {
+
+class FeedbackScreen extends StatelessWidget {
   const FeedbackScreen({super.key});
 
   @override
-  State<FeedbackScreen> createState() => _FeedbackScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt.get<FeedbackCubit>(),
+      child: const FeedbackBody(),
+    );
+  }
 }
 
-class _FeedbackScreenState extends State<FeedbackScreen> {
+class FeedbackBody extends StatefulWidget {
+  const FeedbackBody({super.key});
+
+  @override
+  State<FeedbackBody> createState() => _FeedbackBodyState();
+}
+
+class _FeedbackBodyState extends State<FeedbackBody> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
@@ -166,7 +180,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       title: AppLocalizations.current.feedbackContact,
       showBackButton: true,
       onBackTap: () => Navigator.pop(context),
-      backgroundColor: AppColors.secondaryBrand,
     );
   }
 
@@ -452,8 +465,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       child: ElevatedButton(
         onPressed: isLoading ? null : _submitFeedback,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryBlue,
-          foregroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: isLoading

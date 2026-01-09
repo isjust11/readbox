@@ -69,7 +69,15 @@ void registerCubit(GetIt getIt) {
   getIt.registerFactory(
     () => AdminCubit(getIt.get<AdminRemoteDataSource>()),
   );
- 
+  getIt.registerFactory(
+    () => MediaCubit(repository: getIt.get<MediaRepository>()),
+  );
+  getIt.registerFactory(
+    () => PageCubit(repository: getIt.get<PageRepository>()),
+  );
+  getIt.registerFactory(
+    () => FeedbackCubit(repository: getIt.get<FeedbackRepository>()),
+  );
 }
 
 void registerRepositories(GetIt getIt) {
@@ -84,6 +92,15 @@ void registerRepositories(GetIt getIt) {
   );
   getIt.registerLazySingleton(
     () => BookRepository(remoteDataSource: getIt.get<BookRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton(
+    () => MediaRepository(remoteDataSource: getIt.get<MediaRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton(
+    () => PageRepository(pageRemoteDataSource: getIt.get<PageRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton(
+    () => FeedbackRepository(remoteDataSource: getIt.get<FeedbackRemoteDataSource>()),
   );
 }
 
@@ -101,6 +118,9 @@ void registerDataSource(GetIt getIt) {
   getIt.registerLazySingleton(() => UserRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => BookRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => AdminRemoteDataSource(network: getIt.get()));
+  getIt.registerLazySingleton(() => MediaRemoteDataSource(network: getIt.get()));
+  getIt.registerLazySingleton(() => PageRemoteDataSource(network: getIt.get()));
+  getIt.registerLazySingleton(() => FeedbackRemoteDataSource(network: getIt.get()));
 }
 
 void registerNetwork(GetIt getIt) {
