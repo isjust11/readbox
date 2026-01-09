@@ -537,4 +537,109 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get please_enter_confirm_code => 'Please enter confirm code';
+
+  @override
+  String get camera => 'Camera';
+
+  @override
+  String get gallery => 'Gallery';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get update_profile => 'Update profile';
+
+  @override
+  String get update_profile_success => 'Update profile successfully';
+
+  @override
+  String get update_profile_failed => 'Update profile failed';
+
+  @override
+  String get update_profile_description => 'Update your information';
+
+  @override
+  String get update_profile_description_success =>
+      'Update your information successfully';
+
+  @override
+  String get update_profile_description_failed =>
+      'Update your information failed';
+
+  @override
+  String get please_enter_instagram_link => 'Please enter Instagram link';
+
+  @override
+  String get please_enter_twitter_link => 'Please enter Twitter link';
+
+  @override
+  String get please_enter_linkedin_link => 'Please enter LinkedIn link';
+
+  @override
+  String get please_enter_github_link => 'Please enter GitHub link';
+
+  @override
+  String get please_enter_gitlab_link => 'Please enter GitLab link';
+
+  @override
+  String get please_enter_bitbucket_link => 'Please enter Bitbucket link';
+
+  @override
+  String get please_enter_facebook_link => 'Please enter Facebook link';
+
+  @override
+  String get please_enter_valid_birth_date => 'Please enter valid birth date';
+
+  @override
+  String get please_enter_valid_phone_number =>
+      'Please enter valid phone number';
+
+  @override
+  String get please_enter_valid_address => 'Please enter valid address';
+
+  @override
+  String get please_enter_valid_facebook_link =>
+      'Please enter valid Facebook link';
+
+  @override
+  String get please_enter_valid_instagram_link =>
+      'Please enter valid Instagram link';
+
+  @override
+  String get please_enter_valid_twitter_link =>
+      'Please enter valid Twitter link';
+
+  @override
+  String get please_enter_valid_linkedin_link =>
+      'Please enter valid LinkedIn link';
+
+  @override
+  String get please_enter_valid_github_link => 'Please enter valid GitHub link';
+
+  @override
+  String get please_enter_valid_gitlab_link => 'Please enter valid GitLab link';
+
+  @override
+  String get please_enter_valid_bitbucket_link =>
+      'Please enter valid Bitbucket link';
+
+  @override
+  String get cannot_select_image_message => 'Cannot select image';
+
+  @override
+  String get cannot_access_camera => 'Cannot access camera';
+
+  @override
+  String get please_grant_permission_to_access_camera_or_gallery_in_settings =>
+      'Please grant permission to access camera or gallery in settings';
+
+  @override
+  String get no_available_camera => 'No available camera';
+
+  @override
+  String get no_content_to_display => 'No content to display';
+
+  @override
+  String get privacy_and_security => 'Privacy and security';
 }

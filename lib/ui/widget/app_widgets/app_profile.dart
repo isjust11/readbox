@@ -6,7 +6,8 @@ import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/assets.gen.dart';
 
 class AppProfile extends StatefulWidget {
-  AppProfile({super.key});
+  final UserModel? user;
+  const AppProfile({super.key, this.user,});
 
   @override
   State<AppProfile> createState() => _AppProfileState();

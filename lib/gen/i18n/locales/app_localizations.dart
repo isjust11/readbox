@@ -1141,6 +1141,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter confirm code'**
   String get please_enter_confirm_code;
+
+  /// No description provided for @camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get camera;
+
+  /// No description provided for @gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @update_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Update profile'**
+  String get update_profile;
+
+  /// No description provided for @update_profile_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Update profile successfully'**
+  String get update_profile_success;
+
+  /// No description provided for @update_profile_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Update profile failed'**
+  String get update_profile_failed;
+
+  /// No description provided for @update_profile_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your information'**
+  String get update_profile_description;
+
+  /// No description provided for @update_profile_description_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your information successfully'**
+  String get update_profile_description_success;
+
+  /// No description provided for @update_profile_description_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your information failed'**
+  String get update_profile_description_failed;
+
+  /// No description provided for @please_enter_instagram_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter Instagram link'**
+  String get please_enter_instagram_link;
+
+  /// No description provided for @please_enter_twitter_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter Twitter link'**
+  String get please_enter_twitter_link;
+
+  /// No description provided for @please_enter_linkedin_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter LinkedIn link'**
+  String get please_enter_linkedin_link;
+
+  /// No description provided for @please_enter_github_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter GitHub link'**
+  String get please_enter_github_link;
+
+  /// No description provided for @please_enter_gitlab_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter GitLab link'**
+  String get please_enter_gitlab_link;
+
+  /// No description provided for @please_enter_bitbucket_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter Bitbucket link'**
+  String get please_enter_bitbucket_link;
+
+  /// No description provided for @please_enter_facebook_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter Facebook link'**
+  String get please_enter_facebook_link;
+
+  /// No description provided for @please_enter_valid_birth_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid birth date'**
+  String get please_enter_valid_birth_date;
+
+  /// No description provided for @please_enter_valid_phone_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid phone number'**
+  String get please_enter_valid_phone_number;
+
+  /// No description provided for @please_enter_valid_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid address'**
+  String get please_enter_valid_address;
+
+  /// No description provided for @please_enter_valid_facebook_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid Facebook link'**
+  String get please_enter_valid_facebook_link;
+
+  /// No description provided for @please_enter_valid_instagram_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid Instagram link'**
+  String get please_enter_valid_instagram_link;
+
+  /// No description provided for @please_enter_valid_twitter_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid Twitter link'**
+  String get please_enter_valid_twitter_link;
+
+  /// No description provided for @please_enter_valid_linkedin_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid LinkedIn link'**
+  String get please_enter_valid_linkedin_link;
+
+  /// No description provided for @please_enter_valid_github_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid GitHub link'**
+  String get please_enter_valid_github_link;
+
+  /// No description provided for @please_enter_valid_gitlab_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid GitLab link'**
+  String get please_enter_valid_gitlab_link;
+
+  /// No description provided for @please_enter_valid_bitbucket_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter valid Bitbucket link'**
+  String get please_enter_valid_bitbucket_link;
+
+  /// No description provided for @cannot_select_image_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot select image'**
+  String get cannot_select_image_message;
+
+  /// No description provided for @cannot_access_camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot access camera'**
+  String get cannot_access_camera;
+
+  /// No description provided for @please_grant_permission_to_access_camera_or_gallery_in_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Please grant permission to access camera or gallery in settings'**
+  String get please_grant_permission_to_access_camera_or_gallery_in_settings;
+
+  /// No description provided for @no_available_camera.
+  ///
+  /// In en, this message translates to:
+  /// **'No available camera'**
+  String get no_available_camera;
+
+  /// No description provided for @no_content_to_display.
+  ///
+  /// In en, this message translates to:
+  /// **'No content to display'**
+  String get no_content_to_display;
+
+  /// No description provided for @privacy_and_security.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy and security'**
+  String get privacy_and_security;
 }
 
 class _AppLocalizationsDelegate

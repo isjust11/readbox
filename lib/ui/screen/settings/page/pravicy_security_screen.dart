@@ -32,7 +32,7 @@ class PrivacySecurityBody extends StatelessWidget {
     context.read<PageCubit>().getPageBySlug('securityandpravicy');
     return BaseScreen(
       customAppBar: _buildAppBar(context),
-      colorTitle: AppColors.white,
+      colorTitle: Theme.of(context).colorScheme.surfaceContainerHighest,
       // stateWidget: CustomLoading<PageCubit>(
       //   message: AppLocalizations.current.loading,
       //   size: AppDimens.SIZE_32,
@@ -65,7 +65,7 @@ class PrivacySecurityBody extends StatelessWidget {
             return Center(
               child: Text(
                 AppLocalizations.current.no_content_to_display,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.colorTitle),
               ),
             );
           }

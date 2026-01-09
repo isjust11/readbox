@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/api_constant.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/resources.dart';
 import 'package:readbox/routes.dart';
 
@@ -144,7 +145,7 @@ class BookCard extends StatelessWidget {
                 label: book.isFavorite == true 
                     ? 'Bỏ yêu thích' 
                     : 'Yêu thích',
-                color: Colors.red,
+                color: Theme.of(context).colorScheme.error,
                 onTap: () {
                   Navigator.pop(context);
                   // TODO: Implement toggle favorite
@@ -252,14 +253,14 @@ class BookCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
             blurRadius: 12,
             offset: Offset(0, 4),
           ),
         ],
       ),
       child: Material(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
         child: InkWell(
           onTap: () {
@@ -283,7 +284,7 @@ class BookCard extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimens.SIZE_16)),
                         gradient: LinearGradient(
-                          colors: [Colors.grey[300]!, Colors.grey[100]!],
+                          colors: [Theme.of(context).colorScheme.surface.withValues(alpha: 0.1), Theme.of(context).colorScheme.surface.withValues(alpha: 0.1)],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -297,13 +298,15 @@ class BookCard extends StatelessWidget {
                                 width: double.infinity,
                                 errorBuilder: (context, error, stackTrace) {
                                   return Center(
-                                    child: Icon(Icons.book, size: 48, color: Colors.grey[400]),
+                                    child: Icon(Icons.book, size: 48, 
+                                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)),
                                   );
                                 },
                               ),
                             )
                           : Center(
-                              child: Icon(Icons.book, size: 48, color: Colors.grey[400]),
+                              child: Icon(Icons.book, size: 48, 
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)),
                             ),
                     ),
                     // Favorite badge
@@ -398,14 +401,14 @@ class BookCard extends StatelessWidget {
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[100],
+                                  color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
                                   'Mới',
                                   style: TextStyle(
                                     fontSize: 11,
-                                    color: Colors.grey[600],
+                                    color: Theme.of(context).colorScheme.secondary,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),

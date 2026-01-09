@@ -15,6 +15,7 @@ import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/utils/theme_helper.dart';
 
 class UpdateProfileScreen extends StatelessWidget {
   const UpdateProfileScreen({super.key});
@@ -23,12 +24,8 @@ class UpdateProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthCubit>(
-          create: (_) => getIt.get<AuthCubit>(),
-        ),
-        BlocProvider<MediaCubit>(
-          create: (_) => getIt.get<MediaCubit>(),
-        ),
+        BlocProvider<AuthCubit>(create: (_) => getIt.get<AuthCubit>()),
+        BlocProvider<MediaCubit>(create: (_) => getIt.get<MediaCubit>()),
       ],
       child: const UpdateProfileBody(),
     );
@@ -118,6 +115,8 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
         title: AppLocalizations.current.updateYourInfo,
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
+      colorBg: ThemeHelper.isDarkMode(context) ? Theme.of(context).colorScheme.surfaceContainerHighest : Theme.of(context).colorScheme.secondaryContainer,
+      colorTitle: ThemeHelper.isDarkMode(context) ? Theme.of(context).colorScheme.secondaryContainer : Theme.of(context).colorScheme.surfaceContainerHighest,
       messageNotify: CustomSnackBar<AuthCubit>(),
       body: BlocListener<AuthCubit, BaseState>(
         listener: (context, state) {
@@ -129,8 +128,9 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
               _currentAvatarUrl =
                   userModel.isSocialPlatform
                       ? userModel.picture
-                      :userModel.picture != null ? ApiConstant.storageHost + (userModel.picture ?? '') 
-                      :null;
+                      : userModel.picture != null
+                      ? ApiConstant.storageHost + (userModel.picture ?? '')
+                      : null;
               _pathRelativeAvatar = userModel.picture ?? '';
               _phoneNumberController.text = userModel.phoneNumber ?? '';
               _addressController.text = userModel.address ?? '';
@@ -255,18 +255,18 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
 
   Widget _buildDefaultAvatar() {
     return Container(
-      
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, shape: BoxShape.circle),
       child: Container(
         margin: const EdgeInsets.all(AppDimens.SIZE_4),
         decoration: BoxDecoration(
-          color: AppColors.gray.withValues(alpha: 0.3),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
           shape: BoxShape.circle,
         ),
-        child: Icon(Icons.person, size: AppDimens.SIZE_60, color: AppColors.gray),
+        child: Icon(
+          Icons.person,
+          size: AppDimens.SIZE_60,
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+        ),
       ),
     );
   }
@@ -283,7 +283,6 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
           key: _fullNameFieldKey,
           textController: _fullNameController,
           hintText: AppLocalizations.current.please_enter_full_name,
-          isRequired: true,
           prefixIcon: Icon(
             Icons.person_outline,
             color: AppColors.textMediumGrey,
@@ -426,8 +425,10 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
               ? AppLocalizations.current.saving
               : AppLocalizations.current.save,
       onTap: _isLoading ? null : _saveProfile,
-      backgroundColor: _isLoading ? AppColors.gray.withValues(alpha: 0.5) :
-       Theme.of(context).colorScheme.primary,
+      backgroundColor:
+          _isLoading
+              ? AppColors.gray.withValues(alpha: 0.5)
+              : Theme.of(context).colorScheme.primary,
       width: double.infinity,
     );
   }
@@ -517,10 +518,13 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
       }
     } catch (e) {
       // Handle permission denied or other errors
-      String errorMessage = AppLocalizations.current.cannot_select_image_message;
+      String errorMessage =
+          AppLocalizations.current.cannot_select_image_message;
       if (e.toString().contains('permission')) {
         errorMessage =
-            AppLocalizations.current.please_grant_permission_to_access_camera_or_gallery_in_settings;
+            AppLocalizations
+                .current
+                .please_grant_permission_to_access_camera_or_gallery_in_settings;
       } else if (e.toString().contains('camera')) {
         errorMessage = AppLocalizations.current.cannot_access_camera;
       } else if (e.toString().contains('no_available_camera')) {

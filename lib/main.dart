@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/language_cubit.dart';
 import 'package:readbox/blocs/book_refresh/book_refresh_cubit.dart';
+import 'package:readbox/blocs/theme_cubit.dart';
 import 'package:readbox/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -20,12 +21,16 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   String language = await SharedPreferenceUtil.getCurrentLanguage();
+  String theme = await SharedPreferenceUtil.getTheme();
   runApp(MultiBlocProvider(providers: [
     BlocProvider(
       create: (_) => LanguageCubit(language),
     ),
     BlocProvider(
       create: (_) => BookRefreshCubit(),
+    ),
+    BlocProvider(
+      create: (_) => ThemeCubit(theme),
     ),
   ], child: MyApp()));
 }

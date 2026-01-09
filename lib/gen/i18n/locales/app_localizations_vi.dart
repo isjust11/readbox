@@ -252,7 +252,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get editProfile => 'Chỉnh sửa hồ sơ';
 
   @override
-  String get updateYourInfo => 'Cập nhật thông tin của bạn';
+  String get updateYourInfo => 'Cập nhật thông tin';
 
   @override
   String get security => 'Bảo mật';
@@ -541,4 +541,110 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get please_enter_confirm_code => 'Vui lòng nhập mã xác nhận';
+
+  @override
+  String get camera => 'Máy ảnh';
+
+  @override
+  String get gallery => 'Thư viện ảnh';
+
+  @override
+  String get update => 'Cập nhật';
+
+  @override
+  String get update_profile => 'Cập nhật hồ sơ';
+
+  @override
+  String get update_profile_success => 'Cập nhật hồ sơ thành công';
+
+  @override
+  String get update_profile_failed => 'Cập nhật hồ sơ thất bại';
+
+  @override
+  String get update_profile_description => 'Cập nhật thông tin của bạn';
+
+  @override
+  String get update_profile_description_success =>
+      'Cập nhật thông tin thành công';
+
+  @override
+  String get update_profile_description_failed => 'Cập nhật thông tin thất bại';
+
+  @override
+  String get please_enter_instagram_link => 'Vui lòng nhập liên kết Instagram';
+
+  @override
+  String get please_enter_twitter_link => 'Vui lòng nhập liên kết Twitter';
+
+  @override
+  String get please_enter_linkedin_link => 'Vui lòng nhập liên kết LinkedIn';
+
+  @override
+  String get please_enter_github_link => 'Vui lòng nhập liên kết GitHub';
+
+  @override
+  String get please_enter_gitlab_link => 'Vui lòng nhập liên kết GitLab';
+
+  @override
+  String get please_enter_bitbucket_link => 'Vui lòng nhập liên kết Bitbucket';
+
+  @override
+  String get please_enter_facebook_link => 'Vui lòng nhập liên kết Facebook';
+
+  @override
+  String get please_enter_valid_birth_date => 'Vui lòng nhập ngày sinh hợp lệ';
+
+  @override
+  String get please_enter_valid_phone_number =>
+      'Vui lòng nhập số điện thoại hợp lệ';
+
+  @override
+  String get please_enter_valid_address => 'Vui lòng nhập địa chỉ hợp lệ';
+
+  @override
+  String get please_enter_valid_facebook_link =>
+      'Liên kết Facebook không hợp lệ';
+
+  @override
+  String get please_enter_valid_instagram_link =>
+      'Vui lòng nhập liên kết Instagram hợp lệ';
+
+  @override
+  String get please_enter_valid_twitter_link =>
+      'Vui lòng nhập liên kết Twitter hợp lệ';
+
+  @override
+  String get please_enter_valid_linkedin_link =>
+      'Liên kết LinkedIn không hợp lệ';
+
+  @override
+  String get please_enter_valid_github_link =>
+      'Vui lòng nhập liên kết GitHub hợp lệ';
+
+  @override
+  String get please_enter_valid_gitlab_link =>
+      'Vui lòng nhập liên kết GitLab hợp lệ';
+
+  @override
+  String get please_enter_valid_bitbucket_link =>
+      'Vui lòng nhập liên kết Bitbucket hợp lệ';
+
+  @override
+  String get cannot_select_image_message => 'Không thể chọn ảnh';
+
+  @override
+  String get cannot_access_camera => 'Không thể truy cập camera';
+
+  @override
+  String get please_grant_permission_to_access_camera_or_gallery_in_settings =>
+      'Vui lòng cấp quyền truy cập camera/thư viện ảnh trong cài đặt';
+
+  @override
+  String get no_available_camera => 'Không có camera khả dụng';
+
+  @override
+  String get no_content_to_display => 'Không có nội dung để hiển thị';
+
+  @override
+  String get privacy_and_security => 'Quyền riêng tư và bảo mật';
 }

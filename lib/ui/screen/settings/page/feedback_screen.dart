@@ -6,6 +6,7 @@ import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/ui/widget/base_appbar.dart';
+import 'package:readbox/ui/widget/base_dropdown.dart';
 import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/domain/data/models/models.dart';
@@ -14,6 +15,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io';
 import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/ui/widget/widget.dart';
 
 
 class FeedbackScreen extends StatelessWidget {
@@ -167,7 +169,7 @@ class _FeedbackBodyState extends State<FeedbackBody> {
           return BaseScreen(
             customAppBar: _buildAppBar(context),
             title: AppLocalizations.current.sendFeedback,
-            colorTitle: AppColors.white,
+            colorTitle: Theme.of(context).colorScheme.surfaceContainerHighest,
             body: _buildBody(context, state),
           );
         },
@@ -210,7 +212,7 @@ class _FeedbackBodyState extends State<FeedbackBody> {
         CustomTextLabel(
           AppLocalizations.current.feedbackDescription,
           fontSize: AppDimens.SIZE_16,
-          color: AppColors.gray,
+          color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.colorTitle,
         ),
       ],
     );
@@ -233,114 +235,67 @@ class _FeedbackBodyState extends State<FeedbackBody> {
         const SizedBox(height: 16),
 
         // Tiêu đề
-        _buildSectionTitle(AppLocalizations.current.feedbackTitle),
         const SizedBox(height: 8),
-        TextFormField(
-          controller: _titleController,
-          decoration: InputDecoration(
-            hintText: AppLocalizations.current.feedbackTitle,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            prefixIcon: const Icon(Icons.title),
-          ),
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return AppLocalizations.current.feedbackTitleRequired;
-            }
-            if (value.trim().length < 5) {
-              return AppLocalizations.current.feedbackTitleMinLength;
-            }
-            return null;
-          },
+        CustomTextInput(
+          textController: _titleController,
+          isRequired: true,
+          title: AppLocalizations.current.feedbackTitle,
+          hintText: AppLocalizations.current.feedbackTitle,
+          prefixIcon: Icon(Icons.title_outlined),
+          validator: (value) => value.isEmpty ? AppLocalizations.current.feedbackTitleRequired : null,
         ),
         const SizedBox(height: 16),
 
         // Nội dung
-        _buildSectionTitle(AppLocalizations.current.feedbackContent),
         const SizedBox(height: 8),
-        TextFormField(
-          controller: _contentController,
+        CustomTextInput(
+          textController: _contentController,
+          isRequired: true,
+          title: AppLocalizations.current.feedbackContent,
+          hintText: AppLocalizations.current.feedbackContent,
+          prefixIcon: Icon(Icons.description_outlined),
           maxLines: 5,
-          decoration: InputDecoration(
-            hintText: AppLocalizations.current.feedbackContent,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            prefixIcon: const Icon(Icons.description),
-          ),
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return AppLocalizations.current.feedbackContentRequired;
-            }
-            if (value.trim().length < 10) {
-              return AppLocalizations.current.feedbackContentMinLength;
-            }
-            return null;
-          },
+          minLines: 5,
+          validator: (value) => value.isEmpty ? AppLocalizations.current.feedbackContentRequired : null,
         ),
         const SizedBox(height: 16),
 
         // Thông tin liên hệ
-        _buildSectionTitle(AppLocalizations.current.feedbackContact),
         const SizedBox(height: 8),
         Row(
           children: [
             Expanded(
-              child: TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.current.feedbackName,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  prefixIcon: const Icon(Icons.person),
-                ),
+              child: CustomTextInput(
+                textController: _nameController,
+                isRequired: true,
+                title: AppLocalizations.current.feedbackName,
+                hintText: AppLocalizations.current.feedbackName,
+                prefixIcon: Icon(Icons.person_outlined),
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: TextFormField(
-                controller: _emailController,
+              child: CustomTextInput(
+                textController: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  prefixIcon: const Icon(Icons.email),
-                ),
-                validator: (value) {
-                  if (value != null && value.isNotEmpty) {
-                    if (!RegExp(
-                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                    ).hasMatch(value)) {
-                      return AppLocalizations.current.feedbackEmailInvalid;
-                    }
-                  }
-                  return null;
-                },
+                title: 'Email',
+                hintText: 'Email',
+                prefixIcon: Icon(Icons.email_outlined),
+                validator: (value) => value.isEmpty ? AppLocalizations.current.feedbackEmailInvalid : null,
               ),
             ),
           ],
         ),
         const SizedBox(height: 12),
-        TextFormField(
-          controller: _phoneController,
+        CustomTextInput(
+          textController: _phoneController,
+          title: AppLocalizations.current.feedbackPhone,
+          hintText: AppLocalizations.current.feedbackPhone,
+          prefixIcon: Icon(Icons.phone_outlined),
           keyboardType: TextInputType.phone,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          decoration: InputDecoration(
-            hintText: AppLocalizations.current.feedbackPhone,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            prefixIcon: const Icon(Icons.phone),
-          ),
-          validator: (value) {
-            if (value != null && value.isNotEmpty) {
-              if (value.length < 10) {
-                return AppLocalizations.current.feedbackPhoneInvalid;
-              }
-            }
-            return null;
-          },
+          validator: (value) => value.isEmpty ? AppLocalizations.current.feedbackPhoneInvalid : null,
         ),
         const SizedBox(height: 8),
-
         // Tùy chọn
         _buildSectionTitle(AppLocalizations.current.feedbackOptions),
         const SizedBox(height: 8),
@@ -364,83 +319,33 @@ class _FeedbackBodyState extends State<FeedbackBody> {
       title,
       fontSize: AppDimens.SIZE_14,
       fontWeight: FontWeight.w600,
-      color: AppColors.gray,
+      color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.colorTitle,
     );
   }
 
   Widget _buildTypeSelector() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.gray),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<FeedbackType>(
-          value: _selectedType,
-          isExpanded: true,
-          items: FeedbackType.values.map((type) {
-            return DropdownMenuItem(
-              value: type,
-              child: CustomTextLabel(
-                type.displayName,
-                fontSize: AppDimens.SIZE_14,
-                fontWeight: FontWeight.w600,
-                color: AppColors.gray,
-              ),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) {
-              setState(() {
-                _selectedType = value;
-              });
-            }
-          },
-        ),
-      ),
+    return CustomDropDown(
+      hintText: AppLocalizations.current.feedbackType,
+      listValues: FeedbackType.values.map((type) => type.displayName).toList(),
+      selectedIndex: _selectedType.index,
+      didSelected: (index) {
+        setState(() {
+          _selectedType = FeedbackType.values[index];
+        });
+      },
     );
   }
 
   Widget _buildPrioritySelector() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.gray),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<FeedbackPriority>(
-          value: _selectedPriority,
-          isExpanded: true,
-          items: FeedbackPriority.values.map((priority) {
-            return DropdownMenuItem(
-              value: priority,
-              child: Row(
-                children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: _getPriorityColor(priority),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(priority.displayName),
-                ],
-              ),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null) {
-              setState(() {
-                _selectedPriority = value;
-              });
-            }
-          },
-        ),
-      ),
+    return CustomDropDown(
+      hintText: AppLocalizations.current.feedbackPriority,
+      listValues: FeedbackPriority.values.map((priority) => priority.displayName).toList(),
+      selectedIndex: _selectedPriority.index,
+      didSelected: (index) {
+        setState(() {
+          _selectedPriority = FeedbackPriority.values[index];
+        });
+      },
     );
   }
 
@@ -475,14 +380,14 @@ class _FeedbackBodyState extends State<FeedbackBody> {
                 height: AppDimens.SIZE_20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onPrimary),
                 ),
               )
             : CustomTextLabel(
                 AppLocalizations.current.feedbackSend,
                 fontSize: AppDimens.SIZE_16,
                 fontWeight: FontWeight.w600,
-                color: AppColors.white,
+                color: Theme.of(context).colorScheme.onPrimary,
               ),
       ),
     );

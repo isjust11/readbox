@@ -49,31 +49,37 @@ class _AppDrawerState extends State<AppDrawer> {
           ),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppProfile(),
             SizedBox(height: 8),
             Expanded(
-              flex: 8,
               child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
                   _buildDrawerItem(
                     icon: Icons.library_books,
                     title: AppLocalizations.current.all_books,
                     isSelected: _currentFilter == 'all',
                     onTap: () => _filterBooks('all'),
+                    iconColor: Theme.of(context).primaryColor,
+                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   _buildDrawerItem(
                     icon: Icons.favorite,
                     title: AppLocalizations.current.favorite_books,
                     isSelected: _currentFilter == 'favorite',
                     onTap: () => _filterBooks('favorite'),
-                    iconColor: Colors.red,
+                    iconColor: Theme.of(context).colorScheme.error,
+                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   _buildDrawerItem(
                     icon: Icons.archive,
                     title: AppLocalizations.current.archived_books,
                     isSelected: _currentFilter == 'archived',
                     onTap: () => _filterBooks('archived'),
+                    iconColor: Theme.of(context).colorScheme.primary,
+                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -87,6 +93,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pushNamed(context, Routes.localLibraryScreen);
                     },
                     iconColor: Colors.green,
+                    textColor: Colors.green,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -99,6 +106,8 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, Routes.adminUploadScreen);
                     },
+                    iconColor: Theme.of(context).colorScheme.secondary,
+                    textColor: Theme.of(context).colorScheme.secondary,
                   ),
                   _buildDrawerItem(
                     icon: Icons.feedback,
@@ -107,8 +116,8 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, Routes.feedbackScreen);
                     },
-                    iconColor: Colors.blue,
-                    textColor: Colors.blue,
+                    iconColor: Theme.of(context).primaryColor,
+                    textColor: Theme.of(context).primaryColor,
                   ),
                   _buildDrawerItem(
                     icon: Icons.settings,
@@ -120,23 +129,21 @@ class _AppDrawerState extends State<AppDrawer> {
                     iconColor: Colors.blueGrey,
                     textColor: Colors.blueGrey,
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Divider(height: 1),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  //   child: Divider(height: 1),
+                  // ),
                 ],
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: _buildDrawerItem(
-                icon: Icons.logout,
-                title: AppLocalizations.current.logout,
-                onTap: _handleLogout,
-                iconColor: Colors.red,
-                textColor: Colors.red,
-              ),
+            _buildDrawerItem(
+              icon: Icons.logout,
+              title: AppLocalizations.current.logout,
+              onTap: _handleLogout,
+              iconColor: Colors.red,
+              textColor: Colors.red,
             ),
+            SizedBox(height: 8),
           ],
         ),
       ),
@@ -176,7 +183,7 @@ class _AppDrawerState extends State<AppDrawer> {
             color:
                 isSelected
                     ? Theme.of(context).primaryColor.withValues(alpha: 0.15)
-                    : (iconColor?.withValues(alpha: 0.1) ?? Colors.grey[100]),
+                    : (iconColor?.withValues(alpha: 0.25) ?? Colors.grey[100]),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(

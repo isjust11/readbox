@@ -21,6 +21,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  bool _themeMode = true;
   bool _notificationsEnabled = true;
   bool _biometricEnabled = false;
   bool _biometricAvailable = false;
@@ -31,6 +32,7 @@ class _SettingScreenState extends State<SettingScreen> {
     _loadBiometricStatus();
     _loadNotificationStatus();
     _loadAppVersion();
+    _loadThemeStatus();
   }
 
   Future<void> _loadBiometricStatus() async {
@@ -50,6 +52,13 @@ class _SettingScreenState extends State<SettingScreen> {
     });
   }
 
+  Future<void> _loadThemeStatus() async {
+    final themeCubit = context.read<ThemeCubit>();
+    setState(() {
+      _themeMode = themeCubit.state == 'light';
+    });
+  }
+
   Future<void> _loadAppVersion() async {
     final packageInfo = await PackageInfo.fromPlatform();
     setState(() {
@@ -61,8 +70,9 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget build(BuildContext context) {
     return BaseScreen(
       hideAppBar: true,
-      colorBg: AppColors.lightBackground,
+      colorBg: Theme.of(context).colorScheme.secondaryContainer,
       body: _buildLayoutSection(context),
+      floatingButton: _buildFloatingButton(),
     );
   }
 
@@ -85,6 +95,14 @@ class _SettingScreenState extends State<SettingScreen> {
     
   }
 
+  Widget _buildFloatingButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+      child: Icon(Icons.arrow_back_ios_new,),
+    );
+  }
 
   Widget _buildQuickActions() {
     return Container(
@@ -96,7 +114,7 @@ class _SettingScreenState extends State<SettingScreen> {
               icon: Icons.edit,
               title: AppLocalizations.current.editProfile,
               subtitle: AppLocalizations.current.updateYourInfo,
-              color: Colors.blue,
+              color: Theme.of(context).colorScheme.primary,
               onTap: () {
                 Navigator.of(context).pushNamed(Routes.editProfile);
               },
@@ -131,7 +149,7 @@ class _SettingScreenState extends State<SettingScreen> {
       child: Container(
         padding: const EdgeInsets.all(AppDimens.SIZE_12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
           boxShadow: [
             BoxShadow(
@@ -156,13 +174,13 @@ class _SettingScreenState extends State<SettingScreen> {
               title,
               fontWeight: FontWeight.w600,
               fontSize: AppDimens.SIZE_14,
-              color: AppColors.colorTitle,
+              color: Theme.of(context).textTheme.bodyLarge?.color ?? AppColors.colorTitle,
             ),
             const SizedBox(height: AppDimens.SIZE_4),
             CustomTextLabel(
               subtitle,
               fontSize: AppDimens.SIZE_12,
-              color: AppColors.textMediumGrey,
+              color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.colorTitle,
             ),
           ],
         ),
@@ -174,7 +192,7 @@ class _SettingScreenState extends State<SettingScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
         boxShadow: [
           BoxShadow(
@@ -192,14 +210,22 @@ class _SettingScreenState extends State<SettingScreen> {
             subtitle: AppLocalizations.current.changeAppLanguage,
             trailing: _buildLanguageDropdown(context),
           ),
-          // TODO: Uncomment when ThemeCubit is implemented
-          // _buildDivider(),
-          // _buildSettingItem(
-          //   icon: Icons.palette,
-          //   title: AppLocalizations.current.theme,
-          //   subtitle: AppLocalizations.current.chooseAppAppearance,
-          //   trailing: _buildThemeDropdown(context),
-          // ),
+          _buildDivider(),
+          _buildSettingItem(
+            icon: Icons.palette,
+            title: AppLocalizations.current.theme,
+            subtitle: AppLocalizations.current.chooseAppAppearance,
+            trailing: Switch(
+              value: _themeMode,
+              onChanged: (value) async {
+                setState(() {
+                  _themeMode = value;
+                });
+                context.read<ThemeCubit>().changeTheme(value ? 'light' : 'dark');
+              },
+              activeThumbColor: Theme.of(context).primaryColor,
+            ),
+          ),
           _buildDivider(),
           _buildSettingItem(
             icon: Icons.notifications,
@@ -213,7 +239,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 });
                 await FCMService().toggleNotifications(value);
               },
-              activeColor: Theme.of(context).primaryColor,
+              activeThumbColor: Theme.of(context).primaryColor,
             ),
           ),
           _buildDivider(),
@@ -224,7 +250,7 @@ class _SettingScreenState extends State<SettingScreen> {
             trailing: Switch(
               value: _biometricEnabled,
               onChanged: _biometricAvailable ? _onBiometricToggle : null,
-              activeColor: Theme.of(context).primaryColor,
+              activeThumbColor: Theme.of(context).primaryColor,
             ),
           ),
           // Debug section chỉ hiển thị trong debug mode
@@ -271,7 +297,7 @@ class _SettingScreenState extends State<SettingScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
         boxShadow: [
           BoxShadow(
@@ -358,13 +384,13 @@ class _SettingScreenState extends State<SettingScreen> {
                     title,
                     fontWeight: FontWeight.w600,
                     fontSize: AppDimens.SIZE_16,
-                    color: AppColors.colorTitle,
+                    color: Theme.of(context).textTheme.bodyLarge?.color ?? AppColors.colorTitle,
                   ),
                   const SizedBox(height: 2),
                   CustomTextLabel(
                     subtitle,
                     fontSize: AppDimens.SIZE_14,
-                    color: AppColors.textMediumGrey,
+                    color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.colorTitle,
                   ),
                 ],
               ),
@@ -380,7 +406,7 @@ class _SettingScreenState extends State<SettingScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       height: 1,
-      color: Colors.grey.withValues(alpha: 0.2),
+      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
     );
   }
 
@@ -418,39 +444,6 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  // TODO: Implement ThemeCubit and uncomment this method
-  // Widget _buildThemeDropdown(BuildContext context) {
-  //   return Container(
-  //     padding: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
-  //     decoration: BoxDecoration(
-  //       color: AppColors.secondaryBrand.withValues(alpha: 0.1),
-  //       borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
-  //       border: Border.all(
-  //         color: AppColors.secondaryBrand.withValues(alpha: 0.3),
-  //       ),
-  //     ),
-  //     child: DropdownButton<String>(
-  //       value: context.read<ThemeCubit>().state,
-  //       underline: const SizedBox(),
-  //       icon: Icon(Icons.keyboard_arrow_down, color: AppColors.secondaryBrand),
-  //       items: [
-  //         DropdownMenuItem(
-  //           value: 'light',
-  //           child: Text(AppLocalizations.current.light),
-  //         ),
-  //         DropdownMenuItem(
-  //           value: 'dark',
-  //           child: Text(AppLocalizations.current.dark),
-  //         ),
-  //       ],
-  //       onChanged: (String? value) {
-  //         if (value != null) {
-  //           context.read<ThemeCubit>().changeTheme(value);
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
 
 
   String _getBiometricSubtitle() {
