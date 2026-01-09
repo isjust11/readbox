@@ -8,6 +8,7 @@ import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/book_refresh/book_refresh_cubit.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
+import 'package:readbox/ui/widget/widget.dart';
 
 class AdminUploadScreen extends StatelessWidget {
   const AdminUploadScreen({super.key});
@@ -924,92 +925,33 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                               ],
                             ),
                             SizedBox(height: 24),
-                            
-                            TextFormField(
-                              controller: _titleController,
-                              decoration: InputDecoration(
-                                labelText: 'Tiêu đề *',
-                                hintText: 'Nhập tiêu đề sách',
-                                prefixIcon: Icon(Icons.title_rounded),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.grey[300]!),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor,
-                                    width: 2,
-                                  ),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Vui lòng nhập tiêu đề';
-                                }
-                                return null;
-                              },
+                            CustomTextInput(
+                              textController: _titleController,
+                              title: 'Tiêu đề',
+                              hintText: 'Nhập tiêu đề sách',
+                              isRequired: true,
+                              prefixIcon: Icon(Icons.title_rounded),
+                              validator: (value) => value.isEmpty ? 'Vui lòng nhập tiêu đề' : null,
                             ),
                             
                             SizedBox(height: 16),
-                            
-                            TextFormField(
-                              controller: _authorController,
-                              decoration: InputDecoration(
-                                labelText: 'Tác giả *',
-                                hintText: 'Nhập tên tác giả',
-                                prefixIcon: Icon(Icons.person_outline_rounded),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.grey[300]!),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor,
-                                    width: 2,
-                                  ),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Vui lòng nhập tác giả';
-                                }
-                                return null;
-                              },
+                            CustomTextInput(
+                              textController: _authorController,
+                              title: 'Tác giả',
+                              hintText: 'Nhập tên tác giả',
+                              isRequired: true,
+                              prefixIcon: Icon(Icons.person_outline_rounded),
+                              validator: (value) => value.isEmpty ? 'Vui lòng nhập tác giả' : null,
                             ),
-                            
                             SizedBox(height: 16),
-                            
-                            TextFormField(
-                              controller: _descriptionController,
-                              decoration: InputDecoration(
-                                labelText: 'Mô tả',
-                                hintText: 'Nhập mô tả sách',
-                                prefixIcon: Icon(Icons.description_outlined),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(color: Colors.grey[300]!),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor,
-                                    width: 2,
-                                  ),
-                                ),
-                                alignLabelWithHint: true,
-                              ),
+                            CustomTextInput(
+                              textController: _descriptionController,
+                              title: 'Mô tả',
+                              hintText: 'Nhập mô tả sách',
+                              prefixIcon: Icon(Icons.description_outlined),
                               maxLines: 4,
+                              minLines: 4,
+                              validator: (value) => value.isEmpty ? 'Vui lòng nhập mô tả' : null,
                             ),
                             
                             SizedBox(height: 16),
@@ -1017,52 +959,20 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                             Row(
                               children: [
                                 Expanded(
-                                  child: TextFormField(
-                                    controller: _publisherController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Nhà xuất bản',
-                                      hintText: 'NXB',
-                                      prefixIcon: Icon(Icons.business_rounded),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        borderSide: BorderSide(color: Colors.grey[300]!),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        borderSide: BorderSide(
-                                          color: Theme.of(context).primaryColor,
-                                          width: 2,
-                                        ),
-                                      ),
-                                    ),
+                                  child: CustomTextInput(
+                                    textController: _publisherController,
+                                  title: 'Nhà xuất bản',
+                                  hintText: 'NXB',
+                                  prefixIcon: Icon(Icons.business_rounded),
                                   ),
                                 ),
                                 SizedBox(width: 12),
                                 Expanded(
-                                  child: TextFormField(
-                                    controller: _isbnController,
-                                    decoration: InputDecoration(
-                                      labelText: 'ISBN',
-                                      hintText: 'Mã ISBN',
-                                      prefixIcon: Icon(Icons.tag_rounded),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        borderSide: BorderSide(color: Colors.grey[300]!),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        borderSide: BorderSide(
-                                          color: Theme.of(context).primaryColor,
-                                          width: 2,
-                                        ),
-                                      ),
-                                    ),
+                                  child: CustomTextInput(
+                                    textController: _isbnController,
+                                    title: 'ISBN',
+                                    hintText: 'Mã ISBN',
+                                    prefixIcon: Icon(Icons.tag_rounded),
                                   ),
                                 ),
                               ],
@@ -1073,73 +983,21 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                             Row(
                               children: [
                                 Expanded(
-                                  child: TextFormField(
-                                    controller: _totalPagesController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Số trang',
-                                      hintText: '0',
-                                      prefixIcon: Icon(Icons.numbers_rounded),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        borderSide: BorderSide(color: Colors.grey[300]!),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        borderSide: BorderSide(
-                                          color: Theme.of(context).primaryColor,
-                                          width: 2,
-                                        ),
-                                      ),
-                                    ),
+                                  child: CustomTextInput(
+                                    textController: _totalPagesController,
+                                    title: 'Số trang',
+                                    hintText: '0',
+                                    formatCurrency: true,
+                                    prefixIcon: Icon(Icons.numbers_rounded),
                                     keyboardType: TextInputType.number,
                                   ),
                                 ),
                                 SizedBox(width: 12),
                                 Expanded(
-                                  child: DropdownButtonFormField<String>(
-                                    value: _language,
-                                    decoration: InputDecoration(
-                                      labelText: 'Ngôn ngữ',
-                                      prefixIcon: Icon(Icons.language_rounded),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        borderSide: BorderSide(color: Colors.grey[300]!),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                        borderSide: BorderSide(
-                                          color: Theme.of(context).primaryColor,
-                                          width: 2,
-                                        ),
-                                      ),
-                                    ),
-                                    items: const [
-                                      DropdownMenuItem(
-                                        value: 'vi',
-                                        child: Flexible(child: Text(
-                                          'vn',
-                                          overflow: TextOverflow.ellipsis,
-                                        )),
-                                      ),
-                                      DropdownMenuItem(
-                                        value: 'en',
-                                        child: Flexible(child: Text(
-                                          'En',
-                                          overflow: TextOverflow.ellipsis,
-                                        )),
-                                      ),
-                                    ],
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _language = value!;
-                                      });
-                                    },
+                                  child: CustomDropDown(
+                                    hintText: 'Chọn ngôn ngữ',
+                                    listValues: ['vi', 'en'],
+                                    selectedIndex: _language.indexOf(_language),
                                   ),
                                 ),
                               ],

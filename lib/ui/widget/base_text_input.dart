@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:readbox/res/resources.dart';
-import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/utils/common.dart';
 import 'package:intl/intl.dart';
 
@@ -100,21 +99,38 @@ class CustomTextInput extends StatefulWidget {
   }
 }
 
-class TextFieldState extends State<CustomTextInput> {
+class TextFieldState extends State<CustomTextInput> with SingleTickerProviderStateMixin {
   bool _showText = true;
   late List<TextInputFormatter> inputFormatters;
   String errorText = '';
   late TextEditingController textController;
+  late AnimationController _shakeController;
+  late Animation<double> _shakeAnimation;
 
   @override
   void initState() {
     super.initState();
+    
+    // Initialize shake animation
+    _shakeController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    
+    _shakeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _shakeController,
+        curve: Curves.elasticIn,
+      ),
+    );
+    
     textController = widget.textController ?? TextEditingController();
     if (widget.initData != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        textController.text = widget.formatCurrency
-            ? Common.formatPrice(widget.initData, showPrefix: false)
-            : widget.initData.toString();
+        textController.text =
+            widget.formatCurrency
+                ? Common.formatPrice(widget.initData, showPrefix: false)
+                : widget.initData.toString();
       });
     }
     if (widget.formatNumber || widget.formatCurrency || widget.formatPercent) {
@@ -129,53 +145,71 @@ class TextFieldState extends State<CustomTextInput> {
   }
 
   @override
+  void dispose() {
+    _shakeController.dispose();
+    if (widget.textController == null) {
+      textController.dispose();
+    }
+    super.dispose();
+  }
+
+  /// Trigger shake animation
+  void _triggerShake() {
+    _shakeController.forward(from: 0.0);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      // height: widget.height ?? double.infinity,
-      width: widget.width ?? double.infinity,
-      margin: widget.margin ?? EdgeInsets.zero,
-      child: Wrap(
+    return AnimatedBuilder(
+      animation: _shakeAnimation,
+      builder: (context, child) {
+        // Calculate shake offset
+        final sineValue = math.sin(_shakeAnimation.value * math.pi * 3);
+        final offset = sineValue * 5.0; // Max 5px offset
+        
+        return Transform.translate(
+          offset: Offset(offset, 0),
+          child: child,
+        );
+      },
+      child: Container(
+        // height: widget.height ?? double.infinity,
+        width: widget.width ?? double.infinity,
+        margin: widget.margin ?? EdgeInsets.zero,
+        child: Wrap(
         children: [
-          if (widget.title.isNotEmpty)
-            Container(
-              padding: EdgeInsets.only(bottom: 5),
-              child: CustomTextLabel(
-                widget.title,
-                color: widget.titleStyle?.color ?? AppColors.ff828282,
-                fontSize: widget.titleStyle?.fontSize ?? 16,
-                fontWeight: widget.titleStyle?.fontWeight ?? FontWeight.w400,
-              ),
-            ),
-          Container(
-            height: widget.heightTextInput,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: widget.enabled
-                  ? widget.colorBgTextField
-                  : widget.colorBgTextFieldDisable,
-              borderRadius:
-                  widget.borderRadius ??
-                  BorderRadius.circular(widget.enabled ? 10 : 0),
-            ),
-            child: Stack(
-              children: [
-                TextField(
-                  inputFormatters: inputFormatters,
-                  maxLength: widget.maxLength,
-                  cursorColor: AppColors.black,
-                  autofocus: widget.autoFocus,
-                  enabled: widget.enabled,
-                  textAlign: widget.align ?? TextAlign.start,
-                  textAlignVertical: TextAlignVertical.center,
-                  style: TextStyle(
-                    color: widget.colorText,
-                    fontSize: widget.fontSize ?? AppDimens.SIZE_14,
-                    fontWeight: widget.fontWeight ?? FontWeight.w600,
+          Stack(
+            children: [
+              TextFormField(
+                inputFormatters: inputFormatters,
+                maxLength: widget.maxLength,
+                cursorColor: Theme.of(context).primaryColor,
+                autofocus: widget.autoFocus,
+                enabled: widget.enabled,
+                textAlign: widget.align ?? TextAlign.start,
+                textAlignVertical: TextAlignVertical.center,
+                style: TextStyle(
+                  color: widget.colorText,
+                  fontSize: widget.fontSize ?? AppDimens.SIZE_14,
+                  fontWeight: widget.fontWeight ?? FontWeight.w500,
+                ),
+                decoration: InputDecoration(
+                  counterText: "",
+                  labelText: widget.title + (widget.isRequired ? ' *' : ''),
+                  labelStyle: TextStyle(
+                    color: widget.titleStyle?.color ?? AppColors.ff828282,
+                    fontSize: widget.titleStyle?.fontSize ?? 16,
+                    fontWeight: widget.titleStyle?.fontWeight ?? FontWeight.w400,
                   ),
-                  decoration: InputDecoration(
-                    counterText: "",
-                    suffixIcon: (widget.isPasswordTF == true)
-                        ? IconButton(
+                  hintText: widget.hintText,
+                  hintStyle: TextStyle(
+                    color: errorText.isNotEmpty ? Colors.red : widget.hintTextColor ?? AppColors.hintTextColor,
+                    fontWeight: widget.hintTextFontWeight ?? FontWeight.w400,
+                    fontSize: widget.hintTextFontSize ?? 14,
+                  ),
+                  suffixIcon:
+                      (widget.isPasswordTF == true)
+                          ? IconButton(
                             icon: Icon(
                               !_showText
                                   ? Icons.visibility
@@ -188,83 +222,115 @@ class TextFieldState extends State<CustomTextInput> {
                               });
                             },
                           )
-                        : widget.suffixIcon,
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimens.SIZE_12,
-                      ),
-                      child: widget.prefixIcon,
+                          : widget.suffixIcon,
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimens.SIZE_12,
                     ),
-                    focusColor: Colors.white,
-                    border: InputBorder.none,
-                    suffixIconConstraints: BoxConstraints(
-                      maxHeight: AppDimens.SIZE_35,
-                    ),
-                    prefixIconConstraints: BoxConstraints(
-                      maxHeight: AppDimens.SIZE_35,
-                      minWidth: AppDimens.SIZE_35,
-                    ),
-                    disabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.border),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.baseColor),
-                    ),
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.border),
-                    ),
-                    hintStyle: TextStyle(
-                      color: widget.hintTextColor ?? AppColors.hintTextColor,
-                      fontWeight: widget.hintTextFontWeight ?? FontWeight.w400,
-                      fontSize: widget.hintTextFontSize ?? 14,
-                    ),
-                    hintText: widget.hintText,
-                    isDense: true,
-                    contentPadding:
-                        widget.padding ??
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                    child: widget.prefixIcon,
                   ),
-                  controller: textController,
-                  obscureText: widget.isPasswordTF == true
-                      ? (_showText)
-                      : widget.obscureText,
-                  keyboardType: widget.formatCurrency
-                      ? TextInputType.number
-                      : widget.keyboardType,
-                  textInputAction: widget.textInputAction,
-                  onSubmitted: widget.onSubmitted,
-                  onEditingComplete: () => FocusScope.of(context).nextFocus(),
-                  maxLines: widget.maxLines,
-                  minLines: widget.minLines,
-                  onChanged: (String text) {
-                    _validate();
-                    String currentText = text.trim();
-                    widget.getTextFieldValue?.call(currentText);
-                  },
+                  focusColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey[300]!),
+                  ),
+                  suffixIconConstraints: BoxConstraints(
+                    maxHeight: AppDimens.SIZE_35,
+                  ),
+                  prefixIconConstraints: BoxConstraints(
+                    maxHeight: AppDimens.SIZE_35,
+                    minWidth: AppDimens.SIZE_35,
+                  ),
+                  disabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.border),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                      width: 1,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.grey[300]!),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.red, width: 1.5),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
+                    borderSide: BorderSide(color: Colors.red, width: 2),
+                  ),
+                  errorStyle: TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  isDense: true,
+                  contentPadding:
+                      widget.padding ??
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                 ),
-                widget.onTapTextField != null
-                    ? Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: InkWell(
-                          onTap: () {
-                            if (widget.enabled) widget.onTapTextField?.call();
-                          },
-                          child: Container(),
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
+                controller: textController,
+                obscureText:
+                    widget.isPasswordTF == true
+                        ? (_showText)
+                        : widget.obscureText,
+                keyboardType:
+                    widget.formatCurrency
+                        ? TextInputType.number
+                        : widget.keyboardType,
+                textInputAction: widget.textInputAction,
+                onFieldSubmitted: (String value) {
+                  widget.onSubmitted?.call(value);
+                },
+                onEditingComplete: () => FocusScope.of(context).nextFocus(),
+                maxLines: widget.maxLines,
+                minLines: widget.minLines,
+                
+                // Validator for Form.validate()
+                validator: widget.validator != null 
+                    ? (value) {
+                        final result = widget.validator!(value?.trim() ?? '');
+                        if (result != null && result.isNotEmpty) {
+                          _triggerShake();
+                        }
+                        return result;
+                      }
+                    : null,
+                
+                // Auto validate mode
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+
+                onChanged: (String text) {
+                  String currentText = text.trim();
+                  widget.getTextFieldValue?.call(currentText);
+                },
+              ),
+              widget.onTapTextField != null
+                  ? Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: InkWell(
+                      onTap: () {
+                        if (widget.enabled) widget.onTapTextField?.call();
+                      },
+                      child: Container(),
+                    ),
+                  )
+                  : Container(),
+            ],
           ),
-          errorText.isNotEmpty
-              ? ErrorTextWidget(errorText: errorText)
-              : Container(),
+          // Note: Error text is now displayed by TextFormField's validator
+          // ErrorTextWidget is kept for backward compatibility
         ],
       ),
-    );
+    ),  // Container - child of AnimatedBuilder
+    );  // AnimatedBuilder
   }
 
   String getText(DateTime dateTime) {
@@ -282,6 +348,12 @@ class TextFieldState extends State<CustomTextInput> {
       setState(() {
         errorText = validate ?? "";
       });
+      
+      // Trigger shake animation when validation fails
+      if (errorText.isNotEmpty) {
+        _triggerShake();
+      }
+      
       return errorText.isEmpty;
     }
     return true;

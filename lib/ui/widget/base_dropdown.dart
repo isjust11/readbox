@@ -79,25 +79,16 @@ class CustomDropDownState extends State<CustomDropDown> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.title.isNotEmpty)
-            CustomTextLabel.renderBaseTitle(
-                title: widget.title,
-                isRequired: widget.isRequired,
-                titleColor: widget.titleColor ?? AppColors.colorTitle),
           Container(
             height: widget.heightOfBox ?? 45,
             padding: EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(12),
               border: widget.border ?? Border.all(width: 1, color: AppColors.border),
             ),
             child: DropdownButtonHideUnderline(
-              child: Theme(
-                data: Theme.of(context).copyWith(
-                  canvasColor: widget.bgColorDropdownSelect ?? AppColors.white,
-                ),
-                child: DropdownButton<int>(
+              child: DropdownButton<int>(
                   items: createListDropdownMenuItem(),
                   value: selectedIndex,
                   onChanged: widget.enabled
@@ -126,7 +117,6 @@ class CustomDropDownState extends State<CustomDropDown> {
                         ),
                   ),
                   isExpanded: true,
-                ),
               ),
             ),
           ),
