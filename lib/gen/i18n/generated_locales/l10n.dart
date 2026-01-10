@@ -3039,6 +3039,456 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Cài đặt thông báo`
+  String get notificationSettings {
+    return Intl.message(
+      'Cài đặt thông báo',
+      name: 'notificationSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tùy chọn thông báo`
+  String get notificationPreferences {
+    return Intl.message(
+      'Tùy chọn thông báo',
+      name: 'notificationPreferences',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bật thông báo`
+  String get enableNotifications {
+    return Intl.message(
+      'Bật thông báo',
+      name: 'enableNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tắt thông báo`
+  String get disableNotifications {
+    return Intl.message(
+      'Tắt thông báo',
+      name: 'disableNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông báo đẩy`
+  String get pushNotifications {
+    return Intl.message(
+      'Thông báo đẩy',
+      name: 'pushNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhận thông báo đẩy từ server`
+  String get receivePushNotifications {
+    return Intl.message(
+      'Nhận thông báo đẩy từ server',
+      name: 'receivePushNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông báo cục bộ`
+  String get localNotifications {
+    return Intl.message(
+      'Thông báo cục bộ',
+      name: 'localNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhận nhắc nhở và thông báo cục bộ`
+  String get receiveLocalNotifications {
+    return Intl.message(
+      'Nhận nhắc nhở và thông báo cục bộ',
+      name: 'receiveLocalNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhắc nhở đọc sách`
+  String get readingReminders {
+    return Intl.message(
+      'Nhắc nhở đọc sách',
+      name: 'readingReminders',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đặt nhắc nhở đọc sách hàng ngày`
+  String get setReadingReminders {
+    return Intl.message(
+      'Đặt nhắc nhở đọc sách hàng ngày',
+      name: 'setReadingReminders',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thời gian nhắc nhở`
+  String get reminderTime {
+    return Intl.message(
+      'Thời gian nhắc nhở',
+      name: 'reminderTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn thời gian nhắc nhở`
+  String get selectReminderTime {
+    return Intl.message(
+      'Chọn thời gian nhắc nhở',
+      name: 'selectReminderTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cập nhật sách`
+  String get bookUpdates {
+    return Intl.message(
+      'Cập nhật sách',
+      name: 'bookUpdates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhận thông báo khi có sách mới`
+  String get receiveBookUpdates {
+    return Intl.message(
+      'Nhận thông báo khi có sách mới',
+      name: 'receiveBookUpdates',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông báo hệ thống`
+  String get systemNotifications {
+    return Intl.message(
+      'Thông báo hệ thống',
+      name: 'systemNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhận thông báo về cập nhật ứng dụng`
+  String get receiveSystemNotifications {
+    return Intl.message(
+      'Nhận thông báo về cập nhật ứng dụng',
+      name: 'receiveSystemNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Âm thanh thông báo`
+  String get notificationSound {
+    return Intl.message(
+      'Âm thanh thông báo',
+      name: 'notificationSound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bật âm thanh`
+  String get enableSound {
+    return Intl.message(
+      'Bật âm thanh',
+      name: 'enableSound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rung`
+  String get notificationVibration {
+    return Intl.message(
+      'Rung',
+      name: 'notificationVibration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bật rung`
+  String get enableVibration {
+    return Intl.message(
+      'Bật rung',
+      name: 'enableVibration',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Badge`
+  String get notificationBadge {
+    return Intl.message(
+      'Badge',
+      name: 'notificationBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hiển thị badge trên icon`
+  String get showBadge {
+    return Intl.message(
+      'Hiển thị badge trên icon',
+      name: 'showBadge',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xem trước thông báo`
+  String get notificationPreview {
+    return Intl.message(
+      'Xem trước thông báo',
+      name: 'notificationPreview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hiển thị nội dung trên màn hình khóa`
+  String get showPreview {
+    return Intl.message(
+      'Hiển thị nội dung trên màn hình khóa',
+      name: 'showPreview',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kiểm tra thông báo`
+  String get testNotification {
+    return Intl.message(
+      'Kiểm tra thông báo',
+      name: 'testNotification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gửi thông báo thử nghiệm`
+  String get sendTestNotification {
+    return Intl.message(
+      'Gửi thông báo thử nghiệm',
+      name: 'sendTestNotification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã gửi thông báo thử nghiệm`
+  String get testNotificationSent {
+    return Intl.message(
+      'Đã gửi thông báo thử nghiệm',
+      name: 'testNotificationSent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cần cấp quyền thông báo`
+  String get notificationPermissionRequired {
+    return Intl.message(
+      'Cần cấp quyền thông báo',
+      name: 'notificationPermissionRequired',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mở cài đặt`
+  String get openSettings {
+    return Intl.message(
+      'Mở cài đặt',
+      name: 'openSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quyền bị từ chối`
+  String get permissionDenied {
+    return Intl.message(
+      'Quyền bị từ chối',
+      name: 'permissionDenied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quyền đã được cấp`
+  String get permissionGranted {
+    return Intl.message(
+      'Quyền đã được cấp',
+      name: 'permissionGranted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Danh mục thông báo`
+  String get notificationCategories {
+    return Intl.message(
+      'Danh mục thông báo',
+      name: 'notificationCategories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quản lý danh mục thông báo`
+  String get manageNotificationCategories {
+    return Intl.message(
+      'Quản lý danh mục thông báo',
+      name: 'manageNotificationCategories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa tất cả thông báo`
+  String get clearAllNotifications {
+    return Intl.message(
+      'Xóa tất cả thông báo',
+      name: 'clearAllNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã xóa tất cả thông báo`
+  String get notificationsCleared {
+    return Intl.message(
+      'Đã xóa tất cả thông báo',
+      name: 'notificationsCleared',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không có thông báo`
+  String get noNotifications {
+    return Intl.message(
+      'Không có thông báo',
+      name: 'noNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lịch sử thông báo`
+  String get notificationHistory {
+    return Intl.message(
+      'Lịch sử thông báo',
+      name: 'notificationHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xem lịch sử thông báo`
+  String get viewNotificationHistory {
+    return Intl.message(
+      'Xem lịch sử thông báo',
+      name: 'viewNotificationHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `FCM Token`
+  String get fcmToken {
+    return Intl.message(
+      'FCM Token',
+      name: 'fcmToken',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sao chép token`
+  String get copyToken {
+    return Intl.message(
+      'Sao chép token',
+      name: 'copyToken',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã sao chép token`
+  String get tokenCopied {
+    return Intl.message(
+      'Đã sao chép token',
+      name: 'tokenCopied',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Làm mới token`
+  String get refreshToken {
+    return Intl.message(
+      'Làm mới token',
+      name: 'refreshToken',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Token đã được làm mới`
+  String get tokenRefreshed {
+    return Intl.message(
+      'Token đã được làm mới',
+      name: 'tokenRefreshed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trạng thái thông báo`
+  String get notificationStatus {
+    return Intl.message(
+      'Trạng thái thông báo',
+      name: 'notificationStatus',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trạng thái quyền`
+  String get permissionStatus {
+    return Intl.message(
+      'Trạng thái quyền',
+      name: 'permissionStatus',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -7,11 +7,55 @@ import 'package:readbox/routes.dart';
 import 'package:readbox/blocs/theme_cubit.dart';
 import 'package:readbox/ui/widget/locale_widget.dart';
 import 'package:readbox/utils/navigator.dart';
+import 'package:readbox/services/services.dart';
+import 'package:flutter/foundation.dart';
 
 RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final FCMService _fcmService = FCMService();
+  final LocalNotificationService _localNotificationService = LocalNotificationService();
+  final NotificationHandler _notificationHandler = NotificationHandler();
+  bool _isInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeNotifications();
+  }
+
+  Future<void> _initializeNotifications() async {
+    try {
+      debugPrint('🔔 Initializing notification services...');
+      
+      // Initialize FCM Service
+      await _fcmService.initialize();
+      debugPrint('✅ FCM Service initialized');
+      debugPrint('   FCM Token: ${_fcmService.fcmToken}');
+      
+      // Initialize Local Notification Service
+      await _localNotificationService.initialize();
+      debugPrint('✅ Local Notification Service initialized');
+      
+      setState(() {
+        _isInitialized = true;
+      });
+      
+      debugPrint('✅ All notification services initialized successfully');
+    } catch (e) {
+      debugPrint('❌ Error initializing notification services: $e');
+      setState(() {
+        _isInitialized = true; // Set to true anyway to allow app to continue
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +82,18 @@ class MyApp extends StatelessWidget {
               themeMode: themeState == 'dark' ? ThemeMode.dark : ThemeMode.light,
               initialRoute: Routes.initScreen(),
               onGenerateRoute: Routes.generateRoute,
+              builder: (context, child) {
+                // Set notification handler context when navigator is ready
+                if (_isInitialized) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    final navigatorContext = NavigationService.instance.navigatorKey.currentContext;
+                    if (navigatorContext != null) {
+                      _notificationHandler.setContext(navigatorContext);
+                    }
+                  });
+                }
+                return child ?? const SizedBox.shrink();
+              },
             );
           },
         );

@@ -46,6 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "biometricSetupSuccess": MessageLookupByLibrary.simpleMessage(
             "Thiết lập sinh trắc học thành công"),
         "birth_date": MessageLookupByLibrary.simpleMessage("Ngày sinh"),
+        "bookUpdates": MessageLookupByLibrary.simpleMessage("Cập nhật sách"),
         "book_information":
             MessageLookupByLibrary.simpleMessage("Thông tin sách"),
         "book_will_be_displayed_for_admin":
@@ -64,12 +65,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Thay đổi ngôn ngữ ứng dụng"),
         "chooseAppAppearance":
             MessageLookupByLibrary.simpleMessage("Chọn giao diện ứng dụng"),
+        "clearAllNotifications":
+            MessageLookupByLibrary.simpleMessage("Xóa tất cả thông báo"),
         "close": MessageLookupByLibrary.simpleMessage("Đóng"),
         "confirm": MessageLookupByLibrary.simpleMessage("Xác nhận"),
         "confirm_password":
             MessageLookupByLibrary.simpleMessage("Xác nhận mật khẩu"),
         "convertTextToSpeech":
             MessageLookupByLibrary.simpleMessage("Chuyển đổi text to speech"),
+        "copyToken": MessageLookupByLibrary.simpleMessage("Sao chép token"),
         "cover_image": MessageLookupByLibrary.simpleMessage("Ảnh Bìa"),
         "cover_image_uploaded_successfully":
             MessageLookupByLibrary.simpleMessage(
@@ -88,6 +92,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "defaultVoice": MessageLookupByLibrary.simpleMessage("Giọng mặc định"),
         "delete_book": MessageLookupByLibrary.simpleMessage("Xóa sách"),
         "description": MessageLookupByLibrary.simpleMessage("Mô tả"),
+        "disableNotifications":
+            MessageLookupByLibrary.simpleMessage("Tắt thông báo"),
         "disagree": MessageLookupByLibrary.simpleMessage("Không đồng ý"),
         "done": MessageLookupByLibrary.simpleMessage("Hoàn thành"),
         "edit": MessageLookupByLibrary.simpleMessage("Sửa"),
@@ -97,6 +103,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "email_invalid":
             MessageLookupByLibrary.simpleMessage("Email không hợp lệ"),
         "empty": MessageLookupByLibrary.simpleMessage("Không có dữ liệu"),
+        "enableNotifications":
+            MessageLookupByLibrary.simpleMessage("Bật thông báo"),
+        "enableSound": MessageLookupByLibrary.simpleMessage("Bật âm thanh"),
+        "enableVibration": MessageLookupByLibrary.simpleMessage("Bật rung"),
         "enter_confirm_password":
             MessageLookupByLibrary.simpleMessage("Nhập lại mật khẩu"),
         "enter_email": MessageLookupByLibrary.simpleMessage("Nhập email"),
@@ -133,6 +143,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fast": MessageLookupByLibrary.simpleMessage("Nhanh"),
         "favorite_books":
             MessageLookupByLibrary.simpleMessage("Sách yêu thích"),
+        "fcmToken": MessageLookupByLibrary.simpleMessage("FCM Token"),
         "feedback": MessageLookupByLibrary.simpleMessage("Phản hồi"),
         "feedbackAnonymous":
             MessageLookupByLibrary.simpleMessage("Gửi ẩn danh"),
@@ -224,6 +235,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Lỗi tải thêm sách"),
         "loading_more_books_no_data": MessageLookupByLibrary.simpleMessage(
             "Không có dữ liệu để tải thêm"),
+        "localNotifications":
+            MessageLookupByLibrary.simpleMessage("Thông báo cục bộ"),
         "local_library": MessageLookupByLibrary.simpleMessage("Thư viện Local"),
         "logging_in": MessageLookupByLibrary.simpleMessage("Đang đăng nhập..."),
         "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
@@ -266,6 +279,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Đăng nhập với tên đăng nhập"),
         "logout": MessageLookupByLibrary.simpleMessage("Đăng xuất"),
         "low": MessageLookupByLibrary.simpleMessage("Thấp"),
+        "manageNotificationCategories":
+            MessageLookupByLibrary.simpleMessage("Quản lý danh mục thông báo"),
         "manageNotifications":
             MessageLookupByLibrary.simpleMessage("Quản lý thông báo"),
         "medium": MessageLookupByLibrary.simpleMessage("Trung bình"),
@@ -277,6 +292,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "noLoginInfo": MessageLookupByLibrary.simpleMessage(
             "Không có thông tin đăng nhập"),
         "noName": MessageLookupByLibrary.simpleMessage("Không có tên"),
+        "noNotifications":
+            MessageLookupByLibrary.simpleMessage("Không có thông báo"),
         "no_account":
             MessageLookupByLibrary.simpleMessage("Chưa có tài khoản? "),
         "no_available_camera":
@@ -286,7 +303,28 @@ class MessageLookup extends MessageLookupByLibrary {
             "Không có nội dung để hiển thị"),
         "no_info": MessageLookupByLibrary.simpleMessage("Không có thông tin"),
         "normal": MessageLookupByLibrary.simpleMessage("Bình thường"),
+        "notificationBadge": MessageLookupByLibrary.simpleMessage("Badge"),
+        "notificationCategories":
+            MessageLookupByLibrary.simpleMessage("Danh mục thông báo"),
+        "notificationHistory":
+            MessageLookupByLibrary.simpleMessage("Lịch sử thông báo"),
+        "notificationPermissionRequired":
+            MessageLookupByLibrary.simpleMessage("Cần cấp quyền thông báo"),
+        "notificationPreferences":
+            MessageLookupByLibrary.simpleMessage("Tùy chọn thông báo"),
+        "notificationPreview":
+            MessageLookupByLibrary.simpleMessage("Xem trước thông báo"),
+        "notificationSettings":
+            MessageLookupByLibrary.simpleMessage("Cài đặt thông báo"),
+        "notificationSound":
+            MessageLookupByLibrary.simpleMessage("Âm thanh thông báo"),
+        "notificationStatus":
+            MessageLookupByLibrary.simpleMessage("Trạng thái thông báo"),
+        "notificationVibration": MessageLookupByLibrary.simpleMessage("Rung"),
         "notifications": MessageLookupByLibrary.simpleMessage("Thông báo"),
+        "notificationsCleared":
+            MessageLookupByLibrary.simpleMessage("Đã xóa tất cả thông báo"),
+        "openSettings": MessageLookupByLibrary.simpleMessage("Mở cài đặt"),
         "optional": MessageLookupByLibrary.simpleMessage("Tùy chọn"),
         "password": MessageLookupByLibrary.simpleMessage("Mật khẩu"),
         "password_must_be_at_least_6_characters":
@@ -295,6 +333,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "passwords_do_not_match":
             MessageLookupByLibrary.simpleMessage("Mật khẩu không khớp"),
         "pdfEpubMobi": MessageLookupByLibrary.simpleMessage("PDF, EPUB, MOBI"),
+        "permissionDenied":
+            MessageLookupByLibrary.simpleMessage("Quyền bị từ chối"),
+        "permissionGranted":
+            MessageLookupByLibrary.simpleMessage("Quyền đã được cấp"),
+        "permissionStatus":
+            MessageLookupByLibrary.simpleMessage("Trạng thái quyền"),
         "permissions": MessageLookupByLibrary.simpleMessage("Quyền"),
         "phone": MessageLookupByLibrary.simpleMessage("Số điện thoại"),
         "phone_number": MessageLookupByLibrary.simpleMessage("Số điện thoại"),
@@ -390,17 +434,32 @@ class MessageLookup extends MessageLookupByLibrary {
         "publisher": MessageLookupByLibrary.simpleMessage("Nhà xuất bản"),
         "pull_to_refresh":
             MessageLookupByLibrary.simpleMessage("Kéo xuống để làm mới"),
+        "pushNotifications":
+            MessageLookupByLibrary.simpleMessage("Thông báo đẩy"),
+        "readingReminders":
+            MessageLookupByLibrary.simpleMessage("Nhắc nhở đọc sách"),
         "readingSpeed": MessageLookupByLibrary.simpleMessage("Tốc độ đọc"),
         "ready_to_upload":
             MessageLookupByLibrary.simpleMessage("Sẵn sàng upload"),
+        "receiveBookUpdates": MessageLookupByLibrary.simpleMessage(
+            "Nhận thông báo khi có sách mới"),
+        "receiveLocalNotifications": MessageLookupByLibrary.simpleMessage(
+            "Nhận nhắc nhở và thông báo cục bộ"),
+        "receivePushNotifications": MessageLookupByLibrary.simpleMessage(
+            "Nhận thông báo đẩy từ server"),
+        "receiveSystemNotifications": MessageLookupByLibrary.simpleMessage(
+            "Nhận thông báo về cập nhật ứng dụng"),
         "recommended_size":
             MessageLookupByLibrary.simpleMessage("Khuyến nghị: 600x900px"),
         "refresh": MessageLookupByLibrary.simpleMessage("Làm mới"),
+        "refreshToken": MessageLookupByLibrary.simpleMessage("Làm mới token"),
         "register": MessageLookupByLibrary.simpleMessage("Đăng ký"),
         "register_now": MessageLookupByLibrary.simpleMessage("Đăng ký ngay"),
         "register_to_continue":
             MessageLookupByLibrary.simpleMessage("Đăng ký để tiếp tục"),
         "remember_me": MessageLookupByLibrary.simpleMessage("Nhớ tài khoản"),
+        "reminderTime":
+            MessageLookupByLibrary.simpleMessage("Thời gian nhắc nhở"),
         "required_field": MessageLookupByLibrary.simpleMessage("Bắt buộc"),
         "resend_code": MessageLookupByLibrary.simpleMessage("Gửi lại mã"),
         "reset_password":
@@ -415,6 +474,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "search_books":
             MessageLookupByLibrary.simpleMessage("Tìm kiếm sách..."),
         "security": MessageLookupByLibrary.simpleMessage("Bảo mật"),
+        "selectReminderTime":
+            MessageLookupByLibrary.simpleMessage("Chọn thời gian nhắc nhở"),
         "selectTTSLanguage":
             MessageLookupByLibrary.simpleMessage("Chọn ngôn ngữ đọc"),
         "selectVoice": MessageLookupByLibrary.simpleMessage("Chọn giọng đọc"),
@@ -424,17 +485,35 @@ class MessageLookup extends MessageLookupByLibrary {
         "select_language":
             MessageLookupByLibrary.simpleMessage("Vui lòng nhập ngôn ngữ"),
         "sendFeedback": MessageLookupByLibrary.simpleMessage("Gửi phản hồi"),
+        "sendTestNotification":
+            MessageLookupByLibrary.simpleMessage("Gửi thông báo thử nghiệm"),
+        "setReadingReminders": MessageLookupByLibrary.simpleMessage(
+            "Đặt nhắc nhở đọc sách hàng ngày"),
         "settings": MessageLookupByLibrary.simpleMessage("Cài đặt"),
         "settingsSaved": MessageLookupByLibrary.simpleMessage("Đã lưu cài đặt"),
         "shareYourThoughts":
             MessageLookupByLibrary.simpleMessage("Chia sẻ suy nghĩ của bạn"),
+        "showBadge":
+            MessageLookupByLibrary.simpleMessage("Hiển thị badge trên icon"),
+        "showPreview": MessageLookupByLibrary.simpleMessage(
+            "Hiển thị nội dung trên màn hình khóa"),
         "slow": MessageLookupByLibrary.simpleMessage("Chậm"),
         "stopTest": MessageLookupByLibrary.simpleMessage("Dừng"),
         "success": MessageLookupByLibrary.simpleMessage("Thành công"),
+        "systemNotifications":
+            MessageLookupByLibrary.simpleMessage("Thông báo hệ thống"),
+        "testNotification":
+            MessageLookupByLibrary.simpleMessage("Kiểm tra thông báo"),
+        "testNotificationSent":
+            MessageLookupByLibrary.simpleMessage("Đã gửi thông báo thử nghiệm"),
         "testTTS": MessageLookupByLibrary.simpleMessage("Kiểm tra đọc"),
         "textToSpeech": MessageLookupByLibrary.simpleMessage("Text to speech"),
         "theme": MessageLookupByLibrary.simpleMessage("Giao diện"),
         "title": MessageLookupByLibrary.simpleMessage("Tiêu đề"),
+        "tokenCopied":
+            MessageLookupByLibrary.simpleMessage("Đã sao chép token"),
+        "tokenRefreshed":
+            MessageLookupByLibrary.simpleMessage("Token đã được làm mới"),
         "total_pages": MessageLookupByLibrary.simpleMessage("Số trang"),
         "translate": MessageLookupByLibrary.simpleMessage("Ngôn ngữ dịch"),
         "try_again": MessageLookupByLibrary.simpleMessage("Thử lại"),
@@ -501,6 +580,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "verify_email": MessageLookupByLibrary.simpleMessage("Xác thực email"),
         "version": MessageLookupByLibrary.simpleMessage("Phiên bản"),
         "veryFast": MessageLookupByLibrary.simpleMessage("Rất nhanh"),
+        "viewNotificationHistory":
+            MessageLookupByLibrary.simpleMessage("Xem lịch sử thông báo"),
         "voicePitch": MessageLookupByLibrary.simpleMessage("Cao độ giọng"),
         "warning": MessageLookupByLibrary.simpleMessage("Cảnh báo"),
         "welcome_back":

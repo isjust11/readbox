@@ -32,6 +32,7 @@ class Routes {
   static const String profileScreen = "/profileScreen";
   static const String translateScreen = "/translateScreen";
   static const String textToSpeechSettingScreen = "/textToSpeechSettingScreen";
+  static const String notificationSettingsScreen = "/notificationSettingsScreen";
   // PDF text to speech screen
   static const String pdfTextToSpeechScreen = "/pdfTextToSpeechScreen";
   static const String ttsDemoScreen = "/ttsDemoScreen";
@@ -164,6 +165,11 @@ class Routes {
       case textToSpeechSettingScreen:
         return PageTransition(
           child: TextToSpeechSettingScreen(),
+          type: PageTransitionType.rightToLeft,
+        );
+      case notificationSettingsScreen:
+        return PageTransition(
+          child: NotificationSettingsScreen(),
           type: PageTransitionType.rightToLeft,
         );
       default:

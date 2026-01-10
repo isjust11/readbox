@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-import 'package:readbox/routes.dart';
-import 'package:readbox/ui/widget/custom_dialog.dart';
 
 class NavigationService {
   NavigationService._internal();

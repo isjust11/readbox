@@ -44,6 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Biometric not available"),
         "biometricSetupSuccess":
             MessageLookupByLibrary.simpleMessage("Biometric setup successful"),
+        "bookUpdates": MessageLookupByLibrary.simpleMessage("Book Updates"),
         "book_information":
             MessageLookupByLibrary.simpleMessage("Book information"),
         "book_will_be_displayed_for_admin":
@@ -63,12 +64,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Change app language"),
         "chooseAppAppearance":
             MessageLookupByLibrary.simpleMessage("Choose app appearance"),
+        "clearAllNotifications":
+            MessageLookupByLibrary.simpleMessage("Clear all notifications"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
         "confirm_password":
             MessageLookupByLibrary.simpleMessage("Confirm password"),
         "convertTextToSpeech":
             MessageLookupByLibrary.simpleMessage("Convert text to speech"),
+        "copyToken": MessageLookupByLibrary.simpleMessage("Copy token"),
         "cover_image": MessageLookupByLibrary.simpleMessage("Cover image"),
         "cover_image_uploaded_successfully":
             MessageLookupByLibrary.simpleMessage(
@@ -87,6 +91,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "defaultVoice": MessageLookupByLibrary.simpleMessage("Default voice"),
         "delete_book": MessageLookupByLibrary.simpleMessage("Delete book"),
         "description": MessageLookupByLibrary.simpleMessage("Description"),
+        "disableNotifications":
+            MessageLookupByLibrary.simpleMessage("Disable notifications"),
         "disagree": MessageLookupByLibrary.simpleMessage("Disagree"),
         "done": MessageLookupByLibrary.simpleMessage("Done"),
         "editProfile": MessageLookupByLibrary.simpleMessage("Edit profile"),
@@ -94,6 +100,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "email_invalid": MessageLookupByLibrary.simpleMessage("Email invalid"),
         "empty": MessageLookupByLibrary.simpleMessage("No data"),
+        "enableNotifications":
+            MessageLookupByLibrary.simpleMessage("Enable notifications"),
+        "enableSound": MessageLookupByLibrary.simpleMessage("Enable sound"),
+        "enableVibration":
+            MessageLookupByLibrary.simpleMessage("Enable vibration"),
         "enter_confirm_password":
             MessageLookupByLibrary.simpleMessage("Enter confirm password"),
         "enter_email": MessageLookupByLibrary.simpleMessage("Enter email"),
@@ -129,6 +140,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fast": MessageLookupByLibrary.simpleMessage("Fast"),
         "favorite_books":
             MessageLookupByLibrary.simpleMessage("Favorite books"),
+        "fcmToken": MessageLookupByLibrary.simpleMessage("FCM Token"),
         "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
         "feedbackAnonymous":
             MessageLookupByLibrary.simpleMessage("Send anonymously"),
@@ -210,6 +222,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Loading more books failed"),
         "loading_more_books_no_data":
             MessageLookupByLibrary.simpleMessage("Loading more books no data"),
+        "localNotifications":
+            MessageLookupByLibrary.simpleMessage("Local Notifications"),
         "local_library": MessageLookupByLibrary.simpleMessage("Local library"),
         "logging_in": MessageLookupByLibrary.simpleMessage("Logging in..."),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
@@ -252,6 +266,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Login with username"),
         "logout": MessageLookupByLibrary.simpleMessage("Logout"),
         "low": MessageLookupByLibrary.simpleMessage("Low"),
+        "manageNotificationCategories": MessageLookupByLibrary.simpleMessage(
+            "Manage notification categories"),
         "manageNotifications":
             MessageLookupByLibrary.simpleMessage("Manage notifications"),
         "medium": MessageLookupByLibrary.simpleMessage("Medium"),
@@ -263,6 +279,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "noLoginInfo":
             MessageLookupByLibrary.simpleMessage("No login information"),
         "noName": MessageLookupByLibrary.simpleMessage("No name"),
+        "noNotifications":
+            MessageLookupByLibrary.simpleMessage("No notifications"),
         "no_account": MessageLookupByLibrary.simpleMessage("No account? "),
         "no_available_camera":
             MessageLookupByLibrary.simpleMessage("No available camera"),
@@ -270,7 +288,29 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_content_to_display":
             MessageLookupByLibrary.simpleMessage("No content to display"),
         "normal": MessageLookupByLibrary.simpleMessage("Normal"),
+        "notificationBadge": MessageLookupByLibrary.simpleMessage("Badge"),
+        "notificationCategories":
+            MessageLookupByLibrary.simpleMessage("Notification Categories"),
+        "notificationHistory":
+            MessageLookupByLibrary.simpleMessage("Notification History"),
+        "notificationPermissionRequired": MessageLookupByLibrary.simpleMessage(
+            "Notification permission required"),
+        "notificationPreferences":
+            MessageLookupByLibrary.simpleMessage("Notification Preferences"),
+        "notificationPreview":
+            MessageLookupByLibrary.simpleMessage("Notification Preview"),
+        "notificationSettings":
+            MessageLookupByLibrary.simpleMessage("Notification Settings"),
+        "notificationSound":
+            MessageLookupByLibrary.simpleMessage("Notification Sound"),
+        "notificationStatus":
+            MessageLookupByLibrary.simpleMessage("Notification Status"),
+        "notificationVibration":
+            MessageLookupByLibrary.simpleMessage("Vibration"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
+        "notificationsCleared":
+            MessageLookupByLibrary.simpleMessage("All notifications cleared"),
+        "openSettings": MessageLookupByLibrary.simpleMessage("Open Settings"),
         "optional": MessageLookupByLibrary.simpleMessage("Optional"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "password_must_be_at_least_6_characters":
@@ -279,6 +319,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "passwords_do_not_match":
             MessageLookupByLibrary.simpleMessage("Passwords do not match"),
         "pdfEpubMobi": MessageLookupByLibrary.simpleMessage("PDF, EPUB, MOBI"),
+        "permissionDenied":
+            MessageLookupByLibrary.simpleMessage("Permission denied"),
+        "permissionGranted":
+            MessageLookupByLibrary.simpleMessage("Permission granted"),
+        "permissionStatus":
+            MessageLookupByLibrary.simpleMessage("Permission Status"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone number"),
         "playTest": MessageLookupByLibrary.simpleMessage("Play test"),
         "please_enter_author":
@@ -366,17 +412,31 @@ class MessageLookup extends MessageLookupByLibrary {
         "publisher": MessageLookupByLibrary.simpleMessage("Publisher"),
         "pull_to_refresh":
             MessageLookupByLibrary.simpleMessage("Pull down to refresh"),
+        "pushNotifications":
+            MessageLookupByLibrary.simpleMessage("Push Notifications"),
+        "readingReminders":
+            MessageLookupByLibrary.simpleMessage("Reading Reminders"),
         "readingSpeed": MessageLookupByLibrary.simpleMessage("Reading speed"),
         "ready_to_upload":
             MessageLookupByLibrary.simpleMessage("Ready to upload"),
+        "receiveBookUpdates": MessageLookupByLibrary.simpleMessage(
+            "Receive notifications for new books"),
+        "receiveLocalNotifications": MessageLookupByLibrary.simpleMessage(
+            "Receive reminders and local notifications"),
+        "receivePushNotifications": MessageLookupByLibrary.simpleMessage(
+            "Receive push notifications from server"),
+        "receiveSystemNotifications": MessageLookupByLibrary.simpleMessage(
+            "Receive app update notifications"),
         "recommended_size":
             MessageLookupByLibrary.simpleMessage("Recommended size"),
         "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
+        "refreshToken": MessageLookupByLibrary.simpleMessage("Refresh token"),
         "register": MessageLookupByLibrary.simpleMessage("Register"),
         "register_now": MessageLookupByLibrary.simpleMessage("Register now"),
         "register_to_continue":
             MessageLookupByLibrary.simpleMessage("Register to continue"),
         "remember_me": MessageLookupByLibrary.simpleMessage("Remember me"),
+        "reminderTime": MessageLookupByLibrary.simpleMessage("Reminder Time"),
         "required_field": MessageLookupByLibrary.simpleMessage("Required"),
         "resend_code": MessageLookupByLibrary.simpleMessage("Resend code"),
         "reset_password":
@@ -387,6 +447,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "search_books": MessageLookupByLibrary.simpleMessage("Search books..."),
         "security": MessageLookupByLibrary.simpleMessage("Security"),
+        "selectReminderTime":
+            MessageLookupByLibrary.simpleMessage("Select reminder time"),
         "selectTTSLanguage":
             MessageLookupByLibrary.simpleMessage("Select reading language"),
         "selectVoice": MessageLookupByLibrary.simpleMessage("Select voice"),
@@ -396,17 +458,34 @@ class MessageLookup extends MessageLookupByLibrary {
         "select_language":
             MessageLookupByLibrary.simpleMessage("Please enter language"),
         "sendFeedback": MessageLookupByLibrary.simpleMessage("Send feedback"),
+        "sendTestNotification":
+            MessageLookupByLibrary.simpleMessage("Send test notification"),
+        "setReadingReminders":
+            MessageLookupByLibrary.simpleMessage("Set daily reading reminders"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "settingsSaved": MessageLookupByLibrary.simpleMessage("Settings saved"),
         "shareYourThoughts":
             MessageLookupByLibrary.simpleMessage("Share your thoughts"),
+        "showBadge":
+            MessageLookupByLibrary.simpleMessage("Show badge on app icon"),
+        "showPreview":
+            MessageLookupByLibrary.simpleMessage("Show content on lock screen"),
         "slow": MessageLookupByLibrary.simpleMessage("Slow"),
         "stopTest": MessageLookupByLibrary.simpleMessage("Stop"),
         "success": MessageLookupByLibrary.simpleMessage("Success"),
+        "systemNotifications":
+            MessageLookupByLibrary.simpleMessage("System Notifications"),
+        "testNotification":
+            MessageLookupByLibrary.simpleMessage("Test Notification"),
+        "testNotificationSent":
+            MessageLookupByLibrary.simpleMessage("Test notification sent"),
         "testTTS": MessageLookupByLibrary.simpleMessage("Test reading"),
         "textToSpeech": MessageLookupByLibrary.simpleMessage("Text to speech"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "title": MessageLookupByLibrary.simpleMessage("Title"),
+        "tokenCopied": MessageLookupByLibrary.simpleMessage("Token copied"),
+        "tokenRefreshed":
+            MessageLookupByLibrary.simpleMessage("Token refreshed"),
         "total_pages": MessageLookupByLibrary.simpleMessage("Total pages"),
         "translate":
             MessageLookupByLibrary.simpleMessage("Language translation"),
@@ -472,6 +551,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "verify_email": MessageLookupByLibrary.simpleMessage("Verify email"),
         "version": MessageLookupByLibrary.simpleMessage("Version"),
         "veryFast": MessageLookupByLibrary.simpleMessage("Very fast"),
+        "viewNotificationHistory":
+            MessageLookupByLibrary.simpleMessage("View notification history"),
         "voicePitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
         "warning": MessageLookupByLibrary.simpleMessage("Warning"),
         "welcome_back": MessageLookupByLibrary.simpleMessage("Welcome back!")
