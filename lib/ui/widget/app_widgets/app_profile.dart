@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readbox/domain/network/api_constant.dart';
+import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/assets.gen.dart';
@@ -72,20 +73,25 @@ class _AppProfileState extends State<AppProfile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // User Avatar
-                  Container(
-                    padding: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 12,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, Routes.profileScreen, arguments: _currentUser);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 3),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 12,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: _buildAvatar(),
                     ),
-                    child: _buildAvatar(),
                   ),
                   SizedBox(width: 16),
 

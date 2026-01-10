@@ -44,7 +44,7 @@ class _AppDrawerState extends State<AppDrawer> {
             end: Alignment.bottomCenter,
             colors: [
               Theme.of(context).primaryColor.withValues(alpha: 0.05),
-              Colors.white,
+              Theme.of(context).colorScheme.surface,
             ],
           ),
         ),

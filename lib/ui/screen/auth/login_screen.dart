@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:readbox/blocs/auth/auth_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/blocs/utils.dart';
@@ -226,11 +225,8 @@ class LoginScreenState extends State<LoginBody>
               ),
             ],
           ),
-          child: Icon(
-            Icons.menu_book_rounded,
-            size: 60,
-            color: Color(0xFF667eea),
-          ),
+            child: 
+            Image.asset(Assets.images.appLogo.path, width: 60, height: 60),
         ),
         SizedBox(height: 12),
 

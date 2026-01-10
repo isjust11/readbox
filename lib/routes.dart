@@ -29,7 +29,9 @@ class Routes {
   static const String editProfile = "/editProfile";
   static const String privacySecurityScreen = "/privacySecurityScreen";
   static const String supportCenterScreen = "/supportCenterScreen";
-
+  static const String profileScreen = "/profileScreen";
+  static const String translateScreen = "/translateScreen";
+  static const String textToSpeechSettingScreen = "/textToSpeechSettingScreen";
   // PDF text to speech screen
   static const String pdfTextToSpeechScreen = "/pdfTextToSpeechScreen";
   static const String ttsDemoScreen = "/ttsDemoScreen";
@@ -147,6 +149,21 @@ class Routes {
       case supportCenterScreen:
         return PageTransition(
           child: SupportCenterScreen(),
+          type: PageTransitionType.rightToLeft,
+        );
+      case profileScreen:
+        return PageTransition(
+          child: ProfileScreen(user: settings.arguments as UserModel?),
+          type: PageTransitionType.rightToLeft,
+        );
+      case translateScreen:
+        return PageTransition(
+          child: TranslateScreen(),
+          type: PageTransitionType.rightToLeft,
+        );
+      case textToSpeechSettingScreen:
+        return PageTransition(
+          child: TextToSpeechSettingScreen(),
           type: PageTransitionType.rightToLeft,
         );
       default:

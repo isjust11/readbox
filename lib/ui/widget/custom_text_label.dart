@@ -68,12 +68,13 @@ class CustomTextLabel extends StatelessWidget {
     );
   }
 
-  static renderBaseTitle({String? title, FontWeight? fontWeight, bool isRequired = false, Color? titleColor}) {
+  static renderBaseTitle(BuildContext context, {String? title, FontWeight? fontWeight, bool isRequired = false, Color? titleColor}) {
+    final theme = Theme.of(context);
     return Container(
-      padding: EdgeInsets.only(bottom: 5),
+      padding: EdgeInsets.only(bottom: 8),
       child: CustomTextLabel(
         title,
-        color: titleColor ?? AppColors.colorTitle,
+        color: titleColor ?? theme.colorScheme.secondary.withValues(alpha: 0.8),
         fontSize: 14,
         isRequired: isRequired,
         fontWeight: fontWeight ?? FontWeight.w600,

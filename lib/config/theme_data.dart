@@ -8,6 +8,9 @@ class AppTheme {
     primaryColor: Colors.blue,
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
     useMaterial3: true,
+    dividerTheme: DividerThemeData(
+      color: AppColors.lightBackgroundAlt.withValues(alpha: 0.2),
+    ),
   );
 
   static final ThemeData darkTheme = ThemeData(
@@ -52,6 +55,26 @@ class AppTheme {
       displaySmall: TextStyle(
         color: AppColors.lightBackgroundAlt,
       ),
+    ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.white,
+      titleTextStyle: TextStyle(
+        color: AppColors.black,
+      ),
+      iconTheme: IconThemeData(
+        color: AppColors.black,
+      ),
+    ),
+    scaffoldBackgroundColor: AppColors.white,
+    cardColor: AppColors.white,
+    cardTheme: CardTheme(
+      color: AppColors.white,
+    ),
+    iconTheme: IconThemeData(
+      color: AppColors.black,
+    ),
+    dividerTheme: DividerThemeData(
+      color: AppColors.lightBackgroundAlt.withValues(alpha: 0.2),
     ),
   );
 }

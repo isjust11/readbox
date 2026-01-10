@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/secure_storage_service.dart';
-
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
   @override
   State<StatefulWidget> createState() {
     return _SplashState();
@@ -18,11 +21,11 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
   late Animation<double> _rotateAnimation;
-
+  String _appVersion = '1.0.0';
   @override
   void initState() {
     super.initState();
-    
+    _initDeviceInfo();
     // Scale animation for logo
     _scaleController = AnimationController(
       vsync: this,
@@ -57,7 +60,16 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
       _rotateController.forward();
     });
 
-    SchedulerBinding.instance?.addPostFrameCallback((_) => openScreen(context));
+    SchedulerBinding.instance.addPostFrameCallback((_) => openScreen(context));
+  }
+  
+  Future<void> _initDeviceInfo() async {
+    final deviceInfo = await DeviceInfoPlugin().deviceInfo;
+    if (deviceInfo is AndroidDeviceInfo) {
+      _appVersion = deviceInfo.version.toString();
+    } else if (deviceInfo is IosDeviceInfo) {
+      _appVersion = deviceInfo.systemVersion.toString();
+    }
   }
 
   @override
@@ -97,28 +109,20 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                     // Animated Logo
                     ScaleTransition(
                       scale: _scaleAnimation,
-                      child: RotationTransition(
-                        turns: _rotateAnimation,
-                        child: Container(
-                          padding: EdgeInsets.all(32),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 30,
-                                offset: Offset(0, 15),
-                                spreadRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            Icons.menu_book_rounded,
-                            size: 80,
-                            color: Color(0xFF667eea),
-                          ),
+                      child: Container(
+                        padding: EdgeInsets.all(32),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
                         ),
+                        child: Image.asset(Assets.images.appLogo.path, width: 80, height: 80),
                       ),
                     ),
                     
@@ -134,11 +138,11 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                             style: TextStyle(
                               fontSize: 48,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Theme.of(context).colorScheme.onSurface,
                               letterSpacing: 2.0,
                               shadows: [
                                 Shadow(
-                                  color: Colors.black26,
+                                  color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                                   offset: Offset(0, 4),
                                   blurRadius: 8,
                                 ),
@@ -147,10 +151,10 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                           ),
                           SizedBox(height: 12),
                           Text(
-                            'Thư viện sách của bạn',
+                            AppLocalizations.current.library,
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.white.withOpacity(0.9),
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.9),
                               fontWeight: FontWeight.w300,
                               letterSpacing: 1.0,
                             ),
@@ -178,7 +182,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                 child: FadeTransition(
                   opacity: _fadeAnimation,
                   child: Text(
-                    'Version 1.0.0',
+                    'Version $_appVersion',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.7),
@@ -201,17 +205,17 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
         Positioned(
           top: -100,
           right: -100,
-          child: _buildFloatingCircle(250, Colors.white.withOpacity(0.05)),
+          child: _buildFloatingCircle(250, Colors.white.withValues(alpha: 0.05)),
         ),
         Positioned(
           bottom: -150,
           left: -150,
-          child: _buildFloatingCircle(300, Colors.white.withOpacity(0.05)),
+          child: _buildFloatingCircle(300, Colors.white.withValues(alpha: 0.05)),
         ),
         Positioned(
           top: 100,
           left: -50,
-          child: _buildFloatingCircle(150, Colors.white.withOpacity(0.03)),
+          child: _buildFloatingCircle(150, Colors.white.withValues(alpha: 0.03)),
         ),
       ],
     );
@@ -239,12 +243,12 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
             child: CircularProgressIndicator(
               strokeWidth: 3,
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              backgroundColor: Colors.white.withOpacity(0.3),
+              backgroundColor: Colors.white.withValues(alpha: 0.3),
             ),
           ),
           SizedBox(height: 16),
           Text(
-            'Đang tải...',
+            AppLocalizations.current.loading,
             style: TextStyle(
               color: Colors.white,
               fontSize: 14,

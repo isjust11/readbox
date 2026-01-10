@@ -2130,30 +2130,30 @@ class AppLocalizations {
     );
   }
 
-  /// `Ngày sinh không hợp lệ`
+  /// `Vui lòng nhập ngày sinh hợp lệ`
   String get please_enter_valid_birth_date {
     return Intl.message(
-      'Ngày sinh không hợp lệ',
+      'Vui lòng nhập ngày sinh hợp lệ',
       name: 'please_enter_valid_birth_date',
       desc: '',
       args: [],
     );
   }
 
-  /// `Số điện thoại không hợp lệ`
+  /// `Vui lòng nhập số điện thoại hợp lệ`
   String get please_enter_valid_phone_number {
     return Intl.message(
-      'Số điện thoại không hợp lệ',
+      'Vui lòng nhập số điện thoại hợp lệ',
       name: 'please_enter_valid_phone_number',
       desc: '',
       args: [],
     );
   }
 
-  /// `Địa chỉ không hợp lệ`
+  /// `Vui lòng nhập địa chỉ hợp lệ`
   String get please_enter_valid_address {
     return Intl.message(
-      'Địa chỉ không hợp lệ',
+      'Vui lòng nhập địa chỉ hợp lệ',
       name: 'please_enter_valid_address',
       desc: '',
       args: [],
@@ -2170,20 +2170,20 @@ class AppLocalizations {
     );
   }
 
-  /// `Liên kết Instagram không hợp lệ`
+  /// `Vui lòng nhập liên kết Instagram hợp lệ`
   String get please_enter_valid_instagram_link {
     return Intl.message(
-      'Liên kết Instagram không hợp lệ',
+      'Vui lòng nhập liên kết Instagram hợp lệ',
       name: 'please_enter_valid_instagram_link',
       desc: '',
       args: [],
     );
   }
 
-  /// `Liên kết Twitter không hợp lệ`
+  /// `Vui lòng nhập liên kết Twitter hợp lệ`
   String get please_enter_valid_twitter_link {
     return Intl.message(
-      'Liên kết Twitter không hợp lệ',
+      'Vui lòng nhập liên kết Twitter hợp lệ',
       name: 'please_enter_valid_twitter_link',
       desc: '',
       args: [],
@@ -2200,30 +2200,30 @@ class AppLocalizations {
     );
   }
 
-  /// `Liên kết GitHub không hợp lệ`
+  /// `Vui lòng nhập liên kết GitHub hợp lệ`
   String get please_enter_valid_github_link {
     return Intl.message(
-      'Liên kết GitHub không hợp lệ',
+      'Vui lòng nhập liên kết GitHub hợp lệ',
       name: 'please_enter_valid_github_link',
       desc: '',
       args: [],
     );
   }
 
-  /// `Liên kết GitLab không hợp lệ`
+  /// `Vui lòng nhập liên kết GitLab hợp lệ`
   String get please_enter_valid_gitlab_link {
     return Intl.message(
-      'Liên kết GitLab không hợp lệ',
+      'Vui lòng nhập liên kết GitLab hợp lệ',
       name: 'please_enter_valid_gitlab_link',
       desc: '',
       args: [],
     );
   }
 
-  /// `Liên kết Bitbucket không hợp lệ`
+  /// `Vui lòng nhập liên kết Bitbucket hợp lệ`
   String get please_enter_valid_bitbucket_link {
     return Intl.message(
-      'Liên kết Bitbucket không hợp lệ',
+      'Vui lòng nhập liên kết Bitbucket hợp lệ',
       name: 'please_enter_valid_bitbucket_link',
       desc: '',
       args: [],
@@ -2285,6 +2285,756 @@ class AppLocalizations {
     return Intl.message(
       'Quyền riêng tư và bảo mật',
       name: 'privacy_and_security',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PDF, EPUB, MOBI`
+  String get pdfEpubMobi {
+    return Intl.message(
+      'PDF, EPUB, MOBI',
+      name: 'pdfEpubMobi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `File Ebook`
+  String get fileEbook {
+    return Intl.message(
+      'File Ebook',
+      name: 'fileEbook',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bắt buộc`
+  String get required_field {
+    return Intl.message(
+      'Bắt buộc',
+      name: 'required_field',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn file`
+  String get select_file {
+    return Intl.message(
+      'Chọn file',
+      name: 'select_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Từ file picker`
+  String get from_file_picker {
+    return Intl.message(
+      'Từ file picker',
+      name: 'from_file_picker',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trong bộ nhớ`
+  String get in_memory {
+    return Intl.message(
+      'Trong bộ nhớ',
+      name: 'in_memory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sẵn sàng upload`
+  String get ready_to_upload {
+    return Intl.message(
+      'Sẵn sàng upload',
+      name: 'ready_to_upload',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đang upload...`
+  String get uploading {
+    return Intl.message(
+      'Đang upload...',
+      name: 'uploading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload File`
+  String get upload_file {
+    return Intl.message(
+      'Upload File',
+      name: 'upload_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload thành công`
+  String get upload_success {
+    return Intl.message(
+      'Upload thành công',
+      name: 'upload_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ảnh Bìa`
+  String get cover_image {
+    return Intl.message(
+      'Ảnh Bìa',
+      name: 'cover_image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `JPG, PNG, WEBP`
+  String get jpgPngWebp {
+    return Intl.message(
+      'JPG, PNG, WEBP',
+      name: 'jpgPngWebp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tùy chọn`
+  String get optional {
+    return Intl.message(
+      'Tùy chọn',
+      name: 'optional',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn ảnh bìa`
+  String get select_cover_image {
+    return Intl.message(
+      'Chọn ảnh bìa',
+      name: 'select_cover_image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Khuyến nghị: 600x900px`
+  String get recommended_size {
+    return Intl.message(
+      'Khuyến nghị: 600x900px',
+      name: 'recommended_size',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload ảnh`
+  String get upload_cover_image {
+    return Intl.message(
+      'Upload ảnh',
+      name: 'upload_cover_image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ảnh bìa đã upload thành công`
+  String get cover_image_uploaded_successfully {
+    return Intl.message(
+      'Ảnh bìa đã upload thành công',
+      name: 'cover_image_uploaded_successfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông tin sách`
+  String get book_information {
+    return Intl.message(
+      'Thông tin sách',
+      name: 'book_information',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tiêu đề`
+  String get title {
+    return Intl.message(
+      'Tiêu đề',
+      name: 'title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tác giả`
+  String get author {
+    return Intl.message(
+      'Tác giả',
+      name: 'author',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mô tả`
+  String get description {
+    return Intl.message(
+      'Mô tả',
+      name: 'description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhà xuất bản`
+  String get publisher {
+    return Intl.message(
+      'Nhà xuất bản',
+      name: 'publisher',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ISBN`
+  String get isbn {
+    return Intl.message(
+      'ISBN',
+      name: 'isbn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Số trang`
+  String get total_pages {
+    return Intl.message(
+      'Số trang',
+      name: 'total_pages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thể loại`
+  String get category {
+    return Intl.message(
+      'Thể loại',
+      name: 'category',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Công khai`
+  String get public {
+    return Intl.message(
+      'Công khai',
+      name: 'public',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Riêng tư`
+  String get private {
+    return Intl.message(
+      'Riêng tư',
+      name: 'private',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sách sẽ hiển thị cho mọi người`
+  String get book_will_be_displayed_for_everyone {
+    return Intl.message(
+      'Sách sẽ hiển thị cho mọi người',
+      name: 'book_will_be_displayed_for_everyone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sách chỉ hiển thị cho admin`
+  String get book_will_be_displayed_for_admin {
+    return Intl.message(
+      'Sách chỉ hiển thị cho admin',
+      name: 'book_will_be_displayed_for_admin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đang tạo sách...`
+  String get creating_book {
+    return Intl.message(
+      'Đang tạo sách...',
+      name: 'creating_book',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tạo Sách Mới`
+  String get create_new_book {
+    return Intl.message(
+      'Tạo Sách Mới',
+      name: 'create_new_book',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập tác giả`
+  String get please_enter_author {
+    return Intl.message(
+      'Vui lòng nhập tác giả',
+      name: 'please_enter_author',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập mô tả`
+  String get please_enter_description {
+    return Intl.message(
+      'Vui lòng nhập mô tả',
+      name: 'please_enter_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập nhà xuất bản`
+  String get please_enter_publisher {
+    return Intl.message(
+      'Vui lòng nhập nhà xuất bản',
+      name: 'please_enter_publisher',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập ISBN`
+  String get please_enter_isbn {
+    return Intl.message(
+      'Vui lòng nhập ISBN',
+      name: 'please_enter_isbn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập số trang`
+  String get please_enter_total_pages {
+    return Intl.message(
+      'Vui lòng nhập số trang',
+      name: 'please_enter_total_pages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập ngôn ngữ`
+  String get please_enter_language {
+    return Intl.message(
+      'Vui lòng nhập ngôn ngữ',
+      name: 'please_enter_language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập thể loại`
+  String get please_enter_category {
+    return Intl.message(
+      'Vui lòng nhập thể loại',
+      name: 'please_enter_category',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập tiêu đề`
+  String get please_enter_title {
+    return Intl.message(
+      'Vui lòng nhập tiêu đề',
+      name: 'please_enter_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập ngôn ngữ`
+  String get select_language {
+    return Intl.message(
+      'Vui lòng nhập ngôn ngữ',
+      name: 'select_language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ngôn ngữ dịch`
+  String get translate {
+    return Intl.message(
+      'Ngôn ngữ dịch',
+      name: 'translate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Text to speech`
+  String get textToSpeech {
+    return Intl.message(
+      'Text to speech',
+      name: 'textToSpeech',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chuyển đổi text to speech`
+  String get convertTextToSpeech {
+    return Intl.message(
+      'Chuyển đổi text to speech',
+      name: 'convertTextToSpeech',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thư viện Ebook`
+  String get library {
+    return Intl.message(
+      'Thư viện Ebook',
+      name: 'library',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cài đặt ngôn ngữ TTS`
+  String get ttsLanguageSettings {
+    return Intl.message(
+      'Cài đặt ngôn ngữ TTS',
+      name: 'ttsLanguageSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn ngôn ngữ đọc`
+  String get selectTTSLanguage {
+    return Intl.message(
+      'Chọn ngôn ngữ đọc',
+      name: 'selectTTSLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cài đặt TTS`
+  String get ttsSettings {
+    return Intl.message(
+      'Cài đặt TTS',
+      name: 'ttsSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tốc độ đọc`
+  String get ttsSpeed {
+    return Intl.message(
+      'Tốc độ đọc',
+      name: 'ttsSpeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Âm lượng`
+  String get ttsVolume {
+    return Intl.message(
+      'Âm lượng',
+      name: 'ttsVolume',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cao độ giọng nói`
+  String get ttsPitch {
+    return Intl.message(
+      'Cao độ giọng nói',
+      name: 'ttsPitch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Giọng đọc`
+  String get ttsVoice {
+    return Intl.message(
+      'Giọng đọc',
+      name: 'ttsVoice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kiểm tra đọc`
+  String get testTTS {
+    return Intl.message(
+      'Kiểm tra đọc',
+      name: 'testTTS',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xin chào, đây là bài kiểm tra đọc văn bản.`
+  String get ttsTestText {
+    return Intl.message(
+      'Xin chào, đây là bài kiểm tra đọc văn bản.',
+      name: 'ttsTestText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không có ngôn ngữ khả dụng`
+  String get noLanguagesAvailable {
+    return Intl.message(
+      'Không có ngôn ngữ khả dụng',
+      name: 'noLanguagesAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ngôn ngữ hiện tại`
+  String get currentLanguage {
+    return Intl.message(
+      'Ngôn ngữ hiện tại',
+      name: 'currentLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ngôn ngữ khả dụng`
+  String get availableLanguages {
+    return Intl.message(
+      'Ngôn ngữ khả dụng',
+      name: 'availableLanguages',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn giọng đọc`
+  String get selectVoice {
+    return Intl.message(
+      'Chọn giọng đọc',
+      name: 'selectVoice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Giọng mặc định`
+  String get defaultVoice {
+    return Intl.message(
+      'Giọng mặc định',
+      name: 'defaultVoice',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tốc độ đọc`
+  String get readingSpeed {
+    return Intl.message(
+      'Tốc độ đọc',
+      name: 'readingSpeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chậm`
+  String get slow {
+    return Intl.message(
+      'Chậm',
+      name: 'slow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bình thường`
+  String get normal {
+    return Intl.message(
+      'Bình thường',
+      name: 'normal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhanh`
+  String get fast {
+    return Intl.message(
+      'Nhanh',
+      name: 'fast',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rất nhanh`
+  String get veryFast {
+    return Intl.message(
+      'Rất nhanh',
+      name: 'veryFast',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cao độ giọng`
+  String get voicePitch {
+    return Intl.message(
+      'Cao độ giọng',
+      name: 'voicePitch',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thấp`
+  String get low {
+    return Intl.message(
+      'Thấp',
+      name: 'low',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trung bình`
+  String get medium {
+    return Intl.message(
+      'Trung bình',
+      name: 'medium',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cao`
+  String get high {
+    return Intl.message(
+      'Cao',
+      name: 'high',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phát thử`
+  String get playTest {
+    return Intl.message(
+      'Phát thử',
+      name: 'playTest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dừng`
+  String get stopTest {
+    return Intl.message(
+      'Dừng',
+      name: 'stopTest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã thay đổi ngôn ngữ`
+  String get languageChanged {
+    return Intl.message(
+      'Đã thay đổi ngôn ngữ',
+      name: 'languageChanged',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã lưu cài đặt`
+  String get settingsSaved {
+    return Intl.message(
+      'Đã lưu cài đặt',
+      name: 'settingsSaved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi khi thay đổi ngôn ngữ`
+  String get errorChangingLanguage {
+    return Intl.message(
+      'Lỗi khi thay đổi ngôn ngữ',
+      name: 'errorChangingLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi khi lưu cài đặt`
+  String get errorSavingSettings {
+    return Intl.message(
+      'Lỗi khi lưu cài đặt',
+      name: 'errorSavingSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `TTS chưa được khởi tạo`
+  String get ttsNotInitialized {
+    return Intl.message(
+      'TTS chưa được khởi tạo',
+      name: 'ttsNotInitialized',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đang khởi tạo TTS...`
+  String get initializingTTS {
+    return Intl.message(
+      'Đang khởi tạo TTS...',
+      name: 'initializingTTS',
       desc: '',
       args: [],
     );

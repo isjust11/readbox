@@ -78,29 +78,35 @@ class _SettingScreenState extends State<SettingScreen> {
 
   Widget _buildLayoutSection(BuildContext context) {
     return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AppProfile(),
-              const SizedBox(height: AppDimens.SIZE_12),
-              _buildQuickActions(),
-              const SizedBox(height: AppDimens.SIZE_12),
-              _buildSettingsSection(context),
-              const SizedBox(height: AppDimens.SIZE_12),
-              _buildSupportSection(),
-              const SizedBox(height: AppDimens.SIZE_12),
-            ],
-          ),
-        );
-    
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AppProfile(),
+          const SizedBox(height: AppDimens.SIZE_12),
+          _buildQuickActions(),
+          const SizedBox(height: AppDimens.SIZE_12),
+          _buildReadBookSection(context),
+          const SizedBox(height: AppDimens.SIZE_12),
+          _buildSettingsSection(context),
+          const SizedBox(height: AppDimens.SIZE_12),
+          _buildSupportSection(context),
+          const SizedBox(height: AppDimens.SIZE_12),
+        ],
+      ),
+    );
   }
 
   Widget _buildFloatingButton() {
     return FloatingActionButton(
+      backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.5),
       onPressed: () {
         Navigator.of(context).pop();
       },
-      child: Icon(Icons.arrow_back_ios_new,),
+      child: Icon(
+        Icons.arrow_back_ios_new_outlined,
+        color: Theme.of(context).primaryColor,
+        size: AppDimens.SIZE_18,
+      ),
     );
   }
 
@@ -174,16 +180,66 @@ class _SettingScreenState extends State<SettingScreen> {
               title,
               fontWeight: FontWeight.w600,
               fontSize: AppDimens.SIZE_14,
-              color: Theme.of(context).textTheme.bodyLarge?.color ?? AppColors.colorTitle,
+              color:
+                  Theme.of(context).textTheme.bodyLarge?.color ??
+                  AppColors.colorTitle,
             ),
             const SizedBox(height: AppDimens.SIZE_4),
             CustomTextLabel(
               subtitle,
               fontSize: AppDimens.SIZE_12,
-              color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.colorTitle,
+              color:
+                  Theme.of(context).textTheme.bodyMedium?.color ??
+                  AppColors.colorTitle,
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // Build setting readbook section
+  Widget _buildReadBookSection(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
+      ),
+      child: Column(
+        children: [
+          _buildSettingItem(
+            icon: Icons.translate_outlined,
+            title: AppLocalizations.current.translate,
+            subtitle: AppLocalizations.current.changeAppLanguage,
+            trailing: IconButton(
+              icon: Icon(
+              Icons.arrow_forward_ios,
+              size: AppDimens.SIZE_16,
+              color: Theme.of(context).primaryColor,
+            ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(Routes.translateScreen);
+              },
+            ),
+          ),
+          _buildDivider(),
+          _buildSettingItem(
+            icon: Icons.text_snippet_outlined,
+            title: AppLocalizations.current.textToSpeech,
+            subtitle: AppLocalizations.current.convertTextToSpeech,
+            trailing: IconButton(
+              icon: Icon(
+                Icons.arrow_forward_ios,
+                size: AppDimens.SIZE_16,
+                color: Theme.of(context).primaryColor,
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(Routes.textToSpeechSettingScreen);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -221,9 +277,11 @@ class _SettingScreenState extends State<SettingScreen> {
                 setState(() {
                   _themeMode = value;
                 });
-                context.read<ThemeCubit>().changeTheme(value ? 'light' : 'dark');
+                context.read<ThemeCubit>().changeTheme(
+                  value ? 'light' : 'dark',
+                );
               },
-              activeThumbColor: Theme.of(context).primaryColor,
+              activeColor: Theme.of(context).primaryColor,
             ),
           ),
           _buildDivider(),
@@ -239,7 +297,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 });
                 await FCMService().toggleNotifications(value);
               },
-              activeThumbColor: Theme.of(context).primaryColor,
+              activeColor: Theme.of(context).primaryColor,
             ),
           ),
           _buildDivider(),
@@ -250,7 +308,7 @@ class _SettingScreenState extends State<SettingScreen> {
             trailing: Switch(
               value: _biometricEnabled,
               onChanged: _biometricAvailable ? _onBiometricToggle : null,
-              activeThumbColor: Theme.of(context).primaryColor,
+              activeColor: Theme.of(context).primaryColor,
             ),
           ),
           // Debug section chỉ hiển thị trong debug mode
@@ -262,7 +320,10 @@ class _SettingScreenState extends State<SettingScreen> {
               subtitle:
                   'Test flutter_secure_storage and biometric capabilities',
               trailing: IconButton(
-                icon: Icon(Icons.play_arrow, color: Theme.of(context).primaryColor),
+                icon: Icon(
+                  Icons.play_arrow,
+                  color: Theme.of(context).primaryColor,
+                ),
                 onPressed: () async {
                   await BiometricTestHelper.runAllTests();
                   _showSuccessMessage(
@@ -293,7 +354,7 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  Widget _buildSupportSection() {
+  Widget _buildSupportSection(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
       decoration: BoxDecoration(
@@ -313,9 +374,10 @@ class _SettingScreenState extends State<SettingScreen> {
             icon: Icons.help_outline,
             title: AppLocalizations.current.helpCenter,
             subtitle: AppLocalizations.current.getHelpAndSupport,
-            trailing: const Icon(
+            trailing: Icon(
               Icons.arrow_forward_ios,
               size: AppDimens.SIZE_16,
+              color: Theme.of(context).primaryColor,
             ),
             onTap: () {
               Navigator.of(context).pushNamed(Routes.supportCenterScreen);
@@ -326,9 +388,10 @@ class _SettingScreenState extends State<SettingScreen> {
             icon: Icons.feedback,
             title: AppLocalizations.current.sendFeedback,
             subtitle: AppLocalizations.current.shareYourThoughts,
-            trailing: const Icon(
+            trailing: Icon(
               Icons.arrow_forward_ios,
               size: AppDimens.SIZE_16,
+              color: Theme.of(context).primaryColor,
             ),
             onTap: () {
               Navigator.of(context).pushNamed(Routes.feedbackScreen);
@@ -384,13 +447,17 @@ class _SettingScreenState extends State<SettingScreen> {
                     title,
                     fontWeight: FontWeight.w600,
                     fontSize: AppDimens.SIZE_16,
-                    color: Theme.of(context).textTheme.bodyLarge?.color ?? AppColors.colorTitle,
+                    color:
+                        Theme.of(context).textTheme.bodyLarge?.color ??
+                        AppColors.colorTitle,
                   ),
                   const SizedBox(height: 2),
                   CustomTextLabel(
                     subtitle,
                     fontSize: AppDimens.SIZE_14,
-                    color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.colorTitle,
+                    color:
+                        Theme.of(context).textTheme.bodyMedium?.color ??
+                        AppColors.colorTitle,
                   ),
                 ],
               ),
@@ -444,8 +511,6 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-
-
   String _getBiometricSubtitle() {
     if (!_biometricAvailable) {
       return AppLocalizations.current.biometricNotAvailable;
@@ -470,7 +535,7 @@ class _SettingScreenState extends State<SettingScreen> {
       if (credentials != null || socialInfo != null) {
         // Bật sinh trắc học trong app
         await BiometricAuthService.setBiometricEnabledInApp(true);
-        
+
         setState(() {
           _biometricEnabled = true;
         });

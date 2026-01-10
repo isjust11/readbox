@@ -15,7 +15,6 @@ import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/injection_container.dart';
-import 'package:readbox/utils/theme_helper.dart';
 
 class UpdateProfileScreen extends StatelessWidget {
   const UpdateProfileScreen({super.key});
@@ -110,13 +109,10 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BaseScreen(
-      customAppBar: BaseAppBar(
-        title: AppLocalizations.current.updateYourInfo,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-      colorBg: ThemeHelper.isDarkMode(context) ? Theme.of(context).colorScheme.surfaceContainerHighest : Theme.of(context).colorScheme.secondaryContainer,
-      colorTitle: ThemeHelper.isDarkMode(context) ? Theme.of(context).colorScheme.secondaryContainer : Theme.of(context).colorScheme.surfaceContainerHighest,
+      title: AppLocalizations.current.updateYourInfo,
+      colorBg: theme.colorScheme.surface,
       messageNotify: CustomSnackBar<AuthCubit>(),
       body: BlocListener<AuthCubit, BaseState>(
         listener: (context, state) {
@@ -174,11 +170,11 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
   }
 
   Widget _buildAvatarSection() {
+    final theme = Theme.of(context);
     return Container(
       width: double.infinity,
-      height: AppDimens.SIZE_162,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: theme.primaryColor,
         borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
       ),
       padding: const EdgeInsets.all(AppDimens.SIZE_16),
@@ -203,7 +199,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Theme.of(context).colorScheme.primary,
+                            color: theme.primaryColor,
                             width: 3,
                           ),
                         ),
@@ -231,14 +227,14 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
                         width: AppDimens.SIZE_20,
                         height: AppDimens.SIZE_20,
                         decoration: BoxDecoration(
-                          color: AppColors.white,
+                          color: theme.colorScheme.surface,
                           borderRadius: BorderRadius.circular(
                             AppDimens.SIZE_10,
                           ),
                         ),
                         child: Icon(
                           Icons.camera_alt,
-                          color: Theme.of(context).colorScheme.primary,
+                          color: theme.primaryColor,
                           size: AppDimens.SIZE_16,
                         ),
                       ),
@@ -254,8 +250,9 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
   }
 
   Widget _buildDefaultAvatar() {
+    final theme = Theme.of(context);
     return Container(
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerHighest, shape: BoxShape.circle),
+      decoration: BoxDecoration(color: theme.colorScheme.surfaceContainerHighest, shape: BoxShape.circle),
       child: Container(
         margin: const EdgeInsets.all(AppDimens.SIZE_4),
         decoration: BoxDecoration(
@@ -276,6 +273,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomTextLabel.renderBaseTitle(
+          context,
           title: AppLocalizations.current.full_name,
           isRequired: true,
         ),
@@ -296,6 +294,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
         ),
         const SizedBox(height: AppDimens.SIZE_16),
         CustomTextLabel.renderBaseTitle(
+          context,
           title: AppLocalizations.current.email,
           isRequired: false,
         ),
@@ -304,6 +303,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
           textController: _emailController,
           hintText: AppLocalizations.current.please_enter_email,
           keyboardType: TextInputType.emailAddress,
+          borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
           enabled: false,
           prefixIcon: Icon(
             Icons.email_outlined,
@@ -321,6 +321,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
         ),
         const SizedBox(height: AppDimens.SIZE_16),
         CustomTextLabel.renderBaseTitle(
+          context,
           title: AppLocalizations.current.phone_number,
           isRequired: false,
         ),
@@ -345,6 +346,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
         ),
         const SizedBox(height: AppDimens.SIZE_16),
         CustomTextLabel.renderBaseTitle(
+          context,
           title: AppLocalizations.current.address,
           isRequired: false,
         ),
@@ -361,6 +363,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
         ),
         const SizedBox(height: AppDimens.SIZE_16),
         CustomTextLabel.renderBaseTitle(
+          context,
           title: AppLocalizations.current.birth_date,
           isRequired: false,
         ),
@@ -384,6 +387,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
         ),
         const SizedBox(height: AppDimens.SIZE_16),
         CustomTextLabel.renderBaseTitle(
+          context,
           title: AppLocalizations.current.facebook_link,
           isRequired: false,
         ),
@@ -400,6 +404,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
         ),
         const SizedBox(height: AppDimens.SIZE_16),
         CustomTextLabel.renderBaseTitle(
+          context,
           title: AppLocalizations.current.instagram_link,
           isRequired: false,
         ),
@@ -419,6 +424,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
   }
 
   Widget _buildSaveButton() {
+    final theme = Theme.of(context);
     return BaseButton(
       title:
           _isLoading
@@ -427,8 +433,8 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
       onTap: _isLoading ? null : _saveProfile,
       backgroundColor:
           _isLoading
-              ? AppColors.gray.withValues(alpha: 0.5)
-              : Theme.of(context).colorScheme.primary,
+              ? theme.colorScheme.outline.withValues(alpha: 0.5)
+              : theme.primaryColor,
       width: double.infinity,
     );
   }

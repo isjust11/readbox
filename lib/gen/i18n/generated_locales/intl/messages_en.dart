@@ -32,6 +32,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("All data loaded"),
         "archived_books":
             MessageLookupByLibrary.simpleMessage("Archived books"),
+        "author": MessageLookupByLibrary.simpleMessage("Author"),
+        "availableLanguages":
+            MessageLookupByLibrary.simpleMessage("Available languages"),
         "back_to_login": MessageLookupByLibrary.simpleMessage("Back to login"),
         "biometricDisabled":
             MessageLookupByLibrary.simpleMessage("Biometric disabled"),
@@ -41,12 +44,21 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Biometric not available"),
         "biometricSetupSuccess":
             MessageLookupByLibrary.simpleMessage("Biometric setup successful"),
+        "book_information":
+            MessageLookupByLibrary.simpleMessage("Book information"),
+        "book_will_be_displayed_for_admin":
+            MessageLookupByLibrary.simpleMessage(
+                "Book will be displayed for admin"),
+        "book_will_be_displayed_for_everyone":
+            MessageLookupByLibrary.simpleMessage(
+                "Book will be displayed for everyone"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "cannot_access_camera":
             MessageLookupByLibrary.simpleMessage("Cannot access camera"),
         "cannot_select_image_message":
             MessageLookupByLibrary.simpleMessage("Cannot select image"),
+        "category": MessageLookupByLibrary.simpleMessage("Category"),
         "changeAppLanguage":
             MessageLookupByLibrary.simpleMessage("Change app language"),
         "chooseAppAppearance":
@@ -55,12 +67,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
         "confirm_password":
             MessageLookupByLibrary.simpleMessage("Confirm password"),
+        "convertTextToSpeech":
+            MessageLookupByLibrary.simpleMessage("Convert text to speech"),
+        "cover_image": MessageLookupByLibrary.simpleMessage("Cover image"),
+        "cover_image_uploaded_successfully":
+            MessageLookupByLibrary.simpleMessage(
+                "Cover image uploaded successfully"),
         "create_new_account":
             MessageLookupByLibrary.simpleMessage("Create new account"),
+        "create_new_book":
+            MessageLookupByLibrary.simpleMessage("Create new book"),
         "creating_account":
             MessageLookupByLibrary.simpleMessage("Creating account..."),
+        "creating_book":
+            MessageLookupByLibrary.simpleMessage("Creating book..."),
+        "currentLanguage":
+            MessageLookupByLibrary.simpleMessage("Current language"),
         "dark": MessageLookupByLibrary.simpleMessage("Dark"),
+        "defaultVoice": MessageLookupByLibrary.simpleMessage("Default voice"),
         "delete_book": MessageLookupByLibrary.simpleMessage("Delete book"),
+        "description": MessageLookupByLibrary.simpleMessage("Description"),
         "disagree": MessageLookupByLibrary.simpleMessage("Disagree"),
         "done": MessageLookupByLibrary.simpleMessage("Done"),
         "editProfile": MessageLookupByLibrary.simpleMessage("Edit profile"),
@@ -82,6 +108,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "enter_username":
             MessageLookupByLibrary.simpleMessage("Enter username"),
         "error": MessageLookupByLibrary.simpleMessage("Error"),
+        "errorChangingLanguage":
+            MessageLookupByLibrary.simpleMessage("Error changing language"),
+        "errorSavingSettings":
+            MessageLookupByLibrary.simpleMessage("Error saving settings"),
         "error_common": MessageLookupByLibrary.simpleMessage(
             "Something went wrong, please try again later"),
         "error_connection":
@@ -96,6 +126,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Facebook login failed"),
         "facebook_network_error":
             MessageLookupByLibrary.simpleMessage("Facebook network error"),
+        "fast": MessageLookupByLibrary.simpleMessage("Fast"),
         "favorite_books":
             MessageLookupByLibrary.simpleMessage("Favorite books"),
         "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
@@ -129,8 +160,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "feedbackTitleRequired":
             MessageLookupByLibrary.simpleMessage("Please enter a title"),
         "feedbackType": MessageLookupByLibrary.simpleMessage("Feedback type"),
+        "fileEbook": MessageLookupByLibrary.simpleMessage("File Ebook"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Forgot password"),
+        "from_file_picker":
+            MessageLookupByLibrary.simpleMessage("From file picker"),
         "full_name": MessageLookupByLibrary.simpleMessage("Full name"),
         "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
         "getHelpAndSupport":
@@ -150,12 +184,21 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Google timeout"),
         "have_account": MessageLookupByLibrary.simpleMessage("Have account? "),
         "helpCenter": MessageLookupByLibrary.simpleMessage("Help center"),
+        "high": MessageLookupByLibrary.simpleMessage("High"),
         "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "in_memory": MessageLookupByLibrary.simpleMessage("In memory"),
         "info": MessageLookupByLibrary.simpleMessage("Info"),
+        "initializingTTS":
+            MessageLookupByLibrary.simpleMessage("Initializing TTS..."),
         "input_username":
             MessageLookupByLibrary.simpleMessage("Enter username"),
         "invalid_email": MessageLookupByLibrary.simpleMessage("Invalid email"),
+        "isbn": MessageLookupByLibrary.simpleMessage("ISBN"),
+        "jpgPngWebp": MessageLookupByLibrary.simpleMessage("JPG, PNG, WEBP"),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
+        "languageChanged":
+            MessageLookupByLibrary.simpleMessage("Language changed"),
+        "library": MessageLookupByLibrary.simpleMessage("Ebook library"),
         "light": MessageLookupByLibrary.simpleMessage("Light"),
         "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "loading_books": MessageLookupByLibrary.simpleMessage("Loading books"),
@@ -208,11 +251,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "login_with_username":
             MessageLookupByLibrary.simpleMessage("Login with username"),
         "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+        "low": MessageLookupByLibrary.simpleMessage("Low"),
         "manageNotifications":
             MessageLookupByLibrary.simpleMessage("Manage notifications"),
+        "medium": MessageLookupByLibrary.simpleMessage("Medium"),
         "my_books": MessageLookupByLibrary.simpleMessage("My books"),
         "my_library": MessageLookupByLibrary.simpleMessage("My library"),
         "news": MessageLookupByLibrary.simpleMessage("News"),
+        "noLanguagesAvailable":
+            MessageLookupByLibrary.simpleMessage("No languages available"),
         "noLoginInfo":
             MessageLookupByLibrary.simpleMessage("No login information"),
         "noName": MessageLookupByLibrary.simpleMessage("No name"),
@@ -222,22 +269,32 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_books": MessageLookupByLibrary.simpleMessage("No books"),
         "no_content_to_display":
             MessageLookupByLibrary.simpleMessage("No content to display"),
+        "normal": MessageLookupByLibrary.simpleMessage("Normal"),
         "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
+        "optional": MessageLookupByLibrary.simpleMessage("Optional"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "password_must_be_at_least_6_characters":
             MessageLookupByLibrary.simpleMessage(
                 "Password must be at least 6 characters"),
         "passwords_do_not_match":
             MessageLookupByLibrary.simpleMessage("Passwords do not match"),
+        "pdfEpubMobi": MessageLookupByLibrary.simpleMessage("PDF, EPUB, MOBI"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone number"),
+        "playTest": MessageLookupByLibrary.simpleMessage("Play test"),
+        "please_enter_author":
+            MessageLookupByLibrary.simpleMessage("Please enter author"),
         "please_enter_bitbucket_link":
             MessageLookupByLibrary.simpleMessage("Please enter Bitbucket link"),
+        "please_enter_category":
+            MessageLookupByLibrary.simpleMessage("Please enter category"),
         "please_enter_code":
             MessageLookupByLibrary.simpleMessage("Please enter code"),
         "please_enter_confirm_code":
             MessageLookupByLibrary.simpleMessage("Please enter confirm code"),
         "please_enter_confirm_password": MessageLookupByLibrary.simpleMessage(
             "Please enter confirm password"),
+        "please_enter_description":
+            MessageLookupByLibrary.simpleMessage("Please enter description"),
         "please_enter_email":
             MessageLookupByLibrary.simpleMessage("Please enter email"),
         "please_enter_facebook_link":
@@ -250,12 +307,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please enter GitLab link"),
         "please_enter_instagram_link":
             MessageLookupByLibrary.simpleMessage("Please enter Instagram link"),
+        "please_enter_isbn":
+            MessageLookupByLibrary.simpleMessage("Please enter ISBN"),
         "please_enter_linkedin_link":
             MessageLookupByLibrary.simpleMessage("Please enter LinkedIn link"),
         "please_enter_password":
             MessageLookupByLibrary.simpleMessage("Please enter password"),
         "please_enter_phone":
             MessageLookupByLibrary.simpleMessage("Please enter phone number"),
+        "please_enter_publisher":
+            MessageLookupByLibrary.simpleMessage("Please enter publisher"),
+        "please_enter_title":
+            MessageLookupByLibrary.simpleMessage("Please enter title"),
+        "please_enter_total_pages":
+            MessageLookupByLibrary.simpleMessage("Please enter total pages"),
         "please_enter_twitter_link":
             MessageLookupByLibrary.simpleMessage("Please enter Twitter link"),
         "please_enter_username":
@@ -293,17 +358,26 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Privacy settings"),
         "privacy_and_security":
             MessageLookupByLibrary.simpleMessage("Privacy and security"),
+        "private": MessageLookupByLibrary.simpleMessage("Private"),
         "private_books": MessageLookupByLibrary.simpleMessage("Private books"),
         "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+        "public": MessageLookupByLibrary.simpleMessage("Public"),
         "public_books": MessageLookupByLibrary.simpleMessage("Public books"),
+        "publisher": MessageLookupByLibrary.simpleMessage("Publisher"),
         "pull_to_refresh":
             MessageLookupByLibrary.simpleMessage("Pull down to refresh"),
+        "readingSpeed": MessageLookupByLibrary.simpleMessage("Reading speed"),
+        "ready_to_upload":
+            MessageLookupByLibrary.simpleMessage("Ready to upload"),
+        "recommended_size":
+            MessageLookupByLibrary.simpleMessage("Recommended size"),
         "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
         "register": MessageLookupByLibrary.simpleMessage("Register"),
         "register_now": MessageLookupByLibrary.simpleMessage("Register now"),
         "register_to_continue":
             MessageLookupByLibrary.simpleMessage("Register to continue"),
         "remember_me": MessageLookupByLibrary.simpleMessage("Remember me"),
+        "required_field": MessageLookupByLibrary.simpleMessage("Required"),
         "resend_code": MessageLookupByLibrary.simpleMessage("Resend code"),
         "reset_password":
             MessageLookupByLibrary.simpleMessage("Reset password"),
@@ -313,13 +387,41 @@ class MessageLookup extends MessageLookupByLibrary {
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "search_books": MessageLookupByLibrary.simpleMessage("Search books..."),
         "security": MessageLookupByLibrary.simpleMessage("Security"),
+        "selectTTSLanguage":
+            MessageLookupByLibrary.simpleMessage("Select reading language"),
+        "selectVoice": MessageLookupByLibrary.simpleMessage("Select voice"),
+        "select_cover_image":
+            MessageLookupByLibrary.simpleMessage("Select cover image"),
+        "select_file": MessageLookupByLibrary.simpleMessage("Select file"),
+        "select_language":
+            MessageLookupByLibrary.simpleMessage("Please enter language"),
         "sendFeedback": MessageLookupByLibrary.simpleMessage("Send feedback"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "settingsSaved": MessageLookupByLibrary.simpleMessage("Settings saved"),
         "shareYourThoughts":
             MessageLookupByLibrary.simpleMessage("Share your thoughts"),
+        "slow": MessageLookupByLibrary.simpleMessage("Slow"),
+        "stopTest": MessageLookupByLibrary.simpleMessage("Stop"),
         "success": MessageLookupByLibrary.simpleMessage("Success"),
+        "testTTS": MessageLookupByLibrary.simpleMessage("Test reading"),
+        "textToSpeech": MessageLookupByLibrary.simpleMessage("Text to speech"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
+        "title": MessageLookupByLibrary.simpleMessage("Title"),
+        "total_pages": MessageLookupByLibrary.simpleMessage("Total pages"),
+        "translate":
+            MessageLookupByLibrary.simpleMessage("Language translation"),
         "try_again": MessageLookupByLibrary.simpleMessage("Try again"),
+        "ttsLanguageSettings":
+            MessageLookupByLibrary.simpleMessage("TTS Language Settings"),
+        "ttsNotInitialized":
+            MessageLookupByLibrary.simpleMessage("TTS not initialized"),
+        "ttsPitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
+        "ttsSettings": MessageLookupByLibrary.simpleMessage("TTS Settings"),
+        "ttsSpeed": MessageLookupByLibrary.simpleMessage("Reading speed"),
+        "ttsTestText": MessageLookupByLibrary.simpleMessage(
+            "Hello, this is a text-to-speech test."),
+        "ttsVoice": MessageLookupByLibrary.simpleMessage("Voice"),
+        "ttsVolume": MessageLookupByLibrary.simpleMessage("Volume"),
         "update": MessageLookupByLibrary.simpleMessage("Update"),
         "updateYourInfo":
             MessageLookupByLibrary.simpleMessage("Update your information"),
@@ -338,6 +440,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "update_profile_success":
             MessageLookupByLibrary.simpleMessage("Update profile successfully"),
         "upload_book": MessageLookupByLibrary.simpleMessage("Upload book"),
+        "upload_cover_image":
+            MessageLookupByLibrary.simpleMessage("Upload cover image"),
+        "upload_file": MessageLookupByLibrary.simpleMessage("Upload File"),
+        "upload_success":
+            MessageLookupByLibrary.simpleMessage("Upload success"),
+        "uploading": MessageLookupByLibrary.simpleMessage("Uploading..."),
         "useFingerprintOrFaceID":
             MessageLookupByLibrary.simpleMessage("Use fingerprint or Face ID"),
         "user_cancelled_apple_sign_in": MessageLookupByLibrary.simpleMessage(
@@ -363,6 +471,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "verify_code": MessageLookupByLibrary.simpleMessage("Verify code"),
         "verify_email": MessageLookupByLibrary.simpleMessage("Verify email"),
         "version": MessageLookupByLibrary.simpleMessage("Version"),
+        "veryFast": MessageLookupByLibrary.simpleMessage("Very fast"),
+        "voicePitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
         "warning": MessageLookupByLibrary.simpleMessage("Warning"),
         "welcome_back": MessageLookupByLibrary.simpleMessage("Welcome back!")
       };

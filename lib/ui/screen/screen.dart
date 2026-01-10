@@ -15,3 +15,6 @@ export 'settings/page/feedback_screen.dart';
 export 'settings/page/update_profile_screen.dart';
 export 'settings/page/pravicy_security_screen.dart';
 export 'settings/page/support_center_screen.dart';
+export 'settings/page/profile_screen.dart';
+export 'settings/page/translate_screen.dart';
+export 'settings/page/text_to_speech_setting_screen.dart';

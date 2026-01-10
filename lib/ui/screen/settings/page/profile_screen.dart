@@ -1,65 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:readbox/blocs/base_bloc/base_state.dart';
-import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
-import 'package:readbox/routes.dart';
-import 'package:readbox/ui/widget/base_appbar.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final UserModel? user;
+  const ProfileScreen({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
-    context.read<AuthCubit>().getProfile();
+    final theme = Theme.of(context);
     return BaseScreen(
-      customAppBar: BaseAppBar(
-        title: AppLocalizations.current.profile,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.editProfile);
-            },
-            icon: Icon(
-              Icons.edit,
-              color: AppColors.white,
-              size: AppDimens.SIZE_16,
-            ),
-          ),
-        ],
-      ),
-      body: _buildBody(context),
+      hideAppBar: true,
+      body: _buildUserInfo(context, user),
+      colorBg: theme.colorScheme.surface,
+      colorTitle: theme.colorScheme.surfaceContainerHighest,
+      floatingButton: _buildFloatingButton(context),
     );
   }
 
-  Widget _buildBody(BuildContext context) {
-    return BlocBuilder<AuthCubit, BaseState>(
-      builder: (context, state) {
-        if (state is LoadedState) {
-          UserModel userModel = state.data;
-          return _buildUserInfo(userModel);
-        }
-        return const SizedBox.shrink();
+  Widget _buildFloatingButton(BuildContext context) {
+    final theme = Theme.of(context);
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.pop(context);
       },
+      backgroundColor: theme.primaryColor.withValues(alpha: 0.6),
+      child: Icon(
+        Icons.arrow_back_ios_new_outlined,
+        color: theme.primaryColor,
+        size: AppDimens.SIZE_18,
+      ),
     );
   }
 
-  Widget _buildUserInfo(UserModel userModel) {
+  Widget _buildUserInfo(BuildContext context, UserModel? userModel) {
+    final theme = Theme.of(context);
     return SingleChildScrollView(
       child: Column(
         children: [
           // Header với gradient background
           Container(
             width: double.infinity,
-            decoration: BoxDecoration(color: AppColors.baseColor),
+            decoration: BoxDecoration(color: theme.primaryColor),
             child: Stack(
               children: [
                 // SVG background
@@ -90,25 +79,27 @@ class ProfileScreen extends StatelessWidget {
                           ],
                         ),
                         child: ClipOval(
-                          child: userModel.picture != null
-                              ? BaseNetworkImage(
-                                  url: userModel.isSocialPlatform
-                                      ? userModel.picture
-                                      : ApiConstant.storageHost +
-                                            (userModel.picture ?? ''),
-                                  fit: BoxFit.cover,
-                                  showShimmer: false,
-                                )
-                              : Container(
-                                  color: AppColors.border.withValues(
-                                    alpha: 0.3,
+                          child:
+                              userModel?.picture != null
+                                  ? BaseNetworkImage(
+                                    url:
+                                        userModel?.isSocialPlatform ?? false
+                                            ? userModel?.picture
+                                            : ApiConstant.storageHost +
+                                                (userModel?.picture ?? ''),
+                                    fit: BoxFit.cover,
+                                    showShimmer: false,
+                                  )
+                                  : Container(
+                                    color: AppColors.border.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                    child: const Icon(
+                                      Icons.person,
+                                      size: AppDimens.SIZE_60,
+                                      color: AppColors.white,
+                                    ),
                                   ),
-                                  child: const Icon(
-                                    Icons.person,
-                                    size: AppDimens.SIZE_60,
-                                    color: AppColors.white,
-                                  ),
-                                ),
                         ),
                       ),
                       const SizedBox(width: AppDimens.SIZE_16),
@@ -117,16 +108,18 @@ class ProfileScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomTextLabel(
-                            userModel.fullName ?? '',
-                            color: AppColors.white,
+                            userModel?.fullName ?? '',
+                            color: theme.colorScheme.onPrimary,
                             fontSize: AppDimens.SIZE_20,
                             fontWeight: FontWeight.bold,
                           ),
                           const SizedBox(height: AppDimens.SIZE_4),
                           // Email
                           CustomTextLabel(
-                            userModel.email ?? '',
-                            color: AppColors.white.withValues(alpha: 0.9),
+                            userModel?.email ?? '',
+                            color: theme.colorScheme.onPrimary.withValues(
+                              alpha: 0.9,
+                            ),
                             fontSize: AppDimens.SIZE_14,
                             fontWeight: FontWeight.w400,
                           ),
@@ -145,7 +138,7 @@ class ProfileScreen extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(AppDimens.SIZE_8),
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: theme.colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
               boxShadow: [
                 BoxShadow(
@@ -162,74 +155,87 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   // Thông tin cơ bản
                   _buildInfoCard(
+                    context,
                     AppLocalizations.current.username,
-                    userModel.username ?? '',
+                    userModel?.username ?? '',
                     Icons.person_outline,
                   ),
                   _buildInfoCard(
+                    context,
                     AppLocalizations.current.roles,
-                    userModel.roles.map((e) => e.name).join(', '),
+                    userModel?.roles.map((e) => e.name).join(', ') ?? '',
                     Icons.admin_panel_settings_outlined,
                   ),
+                  // _buildInfoCard(
+                  //   context,
+                  //   AppLocalizations.current.permissions,
+                  //   userModel?.permissions.map((e) => e).join(', ') ?? '',
+                  //   Icons.security_outlined,
+                  // ),
                   _buildInfoCard(
-                    AppLocalizations.current.permissions,
-                    userModel.permissions.map((e) => e.name).join(', '),
-                    Icons.security_outlined,
-                  ),
-                  _buildInfoCard(
+                    context,
                     AppLocalizations.current.birth_date,
-                    userModel.birthDate ?? '',
+                    userModel?.birthDate ?? '',
                     Icons.calendar_today_outlined,
                   ),
                   _buildInfoCard(
+                    context,
                     AppLocalizations.current.address,
-                    userModel.address ?? '',
+                    userModel?.address ?? '',
                     Icons.location_on_outlined,
                   ),
                   _buildInfoCard(
+                    context,
                     AppLocalizations.current.facebook_link,
-                    userModel.facebookLink ?? '',
+                    userModel?.facebookLink ?? '',
                     Icons.facebook_outlined,
                   ),
                   _buildInfoCard(
+                    context,
                     AppLocalizations.current.instagram_link,
-                    userModel.instagramLink ?? '',
+                    userModel?.instagramLink ?? '',
                     Icons.link_outlined,
                   ),
                   _buildInfoCard(
+                    context,
                     AppLocalizations.current.twitter_link,
-                    userModel.twitterLink ?? '',
+                    userModel?.twitterLink ?? '',
                     Icons.link_outlined,
                   ),
                   _buildInfoCard(
+                    context,
                     AppLocalizations.current.linkedin_link,
-                    userModel.linkedinLink ?? '',
+                    userModel?.linkedinLink ?? '',
                     Icons.link_outlined,
                   ),
                   _buildInfoCard(
+                    context,
                     AppLocalizations.current.phone_number,
-                    userModel.phoneNumber ?? '',
+                    userModel?.phoneNumber ?? '',
                     Icons.phone_outlined,
                   ),
 
                   const SizedBox(height: AppDimens.SIZE_20),
 
                   _buildInfoCard(
+                    context,
                     AppLocalizations.current.created_at,
-                    userModel.createdAt ?? '',
+                    userModel?.createdAt ?? '',
                     Icons.calendar_today_outlined,
                   ),
                   _buildInfoCard(
+                    context,
                     AppLocalizations.current.updated_at,
-                    userModel.updatedAt ?? '',
+                    userModel?.updatedAt ?? '',
                     Icons.update_outlined,
                   ),
                   _buildInfoCard(
+                    context,
                     AppLocalizations.current.last_login,
-                    userModel.lastLogin != null
+                    userModel?.lastLogin != null
                         ? DateFormat(
-                            'dd/MM/yyyy HH:mm',
-                          ).format(DateTime.parse(userModel.lastLogin ?? ''))
+                          'dd/MM/yyyy HH:mm',
+                        ).format(DateTime.parse(userModel?.lastLogin ?? ''))
                         : AppLocalizations.current.no_info,
                     Icons.login_outlined,
                   ),
@@ -242,15 +248,25 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard(String title, String value, IconData icon) {
+  Widget _buildInfoCard(
+    BuildContext context,
+    String title,
+    String value,
+    IconData icon,
+  ) {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.only(bottom: AppDimens.SIZE_12),
       padding: const EdgeInsets.all(AppDimens.SIZE_8),
       decoration: BoxDecoration(
-        color: AppColors.baseColor.withValues(alpha: 0.05),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(
+          alpha: 0.05,
+        ),
         borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
         border: Border.all(
-          color: AppColors.baseColor.withValues(alpha: 0.2),
+          color: theme.colorScheme.surfaceContainerHighest.withValues(
+            alpha: 0.2,
+          ),
           width: 1,
         ),
       ),
@@ -259,12 +275,12 @@ class ProfileScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppDimens.SIZE_8),
             decoration: BoxDecoration(
-              color: AppColors.secondaryBrand.withValues(alpha: 0.1),
+              color: theme.primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
             ),
             child: Icon(
               icon,
-              color: AppColors.secondaryBrand,
+              color: theme.primaryColor,
               size: AppDimens.SIZE_20,
             ),
           ),
@@ -275,14 +291,14 @@ class ProfileScreen extends StatelessWidget {
               children: [
                 CustomTextLabel(
                   title,
-                  color: AppColors.baseColor,
+                  color: theme.colorScheme.secondary.withValues(alpha: 0.8),
                   fontSize: AppDimens.SIZE_12,
                   fontWeight: FontWeight.w500,
                 ),
                 const SizedBox(height: AppDimens.SIZE_4),
                 CustomTextLabel(
                   value.isEmpty ? AppLocalizations.current.no_info : value,
-                  color: AppColors.baseColor,
+                  color: theme.colorScheme.secondary.withValues(alpha: 0.8),
                   fontSize: AppDimens.SIZE_14,
                   fontWeight: FontWeight.w500,
                 ),

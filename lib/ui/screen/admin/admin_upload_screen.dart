@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:readbox/blocs/admin/admin_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/book_refresh/book_refresh_cubit.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -227,8 +228,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         elevation: 0,
         flexibleSpace: Container(
@@ -288,6 +289,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           ],
         ),
       ),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: BlocListener<AdminCubit, BaseState>(
         listener: (context, state) {
           if (state is ErrorState) {
@@ -312,11 +314,15 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                     // Ebook File Section
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
+                        color: theme.cardColor,
+                        border: Border.all(
+                          color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.06),
+                            color: theme.colorScheme.shadow.withValues(alpha: 0.06),
                             blurRadius: 12,
                             offset: Offset(0, 4),
                           ),
@@ -334,15 +340,15 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
-                                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                                        Theme.of(context).primaryColor.withValues(alpha: 0.05),
+                                        theme.primaryColor.withValues(alpha: 0.1),
+                                        theme.primaryColor.withValues(alpha: 0.05),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(
                                     Icons.picture_as_pdf_rounded,
-                                    color: Theme.of(context).primaryColor,
+                                    color: theme.primaryColor,
                                     size: 24,
                                   ),
                                 ),
@@ -352,18 +358,18 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'File Ebook',
+                                        AppLocalizations.current.fileEbook,
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.grey[800],
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                                         ),
                                       ),
                                       Text(
-                                        'PDF, EPUB, MOBI',
+                                        AppLocalizations.current.pdfEpubMobi,
                                         style: TextStyle(
                                           fontSize: 13,
-                                          color: Colors.grey[600],
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                                         ),
                                       ),
                                     ],
@@ -372,15 +378,15 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                   decoration: BoxDecoration(
-                                    color: Colors.red[50],
+                                    color: theme.colorScheme.error.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
-                                    'Bắt buộc',
+                                    AppLocalizations.current.required_field,
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.red[700],
+                                      color: theme.colorScheme.error,
                                     ),
                                   ),
                                 ),
@@ -399,8 +405,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                         padding: EdgeInsets.all(20),
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                                            width: 2,
+                                            color: theme.primaryColor.withValues(alpha: 0.3),
+                                            width: 1,
                                           ),
                                           borderRadius: BorderRadius.circular(16),
                                           color: Theme.of(context).primaryColor.withValues(alpha: 0.02),
@@ -410,23 +416,23 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                             Icon(
                                               Icons.folder_open_rounded,
                                               size: 40,
-                                              color: Theme.of(context).primaryColor,
+                                              color: theme.primaryColor,
                                             ),
                                             SizedBox(height: 8),
                                             Text(
-                                              'Chọn file',
+                                              AppLocalizations.current.select_file,
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w600,
-                                                color: Theme.of(context).primaryColor,
+                                                color: theme.primaryColor,
                                               ),
                                             ),
-                                            SizedBox(height: 4),
+                                            SizedBox(height: 2),
                                             Text(
-                                              'Từ file picker',
+                                              AppLocalizations.current.from_file_picker,
                                               style: TextStyle(
                                                 fontSize: 11,
-                                                color: Colors.grey[600],
+                                                color: theme.colorScheme.secondary,
                                               ),
                                             ),
                                           ],
@@ -444,7 +450,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                             color: Colors.green.withValues(alpha: 0.3),
-                                            width: 2,
+                                            width: 1,
                                           ),
                                           borderRadius: BorderRadius.circular(16),
                                           color: Colors.green.withValues(alpha: 0.02),
@@ -458,19 +464,19 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                             ),
                                             SizedBox(height: 8),
                                             Text(
-                                              'Tìm kiếm',
+                                              AppLocalizations.current.search,
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w600,
                                                 color: Colors.green,
                                               ),
                                             ),
-                                            SizedBox(height: 4),
+                                            SizedBox(height: 2),
                                             Text(
-                                              'Trong bộ nhớ',
+                                              AppLocalizations.current.in_memory,
                                               style: TextStyle(
                                                 fontSize: 11,
-                                                color: Colors.grey[600],
+                                                color: theme.colorScheme.secondary,
                                               ),
                                             ),
                                           ],
@@ -485,10 +491,10 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                               Container(
                                 padding: EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color: Colors.orange[50],
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.05),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: Colors.orange[200]!,
+                                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
                                     width: 1,
                                   ),
                                 ),
@@ -499,12 +505,12 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                         Container(
                                           padding: EdgeInsets.all(10),
                                           decoration: BoxDecoration(
-                                            color: Colors.orange[100],
+                                            color: theme.colorScheme.primary.withValues(alpha: 0.1),
                                             borderRadius: BorderRadius.circular(12),
                                           ),
                                           child: Icon(
                                             Icons.insert_drive_file_rounded,
-                                            color: Colors.orange[700],
+                                            color: theme.colorScheme.primary,
                                             size: 24,
                                           ),
                                         ),
@@ -518,23 +524,24 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,
-                                                  color: Colors.grey[800],
+                                                  color: theme.colorScheme.secondary.withValues(alpha: 0.8),
                                                 ),
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                               Text(
-                                                'Sẵn sàng upload',
+                                                AppLocalizations.current.ready_to_upload,
                                                 style: TextStyle(
                                                   fontSize: 12,
-                                                  color: Colors.grey[600],
+                                                  color: theme.colorScheme.secondary.withValues(alpha: 0.6),
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
                                         IconButton(
-                                          icon: Icon(Icons.close_rounded, color: Colors.grey[600]),
+                                          icon: Icon(Icons.close_rounded,
+                                           color: theme.iconTheme.color),
                                           onPressed: () {
                                             setState(() {
                                               _ebookFile = null;
@@ -549,8 +556,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                       child: ElevatedButton(
                                         onPressed: _isUploadingEbook ? null : _uploadEbookFile,
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.orange[600],
-                                          padding: EdgeInsets.symmetric(vertical: 14),
+                                          backgroundColor: theme.colorScheme.primary,
+                                          padding: EdgeInsets.symmetric(vertical: 8),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(12),
                                           ),
@@ -564,17 +571,18 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                                 height: 20,
                                                 child: CircularProgressIndicator(
                                                   strokeWidth: 2,
-                                                  color: Colors.white,
+                                                  color: theme.primaryColor,
                                                 ),
                                               )
                                             else
                                               Icon(Icons.upload_rounded, size: 20),
                                             SizedBox(width: 8),
                                             Text(
-                                              _isUploadingEbook ? 'Đang upload...' : 'Upload File',
+                                              _isUploadingEbook ? AppLocalizations.current.uploading : AppLocalizations.current.upload_file,
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.bold,
+                                                color: theme.colorScheme.secondary
                                               ),
                                             ),
                                           ],
@@ -590,13 +598,13 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      Colors.green[50]!,
-                                      Colors.green[50]!.withValues(alpha: 0.3),
+                                      theme.colorScheme.primary.withValues(alpha: 0.05),
+                                      theme.colorScheme.primary.withValues(alpha: 0.3),
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: Colors.green[300]!,
+                                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
                                     width: 1,
                                   ),
                                 ),
@@ -620,18 +628,18 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Upload thành công!',
+                                            AppLocalizations.current.upload_success,
                                             style: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.green[900],
+                                              color: theme.colorScheme.primary,
                                             ),
                                           ),
                                           Text(
                                             _ebookFile!.path.split('/').last,
                                             style: TextStyle(
                                               fontSize: 12,
-                                              color: Colors.green[700],
+                                              color: theme.colorScheme.secondary.withValues(alpha: 0.6),
                                             ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -652,11 +660,15 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                     // Cover Image Section
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
+                        color: theme.cardColor,
+                        border: Border.all(
+                          color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.06),
+                            color: theme.colorScheme.shadow.withValues(alpha: 0.06),
                             blurRadius: 12,
                             offset: Offset(0, 4),
                           ),
@@ -674,15 +686,15 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
-                                        Colors.purple.withValues(alpha: 0.1),
-                                        Colors.purple.withValues(alpha: 0.05),
+                                        theme.colorScheme.primary.withValues(alpha: 0.3),
+                                        theme.colorScheme.primary.withValues(alpha: 0.2),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Icon(
                                     Icons.image_rounded,
-                                    color: Colors.purple,
+                                    color: theme.primaryColor,
                                     size: 24,
                                   ),
                                 ),
@@ -692,18 +704,18 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Ảnh Bìa',
+                                        AppLocalizations.current.cover_image,
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.grey[800],
+                                          color: theme.colorScheme.secondary.withValues(alpha: 0.8),
                                         ),
                                       ),
                                       Text(
-                                        'JPG, PNG, WEBP',
+                                        AppLocalizations.current.jpgPngWebp,
                                         style: TextStyle(
                                           fontSize: 13,
-                                          color: Colors.grey[600],
+                                          color: theme.colorScheme.secondary.withValues(alpha: 0.6),
                                         ),
                                       ),
                                     ],
@@ -712,11 +724,11 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 Container(
                                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey[100],
+                                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
-                                    'Tùy chọn',
+                                    AppLocalizations.current.optional,
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
@@ -755,7 +767,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                         ),
                                         SizedBox(height: 12),
                                         Text(
-                                          'Chọn ảnh bìa',
+                                          AppLocalizations.current.select_cover_image,
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
@@ -764,10 +776,10 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                         ),
                                         SizedBox(height: 4),
                                         Text(
-                                          'Khuyến nghị: 600x900px',
+                                          AppLocalizations.current.recommended_size,
                                           style: TextStyle(
                                             fontSize: 13,
-                                            color: Colors.grey[600],
+                                            color: theme.colorScheme.secondary.withValues(alpha: 0.6),
                                           ),
                                         ),
                                       ],
@@ -817,7 +829,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                                   Icon(Icons.upload_rounded, size: 20),
                                                 SizedBox(width: 8),
                                                 Text(
-                                                  _isUploadingCover ? 'Đang upload...' : 'Upload Ảnh',
+                                                  _isUploadingCover ? AppLocalizations.current.uploading : AppLocalizations.current.upload_cover_image,
                                                   style: TextStyle(
                                                     fontSize: 15,
                                                     fontWeight: FontWeight.bold,
@@ -857,7 +869,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                           SizedBox(width: 12),
                                           Expanded(
                                             child: Text(
-                                              'Ảnh bìa đã upload thành công',
+                                              AppLocalizations.current.cover_image_uploaded_successfully,
                                               style: TextStyle(
                                                 color: Colors.green[900],
                                                 fontWeight: FontWeight.w600,
@@ -879,11 +891,15 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                     // Book Information
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(12),
+                        color: theme.cardColor,
+                        border: Border.all(
+                          color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.06),
+                            color: theme.colorScheme.shadow.withValues(alpha: 0.06),
                             blurRadius: 12,
                             offset: Offset(0, 4),
                           ),
@@ -915,11 +931,11 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 ),
                                 SizedBox(width: 12),
                                 Text(
-                                  'Thông Tin Sách',
+                                  AppLocalizations.current.book_information,
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.grey[800],
+                                    color: theme.colorScheme.secondary.withValues(alpha: 0.8),
                                   ),
                                 ),
                               ],
@@ -927,31 +943,31 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                             SizedBox(height: 24),
                             CustomTextInput(
                               textController: _titleController,
-                              title: 'Tiêu đề',
-                              hintText: 'Nhập tiêu đề sách',
+                              title: AppLocalizations.current.title,
+                              hintText: AppLocalizations.current.please_enter_title,
                               isRequired: true,
                               prefixIcon: Icon(Icons.title_rounded),
-                              validator: (value) => value.isEmpty ? 'Vui lòng nhập tiêu đề' : null,
+                              validator: (value) => value.isEmpty ? AppLocalizations.current.please_enter_title : null,
                             ),
                             
                             SizedBox(height: 16),
                             CustomTextInput(
                               textController: _authorController,
-                              title: 'Tác giả',
-                              hintText: 'Nhập tên tác giả',
+                              title: AppLocalizations.current.author,
+                              hintText: AppLocalizations.current.please_enter_author,
                               isRequired: true,
                               prefixIcon: Icon(Icons.person_outline_rounded),
-                              validator: (value) => value.isEmpty ? 'Vui lòng nhập tác giả' : null,
+                              validator: (value) => value.isEmpty ? AppLocalizations.current.please_enter_author : null,
                             ),
                             SizedBox(height: 16),
                             CustomTextInput(
                               textController: _descriptionController,
-                              title: 'Mô tả',
-                              hintText: 'Nhập mô tả sách',
+                              title: AppLocalizations.current.description,
+                              hintText: AppLocalizations.current.please_enter_description,
                               prefixIcon: Icon(Icons.description_outlined),
                               maxLines: 4,
                               minLines: 4,
-                              validator: (value) => value.isEmpty ? 'Vui lòng nhập mô tả' : null,
+                              validator: (value) => value.isEmpty ? AppLocalizations.current.please_enter_description : null,
                             ),
                             
                             SizedBox(height: 16),
@@ -961,8 +977,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 Expanded(
                                   child: CustomTextInput(
                                     textController: _publisherController,
-                                  title: 'Nhà xuất bản',
-                                  hintText: 'NXB',
+                                  title: AppLocalizations.current.publisher,
+                                  hintText: AppLocalizations.current.please_enter_publisher,
                                   prefixIcon: Icon(Icons.business_rounded),
                                   ),
                                 ),
@@ -970,8 +986,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 Expanded(
                                   child: CustomTextInput(
                                     textController: _isbnController,
-                                    title: 'ISBN',
-                                    hintText: 'Mã ISBN',
+                                    title: AppLocalizations.current.isbn,
+                                    hintText: AppLocalizations.current.please_enter_isbn,
                                     prefixIcon: Icon(Icons.tag_rounded),
                                   ),
                                 ),
@@ -985,7 +1001,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 Expanded(
                                   child: CustomTextInput(
                                     textController: _totalPagesController,
-                                    title: 'Số trang',
+                                    title: AppLocalizations.current.total_pages,
                                     hintText: '0',
                                     formatCurrency: true,
                                     prefixIcon: Icon(Icons.numbers_rounded),
@@ -995,7 +1011,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 SizedBox(width: 12),
                                 Expanded(
                                   child: CustomDropDown(
-                                    hintText: 'Chọn ngôn ngữ',
+                                    hintText: AppLocalizations.current.select_language,
                                     listValues: ['vi', 'en'],
                                     selectedIndex: _language.indexOf(_language),
                                   ),
@@ -1009,19 +1025,19 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                               DropdownButtonFormField<int>(
                                 value: _selectedCategoryId,
                                 decoration: InputDecoration(
-                                  labelText: 'Thể loại',
+                                  labelText: AppLocalizations.current.category,
                                   prefixIcon: Icon(Icons.category_rounded),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
-                                    borderSide: BorderSide(color: Colors.grey[300]!),
+                                    borderSide: BorderSide(color: theme.colorScheme.outline.withValues(alpha: 0.3)),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                     borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor,
+                                      color: theme.primaryColor,
                                       width: 2,
                                     ),
                                   ),
@@ -1029,7 +1045,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 items: cubit.categories.map((category) {
                                   return DropdownMenuItem<int>(
                                     value: category['id'],
-                                    child: Text(category['name'] ?? ''),
+                                    child: Text(category['name'] ?? '', style: TextStyle(color: theme.colorScheme.secondary.withValues(alpha: 0.8))),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -1045,18 +1061,18 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                               decoration: BoxDecoration(
                                 color: _isPublic 
                                     ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
-                                    : Colors.grey[100],
+                                    : theme.colorScheme.primary.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                   color: _isPublic
-                                      ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
-                                      : Colors.grey[300]!,
+                                      ? theme.primaryColor.withValues(alpha: 0.3)
+                                      : theme.colorScheme.outline.withValues(alpha: 0.3),
                                   width: 1,
                                 ),
                               ),
                               child: SwitchListTile(
                                 title: Text(
-                                  'Công khai',
+                                  AppLocalizations.current.public,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 15,
@@ -1064,12 +1080,12 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 ),
                                 subtitle: Text(
                                   _isPublic 
-                                      ? 'Sách sẽ hiển thị cho mọi người'
-                                      : 'Sách chỉ hiển thị cho admin',
+                                      ? AppLocalizations.current.book_will_be_displayed_for_everyone
+                                      : AppLocalizations.current.book_will_be_displayed_for_admin,
                                   style: TextStyle(fontSize: 12),
                                 ),
                                 value: _isPublic,
-                                activeColor: Theme.of(context).primaryColor,
+                                activeColor: theme.primaryColor,
                                 onChanged: (value) {
                                   setState(() {
                                     _isPublic = value;
@@ -1132,7 +1148,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                   ),
                                   SizedBox(width: 16),
                                   Text(
-                                    'Đang tạo sách...',
+                                    AppLocalizations.current.creating_book,
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -1158,7 +1174,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                   ),
                                   SizedBox(width: 12),
                                   Text(
-                                    'Tạo Sách Mới',
+                                    AppLocalizations.current.create_new_book,
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,

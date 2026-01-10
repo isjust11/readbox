@@ -74,6 +74,7 @@ class CustomDropDownState extends State<CustomDropDown> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       margin: widget.margin,
       child: Column(
@@ -83,9 +84,10 @@ class CustomDropDownState extends State<CustomDropDown> {
             height: widget.heightOfBox ?? 45,
             padding: EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: theme.colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
-              border: widget.border ?? Border.all(width: 1, color: AppColors.border),
+              border: widget.border ?? 
+              Border.all(width: 1, color: theme.colorScheme.outline.withValues(alpha: 0.3)),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<int>(
@@ -100,10 +102,10 @@ class CustomDropDownState extends State<CustomDropDown> {
                           });
                         }
                       : null,
-                  style: TextStyle(color: AppColors.white, fontSize: 14, fontWeight: FontWeight.w400),
+                  style: TextStyle(color: theme.colorScheme.surface, fontSize: 14, fontWeight: FontWeight.w400),
                   hint: CustomTextLabel(
                     widget.hintText,
-                    color: AppColors.hintTextColor,
+                    color: theme.colorScheme.secondary.withValues(alpha: 0.6),
                     fontSize: 14,
                   ),
                   icon: Container(
@@ -131,13 +133,14 @@ class CustomDropDownState extends State<CustomDropDown> {
   }
 
   List<DropdownMenuItem<int>> createListDropdownMenuItem() {
+    final theme = Theme.of(context);
     List<DropdownMenuItem<int>> list = [];
     for (int i = 0; i < (widget.listValues?.length ?? 0); i++) {
       DropdownMenuItem<int> item = DropdownMenuItem<int>(
         value: i,
         child: CustomTextLabel(
           widget.listValues![i],
-          color: widget.valueColor ?? AppColors.colorTitle,
+          color: widget.valueColor ?? theme.colorScheme.secondary.withValues(alpha: 0.8),
           maxLines: 1,
         ),
       );

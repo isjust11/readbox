@@ -38,6 +38,7 @@ class PrivacySecurityBody extends StatelessWidget {
       //   size: AppDimens.SIZE_32,
       // ),
       body: _buildBody(context),
+      colorBg: Theme.of(context).colorScheme.surface,
     );
   }
 

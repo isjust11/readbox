@@ -33,6 +33,8 @@ class UserEntity extends BaseEntity {
   bool? isGoogleUser;
   bool? isAppleUser;
 
+  
+
   UserEntity.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
     id = json['id'].toString();
     username = json['username'];

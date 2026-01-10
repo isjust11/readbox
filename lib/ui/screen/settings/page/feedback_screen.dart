@@ -166,11 +166,13 @@ class _FeedbackBodyState extends State<FeedbackBody> {
       child: BlocBuilder<FeedbackCubit, BaseState>(
         bloc: context.read<FeedbackCubit>(),
         builder: (context, state) {
+          final theme = Theme.of(context);
           return BaseScreen(
             customAppBar: _buildAppBar(context),
             title: AppLocalizations.current.sendFeedback,
-            colorTitle: Theme.of(context).colorScheme.surfaceContainerHighest,
-            body: _buildBody(context, state),
+            colorTitle: theme.colorScheme.surfaceContainerHighest,
+            body: _buildBody(theme, state),
+            colorBg: theme.colorScheme.surface,
           );
         },
       ),
@@ -179,15 +181,16 @@ class _FeedbackBodyState extends State<FeedbackBody> {
 
   BaseAppBar _buildAppBar(BuildContext context) {
     return BaseAppBar(
+      backgroundColor: Theme.of(context).primaryColor,
       title: AppLocalizations.current.feedbackContact,
       showBackButton: true,
       onBackTap: () => Navigator.pop(context),
     );
   }
 
-  Widget _buildBody(BuildContext context, BaseState state) {
+  Widget _buildBody(ThemeData theme, BaseState state) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(AppDimens.SIZE_16),
       child: Form(
         key: _formKey,
         child: Column(
@@ -363,15 +366,16 @@ class _FeedbackBodyState extends State<FeedbackBody> {
   }
 
   Widget _buildSubmitButton(BaseState state) {
+    final theme = Theme.of(context);
     final isLoading = state is LoadingState;
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: 40,
       child: ElevatedButton(
         onPressed: isLoading ? null : _submitFeedback,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          backgroundColor: theme.primaryColor,
+          foregroundColor: theme.colorScheme.onPrimary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: isLoading
@@ -380,14 +384,14 @@ class _FeedbackBodyState extends State<FeedbackBody> {
                 height: AppDimens.SIZE_20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onPrimary),
+                  valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.onPrimary),
                 ),
               )
             : CustomTextLabel(
                 AppLocalizations.current.feedbackSend,
                 fontSize: AppDimens.SIZE_16,
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: theme.colorScheme.secondary,
               ),
       ),
     );

@@ -139,9 +139,13 @@ class MainBodyState extends State<MainBody> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+        iconTheme: IconThemeData(color: colorScheme.onSurface),
         title:
             _isSearching
                 ? TextField(
@@ -152,7 +156,7 @@ class MainBodyState extends State<MainBody> {
                     border: InputBorder.none,
                     hintStyle: TextStyle(color: AppColors.hintTextColor),
                   ),
-                  style: TextStyle(color: AppColors.secondaryTextDark),
+                  style: TextStyle(color: colorScheme.onSurface),
                   onChanged: (value) {
                     // Hủy timer trước đó nếu có
                     _debounceTimer?.cancel();
@@ -169,10 +173,10 @@ class MainBodyState extends State<MainBody> {
                     );
                   },
                 )
-                : Text(title),
+                : Text(title, style: TextStyle(color: colorScheme.onSurface)),
         actions: [
           IconButton(
-            icon: Icon(_isSearching ? Icons.close : Icons.search),
+            icon: Icon(_isSearching ? Icons.close : Icons.search, color: colorScheme.onSurface),
             onPressed: _toggleSearch,
           ),
         ],
@@ -210,7 +214,7 @@ class MainBodyState extends State<MainBody> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    Icon(Icons.error_outline, size: 64, color: colorScheme.error),
                     SizedBox(height: 16),
                     Text(
                       state.data?.toString() ??
@@ -234,16 +238,16 @@ class MainBodyState extends State<MainBody> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.book_outlined, size: 64, color: Colors.grey),
+                    Icon(Icons.book_outlined, size: 64, color: colorScheme.onSurface),
                     SizedBox(height: 16),
                     Text(
                       AppLocalizations.current.no_books,
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                      style: TextStyle(fontSize: 18, color: colorScheme.onSurface),
                     ),
                     SizedBox(height: 8),
                     Text(
                       AppLocalizations.current.add_book_to_start_reading,
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                      style: TextStyle(fontSize: 14, color: colorScheme.onSurface),
                     ),
                   ],
                 ),
@@ -275,7 +279,8 @@ class MainBodyState extends State<MainBody> {
                       child: Center(
                         child: Text(
                           AppLocalizations.current.all_data_loaded,
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(color: Theme.of(context).
+                          colorScheme.onSurface.withValues(alpha: 0.8)),
                         ),
                       ),
                     );

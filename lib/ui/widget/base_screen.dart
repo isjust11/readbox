@@ -137,7 +137,7 @@ class BaseScreen extends StatelessWidget {
       elevation: 0,
       toolbarHeight: toolbarHeight,
       title: widgetTitle,
-      backgroundColor: AppColors.secondaryBrand,
+      backgroundColor: Theme.of(context).primaryColor,
       leading: hiddenIconBack
           ? Container()
           : InkWell(

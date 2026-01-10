@@ -46,10 +46,11 @@ class _BaseAppBarState extends State<BaseAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return AppBar(
       title: _buildTitle(context, _isSearching),
       centerTitle: widget.centerTitle,
-      backgroundColor: widget.backgroundColor ?? Theme.of(context).colorScheme.primary,
+      backgroundColor: widget.backgroundColor ?? theme.primaryColor,
       elevation: 0,
       automaticallyImplyLeading: false,
       leadingWidth: AppDimens.SIZE_40,
@@ -59,6 +60,7 @@ class _BaseAppBarState extends State<BaseAppBar> {
   }
 
   Widget? _buildTitle(BuildContext context, bool showSearch) {
+    final theme = Theme.of(context);
     if (widget.customTitle != null) {
       return widget.customTitle;
     }
@@ -69,16 +71,16 @@ class _BaseAppBarState extends State<BaseAppBar> {
         autofocus: true,
         decoration: InputDecoration(
           hintText: widget.searchHint ?? AppLocalizations.current.search,
-          hintStyle: TextStyle(color: AppColors.hintTextColor),
+          hintStyle: TextStyle(color: theme.colorScheme.secondary.withValues(alpha: 0.6)),
           border: InputBorder.none,
         ),
-        style: TextStyle(color: AppColors.secondaryTextDark),
+        style: TextStyle(color: theme.colorScheme.secondary.withValues(alpha: 0.8)),
         onChanged: (value) {
           widget.onSearchChanged?.call(value);
         },
       ) : CustomTextLabel(
         widget.title,
-        color: AppColors.white,
+        color: theme.colorScheme.onPrimary,
         fontSize: AppDimens.SIZE_14,
         fontWeight: FontWeight.w700,
         maxLines: 1,
@@ -87,6 +89,7 @@ class _BaseAppBarState extends State<BaseAppBar> {
   }
 
   Widget? _buildLeading(BuildContext context) {
+    final theme = Theme.of(context);
     if (widget.customLeading != null) {
       return widget.customLeading;
     }
@@ -107,7 +110,7 @@ class _BaseAppBarState extends State<BaseAppBar> {
           ),
           child: Icon(
             Icons.arrow_back_ios_new,
-            color: AppColors.white,
+            color: theme.colorScheme.onPrimary,
             size: AppDimens.SIZE_16,
           ),
         ),

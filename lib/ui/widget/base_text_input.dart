@@ -160,6 +160,7 @@ class TextFieldState extends State<CustomTextInput> with SingleTickerProviderSta
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return AnimatedBuilder(
       animation: _shakeAnimation,
       builder: (context, child) {
@@ -189,7 +190,7 @@ class TextFieldState extends State<CustomTextInput> with SingleTickerProviderSta
                 textAlign: widget.align ?? TextAlign.start,
                 textAlignVertical: TextAlignVertical.center,
                 style: TextStyle(
-                  color: widget.colorText,
+                  color: theme.colorScheme.secondary.withValues(alpha: 0.8),
                   fontSize: widget.fontSize ?? AppDimens.SIZE_14,
                   fontWeight: widget.fontWeight ?? FontWeight.w500,
                 ),
@@ -197,13 +198,13 @@ class TextFieldState extends State<CustomTextInput> with SingleTickerProviderSta
                   counterText: "",
                   labelText: widget.title + (widget.isRequired ? ' *' : ''),
                   labelStyle: TextStyle(
-                    color: widget.titleStyle?.color ?? AppColors.ff828282,
+                    color: widget.titleStyle?.color ?? theme.colorScheme.secondary.withValues(alpha: 0.6),
                     fontSize: widget.titleStyle?.fontSize ?? 16,
                     fontWeight: widget.titleStyle?.fontWeight ?? FontWeight.w400,
                   ),
                   hintText: widget.hintText,
                   hintStyle: TextStyle(
-                    color: errorText.isNotEmpty ? Colors.red : widget.hintTextColor ?? AppColors.hintTextColor,
+                    color: errorText.isNotEmpty ? theme.colorScheme.error : widget.hintTextColor ?? theme.colorScheme.secondary.withValues(alpha: 0.6),
                     fontWeight: widget.hintTextFontWeight ?? FontWeight.w400,
                     fontSize: widget.hintTextFontSize ?? 14,
                   ),
@@ -214,7 +215,7 @@ class TextFieldState extends State<CustomTextInput> with SingleTickerProviderSta
                               !_showText
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: Colors.grey,
+                              color: theme.colorScheme.secondary.withValues(alpha: 0.6),
                             ),
                             onPressed: () {
                               setState(() {
@@ -229,10 +230,10 @@ class TextFieldState extends State<CustomTextInput> with SingleTickerProviderSta
                     ),
                     child: widget.prefixIcon,
                   ),
-                  focusColor: Colors.white,
+                  focusColor: theme.colorScheme.surface,
                   border: OutlineInputBorder(
                     borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
+                    borderSide: BorderSide(color: theme.colorScheme.outline.withValues(alpha: 0.3)),
                   ),
                   suffixIconConstraints: BoxConstraints(
                     maxHeight: AppDimens.SIZE_35,
@@ -241,37 +242,38 @@ class TextFieldState extends State<CustomTextInput> with SingleTickerProviderSta
                     maxHeight: AppDimens.SIZE_35,
                     minWidth: AppDimens.SIZE_35,
                   ),
-                  disabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.border),
+                  disabledBorder: OutlineInputBorder(
+                    borderRadius: widget.borderRadius ?? BorderRadius.circular(AppDimens.SIZE_8),
+                    borderSide: BorderSide(color: theme.colorScheme.outline.withValues(alpha: 0.3)),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
+                    borderRadius: widget.borderRadius ?? BorderRadius.circular(AppDimens.SIZE_12),
                     borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
+                      color: theme.primaryColor,
                       width: 1,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.grey[300]!),
+                    borderRadius: widget.borderRadius ?? BorderRadius.circular(AppDimens.SIZE_12),
+                    borderSide: BorderSide(color: theme.colorScheme.outline.withValues(alpha: 0.3)),
                   ),
                   errorBorder: OutlineInputBorder(
-                    borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.red, width: 1.5),
+                    borderRadius: widget.borderRadius ?? BorderRadius.circular(AppDimens.SIZE_12),
+                    borderSide: BorderSide(color: theme.colorScheme.error, width: 1.5),
                   ),
                   focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.red, width: 2),
+                    borderRadius: widget.borderRadius ?? BorderRadius.circular(AppDimens.SIZE_12),
+                    borderSide: BorderSide(color: theme.colorScheme.error, width: 2),
                   ),
                   errorStyle: TextStyle(
-                    color: Colors.red,
+                    color: theme.colorScheme.error,
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                   ),
                   isDense: true,
                   contentPadding:
                       widget.padding ??
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                      EdgeInsets.symmetric(horizontal: AppDimens.SIZE_10, vertical: AppDimens.SIZE_12),
                 ),
                 controller: textController,
                 obscureText:
