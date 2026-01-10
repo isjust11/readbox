@@ -30,7 +30,7 @@ class SupportCenterBody extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<PageCubit>().getPageBySlug('support-center');
     return BaseScreen(
-      customAppBar: _buildAppBar(context),
+      title: AppLocalizations.current.helpCenter,
       colorTitle: Theme.of(context).colorScheme.onPrimary,
       // stateWidget: CustomLoading<PageCubit>(
       //   message: AppLocalizations.current.loading,
@@ -38,14 +38,6 @@ class SupportCenterBody extends StatelessWidget {
       // ),
       body: _buildBody(context),
       colorBg: Theme.of(context).colorScheme.surface,
-    );
-  }
-
-  BaseAppBar _buildAppBar(BuildContext context) {
-    return BaseAppBar(
-      title: AppLocalizations.current.helpCenter,
-      showBackButton: true,
-      onBackTap: () => Navigator.pop(context),
     );
   }
 

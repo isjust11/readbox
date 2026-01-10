@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/res/dimens.dart';
-import 'package:readbox/ui/widget/base_appbar.dart';
-import 'package:readbox/ui/widget/base_dropdown.dart';
-import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io';
-import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
@@ -168,7 +163,6 @@ class _FeedbackBodyState extends State<FeedbackBody> {
         builder: (context, state) {
           final theme = Theme.of(context);
           return BaseScreen(
-            customAppBar: _buildAppBar(context),
             title: AppLocalizations.current.sendFeedback,
             colorTitle: theme.colorScheme.surfaceContainerHighest,
             body: _buildBody(theme, state),
@@ -176,15 +170,6 @@ class _FeedbackBodyState extends State<FeedbackBody> {
           );
         },
       ),
-    );
-  }
-
-  BaseAppBar _buildAppBar(BuildContext context) {
-    return BaseAppBar(
-      backgroundColor: Theme.of(context).primaryColor,
-      title: AppLocalizations.current.feedbackContact,
-      showBackButton: true,
-      onBackTap: () => Navigator.pop(context),
     );
   }
 
@@ -238,7 +223,6 @@ class _FeedbackBodyState extends State<FeedbackBody> {
         const SizedBox(height: 16),
 
         // Tiêu đề
-        const SizedBox(height: 8),
         CustomTextInput(
           textController: _titleController,
           isRequired: true,
@@ -250,7 +234,6 @@ class _FeedbackBodyState extends State<FeedbackBody> {
         const SizedBox(height: 16),
 
         // Nội dung
-        const SizedBox(height: 8),
         CustomTextInput(
           textController: _contentController,
           isRequired: true,
@@ -264,7 +247,6 @@ class _FeedbackBodyState extends State<FeedbackBody> {
         const SizedBox(height: 16),
 
         // Thông tin liên hệ
-        const SizedBox(height: 8),
         Row(
           children: [
             Expanded(
@@ -289,7 +271,7 @@ class _FeedbackBodyState extends State<FeedbackBody> {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         CustomTextInput(
           textController: _phoneController,
           title: AppLocalizations.current.feedbackPhone,
@@ -298,7 +280,7 @@ class _FeedbackBodyState extends State<FeedbackBody> {
           keyboardType: TextInputType.phone,
           validator: (value) => value.isEmpty ? AppLocalizations.current.feedbackPhoneInvalid : null,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 16),
         // Tùy chọn
         _buildSectionTitle(AppLocalizations.current.feedbackOptions),
         const SizedBox(height: 8),

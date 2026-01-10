@@ -31,7 +31,7 @@ class PrivacySecurityBody extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<PageCubit>().getPageBySlug('securityandpravicy');
     return BaseScreen(
-      customAppBar: _buildAppBar(context),
+      title: AppLocalizations.current.privacy_and_security,
       colorTitle: Theme.of(context).colorScheme.surfaceContainerHighest,
       // stateWidget: CustomLoading<PageCubit>(
       //   message: AppLocalizations.current.loading,
@@ -39,14 +39,6 @@ class PrivacySecurityBody extends StatelessWidget {
       // ),
       body: _buildBody(context),
       colorBg: Theme.of(context).colorScheme.surface,
-    );
-  }
-
-  BaseAppBar _buildAppBar(BuildContext context) {
-    return BaseAppBar(
-      title: AppLocalizations.current.privacy_and_security,
-      showBackButton: true,
-      onBackTap: () => Navigator.pop(context),
     );
   }
 

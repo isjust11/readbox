@@ -83,7 +83,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Divider(height: 1),
+                    child: Divider(height: 1, color: Theme.of(context).dividerColor),
                   ),
                   _buildDrawerItem(
                     icon: Icons.phone_android,
@@ -93,11 +93,11 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pushNamed(context, Routes.localLibraryScreen);
                     },
                     iconColor: Colors.green,
-                    textColor: Colors.green,
+                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Divider(height: 1),
+                    child: Divider(height: 1, color: Theme.of(context).dividerColor),
                   ),
                   _buildDrawerItem(
                     icon: Icons.upload_file,
@@ -107,7 +107,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pushNamed(context, Routes.adminUploadScreen);
                     },
                     iconColor: Theme.of(context).colorScheme.secondary,
-                    textColor: Theme.of(context).colorScheme.secondary,
+                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   _buildDrawerItem(
                     icon: Icons.feedback,
@@ -117,7 +117,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pushNamed(context, Routes.feedbackScreen);
                     },
                     iconColor: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).primaryColor,
+                    textColor: Theme.of(context).colorScheme.onSurface,
                   ),
                   _buildDrawerItem(
                     icon: Icons.settings,
@@ -127,7 +127,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pushNamed(context, Routes.settingsScreen);
                     },
                     iconColor: Colors.blueGrey,
-                    textColor: Colors.blueGrey,
+                    textColor: Theme.of(context).textTheme.bodyLarge?.color
                   ),
                   // Padding(
                   //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
