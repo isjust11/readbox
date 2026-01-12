@@ -21,10 +21,10 @@ class FCMService {
   final GetStorage _storage = GetStorage();
 
   // Notification channels
-  static const String _channelId = 'sotaynamduoc_channel';
-  static const String _channelName = 'Sổ Tay Nam Dược';
+  static const String _channelId = 'readbox_channel';
+  static const String _channelName = 'ReadBox Notifications';
   static const String _channelDescription =
-      'Thông báo từ ứng dụng Sổ Tay Nam Dược';
+      'Notifications from ReadBox app';
 
   // Storage keys
   static const String _fcmTokenKey = 'fcm_token';

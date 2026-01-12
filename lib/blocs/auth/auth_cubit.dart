@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/data/models/models.dart';
@@ -10,40 +11,83 @@ import 'package:readbox/utils/shared_preference.dart';
 class AuthCubit extends Cubit<BaseState> {
   final AuthRepository repository;
   final SecureStorageService _secureStorage = SecureStorageService();
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   AuthCubit({required this.repository}) : super(InitState());
+
+  /// Lấy FCM token hiện tại
+  Future<String?> _getFCMToken() async {
+    try {
+      print('🔍 Attempting to get FCM token...');
+      
+      // Retry logic for SERVICE_NOT_AVAILABLE
+      for (int attempt = 1; attempt <= 3; attempt++) {
+        try {
+          print('   Attempt $attempt/3...');
+          final token = await _messaging.getToken().timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              print('   ⏰ Timeout on attempt $attempt');
+              return null;
+            },
+          );
+          
+          if (token != null) {
+            print('✅ FCM token retrieved: ${token.substring(0, 20)}...');
+            return token;
+          }
+          
+          // Wait before retry
+          if (attempt < 3) {
+            print('   ⚠️ Token null, waiting before retry...');
+            await Future.delayed(Duration(seconds: attempt * 2));
+          }
+        } catch (e) {
+          print('   ❌ Attempt $attempt failed: $e');
+          
+          // Check if it's SERVICE_NOT_AVAILABLE
+          if (e.toString().contains('SERVICE_NOT_AVAILABLE')) {
+            print('   ⚠️ Google Play Services not available!');
+            print('   → Check if device has Google Play Services');
+            print('   → Check internet connection');
+            print('   → Try restarting device');
+          }
+          
+          // Wait before retry
+          if (attempt < 3) {
+            await Future.delayed(Duration(seconds: attempt * 2));
+          }
+        }
+      }
+      
+      print('❌ Failed to get FCM token after 3 attempts');
+      return null;
+      
+    } catch (e) {
+      print('❌ Error getting FCM token: $e');
+      return null;
+    }
+  }
 
   Future doLogin({String? username, String? password}) async {
     try {
       emit(LoadingState());
+      
+      // Lấy FCM token để gửi kèm theo request
+      final fcmToken = await _getFCMToken();
+      
       AuthenModel userModel = await repository.login({
         "username": username,
         "password": password,
+        if (fcmToken != null) "fcmToken": fcmToken,
       });
+      
       //save secure storage
       await BiometricAuthService.storeCredentials(username!, password!);
-
-      // Gửi FCM token sau khi login thành công
-      await _sendFCMTokenAfterLogin();
-      // fcmRepository.registerFcmToken();
 
       emit(LoadedState(userModel));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
-    }
-  }
-
-  /// Gửi FCM token lên server sau khi login thành công (đã có userId)
-  Future<void> _sendFCMTokenAfterLogin() async {
-    try {
-      // final fcmService = FCMService(
-      //   fcmRepository: getIt.getIt.get<FcmRepository>(),
-      // );
-      // // Gửi token lên server với userId (từ JWT token trong header)
-      // await fcmService.sendTokenToServer();
-    } catch (e) {
-      // Không throw error để không ảnh hưởng đến flow login
-      print('Error sending FCM token after login: $e');
     }
   }
 
@@ -159,12 +203,20 @@ class AuthCubit extends Cubit<BaseState> {
         return;
       }
 
-      AuthenModel authModel = await repository.mobileSocialLogin(socialData);
+      // Lấy FCM token để gửi kèm theo request
+      final fcmToken = await _getFCMToken();
+      
+      // Thêm fcmToken vào socialData
+      final loginData = Map<String, dynamic>.from(socialData);
+      if (fcmToken != null) {
+        loginData['fcmToken'] = fcmToken;
+      }
+
+      AuthenModel authModel = await repository.mobileSocialLogin(loginData);
 
       // Lưu thông tin social login cho sinh trắc học
       await BiometricAuthService.storeSocialLoginInfo(socialData);
-      // Gửi FCM token sau khi login thành công
-      await _sendFCMTokenAfterLogin();
+      
       emit(LoadedState(authModel));
     } catch (e) {
       String errorMessage = BlocUtils.getMessageError(e);
@@ -182,13 +234,19 @@ class AuthCubit extends Cubit<BaseState> {
         return;
       }
 
-      AuthenModel authModel = await repository.mobileSocialLogin(socialData);
+      // Lấy FCM token để gửi kèm theo request
+      final fcmToken = await _getFCMToken();
+      
+      // Thêm fcmToken vào socialData
+      final loginData = Map<String, dynamic>.from(socialData);
+      if (fcmToken != null) {
+        loginData['fcmToken'] = fcmToken;
+      }
+
+      AuthenModel authModel = await repository.mobileSocialLogin(loginData);
 
       // Lưu thông tin social login cho sinh trắc học
       await BiometricAuthService.storeSocialLoginInfo(socialData);
-
-      // Gửi FCM token sau khi login thành công
-      await _sendFCMTokenAfterLogin();
 
       emit(LoadedState(authModel));
     } catch (e) {
@@ -203,9 +261,14 @@ class AuthCubit extends Cubit<BaseState> {
     required String platform,
     required String accessToken, // Bây giờ là required
     String? picture,
+    String? deviceId,
   }) async {
     try {
       emit(LoadingState());
+      
+      // Lấy FCM token để gửi kèm theo request
+      final fcmToken = await _getFCMToken();
+      
       AuthenModel authModel = await repository.mobileSocialLogin({
         "platformId": platformId,
         "email": email,
@@ -213,10 +276,9 @@ class AuthCubit extends Cubit<BaseState> {
         "platform": platform,
         "picture": picture,
         "accessToken": accessToken, // Required cho token verification
+        "deviceId": deviceId,
+        if (fcmToken != null) "fcmToken": fcmToken,
       });
-
-      // Gửi FCM token sau khi login thành công
-      await _sendFCMTokenAfterLogin();
 
       emit(LoadedState(authModel));
     } catch (e) {
@@ -234,10 +296,17 @@ class AuthCubit extends Cubit<BaseState> {
         if (result.isSocialLogin) {
           // Đăng nhập lại bằng social
           final socialData = result.data!;
-          AuthenModel authModel = await repository.mobileSocialLogin(socialData);
-
-          // Gửi FCM token sau khi login thành công
-          await _sendFCMTokenAfterLogin();
+          
+          // Lấy FCM token để gửi kèm theo request
+          final fcmToken = await _getFCMToken();
+          
+          // Thêm fcmToken vào socialData
+          final loginData = Map<String, dynamic>.from(socialData);
+          if (fcmToken != null) {
+            loginData['fcmToken'] = fcmToken;
+          }
+          
+          AuthenModel authModel = await repository.mobileSocialLogin(loginData);
 
           emit(LoadedState(authModel));
         } else {

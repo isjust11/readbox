@@ -47,12 +47,12 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDJbxk732TbG3wZLO4SpS7f3tH4bNb1Dc8',
-    appId: '1:541095232626:ios:b6d1872641954808502eeb',
-    messagingSenderId: '541095232626',
-    projectId: 'readbox-910a2',
-    storageBucket: 'readbox-910a2.firebasestorage.app',
-    iosClientId: '541095232626-0n5ecovgkvhvopc2jk7in06sbuf9d5rv.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCsMWsErHIiOnE57WTyaUBsGpN2n03rR8c',
+    appId: '1:534175741610:ios:1624db9508c9f88e3c42d3',
+    messagingSenderId: '534175741610',
+    projectId: 'readbox-3c692',
+    storageBucket: 'readbox-3c692.firebasestorage.app',
+    iosClientId: '534175741610-44bsn5bprdk2aahkl86k8ln36ckqe62g.apps.googleusercontent.com',
     iosBundleId: 'com.hungvv.readbox',
   );
 }

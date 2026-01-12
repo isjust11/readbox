@@ -23,6 +23,8 @@ class Network {
       String? token = await _secureStorage.getToken();
       if (token != null && token.isNotEmpty) {
         myOption.headers["Authorization"] = "Bearer $token";
+        print("===token =====");
+        debugPrint(token);
       }
       return handler.next(myOption);
     }));
