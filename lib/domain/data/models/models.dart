@@ -11,3 +11,6 @@ export 'feedback_model.dart';
 export 'fcm_token_model.dart';
 export 'media_model.dart';
 export 'page_model.dart';
+export 'notification_model.dart';
+export 'user_interaction_model.dart';
+export 'interactioin_stats_model.dart';

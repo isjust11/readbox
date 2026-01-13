@@ -19,3 +19,4 @@ export 'settings/page/profile_screen.dart';
 export 'settings/page/translate_screen.dart';
 export 'settings/page/text_to_speech_setting_screen.dart';
 export 'settings/page/notification_settings_screen.dart';
+export 'settings/page/notification_screen.dart';

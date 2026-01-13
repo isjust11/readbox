@@ -1,0 +1,64 @@
+import 'package:readbox/domain/data/entities/notification_entity.dart';
+
+class NotificationModel extends NotificationEntity {
+  NotificationModel.fromJson(Map<String, dynamic> json) : super.fromJson(json);
+
+  // Helper methods
+  String get displayTitle => title ?? 'Thông báo';
+  String get displayBody => message ?? body ?? 'Không có nội dung';
+
+  String get formattedDate {
+    if (createdAt == null) return '';
+    
+    final now = DateTime.now();
+    final difference = now.difference(createdAt!);
+    
+    if (difference.inDays == 0) {
+      // Today
+      final hour = createdAt!.hour.toString().padLeft(2, '0');
+      final minute = createdAt!.minute.toString().padLeft(2, '0');
+      return 'Hôm nay, $hour:$minute';
+    } else if (difference.inDays == 1) {
+      // Yesterday
+      final hour = createdAt!.hour.toString().padLeft(2, '0');
+      final minute = createdAt!.minute.toString().padLeft(2, '0');
+      return 'Hôm qua, $hour:$minute';
+    } else if (difference.inDays < 7) {
+      // Within a week
+      final weekdays = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+      final weekday = weekdays[createdAt!.weekday % 7];
+      final hour = createdAt!.hour.toString().padLeft(2, '0');
+      final minute = createdAt!.minute.toString().padLeft(2, '0');
+      return '$weekday, $hour:$minute';
+    } else {
+      // Older
+      final day = createdAt!.day.toString().padLeft(2, '0');
+      final month = createdAt!.month.toString().padLeft(2, '0');
+      final year = createdAt!.year;
+      return '$day/$month/$year';
+    }
+  }
+
+  bool get isUnread => !(isRead ?? false);
+
+  String get typeDisplay {
+    switch (type) {
+      case NotificationType.book:
+        return 'Sách';
+      case NotificationType.library:
+        return 'Thư viện';
+      case NotificationType.reminder:
+        return 'Nhắc nhở';
+      case NotificationType.update:
+        return 'Cập nhật';
+      case NotificationType.message:
+        return 'Tin nhắn';
+      case NotificationType.announcement:
+        return 'Thông báo';
+      case NotificationType.system:
+        return 'Hệ thống';
+      default:
+        return 'Khác';
+    }
+  }
+}

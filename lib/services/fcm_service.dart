@@ -54,7 +54,7 @@ class FCMService {
       await _getFCMToken();
 
       // Nếu user đã login rồi, gửi token với userId
-      await sendTokenToServerIfLoggedIn();
+      // await sendTokenToServerIfLoggedIn();
 
       // Setup message handlers
       _setupMessageHandlers();
@@ -206,46 +206,22 @@ class FCMService {
     }
   }
 
-  /// Send FCM token to server (chỉ gọi khi đã có userId - sau khi login)
-  Future<void> sendTokenToServer() async {
-    _fcmToken = await _messaging.getToken();
-    if (_fcmToken == null) {
-      debugPrint('FCM token is null, cannot send to server');
-      return;
-    }
-
-    try {
-      // final fcmTokenModel = await fcmRepository.registerFcmToken(
-      //   _fcmToken!,
-      //   platform,
-      //   deviceId,
-      //   appVersion,
-      // );
-      // if (fcmTokenModel.id != null) {
-      //   debugPrint(
-      //     'FCM token registered to server with id: ${fcmTokenModel.id}',
-      //   );
-      // }
-    } catch (e) {
-      debugPrint('Error registering FCM token to server: $e');
-    }
-  }
 
   /// Kiểm tra và gửi FCM token nếu user đã login (dùng khi app khởi động lại)
-  Future<void> sendTokenToServerIfLoggedIn() async {
-    try {
-      // Kiểm tra xem có access token không (user đã login)
-      final secureStorage = SecureStorageService();
-      final hasToken = await secureStorage.hasToken();
+  // Future<void> sendTokenToServerIfLoggedIn() async {
+  //   try {
+  //     // Kiểm tra xem có access token không (user đã login)
+  //     final secureStorage = SecureStorageService();
+  //     final hasToken = await secureStorage.hasToken();
       
-      if (hasToken && _fcmToken != null) {
-        debugPrint('User already logged in, sending FCM token with userId');
-        await sendTokenToServer();
-      }
-    } catch (e) {
-      debugPrint('Error checking login status: $e');
-    }
-  }
+  //     if (hasToken && _fcmToken != null) {
+  //       debugPrint('User already logged in, sending FCM token with userId');
+  //       await sendTokenToServer();
+  //     }
+  //   } catch (e) {
+  //     debugPrint('Error checking login status: $e');
+  //   }
+  // }
 
   /// Setup message handlers
   void _setupMessageHandlers() {

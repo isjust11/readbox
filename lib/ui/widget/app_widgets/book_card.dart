@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/api_constant.dart';
-import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/resources.dart';
 import 'package:readbox/routes.dart';
 
 class BookCard extends StatelessWidget {
   final BookModel book;
-  const BookCard({super.key, required this.book});
+  final UserInteractionCubit userInteractionCubit;
+  const BookCard({super.key, required this.book, required this.userInteractionCubit});
 
   void _openPdfViewer(BuildContext context, BookModel book) {
     if (book.fileUrl != null) {
@@ -17,6 +18,7 @@ class BookCard extends StatelessWidget {
         arguments: {
           'fileUrl': '${ApiConstant.apiHostStorage}${book.fileUrl}',
           'title': book.displayTitle,
+          'bookId': book.id!,
         },
       );
     } else {
@@ -44,139 +46,128 @@ class BookCard extends StatelessWidget {
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle bar
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              
-              // Book info
-              Row(
-                children: [
-                  Container(
-                    width: 60,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.grey[200],
+                SizedBox(height: 20),
+                
+                // Book info
+                Row(
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.grey[200],
+                      ),
+                      child: book.coverImageUrl != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                _getImageUrl(book.coverImageUrl),
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(Icons.book, color: Colors.grey);
+                                },
+                              ),
+                            )
+                          : Icon(Icons.book, color: Colors.grey),
                     ),
-                    child: book.coverImageUrl != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              _getImageUrl(book.coverImageUrl),
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(Icons.book, color: Colors.grey);
-                              },
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            book.displayTitle,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
-                          )
-                        : Icon(Icons.book, color: Colors.grey),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          book.displayTitle,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          book.displayAuthor,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
+                          SizedBox(height: 4),
+                          Text(
+                            book.displayAuthor,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              
-              SizedBox(height: 24),
-              
-              // Action buttons
-              _buildActionButton(
-                icon: Icons.menu_book_rounded,
-                label: 'Đọc sách',
-                color: Theme.of(context).primaryColor,
-                onTap: () {
-                  Navigator.pop(context);
-                  _openPdfViewer(context, book);
-                },
-              ),
-              
-              SizedBox(height: 12),
-              
-              _buildActionButton(
-                icon: Icons.info_outline_rounded,
-                label: 'Xem chi tiết',
-                color: Colors.blue,
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, Routes.bookDetailScreen, arguments: book);
-                },
-              ),
-              
-              SizedBox(height: 12),
-              
-              _buildActionButton(
-                icon: book.isFavorite == true 
-                    ? Icons.favorite_rounded 
-                    : Icons.favorite_border_rounded,
-                label: book.isFavorite == true 
-                    ? 'Bỏ yêu thích' 
-                    : 'Yêu thích',
-                color: Theme.of(context).colorScheme.error,
-                onTap: () {
-                  Navigator.pop(context);
-                  // TODO: Implement toggle favorite
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        book.isFavorite == true 
-                            ? 'Đã bỏ khỏi yêu thích' 
-                            : 'Đã thêm vào yêu thích',
-                      ),
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        ],
                       ),
                     ),
-                  );
-                },
-              ),
-              
-              SizedBox(height: 12),
-              
-              _buildActionButton(
-                icon: Icons.close_rounded,
-                label: 'Đóng',
-                color: Colors.grey[700]!,
-                onTap: () => Navigator.pop(context),
-                isOutlined: true,
-              ),
-              
-              SizedBox(height: MediaQuery.of(context).padding.bottom),
-            ],
+                  ],
+                ),
+                
+                SizedBox(height: 24),
+                
+                // Action buttons
+                _buildActionButton(
+                  icon: Icons.menu_book_rounded,
+                  label: 'Đọc sách',
+                  color: Theme.of(context).primaryColor,
+                  onTap: () {
+                    Navigator.pop(context);
+                    _openPdfViewer(context, book);
+                  },
+                ),
+                
+                SizedBox(height: 12),
+                
+                _buildActionButton(
+                  icon: Icons.info_outline_rounded,
+                  label: 'Xem chi tiết',
+                  color: Colors.blue,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, Routes.bookDetailScreen, arguments: book);
+                  },
+                ),
+                
+                SizedBox(height: 12),
+                
+                _buildActionButton(
+                  icon: book.isFavorite == true 
+                      ? Icons.favorite_rounded 
+                      : Icons.favorite_border_rounded,
+                  label: book.isFavorite == true 
+                      ? 'Bỏ yêu thích' 
+                      : 'Yêu thích',
+                  color: Theme.of(context).colorScheme.error,
+                  onTap: () async {
+                    Navigator.pop(context);
+                   await userInteractionCubit.toggleFavorite(targetType: 'book', targetId: book.id!);
+                  },
+                ),
+                
+                SizedBox(height: 12),
+                
+                _buildActionButton(
+                  icon: Icons.close_rounded,
+                  label: 'Đóng',
+                  color: Colors.grey[700]!,
+                  onTap: () => Navigator.pop(context),
+                  isOutlined: true,
+                ),
+                
+                SizedBox(height: MediaQuery.of(context).padding.bottom),
+              ],
+            ),
           ),
         );
       },

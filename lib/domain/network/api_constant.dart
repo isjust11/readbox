@@ -52,7 +52,19 @@ class ApiConstant {
   static final updateBook = "books";
   static final deleteBook = "books";
   static final toggleFavorite = "books/favorite";
-  
+  static final getFavorite = "books/favorite";
+  static final getUnfavorite = "books/unfavorite";
+  static final getView = "books/view";
+  static final getBookmark = "books/bookmark";
+  static final getUnbookmark = "books/unbookmark";
+  static final getRead = "books/read";
+  static final getUnread = "books/unread";
+  static final getSave = "books/save";
+  static final getUnsave = "books/unsave";
+  static final getInteractionStatus = "books/interaction-status";
+  static final getInteractionStats = "books/interaction-stats";
+  static final getMyInteractions = "books/my-interactions";
+  static final toggleSave = "books/save";
   // Chapter endpoints
   static final getChapters = "books";
   
@@ -72,4 +84,12 @@ class ApiConstant {
   //upload medial
   static final uploadMedia = "media/upload";
   static final createFeedback = "feedback";
+  
+  // Notification endpoints
+  static final getNotifications = "notifications";
+  static final markNotificationRead = "notifications/mark-read";
+  static final markAllNotificationsRead = "notifications/mark-all-read";
+  static final deleteNotification = "notifications";
+  static final deleteAllNotifications = "notifications/delete-all";
+  static final getNotificationUnreadCount = "notifications/unread-count";
 }

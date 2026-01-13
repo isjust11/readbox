@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readbox/blocs/user_interaction_cubit.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:readbox/ui/widget/tts_control_widget.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
@@ -11,11 +13,12 @@ import 'dart:async';
 class PdfViewerWithSelectionScreen extends StatefulWidget {
   final String fileUrl;
   final String title;
-
+  final String bookId;
   const PdfViewerWithSelectionScreen({
     super.key,
     required this.fileUrl,
     required this.title,
+    required this.bookId,
   });
 
   @override
@@ -25,7 +28,7 @@ class PdfViewerWithSelectionScreen extends StatefulWidget {
 class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScreen> {
   final GlobalKey<SfPdfViewerState> _pdfViewerKey = GlobalKey();
   final PdfViewerController _pdfViewerController = PdfViewerController();
-  
+  late UserInteractionCubit _userInteractionCubit;
   int _currentPage = 1;
   int _totalPages = 0;
   bool _isSearchVisible = false;
@@ -48,6 +51,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
     super.initState();
     _initializeTTS();
     _loadPdfBytes();
+    _userInteractionCubit = context.read<UserInteractionCubit>();
   }
 
   /// Load PDF bytes để sử dụng cho text extraction
@@ -322,6 +326,20 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
                 'Đọc liên tục',
                 Colors.teal,
               ),
+              PopupMenuDivider(),
+              _buildMenuItem(
+                'favorite',
+                Icons.favorite,
+                'Yêu thích',
+                Colors.pink,
+              ),
+               _buildMenuItem(
+                'save',
+                Icons.save,
+                'Lưu vào xem sau',
+                Colors.blue,
+              ),
+              
             ],
           ),
         ),
@@ -380,7 +398,12 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
         break;
       case 'read_continuous':
         _readContinuousPages();
-        break;
+        case 'favorite':
+          _favoriteBook();
+          break;
+        case 'save':
+          _saveToReadLater();
+          break;
     }
   }
 
@@ -572,6 +595,33 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
   void _showTextSelectionMenu(PdfTextSelectionChangedDetails details) {
     // Menu sẽ tự động hiện khi chọn text
     // Syncfusion tự động xử lý context menu
+  }
+
+  Future<void> _favoriteBook() async {
+
+    try {
+      await _userInteractionCubit.toggleFavorite(targetType: 'book', targetId: widget.bookId);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Lỗi yêu thích: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _saveToReadLater() async {
+    try {
+      await _userInteractionCubit.toggleReadLater(targetType: 'book', targetId: widget.bookId);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Lỗi lưu vào xem sau: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   Future<void> _copySelectedText() async {

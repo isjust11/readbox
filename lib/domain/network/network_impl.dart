@@ -85,6 +85,33 @@ class Network {
     }
   }
 
+  Future<ApiResponse> put({required String url, Map<String, dynamic>? body}) async {
+    try {
+      Response response = await _dio.put(url, data: body, options: Options(responseType: ResponseType.json));
+      return getApiResponse(response);
+    } catch (e) {
+      return getError(e as DioError);
+    }
+  }
+
+  Future<ApiResponse> patch({required String url, Map<String, dynamic>? body}) async {
+    try {
+      Response response = await _dio.patch(url, data: body, options: Options(responseType: ResponseType.json));
+      return getApiResponse(response);
+    } catch (e) {
+      return getError(e as DioError);
+    }
+  }
+
+  Future<ApiResponse> delete({required String url, Map<String, dynamic>? body}) async {
+    try {
+      Response response = await _dio.delete(url, data: body, options: Options(responseType: ResponseType.json));
+      return getApiResponse(response);
+    } catch (e) {
+      return getError(e as DioError);
+    }
+  }
+
   ApiResponse getError(DioError e) {
     if (e.response?.statusCode == 401) {
       // handleTokenExpired();

@@ -33,6 +33,7 @@ class Routes {
   static const String translateScreen = "/translateScreen";
   static const String textToSpeechSettingScreen = "/textToSpeechSettingScreen";
   static const String notificationSettingsScreen = "/notificationSettingsScreen";
+  static const String notificationScreen = "/notificationScreen";
   // PDF text to speech screen
   static const String pdfTextToSpeechScreen = "/pdfTextToSpeechScreen";
   static const String ttsDemoScreen = "/ttsDemoScreen";
@@ -125,6 +126,7 @@ class Routes {
           child: PdfViewerWithSelectionScreen(
             fileUrl: args['fileUrl'] as String,
             title: args['title'] as String,
+            bookId: args['bookId'] as String,
           ),
           type: PageTransitionType.rightToLeft,
         );
@@ -170,6 +172,11 @@ class Routes {
       case notificationSettingsScreen:
         return PageTransition(
           child: NotificationSettingsScreen(),
+          type: PageTransitionType.rightToLeft,
+        );
+      case notificationScreen:
+        return PageTransition(
+          child: NotificationScreen(),
           type: PageTransitionType.rightToLeft,
         );
       default:

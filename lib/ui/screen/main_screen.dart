@@ -7,6 +7,7 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/res.dart';
+import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
 class MainScreen extends StatelessWidget {
@@ -142,9 +143,9 @@ class MainBodyState extends State<MainBody> {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+        backgroundColor: colorScheme.surfaceContainerHighest,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
         title:
             _isSearching
@@ -178,6 +179,12 @@ class MainBodyState extends State<MainBody> {
           IconButton(
             icon: Icon(_isSearching ? Icons.close : Icons.search, color: colorScheme.onSurface),
             onPressed: _toggleSearch,
+          ),
+          IconButton(
+            icon: Icon(Icons.notifications, color: colorScheme.onSurface),
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.notificationScreen);
+            },
           ),
         ],
       ),
@@ -300,7 +307,7 @@ class MainBodyState extends State<MainBody> {
                 ),
                 itemCount: books.length,
                 itemBuilder: (context, index) {
-                  return BookCard(book: books[index]);
+                  return BookCard(book: books[index], userInteractionCubit: context.read<UserInteractionCubit>());
                 },
               ),
             );

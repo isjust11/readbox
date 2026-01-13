@@ -8,7 +8,6 @@ import 'package:readbox/blocs/theme_cubit.dart';
 import 'package:readbox/ui/widget/locale_widget.dart';
 import 'package:readbox/utils/navigator.dart';
 import 'package:readbox/services/services.dart';
-import 'package:flutter/foundation.dart';
 
 RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 

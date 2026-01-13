@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/language_cubit.dart';
 import 'package:readbox/blocs/book_refresh/book_refresh_cubit.dart';
 import 'package:readbox/blocs/theme_cubit.dart';
+import 'package:readbox/blocs/user_interaction_cubit.dart';
 import 'package:readbox/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:readbox/services/fcm_service.dart';
+import 'domain/repositories/user_interaction_repository.dart';
 import 'injection_container.dart' as di;
 import 'ui/app.dart';
 import 'utils/shared_preference.dart';
@@ -31,6 +33,9 @@ void main() async {
     ),
     BlocProvider(
       create: (_) => ThemeCubit(theme),
+    ),
+    BlocProvider(
+      create: (_) => UserInteractionCubit(repository: di.getIt<UserInteractionRepository>()),
     ),
   ], child: MyApp()));
 }

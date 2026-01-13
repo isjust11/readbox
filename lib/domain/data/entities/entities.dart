@@ -5,3 +5,6 @@ export 'bookmark_entity.dart';
 export 'reading_progress_entity.dart';
 export 'authen_entity.dart';
 export 'role_entity.dart';
+export 'notification_entity.dart';
+export 'user_interaction_entity.dart';
+export 'base_entity.dart';

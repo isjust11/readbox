@@ -106,6 +106,7 @@ class PdfViewerDemoScreen extends StatelessWidget {
                   builder: (context) => PdfViewerWithSelectionScreen(
                     fileUrl: samplePdf2,
                     title: 'PDF với Text Selection',
+                    bookId: '123',
                   ),
                 ),
               );
