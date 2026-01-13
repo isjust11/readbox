@@ -1,4 +1,5 @@
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/network.dart';
 
 class UserInteractionRemoteDataSource {
@@ -12,7 +13,7 @@ class UserInteractionRemoteDataSource {
     required dynamic targetId,
   }) async {
     final ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.toggleFavorite}/$targetType/$targetId',
+      url: '${ApiConstant.apiHost}user-interactions/action/${InteractionType.favorite.value}/$targetType/$targetId',
     );
     if (apiResponse.isSuccess) {
       return UserInteractionModel.fromJson(apiResponse.data);
@@ -25,7 +26,7 @@ class UserInteractionRemoteDataSource {
     required dynamic targetId,
   }) async {
     final ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.toggleSave}/$targetType/$targetId',
+      url: '${ApiConstant.apiHost}/user-interactions/action/${InteractionType.read.value}/$targetType/$targetId',
     );
     if (apiResponse.isSuccess) {
       return UserInteractionModel.fromJson(apiResponse.data);
@@ -39,7 +40,7 @@ class UserInteractionRemoteDataSource {
     required dynamic targetId,
   }) async {
     final ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.getView}/$targetType/$targetId',
+      url: '${ApiConstant.apiHost}/user-interactions/action/${InteractionType.download.value}/$targetType/$targetId',
     );
     if (apiResponse.isSuccess) {
       return UserInteractionModel.fromJson(apiResponse.data);

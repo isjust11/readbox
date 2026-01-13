@@ -2,7 +2,8 @@ enum InteractionType {
   favorite('favorite'),
   bookmark('bookmark'),
   save('save'),
-  read('read');
+  read('read'),
+  download('download');
 
   const InteractionType(this.value);
   final String value;

@@ -51,7 +51,7 @@ class ApiConstant {
   static final addBook = "books";
   static final updateBook = "books";
   static final deleteBook = "books";
-  static final toggleFavorite = "books/favorite";
+  static final toggleFavorite = "user-interactions/toggle-favorite";
   static final getFavorite = "books/favorite";
   static final getUnfavorite = "books/unfavorite";
   static final getView = "books/view";

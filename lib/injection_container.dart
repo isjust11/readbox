@@ -81,6 +81,9 @@ void registerCubit(GetIt getIt) {
   getIt.registerFactory(
     () => NotificationCubit(notificationRepository: getIt.get<NotificationRepository>()),
   );
+  getIt.registerFactory(
+    () => UserInteractionCubit(repository: getIt.get<UserInteractionRepository>()),
+  );
 }
 
 void registerRepositories(GetIt getIt) {
@@ -108,6 +111,9 @@ void registerRepositories(GetIt getIt) {
   getIt.registerLazySingleton(
     () => NotificationRepository(remoteDataSource: getIt.get<NotificationRemoteDataSource>()),
   );
+  getIt.registerLazySingleton(
+    () => UserInteractionRepository(remoteDataSource: getIt.get<UserInteractionRemoteDataSource>()),
+  );
 }
 
 void registerUseCases(GetIt getIt) {
@@ -128,6 +134,7 @@ void registerDataSource(GetIt getIt) {
   getIt.registerLazySingleton(() => PageRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => FeedbackRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => NotificationRemoteDataSource(network: getIt.get()));
+  getIt.registerLazySingleton(() => UserInteractionRemoteDataSource(network: getIt.get()));
 }
 
 void registerNetwork(GetIt getIt) {
