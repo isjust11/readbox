@@ -13,7 +13,7 @@ class UserInteractionRemoteDataSource {
     required dynamic targetId,
   }) async {
     final ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.apiHost}user-interactions/action/${InteractionType.favorite.value}/$targetType/$targetId',
+      url: '${ApiConstant.apiHost}${ApiConstant.interactionAction}${InteractionType.favorite.value}/$targetType/$targetId',
     );
     if (apiResponse.isSuccess) {
       return UserInteractionModel.fromJson(apiResponse.data);
@@ -21,12 +21,12 @@ class UserInteractionRemoteDataSource {
     return Future.error(apiResponse.data);
   }
   // toggle read later
-  Future<UserInteractionModel> toggleReadLater({
+  Future<UserInteractionModel> toggleArchive({
     required String targetType,
     required dynamic targetId,
   }) async {
     final ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.apiHost}/user-interactions/action/${InteractionType.read.value}/$targetType/$targetId',
+      url: '${ApiConstant.apiHost}${ApiConstant.interactionAction}${InteractionType.archived.value}/$targetType/$targetId',
     );
     if (apiResponse.isSuccess) {
       return UserInteractionModel.fromJson(apiResponse.data);
@@ -140,7 +140,7 @@ class UserInteractionRemoteDataSource {
     required dynamic targetId,
   }) async {
     final ApiResponse apiResponse = await network.get(
-      url: '${ApiConstant.getInteractionStatus}/$targetType/$targetId',
+      url: '${ApiConstant.apiHost}${ApiConstant.getInteractionStatus}/$targetType/$targetId',
     );
     if (apiResponse.isSuccess) {
       return apiResponse.data;
@@ -154,7 +154,7 @@ class UserInteractionRemoteDataSource {
     required dynamic targetId,
   }) async {
     final ApiResponse apiResponse = await network.get(
-      url: '${ApiConstant.getInteractionStats}/$targetType/$targetId',
+      url: '${ApiConstant.apiHost}${ApiConstant.getInteractionStats}/$targetType/$targetId',
     );
     if (apiResponse.isSuccess) {
       return InteractionStatsModel.fromJson(apiResponse.data);
@@ -163,11 +163,11 @@ class UserInteractionRemoteDataSource {
   }
 
   // get my interactions
-  Future<dynamic> getMyInteractions({Map<String, dynamic>? query}) async {
-    final ApiResponse apiResponse = await network.get(
-      url: '${ApiConstant.getMyInteractions}?${query?.entries.map((e) => '${e.key}=${e.value}').join('&')}',
-    );
-    if (apiResponse.isSuccess) return apiResponse.data;
-    return Future.error(apiResponse.data);
-  }
+  // Future<dynamic> getMyInteractions({Map<String, dynamic>? query}) async {
+  //   final ApiResponse apiResponse = await network.get(
+  //     url: '${ApiConstant.apiHost}${ApiConstant.myInteractionsUrl(query: query)}',
+  //   );
+  //   if (apiResponse.isSuccess) return apiResponse.data;
+  //   return Future.error(apiResponse.data);
+  // }
 }

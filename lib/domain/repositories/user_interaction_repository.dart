@@ -11,10 +11,10 @@ class UserInteractionRepository {
     required dynamic targetId,
   }) => remoteDataSource.toggleFavorite(targetType: targetType, targetId: targetId);
 
-  Future<UserInteractionModel> toggleReadLater({
+  Future<UserInteractionModel> toggleArchive({
     required String targetType,
     required dynamic targetId,
-  }) => remoteDataSource.toggleReadLater(targetType: targetType, targetId: targetId);
+  }) => remoteDataSource.toggleArchive(targetType: targetType, targetId: targetId);
   
   Future<UserInteractionModel> view({
     required String targetType,
@@ -76,6 +76,6 @@ class UserInteractionRepository {
     required dynamic targetId,
   }) => remoteDataSource.getStats(targetType: targetType, targetId: targetId);
 
-  Future<dynamic> getMyInteractions({Map<String, dynamic>? query}) =>
-      remoteDataSource.getMyInteractions(query: query);
+  // Future<dynamic> getMyInteractions({Map<String, dynamic>? query}) =>
+  //     remoteDataSource.getMyInteractions(query: query);
 }

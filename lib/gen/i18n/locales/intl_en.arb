@@ -323,5 +323,13 @@
   "refreshToken" : "Refresh token",
   "tokenRefreshed" : "Token refreshed",
   "notificationStatus" : "Notification Status",
-  "permissionStatus" : "Permission Status"
+  "permissionStatus" : "Permission Status",
+  "new_book" : "New",
+  "read_book" : "Read book",
+  "view_details" : "View details",
+  "add_favorite" : "Add favorite",
+  "remove_favorite" : "Remove favorite",
+  "add_archive" : "Add archive",
+  "remove_archive" : "Remove archive",
+  "file_ebook_not_found" : "File ebook not found"
 }

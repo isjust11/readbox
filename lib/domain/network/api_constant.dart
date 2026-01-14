@@ -61,10 +61,11 @@ class ApiConstant {
   static final getUnread = "books/unread";
   static final getSave = "books/save";
   static final getUnsave = "books/unsave";
-  static final getInteractionStatus = "books/interaction-status";
-  static final getInteractionStats = "books/interaction-stats";
+  static final getInteractionStatus = "user-interactions/status";
+  static final getInteractionStats = "user-interactions/stats";
+
   static final getMyInteractions = "books/my-interactions";
-  static final toggleSave = "books/save";
+  static final interactionAction = "user-interactions/action/";
   // Chapter endpoints
   static final getChapters = "books";
   

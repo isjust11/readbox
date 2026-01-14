@@ -613,11 +613,11 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
 
   Future<void> _saveToReadLater() async {
     try {
-      await _userInteractionCubit.toggleReadLater(targetType: 'book', targetId: widget.bookId);
+      await _userInteractionCubit.toggleArchive(targetType: 'book', targetId: widget.bookId);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Lỗi lưu vào xem sau: $e'),
+          content: Text('Lỗi lưu vào thư viện: $e'),
           backgroundColor: Colors.red,
         ),
       );

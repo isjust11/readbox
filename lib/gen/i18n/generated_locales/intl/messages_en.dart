@@ -23,9 +23,11 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutApp": MessageLookupByLibrary.simpleMessage("About app"),
+        "add_archive": MessageLookupByLibrary.simpleMessage("Add archive"),
         "add_book": MessageLookupByLibrary.simpleMessage("Add book"),
         "add_book_to_start_reading":
             MessageLookupByLibrary.simpleMessage("Add book to start reading"),
+        "add_favorite": MessageLookupByLibrary.simpleMessage("Add favorite"),
         "agree": MessageLookupByLibrary.simpleMessage("Agree"),
         "all_books": MessageLookupByLibrary.simpleMessage("All books"),
         "all_data_loaded":
@@ -173,6 +175,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please enter a title"),
         "feedbackType": MessageLookupByLibrary.simpleMessage("Feedback type"),
         "fileEbook": MessageLookupByLibrary.simpleMessage("File Ebook"),
+        "file_ebook_not_found":
+            MessageLookupByLibrary.simpleMessage("File ebook not found"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Forgot password"),
         "from_file_picker":
@@ -273,6 +277,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "medium": MessageLookupByLibrary.simpleMessage("Medium"),
         "my_books": MessageLookupByLibrary.simpleMessage("My books"),
         "my_library": MessageLookupByLibrary.simpleMessage("My library"),
+        "new_book": MessageLookupByLibrary.simpleMessage("New"),
         "news": MessageLookupByLibrary.simpleMessage("News"),
         "noLanguagesAvailable":
             MessageLookupByLibrary.simpleMessage("No languages available"),
@@ -414,6 +419,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Pull down to refresh"),
         "pushNotifications":
             MessageLookupByLibrary.simpleMessage("Push Notifications"),
+        "read_book": MessageLookupByLibrary.simpleMessage("Read book"),
         "readingReminders":
             MessageLookupByLibrary.simpleMessage("Reading Reminders"),
         "readingSpeed": MessageLookupByLibrary.simpleMessage("Reading speed"),
@@ -437,6 +443,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Register to continue"),
         "remember_me": MessageLookupByLibrary.simpleMessage("Remember me"),
         "reminderTime": MessageLookupByLibrary.simpleMessage("Reminder Time"),
+        "remove_archive":
+            MessageLookupByLibrary.simpleMessage("Remove archive"),
+        "remove_favorite":
+            MessageLookupByLibrary.simpleMessage("Remove favorite"),
         "required_field": MessageLookupByLibrary.simpleMessage("Required"),
         "resend_code": MessageLookupByLibrary.simpleMessage("Resend code"),
         "reset_password":
@@ -553,6 +563,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "veryFast": MessageLookupByLibrary.simpleMessage("Very fast"),
         "viewNotificationHistory":
             MessageLookupByLibrary.simpleMessage("View notification history"),
+        "view_details": MessageLookupByLibrary.simpleMessage("View details"),
         "voicePitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
         "warning": MessageLookupByLibrary.simpleMessage("Warning"),
         "welcome_back": MessageLookupByLibrary.simpleMessage("Welcome back!")

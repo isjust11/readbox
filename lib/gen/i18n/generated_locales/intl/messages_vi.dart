@@ -23,9 +23,12 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "aboutApp": MessageLookupByLibrary.simpleMessage("Về ứng dụng"),
+        "add_archive":
+            MessageLookupByLibrary.simpleMessage("Thêm lưu vào thư viện"),
         "add_book": MessageLookupByLibrary.simpleMessage("Thêm sách"),
         "add_book_to_start_reading":
             MessageLookupByLibrary.simpleMessage("Thêm sách để bắt đầu đọc"),
+        "add_favorite": MessageLookupByLibrary.simpleMessage("Thêm yêu thích"),
         "address": MessageLookupByLibrary.simpleMessage("Địa chỉ"),
         "agree": MessageLookupByLibrary.simpleMessage("Đồng ý"),
         "all_books": MessageLookupByLibrary.simpleMessage("Tất cả sách"),
@@ -177,6 +180,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Vui lòng nhập tiêu đề"),
         "feedbackType": MessageLookupByLibrary.simpleMessage("Loại phản hồi"),
         "fileEbook": MessageLookupByLibrary.simpleMessage("File Ebook"),
+        "file_ebook_not_found":
+            MessageLookupByLibrary.simpleMessage("File ebook không tồn tại"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Quên mật khẩu"),
         "from_file_picker":
@@ -286,6 +291,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "medium": MessageLookupByLibrary.simpleMessage("Trung bình"),
         "my_books": MessageLookupByLibrary.simpleMessage("Sách của tôi"),
         "my_library": MessageLookupByLibrary.simpleMessage("Thư viện của tôi"),
+        "new_book": MessageLookupByLibrary.simpleMessage("Mới"),
         "news": MessageLookupByLibrary.simpleMessage("Tin tức"),
         "noLanguagesAvailable":
             MessageLookupByLibrary.simpleMessage("Không có ngôn ngữ khả dụng"),
@@ -436,6 +442,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Kéo xuống để làm mới"),
         "pushNotifications":
             MessageLookupByLibrary.simpleMessage("Thông báo đẩy"),
+        "read_book": MessageLookupByLibrary.simpleMessage("Đọc sách"),
         "readingReminders":
             MessageLookupByLibrary.simpleMessage("Nhắc nhở đọc sách"),
         "readingSpeed": MessageLookupByLibrary.simpleMessage("Tốc độ đọc"),
@@ -460,6 +467,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "remember_me": MessageLookupByLibrary.simpleMessage("Nhớ tài khoản"),
         "reminderTime":
             MessageLookupByLibrary.simpleMessage("Thời gian nhắc nhở"),
+        "remove_archive":
+            MessageLookupByLibrary.simpleMessage("Bỏ lưu vào thư viện"),
+        "remove_favorite": MessageLookupByLibrary.simpleMessage("Bỏ yêu thích"),
         "required_field": MessageLookupByLibrary.simpleMessage("Bắt buộc"),
         "resend_code": MessageLookupByLibrary.simpleMessage("Gửi lại mã"),
         "reset_password":
@@ -582,6 +592,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "veryFast": MessageLookupByLibrary.simpleMessage("Rất nhanh"),
         "viewNotificationHistory":
             MessageLookupByLibrary.simpleMessage("Xem lịch sử thông báo"),
+        "view_details": MessageLookupByLibrary.simpleMessage("Xem chi tiết"),
         "voicePitch": MessageLookupByLibrary.simpleMessage("Cao độ giọng"),
         "warning": MessageLookupByLibrary.simpleMessage("Cảnh báo"),
         "welcome_back":

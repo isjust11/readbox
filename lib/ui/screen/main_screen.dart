@@ -189,12 +189,13 @@ class MainBodyState extends State<MainBody> {
         ],
       ),
       drawer: AppDrawer(
-        onSelected: (filter) {
+        onSelected: (filter, title) {
           setState(() {
             filterType = FilterType.values.firstWhere((e) => e.name == filter);
+            this.title = title;
           });
           getBooks();
-        },
+        }, 
       ),
       body: BlocListener<BookRefreshCubit, int>(
         listener: (context, state) {
@@ -307,7 +308,8 @@ class MainBodyState extends State<MainBody> {
                 ),
                 itemCount: books.length,
                 itemBuilder: (context, index) {
-                  return BookCard(book: books[index], userInteractionCubit: context.read<UserInteractionCubit>());
+                  return BookCard(book: books[index], 
+                  userInteractionCubit: context.read<UserInteractionCubit>());
                 },
               ),
             );

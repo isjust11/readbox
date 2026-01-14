@@ -30,10 +30,10 @@ class UserInteractionCubit extends Cubit<BaseState> {
   }
 
     // toggle favorite
-  Future<dynamic> toggleReadLater({required String targetType, required dynamic targetId}) async {
+  Future<dynamic> toggleArchive({required String targetType, required dynamic targetId}) async {
     try {
       emit(LoadingState());
-      final response = await repository.toggleReadLater(
+      final response = await repository.toggleArchive(
         targetType: targetType,
         targetId: targetId,
       );
@@ -163,7 +163,7 @@ class UserInteractionCubit extends Cubit<BaseState> {
     }
   }
 
-  void getStats({required String targetType, required dynamic targetId}) async {
+  Future<void> getStats({required String targetType, required dynamic targetId}) async {
     try {
       emit(LoadingState());
       final response = await repository.getStats(
@@ -179,8 +179,8 @@ class UserInteractionCubit extends Cubit<BaseState> {
   void getMyInteractions({Map<String, dynamic>? query}) async {
     try {
       emit(LoadingState());
-      final response = await repository.getMyInteractions(query: query);
-      emit(LoadedState(response));
+      // final response = await repository.getMyInteractions(query: query);
+      // emit(LoadedState(response));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }

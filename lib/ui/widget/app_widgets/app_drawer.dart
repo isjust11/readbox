@@ -5,7 +5,7 @@ import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/app_widgets/app_profile.dart';
 
 class AppDrawer extends StatefulWidget {
-  final Function(String) onSelected;
+  final Function(String, String) onSelected;
   const AppDrawer({super.key, required this.onSelected});
 
   @override
@@ -15,20 +15,20 @@ class AppDrawer extends StatefulWidget {
 class _AppDrawerState extends State<AppDrawer> {
   String? _currentFilter;
 
-  void _filterBooks(String filter) {
+  void _filterBooks(String filter, String title) {
     setState(() {
       _currentFilter = filter;
     });
 
     switch (filter) {
       case 'all':
-        widget.onSelected('all');
+        widget.onSelected('all', title);
         break;
       case 'favorite':
-        widget.onSelected('favorite');
+        widget.onSelected('favorite', title);
         break;
       case 'archived':
-        widget.onSelected('archived');
+        widget.onSelected('archived', title);
         break;
     }
     Navigator.pop(context); // Close drawer
@@ -61,7 +61,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     icon: Icons.library_books,
                     title: AppLocalizations.current.all_books,
                     isSelected: _currentFilter == 'all',
-                    onTap: () => _filterBooks('all'),
+                    onTap: () => _filterBooks('all', AppLocalizations.current.all_books),
                     iconColor: Theme.of(context).primaryColor,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
@@ -69,7 +69,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     icon: Icons.favorite,
                     title: AppLocalizations.current.favorite_books,
                     isSelected: _currentFilter == 'favorite',
-                    onTap: () => _filterBooks('favorite'),
+                    onTap: () => _filterBooks('favorite', AppLocalizations.current.favorite_books),
                     iconColor: Theme.of(context).colorScheme.error,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
@@ -77,7 +77,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     icon: Icons.archive,
                     title: AppLocalizations.current.archived_books,
                     isSelected: _currentFilter == 'archived',
-                    onTap: () => _filterBooks('archived'),
+                    onTap: () => _filterBooks('archived', AppLocalizations.current.archived_books),
                     iconColor: Theme.of(context).colorScheme.primary,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),

@@ -7,11 +7,6 @@ class InteractionStatsEntity extends BaseEntity {
   String? targetId;
 
   // Optional foreign key relationships based on target type
-  String? articleId;
-  String? herbalId;
-  String? folkMedicineId;
-  String? authorId;
-  String? categoryId;
 
   // Related entities
   BookEntity? book;
@@ -25,6 +20,8 @@ class InteractionStatsEntity extends BaseEntity {
   int? commentCount;
   int? rateCount;
   int? followCount;
+  bool? favoriteStatus;
+  bool? archiveStatus;
 
   // Average rating (for rate interactions)
   double? averageRating;
@@ -43,13 +40,8 @@ class InteractionStatsEntity extends BaseEntity {
         : null;
     targetId = json['targetId'];
 
-    // Optional foreign keys
-    articleId = json['articleId'];
-    herbalId = json['herbalId'];
-    folkMedicineId = json['folkMedicineId'];
-    authorId = json['authorId'];
-    categoryId = json['categoryId'];
-
+    favoriteStatus = json['favoriteStatus'];
+    archiveStatus = json['archiveStatus'];
     if (json['book'] != null) {
       book = BookEntity.fromJson(json['book']);
     }
@@ -83,12 +75,6 @@ class InteractionStatsEntity extends BaseEntity {
     data['targetType'] = targetType?.value;
     data['targetId'] = targetId;
 
-    // Optional foreign keys
-    data['articleId'] = articleId;
-    data['herbalId'] = herbalId;
-    data['folkMedicineId'] = folkMedicineId;
-    data['authorId'] = authorId;
-    data['categoryId'] = categoryId;
 
     // Related entities
     data['book'] = book?.toJson();
@@ -109,7 +95,8 @@ class InteractionStatsEntity extends BaseEntity {
 
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
-
+    data['favoriteStatus'] = favoriteStatus;
+    data['archiveStatus'] = archiveStatus;
     return data;
   }
 }

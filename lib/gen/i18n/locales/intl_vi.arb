@@ -342,5 +342,13 @@
    "refreshToken" : "Làm mới token",
    "tokenRefreshed" : "Token đã được làm mới",
    "notificationStatus" : "Trạng thái thông báo",
-   "permissionStatus" : "Trạng thái quyền"
+   "permissionStatus" : "Trạng thái quyền",
+   "new_book" : "Mới",
+   "read_book" : "Đọc sách",
+   "view_details" : "Xem chi tiết",
+   "add_favorite" : "Thêm yêu thích",
+   "remove_favorite" : "Bỏ yêu thích",
+   "add_archive" : "Thêm lưu vào thư viện",
+   "remove_archive" : "Bỏ lưu vào thư viện",
+   "file_ebook_not_found" : "File ebook không tồn tại"
 }

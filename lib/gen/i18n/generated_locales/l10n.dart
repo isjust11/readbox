@@ -3489,6 +3489,86 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Mới`
+  String get new_book {
+    return Intl.message(
+      'Mới',
+      name: 'new_book',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đọc sách`
+  String get read_book {
+    return Intl.message(
+      'Đọc sách',
+      name: 'read_book',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xem chi tiết`
+  String get view_details {
+    return Intl.message(
+      'Xem chi tiết',
+      name: 'view_details',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thêm yêu thích`
+  String get add_favorite {
+    return Intl.message(
+      'Thêm yêu thích',
+      name: 'add_favorite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bỏ yêu thích`
+  String get remove_favorite {
+    return Intl.message(
+      'Bỏ yêu thích',
+      name: 'remove_favorite',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thêm lưu vào thư viện`
+  String get add_archive {
+    return Intl.message(
+      'Thêm lưu vào thư viện',
+      name: 'add_archive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bỏ lưu vào thư viện`
+  String get remove_archive {
+    return Intl.message(
+      'Bỏ lưu vào thư viện',
+      name: 'remove_archive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `File ebook không tồn tại`
+  String get file_ebook_not_found {
+    return Intl.message(
+      'File ebook không tồn tại',
+      name: 'file_ebook_not_found',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

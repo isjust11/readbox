@@ -3,7 +3,8 @@ enum InteractionType {
   bookmark('bookmark'),
   save('save'),
   read('read'),
-  download('download');
+  download('download'),
+  archived('archived');
 
   const InteractionType(this.value);
   final String value;
