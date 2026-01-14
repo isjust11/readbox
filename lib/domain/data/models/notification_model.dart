@@ -39,7 +39,7 @@ class NotificationModel extends NotificationEntity {
     }
   }
 
-  bool get isUnread => !(isRead ?? false);
+  bool get isUnread => !(status == NotificationStatus.unread);
 
   String get typeDisplay {
     switch (type) {

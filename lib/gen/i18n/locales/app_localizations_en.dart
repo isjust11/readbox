@@ -642,4 +642,391 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get privacy_and_security => 'Privacy and security';
+
+  @override
+  String get pdfEpubMobi => 'PDF, EPUB, MOBI';
+
+  @override
+  String get fileEbook => 'File Ebook';
+
+  @override
+  String get required_field => 'Required';
+
+  @override
+  String get select_file => 'Select file';
+
+  @override
+  String get from_file_picker => 'From file picker';
+
+  @override
+  String get in_memory => 'In memory';
+
+  @override
+  String get ready_to_upload => 'Ready to upload';
+
+  @override
+  String get uploading => 'Uploading...';
+
+  @override
+  String get upload_file => 'Upload File';
+
+  @override
+  String get upload_success => 'Upload success';
+
+  @override
+  String get cover_image => 'Cover image';
+
+  @override
+  String get jpgPngWebp => 'JPG, PNG, WEBP';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
+  String get select_cover_image => 'Select cover image';
+
+  @override
+  String get recommended_size => 'Recommended size';
+
+  @override
+  String get upload_cover_image => 'Upload cover image';
+
+  @override
+  String get cover_image_uploaded_successfully =>
+      'Cover image uploaded successfully';
+
+  @override
+  String get book_information => 'Book information';
+
+  @override
+  String get title => 'Title';
+
+  @override
+  String get author => 'Author';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get publisher => 'Publisher';
+
+  @override
+  String get isbn => 'ISBN';
+
+  @override
+  String get total_pages => 'Total pages';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get public => 'Public';
+
+  @override
+  String get private => 'Private';
+
+  @override
+  String get book_will_be_displayed_for_everyone =>
+      'Book will be displayed for everyone';
+
+  @override
+  String get book_will_be_displayed_for_admin =>
+      'Book will be displayed for admin';
+
+  @override
+  String get creating_book => 'Creating book...';
+
+  @override
+  String get create_new_book => 'Create new book';
+
+  @override
+  String get please_enter_author => 'Please enter author';
+
+  @override
+  String get please_enter_description => 'Please enter description';
+
+  @override
+  String get please_enter_publisher => 'Please enter publisher';
+
+  @override
+  String get please_enter_isbn => 'Please enter ISBN';
+
+  @override
+  String get please_enter_total_pages => 'Please enter total pages';
+
+  @override
+  String get please_enter_category => 'Please enter category';
+
+  @override
+  String get please_enter_title => 'Please enter title';
+
+  @override
+  String get select_language => 'Please enter language';
+
+  @override
+  String get translate => 'Language translation';
+
+  @override
+  String get textToSpeech => 'Text to speech';
+
+  @override
+  String get convertTextToSpeech => 'Convert text to speech';
+
+  @override
+  String get library => 'Ebook library';
+
+  @override
+  String get ttsLanguageSettings => 'TTS Language Settings';
+
+  @override
+  String get selectTTSLanguage => 'Select reading language';
+
+  @override
+  String get ttsSettings => 'TTS Settings';
+
+  @override
+  String get ttsSpeed => 'Reading speed';
+
+  @override
+  String get ttsVolume => 'Volume';
+
+  @override
+  String get ttsPitch => 'Voice pitch';
+
+  @override
+  String get ttsVoice => 'Voice';
+
+  @override
+  String get testTTS => 'Test reading';
+
+  @override
+  String get ttsTestText => 'Hello, this is a text-to-speech test.';
+
+  @override
+  String get noLanguagesAvailable => 'No languages available';
+
+  @override
+  String get currentLanguage => 'Current language';
+
+  @override
+  String get availableLanguages => 'Available languages';
+
+  @override
+  String get selectVoice => 'Select voice';
+
+  @override
+  String get defaultVoice => 'Default voice';
+
+  @override
+  String get readingSpeed => 'Reading speed';
+
+  @override
+  String get slow => 'Slow';
+
+  @override
+  String get normal => 'Normal';
+
+  @override
+  String get fast => 'Fast';
+
+  @override
+  String get veryFast => 'Very fast';
+
+  @override
+  String get voicePitch => 'Voice pitch';
+
+  @override
+  String get low => 'Low';
+
+  @override
+  String get medium => 'Medium';
+
+  @override
+  String get high => 'High';
+
+  @override
+  String get playTest => 'Play test';
+
+  @override
+  String get stopTest => 'Stop';
+
+  @override
+  String get languageChanged => 'Language changed';
+
+  @override
+  String get settingsSaved => 'Settings saved';
+
+  @override
+  String get errorChangingLanguage => 'Error changing language';
+
+  @override
+  String get errorSavingSettings => 'Error saving settings';
+
+  @override
+  String get ttsNotInitialized => 'TTS not initialized';
+
+  @override
+  String get initializingTTS => 'Initializing TTS...';
+
+  @override
+  String get notificationSettings => 'Notification Settings';
+
+  @override
+  String get notificationPreferences => 'Notification Preferences';
+
+  @override
+  String get enableNotifications => 'Enable notifications';
+
+  @override
+  String get disableNotifications => 'Disable notifications';
+
+  @override
+  String get pushNotifications => 'Push Notifications';
+
+  @override
+  String get receivePushNotifications =>
+      'Receive push notifications from server';
+
+  @override
+  String get localNotifications => 'Local Notifications';
+
+  @override
+  String get receiveLocalNotifications =>
+      'Receive reminders and local notifications';
+
+  @override
+  String get readingReminders => 'Reading Reminders';
+
+  @override
+  String get setReadingReminders => 'Set daily reading reminders';
+
+  @override
+  String get reminderTime => 'Reminder Time';
+
+  @override
+  String get selectReminderTime => 'Select reminder time';
+
+  @override
+  String get bookUpdates => 'Book Updates';
+
+  @override
+  String get receiveBookUpdates => 'Receive notifications for new books';
+
+  @override
+  String get systemNotifications => 'System Notifications';
+
+  @override
+  String get receiveSystemNotifications => 'Receive app update notifications';
+
+  @override
+  String get notificationSound => 'Notification Sound';
+
+  @override
+  String get enableSound => 'Enable sound';
+
+  @override
+  String get notificationVibration => 'Vibration';
+
+  @override
+  String get enableVibration => 'Enable vibration';
+
+  @override
+  String get notificationBadge => 'Badge';
+
+  @override
+  String get showBadge => 'Show badge on app icon';
+
+  @override
+  String get notificationPreview => 'Notification Preview';
+
+  @override
+  String get showPreview => 'Show content on lock screen';
+
+  @override
+  String get testNotification => 'Test Notification';
+
+  @override
+  String get sendTestNotification => 'Send test notification';
+
+  @override
+  String get testNotificationSent => 'Test notification sent';
+
+  @override
+  String get notificationPermissionRequired =>
+      'Notification permission required';
+
+  @override
+  String get openSettings => 'Open Settings';
+
+  @override
+  String get permissionDenied => 'Permission denied';
+
+  @override
+  String get permissionGranted => 'Permission granted';
+
+  @override
+  String get notificationCategories => 'Notification Categories';
+
+  @override
+  String get manageNotificationCategories => 'Manage notification categories';
+
+  @override
+  String get clearAllNotifications => 'Clear all notifications';
+
+  @override
+  String get notificationsCleared => 'All notifications cleared';
+
+  @override
+  String get noNotifications => 'No notifications';
+
+  @override
+  String get notificationHistory => 'Notification History';
+
+  @override
+  String get viewNotificationHistory => 'View notification history';
+
+  @override
+  String get fcmToken => 'FCM Token';
+
+  @override
+  String get copyToken => 'Copy token';
+
+  @override
+  String get tokenCopied => 'Token copied';
+
+  @override
+  String get refreshToken => 'Refresh token';
+
+  @override
+  String get tokenRefreshed => 'Token refreshed';
+
+  @override
+  String get notificationStatus => 'Notification Status';
+
+  @override
+  String get permissionStatus => 'Permission Status';
+
+  @override
+  String get new_book => 'New';
+
+  @override
+  String get read_book => 'Read book';
+
+  @override
+  String get view_details => 'View details';
+
+  @override
+  String get add_favorite => 'Add favorite';
+
+  @override
+  String get remove_favorite => 'Remove favorite';
+
+  @override
+  String get add_archive => 'Add archive';
+
+  @override
+  String get remove_archive => 'Remove archive';
+
+  @override
+  String get file_ebook_not_found => 'File ebook not found';
 }

@@ -67,7 +67,7 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: AppColors.white,
     cardColor: AppColors.white,
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: AppColors.white,
     ),
     iconTheme: IconThemeData(

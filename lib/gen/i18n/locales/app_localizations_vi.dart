@@ -647,4 +647,388 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get privacy_and_security => 'Quyền riêng tư và bảo mật';
+
+  @override
+  String get pdfEpubMobi => 'PDF, EPUB, MOBI';
+
+  @override
+  String get fileEbook => 'File Ebook';
+
+  @override
+  String get required_field => 'Bắt buộc';
+
+  @override
+  String get select_file => 'Chọn file';
+
+  @override
+  String get from_file_picker => 'Từ file picker';
+
+  @override
+  String get in_memory => 'Trong bộ nhớ';
+
+  @override
+  String get ready_to_upload => 'Sẵn sàng upload';
+
+  @override
+  String get uploading => 'Đang upload...';
+
+  @override
+  String get upload_file => 'Upload File';
+
+  @override
+  String get upload_success => 'Upload thành công';
+
+  @override
+  String get cover_image => 'Ảnh Bìa';
+
+  @override
+  String get jpgPngWebp => 'JPG, PNG, WEBP';
+
+  @override
+  String get optional => 'Tùy chọn';
+
+  @override
+  String get select_cover_image => 'Chọn ảnh bìa';
+
+  @override
+  String get recommended_size => 'Khuyến nghị: 600x900px';
+
+  @override
+  String get upload_cover_image => 'Upload ảnh';
+
+  @override
+  String get cover_image_uploaded_successfully =>
+      'Ảnh bìa đã upload thành công';
+
+  @override
+  String get book_information => 'Thông tin sách';
+
+  @override
+  String get title => 'Tiêu đề';
+
+  @override
+  String get author => 'Tác giả';
+
+  @override
+  String get description => 'Mô tả';
+
+  @override
+  String get publisher => 'Nhà xuất bản';
+
+  @override
+  String get isbn => 'ISBN';
+
+  @override
+  String get total_pages => 'Số trang';
+
+  @override
+  String get category => 'Thể loại';
+
+  @override
+  String get public => 'Công khai';
+
+  @override
+  String get private => 'Riêng tư';
+
+  @override
+  String get book_will_be_displayed_for_everyone =>
+      'Sách sẽ hiển thị cho mọi người';
+
+  @override
+  String get book_will_be_displayed_for_admin => 'Sách chỉ hiển thị cho admin';
+
+  @override
+  String get creating_book => 'Đang tạo sách...';
+
+  @override
+  String get create_new_book => 'Tạo Sách Mới';
+
+  @override
+  String get please_enter_author => 'Vui lòng nhập tác giả';
+
+  @override
+  String get please_enter_description => 'Vui lòng nhập mô tả';
+
+  @override
+  String get please_enter_publisher => 'Vui lòng nhập nhà xuất bản';
+
+  @override
+  String get please_enter_isbn => 'Vui lòng nhập ISBN';
+
+  @override
+  String get please_enter_total_pages => 'Vui lòng nhập số trang';
+
+  @override
+  String get please_enter_category => 'Vui lòng nhập thể loại';
+
+  @override
+  String get please_enter_title => 'Vui lòng nhập tiêu đề';
+
+  @override
+  String get select_language => 'Vui lòng nhập ngôn ngữ';
+
+  @override
+  String get translate => 'Ngôn ngữ dịch';
+
+  @override
+  String get textToSpeech => 'Text to speech';
+
+  @override
+  String get convertTextToSpeech => 'Chuyển đổi text to speech';
+
+  @override
+  String get library => 'Thư viện Ebook';
+
+  @override
+  String get ttsLanguageSettings => 'Cài đặt ngôn ngữ TTS';
+
+  @override
+  String get selectTTSLanguage => 'Chọn ngôn ngữ đọc';
+
+  @override
+  String get ttsSettings => 'Cài đặt TTS';
+
+  @override
+  String get ttsSpeed => 'Tốc độ đọc';
+
+  @override
+  String get ttsVolume => 'Âm lượng';
+
+  @override
+  String get ttsPitch => 'Cao độ giọng nói';
+
+  @override
+  String get ttsVoice => 'Giọng đọc';
+
+  @override
+  String get testTTS => 'Kiểm tra đọc';
+
+  @override
+  String get ttsTestText => 'Xin chào, đây là bài kiểm tra đọc văn bản.';
+
+  @override
+  String get noLanguagesAvailable => 'Không có ngôn ngữ khả dụng';
+
+  @override
+  String get currentLanguage => 'Ngôn ngữ hiện tại';
+
+  @override
+  String get availableLanguages => 'Ngôn ngữ khả dụng';
+
+  @override
+  String get selectVoice => 'Chọn giọng đọc';
+
+  @override
+  String get defaultVoice => 'Giọng mặc định';
+
+  @override
+  String get readingSpeed => 'Tốc độ đọc';
+
+  @override
+  String get slow => 'Chậm';
+
+  @override
+  String get normal => 'Bình thường';
+
+  @override
+  String get fast => 'Nhanh';
+
+  @override
+  String get veryFast => 'Rất nhanh';
+
+  @override
+  String get voicePitch => 'Cao độ giọng';
+
+  @override
+  String get low => 'Thấp';
+
+  @override
+  String get medium => 'Trung bình';
+
+  @override
+  String get high => 'Cao';
+
+  @override
+  String get playTest => 'Phát thử';
+
+  @override
+  String get stopTest => 'Dừng';
+
+  @override
+  String get languageChanged => 'Đã thay đổi ngôn ngữ';
+
+  @override
+  String get settingsSaved => 'Đã lưu cài đặt';
+
+  @override
+  String get errorChangingLanguage => 'Lỗi khi thay đổi ngôn ngữ';
+
+  @override
+  String get errorSavingSettings => 'Lỗi khi lưu cài đặt';
+
+  @override
+  String get ttsNotInitialized => 'TTS chưa được khởi tạo';
+
+  @override
+  String get initializingTTS => 'Đang khởi tạo TTS...';
+
+  @override
+  String get notificationSettings => 'Cài đặt thông báo';
+
+  @override
+  String get notificationPreferences => 'Tùy chọn thông báo';
+
+  @override
+  String get enableNotifications => 'Bật thông báo';
+
+  @override
+  String get disableNotifications => 'Tắt thông báo';
+
+  @override
+  String get pushNotifications => 'Thông báo đẩy';
+
+  @override
+  String get receivePushNotifications => 'Nhận thông báo đẩy từ server';
+
+  @override
+  String get localNotifications => 'Thông báo cục bộ';
+
+  @override
+  String get receiveLocalNotifications => 'Nhận nhắc nhở và thông báo cục bộ';
+
+  @override
+  String get readingReminders => 'Nhắc nhở đọc sách';
+
+  @override
+  String get setReadingReminders => 'Đặt nhắc nhở đọc sách hàng ngày';
+
+  @override
+  String get reminderTime => 'Thời gian nhắc nhở';
+
+  @override
+  String get selectReminderTime => 'Chọn thời gian nhắc nhở';
+
+  @override
+  String get bookUpdates => 'Cập nhật sách';
+
+  @override
+  String get receiveBookUpdates => 'Nhận thông báo khi có sách mới';
+
+  @override
+  String get systemNotifications => 'Thông báo hệ thống';
+
+  @override
+  String get receiveSystemNotifications =>
+      'Nhận thông báo về cập nhật ứng dụng';
+
+  @override
+  String get notificationSound => 'Âm thanh thông báo';
+
+  @override
+  String get enableSound => 'Bật âm thanh';
+
+  @override
+  String get notificationVibration => 'Rung';
+
+  @override
+  String get enableVibration => 'Bật rung';
+
+  @override
+  String get notificationBadge => 'Badge';
+
+  @override
+  String get showBadge => 'Hiển thị badge trên icon';
+
+  @override
+  String get notificationPreview => 'Xem trước thông báo';
+
+  @override
+  String get showPreview => 'Hiển thị nội dung trên màn hình khóa';
+
+  @override
+  String get testNotification => 'Kiểm tra thông báo';
+
+  @override
+  String get sendTestNotification => 'Gửi thông báo thử nghiệm';
+
+  @override
+  String get testNotificationSent => 'Đã gửi thông báo thử nghiệm';
+
+  @override
+  String get notificationPermissionRequired => 'Cần cấp quyền thông báo';
+
+  @override
+  String get openSettings => 'Mở cài đặt';
+
+  @override
+  String get permissionDenied => 'Quyền bị từ chối';
+
+  @override
+  String get permissionGranted => 'Quyền đã được cấp';
+
+  @override
+  String get notificationCategories => 'Danh mục thông báo';
+
+  @override
+  String get manageNotificationCategories => 'Quản lý danh mục thông báo';
+
+  @override
+  String get clearAllNotifications => 'Xóa tất cả thông báo';
+
+  @override
+  String get notificationsCleared => 'Đã xóa tất cả thông báo';
+
+  @override
+  String get noNotifications => 'Không có thông báo';
+
+  @override
+  String get notificationHistory => 'Lịch sử thông báo';
+
+  @override
+  String get viewNotificationHistory => 'Xem lịch sử thông báo';
+
+  @override
+  String get fcmToken => 'FCM Token';
+
+  @override
+  String get copyToken => 'Sao chép token';
+
+  @override
+  String get tokenCopied => 'Đã sao chép token';
+
+  @override
+  String get refreshToken => 'Làm mới token';
+
+  @override
+  String get tokenRefreshed => 'Token đã được làm mới';
+
+  @override
+  String get notificationStatus => 'Trạng thái thông báo';
+
+  @override
+  String get permissionStatus => 'Trạng thái quyền';
+
+  @override
+  String get new_book => 'Mới';
+
+  @override
+  String get read_book => 'Đọc sách';
+
+  @override
+  String get view_details => 'Xem chi tiết';
+
+  @override
+  String get add_favorite => 'Thêm yêu thích';
+
+  @override
+  String get remove_favorite => 'Bỏ yêu thích';
+
+  @override
+  String get add_archive => 'Thêm lưu vào thư viện';
+
+  @override
+  String get remove_archive => 'Bỏ lưu vào thư viện';
+
+  @override
+  String get file_ebook_not_found => 'File ebook không tồn tại';
 }

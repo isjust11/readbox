@@ -14,7 +14,7 @@ class NotificationRemoteDataSource {
   }) async {
     Map<String, dynamic> params = {};
     if (page != null) params['page'] = page;
-    if (limit != null) params['limit'] = limit;
+    if (limit != null) params['size'] = limit;
     if (isRead != null) params['isRead'] = isRead;
 
     ApiResponse apiResponse = await network.get(
@@ -25,7 +25,7 @@ class NotificationRemoteDataSource {
     if (apiResponse.isSuccess) {
       if (apiResponse.data != null) {
         final data = apiResponse.data;
-        final notifications = (data['data'] as List?)
+        final notifications = (data['items'] as List?)
                 ?.map((item) =>
                     NotificationModel.fromJson(item as Map<String, dynamic>))
                 .toList() ??

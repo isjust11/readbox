@@ -1333,6 +1333,768 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Privacy and security'**
   String get privacy_and_security;
+
+  /// No description provided for @pdfEpubMobi.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF, EPUB, MOBI'**
+  String get pdfEpubMobi;
+
+  /// No description provided for @fileEbook.
+  ///
+  /// In en, this message translates to:
+  /// **'File Ebook'**
+  String get fileEbook;
+
+  /// No description provided for @required_field.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get required_field;
+
+  /// No description provided for @select_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Select file'**
+  String get select_file;
+
+  /// No description provided for @from_file_picker.
+  ///
+  /// In en, this message translates to:
+  /// **'From file picker'**
+  String get from_file_picker;
+
+  /// No description provided for @in_memory.
+  ///
+  /// In en, this message translates to:
+  /// **'In memory'**
+  String get in_memory;
+
+  /// No description provided for @ready_to_upload.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to upload'**
+  String get ready_to_upload;
+
+  /// No description provided for @uploading.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading...'**
+  String get uploading;
+
+  /// No description provided for @upload_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload File'**
+  String get upload_file;
+
+  /// No description provided for @upload_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload success'**
+  String get upload_success;
+
+  /// No description provided for @cover_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover image'**
+  String get cover_image;
+
+  /// No description provided for @jpgPngWebp.
+  ///
+  /// In en, this message translates to:
+  /// **'JPG, PNG, WEBP'**
+  String get jpgPngWebp;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// No description provided for @select_cover_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Select cover image'**
+  String get select_cover_image;
+
+  /// No description provided for @recommended_size.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended size'**
+  String get recommended_size;
+
+  /// No description provided for @upload_cover_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload cover image'**
+  String get upload_cover_image;
+
+  /// No description provided for @cover_image_uploaded_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover image uploaded successfully'**
+  String get cover_image_uploaded_successfully;
+
+  /// No description provided for @book_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Book information'**
+  String get book_information;
+
+  /// No description provided for @title.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get title;
+
+  /// No description provided for @author.
+  ///
+  /// In en, this message translates to:
+  /// **'Author'**
+  String get author;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @publisher.
+  ///
+  /// In en, this message translates to:
+  /// **'Publisher'**
+  String get publisher;
+
+  /// No description provided for @isbn.
+  ///
+  /// In en, this message translates to:
+  /// **'ISBN'**
+  String get isbn;
+
+  /// No description provided for @total_pages.
+  ///
+  /// In en, this message translates to:
+  /// **'Total pages'**
+  String get total_pages;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @public.
+  ///
+  /// In en, this message translates to:
+  /// **'Public'**
+  String get public;
+
+  /// No description provided for @private.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get private;
+
+  /// No description provided for @book_will_be_displayed_for_everyone.
+  ///
+  /// In en, this message translates to:
+  /// **'Book will be displayed for everyone'**
+  String get book_will_be_displayed_for_everyone;
+
+  /// No description provided for @book_will_be_displayed_for_admin.
+  ///
+  /// In en, this message translates to:
+  /// **'Book will be displayed for admin'**
+  String get book_will_be_displayed_for_admin;
+
+  /// No description provided for @creating_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating book...'**
+  String get creating_book;
+
+  /// No description provided for @create_new_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new book'**
+  String get create_new_book;
+
+  /// No description provided for @please_enter_author.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter author'**
+  String get please_enter_author;
+
+  /// No description provided for @please_enter_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter description'**
+  String get please_enter_description;
+
+  /// No description provided for @please_enter_publisher.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter publisher'**
+  String get please_enter_publisher;
+
+  /// No description provided for @please_enter_isbn.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter ISBN'**
+  String get please_enter_isbn;
+
+  /// No description provided for @please_enter_total_pages.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter total pages'**
+  String get please_enter_total_pages;
+
+  /// No description provided for @please_enter_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter category'**
+  String get please_enter_category;
+
+  /// No description provided for @please_enter_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter title'**
+  String get please_enter_title;
+
+  /// No description provided for @select_language.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter language'**
+  String get select_language;
+
+  /// No description provided for @translate.
+  ///
+  /// In en, this message translates to:
+  /// **'Language translation'**
+  String get translate;
+
+  /// No description provided for @textToSpeech.
+  ///
+  /// In en, this message translates to:
+  /// **'Text to speech'**
+  String get textToSpeech;
+
+  /// No description provided for @convertTextToSpeech.
+  ///
+  /// In en, this message translates to:
+  /// **'Convert text to speech'**
+  String get convertTextToSpeech;
+
+  /// No description provided for @library.
+  ///
+  /// In en, this message translates to:
+  /// **'Ebook library'**
+  String get library;
+
+  /// No description provided for @ttsLanguageSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'TTS Language Settings'**
+  String get ttsLanguageSettings;
+
+  /// No description provided for @selectTTSLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select reading language'**
+  String get selectTTSLanguage;
+
+  /// No description provided for @ttsSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'TTS Settings'**
+  String get ttsSettings;
+
+  /// No description provided for @ttsSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading speed'**
+  String get ttsSpeed;
+
+  /// No description provided for @ttsVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume'**
+  String get ttsVolume;
+
+  /// No description provided for @ttsPitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice pitch'**
+  String get ttsPitch;
+
+  /// No description provided for @ttsVoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice'**
+  String get ttsVoice;
+
+  /// No description provided for @testTTS.
+  ///
+  /// In en, this message translates to:
+  /// **'Test reading'**
+  String get testTTS;
+
+  /// No description provided for @ttsTestText.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, this is a text-to-speech test.'**
+  String get ttsTestText;
+
+  /// No description provided for @noLanguagesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No languages available'**
+  String get noLanguagesAvailable;
+
+  /// No description provided for @currentLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Current language'**
+  String get currentLanguage;
+
+  /// No description provided for @availableLanguages.
+  ///
+  /// In en, this message translates to:
+  /// **'Available languages'**
+  String get availableLanguages;
+
+  /// No description provided for @selectVoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Select voice'**
+  String get selectVoice;
+
+  /// No description provided for @defaultVoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Default voice'**
+  String get defaultVoice;
+
+  /// No description provided for @readingSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading speed'**
+  String get readingSpeed;
+
+  /// No description provided for @slow.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow'**
+  String get slow;
+
+  /// No description provided for @normal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get normal;
+
+  /// No description provided for @fast.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast'**
+  String get fast;
+
+  /// No description provided for @veryFast.
+  ///
+  /// In en, this message translates to:
+  /// **'Very fast'**
+  String get veryFast;
+
+  /// No description provided for @voicePitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice pitch'**
+  String get voicePitch;
+
+  /// No description provided for @low.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get low;
+
+  /// No description provided for @medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get medium;
+
+  /// No description provided for @high.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get high;
+
+  /// No description provided for @playTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Play test'**
+  String get playTest;
+
+  /// No description provided for @stopTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get stopTest;
+
+  /// No description provided for @languageChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Language changed'**
+  String get languageChanged;
+
+  /// No description provided for @settingsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings saved'**
+  String get settingsSaved;
+
+  /// No description provided for @errorChangingLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Error changing language'**
+  String get errorChangingLanguage;
+
+  /// No description provided for @errorSavingSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving settings'**
+  String get errorSavingSettings;
+
+  /// No description provided for @ttsNotInitialized.
+  ///
+  /// In en, this message translates to:
+  /// **'TTS not initialized'**
+  String get ttsNotInitialized;
+
+  /// No description provided for @initializingTTS.
+  ///
+  /// In en, this message translates to:
+  /// **'Initializing TTS...'**
+  String get initializingTTS;
+
+  /// No description provided for @notificationSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Settings'**
+  String get notificationSettings;
+
+  /// No description provided for @notificationPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Preferences'**
+  String get notificationPreferences;
+
+  /// No description provided for @enableNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable notifications'**
+  String get enableNotifications;
+
+  /// No description provided for @disableNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable notifications'**
+  String get disableNotifications;
+
+  /// No description provided for @pushNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get pushNotifications;
+
+  /// No description provided for @receivePushNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive push notifications from server'**
+  String get receivePushNotifications;
+
+  /// No description provided for @localNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Notifications'**
+  String get localNotifications;
+
+  /// No description provided for @receiveLocalNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive reminders and local notifications'**
+  String get receiveLocalNotifications;
+
+  /// No description provided for @readingReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading Reminders'**
+  String get readingReminders;
+
+  /// No description provided for @setReadingReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Set daily reading reminders'**
+  String get setReadingReminders;
+
+  /// No description provided for @reminderTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder Time'**
+  String get reminderTime;
+
+  /// No description provided for @selectReminderTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select reminder time'**
+  String get selectReminderTime;
+
+  /// No description provided for @bookUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Updates'**
+  String get bookUpdates;
+
+  /// No description provided for @receiveBookUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive notifications for new books'**
+  String get receiveBookUpdates;
+
+  /// No description provided for @systemNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'System Notifications'**
+  String get systemNotifications;
+
+  /// No description provided for @receiveSystemNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive app update notifications'**
+  String get receiveSystemNotifications;
+
+  /// No description provided for @notificationSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Sound'**
+  String get notificationSound;
+
+  /// No description provided for @enableSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable sound'**
+  String get enableSound;
+
+  /// No description provided for @notificationVibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibration'**
+  String get notificationVibration;
+
+  /// No description provided for @enableVibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable vibration'**
+  String get enableVibration;
+
+  /// No description provided for @notificationBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Badge'**
+  String get notificationBadge;
+
+  /// No description provided for @showBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Show badge on app icon'**
+  String get showBadge;
+
+  /// No description provided for @notificationPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Preview'**
+  String get notificationPreview;
+
+  /// No description provided for @showPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'Show content on lock screen'**
+  String get showPreview;
+
+  /// No description provided for @testNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Notification'**
+  String get testNotification;
+
+  /// No description provided for @sendTestNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Send test notification'**
+  String get sendTestNotification;
+
+  /// No description provided for @testNotificationSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Test notification sent'**
+  String get testNotificationSent;
+
+  /// No description provided for @notificationPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification permission required'**
+  String get notificationPermissionRequired;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get openSettings;
+
+  /// No description provided for @permissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission denied'**
+  String get permissionDenied;
+
+  /// No description provided for @permissionGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission granted'**
+  String get permissionGranted;
+
+  /// No description provided for @notificationCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Categories'**
+  String get notificationCategories;
+
+  /// No description provided for @manageNotificationCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage notification categories'**
+  String get manageNotificationCategories;
+
+  /// No description provided for @clearAllNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all notifications'**
+  String get clearAllNotifications;
+
+  /// No description provided for @notificationsCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'All notifications cleared'**
+  String get notificationsCleared;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications'**
+  String get noNotifications;
+
+  /// No description provided for @notificationHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification History'**
+  String get notificationHistory;
+
+  /// No description provided for @viewNotificationHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'View notification history'**
+  String get viewNotificationHistory;
+
+  /// No description provided for @fcmToken.
+  ///
+  /// In en, this message translates to:
+  /// **'FCM Token'**
+  String get fcmToken;
+
+  /// No description provided for @copyToken.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy token'**
+  String get copyToken;
+
+  /// No description provided for @tokenCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Token copied'**
+  String get tokenCopied;
+
+  /// No description provided for @refreshToken.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh token'**
+  String get refreshToken;
+
+  /// No description provided for @tokenRefreshed.
+  ///
+  /// In en, this message translates to:
+  /// **'Token refreshed'**
+  String get tokenRefreshed;
+
+  /// No description provided for @notificationStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Status'**
+  String get notificationStatus;
+
+  /// No description provided for @permissionStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Status'**
+  String get permissionStatus;
+
+  /// No description provided for @new_book.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get new_book;
+
+  /// No description provided for @read_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Read book'**
+  String get read_book;
+
+  /// No description provided for @view_details.
+  ///
+  /// In en, this message translates to:
+  /// **'View details'**
+  String get view_details;
+
+  /// No description provided for @add_favorite.
+  ///
+  /// In en, this message translates to:
+  /// **'Add favorite'**
+  String get add_favorite;
+
+  /// No description provided for @remove_favorite.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove favorite'**
+  String get remove_favorite;
+
+  /// No description provided for @add_archive.
+  ///
+  /// In en, this message translates to:
+  /// **'Add archive'**
+  String get add_archive;
+
+  /// No description provided for @remove_archive.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove archive'**
+  String get remove_archive;
+
+  /// No description provided for @file_ebook_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'File ebook not found'**
+  String get file_ebook_not_found;
 }
 
 class _AppLocalizationsDelegate

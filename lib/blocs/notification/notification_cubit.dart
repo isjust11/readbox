@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/utils.dart';
+import 'package:readbox/domain/data/entities/notification_entity.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 
@@ -122,7 +123,7 @@ class NotificationCubit extends Cubit<BaseState> {
       
       // Update all notifications in local list to read
       for (var notification in _notifications) {
-        notification.isRead = true;
+        notification.status = NotificationStatus.read;
       }
       _unreadCount = 0;
       

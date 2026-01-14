@@ -11,6 +11,11 @@ enum NotificationType {
   other
 }
 
+enum NotificationStatus {
+  read,
+  unread,
+}
+
 class NotificationEntity extends BaseEntity {
   String? id;
   String? title;
@@ -18,7 +23,8 @@ class NotificationEntity extends BaseEntity {
   String? message;
   NotificationType? type;
   Map<String, dynamic>? data;
-  bool? isRead;
+  NotificationStatus? status;
+  DateTime? sentAt;
   DateTime? createdAt;
   DateTime? readAt;
   String? userId;
@@ -33,7 +39,8 @@ class NotificationEntity extends BaseEntity {
     this.message,
     this.type,
     this.data,
-    this.isRead,
+    this.status,
+    this.sentAt,
     this.createdAt,
     this.readAt,
     this.userId,
@@ -45,13 +52,21 @@ class NotificationEntity extends BaseEntity {
   NotificationEntity.fromJson(Map<String, dynamic> json) {
     id = json['id']?.toString();
     title = json['title'];
-    body = json['body'];
-    message = json['message'] ?? json['body'];
+    body = json['content'];
+    message = json['message'] ?? json['content'];
     type = _parseNotificationType(json['type']);
     data = json['data'] != null
         ? Map<String, dynamic>.from(json['data'])
         : null;
-    isRead = json['isRead'] ?? json['read'] ?? false;
+    status = json['status'] != null
+        ? NotificationStatus.values.firstWhere(
+            (e) => e.toString() == 'NotificationStatus.${json['status']}',
+            orElse: () => NotificationStatus.unread,
+          )
+        : NotificationStatus.unread;
+    sentAt = json['sentAt'] != null
+        ? DateTime.parse(json['sentAt'])
+        : null;
     createdAt = json['createdAt'] != null
         ? DateTime.parse(json['createdAt'])
         : null;
@@ -100,7 +115,7 @@ class NotificationEntity extends BaseEntity {
     jsonData['message'] = message;
     jsonData['type'] = type?.toString().split('.').last;
     jsonData['data'] = data;
-    jsonData['isRead'] = isRead;
+    jsonData['status'] = status?.toString().split('.').last;
     jsonData['createdAt'] = createdAt?.toIso8601String();
     jsonData['readAt'] = readAt?.toIso8601String();
     jsonData['userId'] = userId;
