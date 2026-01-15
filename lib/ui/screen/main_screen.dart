@@ -16,7 +16,10 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<LibraryCubit>(
       create: (_) => getIt.get<LibraryCubit>(),
-      child: MainBody(),
+      child: BlocProvider<NotificationCubit>(
+        create: (_) => getIt.get<NotificationCubit>()..getUnreadCount(),
+        child: MainBody(),
+      ),
     );
   }
 }
@@ -45,7 +48,7 @@ class MainBodyState extends State<MainBody> {
   @override
   void initState() {
     super.initState();
-    title = AppLocalizations.current.my_library;  
+    title = AppLocalizations.current.my_library;
     // Load initial data after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getBooks();
@@ -138,6 +141,49 @@ class MainBodyState extends State<MainBody> {
     }
   }
 
+  Widget _buildNotificationButton() {
+    return ValueListenableBuilder<int>(
+      valueListenable: context.read<NotificationCubit>().unreadCountNotifier,
+      builder: (context, unreadCount, child) {
+        return unreadCount > 0
+            ? Stack(
+              children: [
+                 IconButton(
+                  icon: Icon(
+                    Icons.notifications,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, Routes.notificationScreen);
+                  },
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Badge(
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                    label: Text(
+                      unreadCount.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+               
+              ],
+            )
+            : IconButton(
+              icon: Icon(
+                Icons.notifications,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.notificationScreen);
+              },
+            );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -177,15 +223,13 @@ class MainBodyState extends State<MainBody> {
                 : Text(title, style: TextStyle(color: colorScheme.onSurface)),
         actions: [
           IconButton(
-            icon: Icon(_isSearching ? Icons.close : Icons.search, color: colorScheme.onSurface),
+            icon: Icon(
+              _isSearching ? Icons.close : Icons.search,
+              color: colorScheme.onSurface,
+            ),
             onPressed: _toggleSearch,
           ),
-          IconButton(
-            icon: Icon(Icons.notifications, color: colorScheme.onSurface),
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.notificationScreen);
-            },
-          ),
+          _buildNotificationButton(),
         ],
       ),
       drawer: AppDrawer(
@@ -195,7 +239,7 @@ class MainBodyState extends State<MainBody> {
             this.title = title;
           });
           getBooks();
-        }, 
+        },
       ),
       body: BlocListener<BookRefreshCubit, int>(
         listener: (context, state) {
@@ -222,7 +266,11 @@ class MainBodyState extends State<MainBody> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.error_outline, size: 64, color: colorScheme.error),
+                    Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: colorScheme.error,
+                    ),
                     SizedBox(height: 16),
                     Text(
                       state.data?.toString() ??
@@ -246,16 +294,26 @@ class MainBodyState extends State<MainBody> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.book_outlined, size: 64, color: colorScheme.onSurface),
+                    Icon(
+                      Icons.book_outlined,
+                      size: 64,
+                      color: colorScheme.onSurface,
+                    ),
                     SizedBox(height: 16),
                     Text(
                       AppLocalizations.current.no_books,
-                      style: TextStyle(fontSize: 18, color: colorScheme.onSurface),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: colorScheme.onSurface,
+                      ),
                     ),
                     SizedBox(height: 8),
                     Text(
                       AppLocalizations.current.add_book_to_start_reading,
-                      style: TextStyle(fontSize: 14, color: colorScheme.onSurface),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: colorScheme.onSurface,
+                      ),
                     ),
                   ],
                 ),
@@ -287,8 +345,11 @@ class MainBodyState extends State<MainBody> {
                       child: Center(
                         child: Text(
                           AppLocalizations.current.all_data_loaded,
-                          style: TextStyle(color: Theme.of(context).
-                          colorScheme.onSurface.withValues(alpha: 0.8)),
+                          style: TextStyle(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.8),
+                          ),
                         ),
                       ),
                     );
@@ -308,8 +369,10 @@ class MainBodyState extends State<MainBody> {
                 ),
                 itemCount: books.length,
                 itemBuilder: (context, index) {
-                  return BookCard(book: books[index], 
-                  userInteractionCubit: context.read<UserInteractionCubit>());
+                  return BookCard(
+                    book: books[index],
+                    userInteractionCubit: context.read<UserInteractionCubit>(),
+                  );
                 },
               ),
             );

@@ -58,10 +58,10 @@ class _AppDrawerState extends State<AppDrawer> {
                 padding: EdgeInsets.zero,
                 children: [
                   _buildDrawerItem(
-                    icon: Icons.library_books,
-                    title: AppLocalizations.current.all_books,
+                    icon: Icons.explore,
+                    title: AppLocalizations.current.book_discover,
                     isSelected: _currentFilter == 'all',
-                    onTap: () => _filterBooks('all', AppLocalizations.current.all_books),
+                    onTap: () => _filterBooks('all', AppLocalizations.current.book_discover),
                     iconColor: Theme.of(context).primaryColor,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),

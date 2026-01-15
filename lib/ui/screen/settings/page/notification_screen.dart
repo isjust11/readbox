@@ -127,31 +127,6 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
     );
   }
 
-  void _showDeleteAllDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Center(child: Text(AppLocalizations.current.deleteAll, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500))),
-          content: Text(AppLocalizations.current.areYouSureYouWantToDeleteAllNotifications, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Hủy'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-                context.read<NotificationCubit>().deleteAllNotifications();
-              },
-              child: const Text('Xóa', style: TextStyle(color: Colors.red)),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -170,19 +145,18 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       IconButton(
         icon: Icon(Icons.filter_list, color: theme.colorScheme.onPrimary),
         onPressed: _showFilterDialog,
-        tooltip: 'Lọc',
+        tooltip: AppLocalizations.current.filter,
       ),
       PopupMenuButton<String>(
         icon: Icon(Icons.more_vert, color: theme.colorScheme.onPrimary),
         onSelected: (value) {
-          final cubit = context.read<NotificationCubit>();
-          if(cubit.notifications.isEmpty) {
+          if(_cubit.notifications.isEmpty) {
             return;
           }
-          if (value == 'mark_all_read') {
-            cubit.markAllAsRead();
+          if (value == 'mark_all_read' && _cubit.unreadCount > 0) {
+            _cubit.markAllAsRead();
           } else if (value == 'delete_all') {
-            _showDeleteAllDialog();
+            _cubit.deleteAllNotifications();
           }
         },
         itemBuilder:

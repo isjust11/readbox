@@ -32,7 +32,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "address": MessageLookupByLibrary.simpleMessage("Địa chỉ"),
         "agree": MessageLookupByLibrary.simpleMessage("Đồng ý"),
         "all": MessageLookupByLibrary.simpleMessage("Tất cả"),
-        "all_books": MessageLookupByLibrary.simpleMessage("Tất cả sách"),
         "all_data_loaded":
             MessageLookupByLibrary.simpleMessage("Đã tải hết dữ liệu"),
         "archived_books": MessageLookupByLibrary.simpleMessage("Sách đã lưu"),
@@ -57,6 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Thiết lập sinh trắc học thành công"),
         "birth_date": MessageLookupByLibrary.simpleMessage("Ngày sinh"),
         "bookUpdates": MessageLookupByLibrary.simpleMessage("Cập nhật sách"),
+        "book_discover": MessageLookupByLibrary.simpleMessage("Khám phá"),
         "book_information":
             MessageLookupByLibrary.simpleMessage("Thông tin sách"),
         "book_will_be_displayed_for_admin":

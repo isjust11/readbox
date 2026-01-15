@@ -420,11 +420,11 @@ class AppLocalizations {
     );
   }
 
-  /// `Tất cả sách`
-  String get all_books {
+  /// `Khám phá`
+  String get book_discover {
     return Intl.message(
-      'Tất cả sách',
-      name: 'all_books',
+      'Khám phá',
+      name: 'book_discover',
       desc: '',
       args: [],
     );

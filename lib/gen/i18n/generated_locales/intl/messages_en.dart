@@ -30,7 +30,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "add_favorite": MessageLookupByLibrary.simpleMessage("Add favorite"),
         "agree": MessageLookupByLibrary.simpleMessage("Agree"),
         "all": MessageLookupByLibrary.simpleMessage("All"),
-        "all_books": MessageLookupByLibrary.simpleMessage("All books"),
         "all_data_loaded":
             MessageLookupByLibrary.simpleMessage("All data loaded"),
         "archived_books":
@@ -54,6 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "biometricSetupSuccess":
             MessageLookupByLibrary.simpleMessage("Biometric setup successful"),
         "bookUpdates": MessageLookupByLibrary.simpleMessage("Book Updates"),
+        "book_discover": MessageLookupByLibrary.simpleMessage("Discover"),
         "book_information":
             MessageLookupByLibrary.simpleMessage("Book information"),
         "book_will_be_displayed_for_admin":

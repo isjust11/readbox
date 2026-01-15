@@ -135,7 +135,7 @@ class NotificationRemoteDataSource {
     );
 
     if (apiResponse.isSuccess) {
-      return apiResponse.data['count'] ?? 0;
+      return apiResponse.data ?? 0;
     }
     return Future.error(apiResponse.errMessage);
   }
