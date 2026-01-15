@@ -12,8 +12,8 @@ enum NotificationType {
 }
 
 enum NotificationStatus {
-  read,
-  unread,
+  READ,
+  UNREAD,
 }
 
 class NotificationEntity extends BaseEntity {
@@ -61,9 +61,9 @@ class NotificationEntity extends BaseEntity {
     status = json['status'] != null
         ? NotificationStatus.values.firstWhere(
             (e) => e.toString() == 'NotificationStatus.${json['status']}',
-            orElse: () => NotificationStatus.unread,
+            orElse: () => NotificationStatus.UNREAD,
           )
-        : NotificationStatus.unread;
+        : NotificationStatus.UNREAD;
     sentAt = json['sentAt'] != null
         ? DateTime.parse(json['sentAt'])
         : null;

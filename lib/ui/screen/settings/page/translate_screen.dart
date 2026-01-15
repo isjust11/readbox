@@ -179,7 +179,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
         gradient: LinearGradient(
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.7),
+            Theme.of(context).primaryColor.withValues(alpha: 0.7),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -187,7 +187,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
         borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).primaryColor.withOpacity(0.3),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -201,7 +201,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
               Container(
                 padding: const EdgeInsets.all(AppDimens.SIZE_12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
                 ),
                 child: const Icon(
@@ -215,7 +215,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
                 child: CustomTextLabel(
                   AppLocalizations.current.currentLanguage,
                   fontSize: AppDimens.SIZE_14,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -232,7 +232,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
           CustomTextLabel(
             _currentLanguage,
             fontSize: AppDimens.SIZE_14,
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
           ),
         ],
       ),

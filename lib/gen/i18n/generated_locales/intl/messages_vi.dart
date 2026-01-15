@@ -31,10 +31,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "add_favorite": MessageLookupByLibrary.simpleMessage("Thêm yêu thích"),
         "address": MessageLookupByLibrary.simpleMessage("Địa chỉ"),
         "agree": MessageLookupByLibrary.simpleMessage("Đồng ý"),
+        "all": MessageLookupByLibrary.simpleMessage("Tất cả"),
         "all_books": MessageLookupByLibrary.simpleMessage("Tất cả sách"),
         "all_data_loaded":
             MessageLookupByLibrary.simpleMessage("Đã tải hết dữ liệu"),
         "archived_books": MessageLookupByLibrary.simpleMessage("Sách đã lưu"),
+        "areYouSureYouWantToDeleteAllNotifications":
+            MessageLookupByLibrary.simpleMessage(
+                "Bạn có chắc chắn muốn xóa tất cả thông báo?"),
+        "areYouSureYouWantToDeleteNotification":
+            MessageLookupByLibrary.simpleMessage(
+                "Bạn có chắc chắn muốn xóa thông báo này?"),
         "author": MessageLookupByLibrary.simpleMessage("Tác giả"),
         "availableLanguages":
             MessageLookupByLibrary.simpleMessage("Ngôn ngữ khả dụng"),
@@ -93,6 +100,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Ngôn ngữ hiện tại"),
         "dark": MessageLookupByLibrary.simpleMessage("Tối"),
         "defaultVoice": MessageLookupByLibrary.simpleMessage("Giọng mặc định"),
+        "delete": MessageLookupByLibrary.simpleMessage("Xóa"),
+        "deleteAll": MessageLookupByLibrary.simpleMessage("Xóa tất cả"),
+        "deleteAllNotificationsFailed": MessageLookupByLibrary.simpleMessage(
+            "Xóa tất cả thông báo thất bại"),
+        "deleteAllNotificationsSuccess": MessageLookupByLibrary.simpleMessage(
+            "Xóa tất cả thông báo thành công"),
+        "deleteNotification":
+            MessageLookupByLibrary.simpleMessage("Xóa thông báo"),
+        "deleteNotificationFailed":
+            MessageLookupByLibrary.simpleMessage("Xóa thông báo thất bại"),
+        "deleteNotificationSuccess":
+            MessageLookupByLibrary.simpleMessage("Xóa thông báo thành công"),
         "delete_book": MessageLookupByLibrary.simpleMessage("Xóa sách"),
         "description": MessageLookupByLibrary.simpleMessage("Mô tả"),
         "disableNotifications":
@@ -182,6 +201,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fileEbook": MessageLookupByLibrary.simpleMessage("File Ebook"),
         "file_ebook_not_found":
             MessageLookupByLibrary.simpleMessage("File ebook không tồn tại"),
+        "filter": MessageLookupByLibrary.simpleMessage("Lọc"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Quên mật khẩu"),
         "from_file_picker":
@@ -288,6 +308,37 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Quản lý danh mục thông báo"),
         "manageNotifications":
             MessageLookupByLibrary.simpleMessage("Quản lý thông báo"),
+        "markAllAsRead":
+            MessageLookupByLibrary.simpleMessage("Đánh dấu tất cả đã đọc"),
+        "markAllAsReadFailed": MessageLookupByLibrary.simpleMessage(
+            "Đánh dấu tất cả đã đọc thất bại"),
+        "markAllAsReadSuccess": MessageLookupByLibrary.simpleMessage(
+            "Đánh dấu tất cả đã đọc thành công"),
+        "markAllAsUnread":
+            MessageLookupByLibrary.simpleMessage("Đánh dấu tất cả chưa đọc"),
+        "markAllAsUnreadFailed": MessageLookupByLibrary.simpleMessage(
+            "Đánh dấu tất cả chưa đọc thất bại"),
+        "markAllAsUnreadSuccess": MessageLookupByLibrary.simpleMessage(
+            "Đánh dấu tất cả chưa đọc thành công"),
+        "markAsRead": MessageLookupByLibrary.simpleMessage("Đánh dấu đã đọc"),
+        "markAsReadFailed":
+            MessageLookupByLibrary.simpleMessage("Đánh dấu đã đọc thất bại"),
+        "markAsReadSuccess":
+            MessageLookupByLibrary.simpleMessage("Đánh dấu đã đọc thành công"),
+        "markAsUnread":
+            MessageLookupByLibrary.simpleMessage("Đánh dấu chưa đọc"),
+        "markAsUnreadFailed":
+            MessageLookupByLibrary.simpleMessage("Đánh dấu chưa đọc thất bại"),
+        "markAsUnreadSuccess": MessageLookupByLibrary.simpleMessage(
+            "Đánh dấu chưa đọc thành công"),
+        "markReadFailed":
+            MessageLookupByLibrary.simpleMessage("Đánh dấu đã đọc thất bại"),
+        "markReadSuccess":
+            MessageLookupByLibrary.simpleMessage("Đánh dấu đã đọc thành công"),
+        "markUnreadFailed":
+            MessageLookupByLibrary.simpleMessage("Đánh dấu chưa đọc thất bại"),
+        "markUnreadSuccess": MessageLookupByLibrary.simpleMessage(
+            "Đánh dấu chưa đọc thành công"),
         "medium": MessageLookupByLibrary.simpleMessage("Trung bình"),
         "my_books": MessageLookupByLibrary.simpleMessage("Sách của tôi"),
         "my_library": MessageLookupByLibrary.simpleMessage("Thư viện của tôi"),
@@ -312,8 +363,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "notificationBadge": MessageLookupByLibrary.simpleMessage("Badge"),
         "notificationCategories":
             MessageLookupByLibrary.simpleMessage("Danh mục thông báo"),
+        "notificationDeletedFailed":
+            MessageLookupByLibrary.simpleMessage("Đã xóa thông báo thất bại"),
+        "notificationDeletedSuccessfully":
+            MessageLookupByLibrary.simpleMessage("Đã xóa thông báo thành công"),
         "notificationHistory":
             MessageLookupByLibrary.simpleMessage("Lịch sử thông báo"),
+        "notificationMarkedAsReadFailed":
+            MessageLookupByLibrary.simpleMessage("Đã đánh dấu đã đọc thất bại"),
+        "notificationMarkedAsReadSuccessfully":
+            MessageLookupByLibrary.simpleMessage(
+                "Đã đánh dấu đã đọc thành công"),
         "notificationPermissionRequired":
             MessageLookupByLibrary.simpleMessage("Cần cấp quyền thông báo"),
         "notificationPreferences":
@@ -442,6 +502,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Kéo xuống để làm mới"),
         "pushNotifications":
             MessageLookupByLibrary.simpleMessage("Thông báo đẩy"),
+        "read": MessageLookupByLibrary.simpleMessage("Đã đọc"),
         "read_book": MessageLookupByLibrary.simpleMessage("Đọc sách"),
         "readingReminders":
             MessageLookupByLibrary.simpleMessage("Nhắc nhở đọc sách"),
@@ -540,6 +601,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "ttsVolume": MessageLookupByLibrary.simpleMessage("Âm lượng"),
         "twitter_link":
             MessageLookupByLibrary.simpleMessage("Liên kết Twitter"),
+        "unread": MessageLookupByLibrary.simpleMessage("Chưa đọc"),
+        "unreadNotifications":
+            MessageLookupByLibrary.simpleMessage("thông báo chưa đọc"),
         "update": MessageLookupByLibrary.simpleMessage("Cập nhật"),
         "updateYourInfo":
             MessageLookupByLibrary.simpleMessage("Cập nhật thông tin"),
@@ -596,6 +660,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "voicePitch": MessageLookupByLibrary.simpleMessage("Cao độ giọng"),
         "warning": MessageLookupByLibrary.simpleMessage("Cảnh báo"),
         "welcome_back":
-            MessageLookupByLibrary.simpleMessage("Chào mừng trở lại!")
+            MessageLookupByLibrary.simpleMessage("Chào mừng trở lại!"),
+        "youHave": MessageLookupByLibrary.simpleMessage("Bạn có")
       };
 }

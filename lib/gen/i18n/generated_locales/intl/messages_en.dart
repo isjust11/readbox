@@ -29,11 +29,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Add book to start reading"),
         "add_favorite": MessageLookupByLibrary.simpleMessage("Add favorite"),
         "agree": MessageLookupByLibrary.simpleMessage("Agree"),
+        "all": MessageLookupByLibrary.simpleMessage("All"),
         "all_books": MessageLookupByLibrary.simpleMessage("All books"),
         "all_data_loaded":
             MessageLookupByLibrary.simpleMessage("All data loaded"),
         "archived_books":
             MessageLookupByLibrary.simpleMessage("Archived books"),
+        "areYouSureYouWantToDeleteAllNotifications":
+            MessageLookupByLibrary.simpleMessage(
+                "Are you sure you want to delete all notifications?"),
+        "areYouSureYouWantToDeleteNotification":
+            MessageLookupByLibrary.simpleMessage(
+                "Are you sure you want to delete this notification?"),
         "author": MessageLookupByLibrary.simpleMessage("Author"),
         "availableLanguages":
             MessageLookupByLibrary.simpleMessage("Available languages"),
@@ -91,6 +98,18 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Current language"),
         "dark": MessageLookupByLibrary.simpleMessage("Dark"),
         "defaultVoice": MessageLookupByLibrary.simpleMessage("Default voice"),
+        "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "deleteAll": MessageLookupByLibrary.simpleMessage("Delete all"),
+        "deleteAllNotificationsFailed": MessageLookupByLibrary.simpleMessage(
+            "Delete all notifications failed"),
+        "deleteAllNotificationsSuccess": MessageLookupByLibrary.simpleMessage(
+            "Delete all notifications successfully"),
+        "deleteNotification":
+            MessageLookupByLibrary.simpleMessage("Delete notification"),
+        "deleteNotificationFailed":
+            MessageLookupByLibrary.simpleMessage("Delete notification failed"),
+        "deleteNotificationSuccess": MessageLookupByLibrary.simpleMessage(
+            "Delete notification successfully"),
         "delete_book": MessageLookupByLibrary.simpleMessage("Delete book"),
         "description": MessageLookupByLibrary.simpleMessage("Description"),
         "disableNotifications":
@@ -177,6 +196,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fileEbook": MessageLookupByLibrary.simpleMessage("File Ebook"),
         "file_ebook_not_found":
             MessageLookupByLibrary.simpleMessage("File ebook not found"),
+        "filter": MessageLookupByLibrary.simpleMessage("Filter"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Forgot password"),
         "from_file_picker":
@@ -274,6 +294,36 @@ class MessageLookup extends MessageLookupByLibrary {
             "Manage notification categories"),
         "manageNotifications":
             MessageLookupByLibrary.simpleMessage("Manage notifications"),
+        "markAllAsRead":
+            MessageLookupByLibrary.simpleMessage("Mark all as read"),
+        "markAllAsReadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark all as read failed"),
+        "markAllAsReadSuccess": MessageLookupByLibrary.simpleMessage(
+            "Mark all as read successfully"),
+        "markAllAsUnread":
+            MessageLookupByLibrary.simpleMessage("Mark all as unread"),
+        "markAllAsUnreadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark all as unread failed"),
+        "markAllAsUnreadSuccess": MessageLookupByLibrary.simpleMessage(
+            "Mark all as unread successfully"),
+        "markAsRead": MessageLookupByLibrary.simpleMessage("Mark as read"),
+        "markAsReadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark as read failed"),
+        "markAsReadSuccess":
+            MessageLookupByLibrary.simpleMessage("Mark as read successfully"),
+        "markAsUnread": MessageLookupByLibrary.simpleMessage("Mark as unread"),
+        "markAsUnreadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark as unread failed"),
+        "markAsUnreadSuccess":
+            MessageLookupByLibrary.simpleMessage("Mark as unread successfully"),
+        "markReadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark read failed"),
+        "markReadSuccess":
+            MessageLookupByLibrary.simpleMessage("Mark read successfully"),
+        "markUnreadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark unread failed"),
+        "markUnreadSuccess":
+            MessageLookupByLibrary.simpleMessage("Mark unread successfully"),
         "medium": MessageLookupByLibrary.simpleMessage("Medium"),
         "my_books": MessageLookupByLibrary.simpleMessage("My books"),
         "my_library": MessageLookupByLibrary.simpleMessage("My library"),
@@ -296,6 +346,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "notificationBadge": MessageLookupByLibrary.simpleMessage("Badge"),
         "notificationCategories":
             MessageLookupByLibrary.simpleMessage("Notification Categories"),
+        "notificationDeletedFailed":
+            MessageLookupByLibrary.simpleMessage("Notification deleted failed"),
+        "notificationDeletedSuccessfully": MessageLookupByLibrary.simpleMessage(
+            "Notification deleted successfully"),
         "notificationHistory":
             MessageLookupByLibrary.simpleMessage("Notification History"),
         "notificationPermissionRequired": MessageLookupByLibrary.simpleMessage(
@@ -419,6 +473,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Pull down to refresh"),
         "pushNotifications":
             MessageLookupByLibrary.simpleMessage("Push Notifications"),
+        "read": MessageLookupByLibrary.simpleMessage("Read"),
         "read_book": MessageLookupByLibrary.simpleMessage("Read book"),
         "readingReminders":
             MessageLookupByLibrary.simpleMessage("Reading Reminders"),
@@ -511,6 +566,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Hello, this is a text-to-speech test."),
         "ttsVoice": MessageLookupByLibrary.simpleMessage("Voice"),
         "ttsVolume": MessageLookupByLibrary.simpleMessage("Volume"),
+        "unread": MessageLookupByLibrary.simpleMessage("Unread"),
+        "unreadNotifications":
+            MessageLookupByLibrary.simpleMessage("unread notifications"),
         "update": MessageLookupByLibrary.simpleMessage("Update"),
         "updateYourInfo":
             MessageLookupByLibrary.simpleMessage("Update your information"),
@@ -566,6 +624,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "view_details": MessageLookupByLibrary.simpleMessage("View details"),
         "voicePitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
         "warning": MessageLookupByLibrary.simpleMessage("Warning"),
-        "welcome_back": MessageLookupByLibrary.simpleMessage("Welcome back!")
+        "welcome_back": MessageLookupByLibrary.simpleMessage("Welcome back!"),
+        "youHave": MessageLookupByLibrary.simpleMessage("You have")
       };
 }

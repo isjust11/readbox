@@ -3569,6 +3569,356 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Lọc`
+  String get filter {
+    return Intl.message(
+      'Lọc',
+      name: 'filter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tất cả`
+  String get all {
+    return Intl.message(
+      'Tất cả',
+      name: 'all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chưa đọc`
+  String get unread {
+    return Intl.message(
+      'Chưa đọc',
+      name: 'unread',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã đọc`
+  String get read {
+    return Intl.message(
+      'Đã đọc',
+      name: 'read',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa tất cả`
+  String get deleteAll {
+    return Intl.message(
+      'Xóa tất cả',
+      name: 'deleteAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn có chắc chắn muốn xóa tất cả thông báo?`
+  String get areYouSureYouWantToDeleteAllNotifications {
+    return Intl.message(
+      'Bạn có chắc chắn muốn xóa tất cả thông báo?',
+      name: 'areYouSureYouWantToDeleteAllNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu tất cả đã đọc`
+  String get markAllAsRead {
+    return Intl.message(
+      'Đánh dấu tất cả đã đọc',
+      name: 'markAllAsRead',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu tất cả chưa đọc`
+  String get markAllAsUnread {
+    return Intl.message(
+      'Đánh dấu tất cả chưa đọc',
+      name: 'markAllAsUnread',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu tất cả đã đọc thành công`
+  String get markAllAsReadSuccess {
+    return Intl.message(
+      'Đánh dấu tất cả đã đọc thành công',
+      name: 'markAllAsReadSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu tất cả chưa đọc thành công`
+  String get markAllAsUnreadSuccess {
+    return Intl.message(
+      'Đánh dấu tất cả chưa đọc thành công',
+      name: 'markAllAsUnreadSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu tất cả đã đọc thất bại`
+  String get markAllAsReadFailed {
+    return Intl.message(
+      'Đánh dấu tất cả đã đọc thất bại',
+      name: 'markAllAsReadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu tất cả chưa đọc thất bại`
+  String get markAllAsUnreadFailed {
+    return Intl.message(
+      'Đánh dấu tất cả chưa đọc thất bại',
+      name: 'markAllAsUnreadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa tất cả thông báo thành công`
+  String get deleteAllNotificationsSuccess {
+    return Intl.message(
+      'Xóa tất cả thông báo thành công',
+      name: 'deleteAllNotificationsSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa tất cả thông báo thất bại`
+  String get deleteAllNotificationsFailed {
+    return Intl.message(
+      'Xóa tất cả thông báo thất bại',
+      name: 'deleteAllNotificationsFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu đã đọc thành công`
+  String get markReadSuccess {
+    return Intl.message(
+      'Đánh dấu đã đọc thành công',
+      name: 'markReadSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu đã đọc thất bại`
+  String get markReadFailed {
+    return Intl.message(
+      'Đánh dấu đã đọc thất bại',
+      name: 'markReadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu chưa đọc thành công`
+  String get markUnreadSuccess {
+    return Intl.message(
+      'Đánh dấu chưa đọc thành công',
+      name: 'markUnreadSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu chưa đọc thất bại`
+  String get markUnreadFailed {
+    return Intl.message(
+      'Đánh dấu chưa đọc thất bại',
+      name: 'markUnreadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa thông báo thành công`
+  String get deleteNotificationSuccess {
+    return Intl.message(
+      'Xóa thông báo thành công',
+      name: 'deleteNotificationSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa thông báo thất bại`
+  String get deleteNotificationFailed {
+    return Intl.message(
+      'Xóa thông báo thất bại',
+      name: 'deleteNotificationFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu đã đọc thành công`
+  String get markAsReadSuccess {
+    return Intl.message(
+      'Đánh dấu đã đọc thành công',
+      name: 'markAsReadSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu đã đọc thất bại`
+  String get markAsReadFailed {
+    return Intl.message(
+      'Đánh dấu đã đọc thất bại',
+      name: 'markAsReadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu chưa đọc thành công`
+  String get markAsUnreadSuccess {
+    return Intl.message(
+      'Đánh dấu chưa đọc thành công',
+      name: 'markAsUnreadSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu chưa đọc thất bại`
+  String get markAsUnreadFailed {
+    return Intl.message(
+      'Đánh dấu chưa đọc thất bại',
+      name: 'markAsUnreadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa thông báo`
+  String get deleteNotification {
+    return Intl.message(
+      'Xóa thông báo',
+      name: 'deleteNotification',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu đã đọc`
+  String get markAsRead {
+    return Intl.message(
+      'Đánh dấu đã đọc',
+      name: 'markAsRead',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh dấu chưa đọc`
+  String get markAsUnread {
+    return Intl.message(
+      'Đánh dấu chưa đọc',
+      name: 'markAsUnread',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn có`
+  String get youHave {
+    return Intl.message(
+      'Bạn có',
+      name: 'youHave',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `thông báo chưa đọc`
+  String get unreadNotifications {
+    return Intl.message(
+      'thông báo chưa đọc',
+      name: 'unreadNotifications',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa`
+  String get delete {
+    return Intl.message(
+      'Xóa',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã xóa thông báo thành công`
+  String get notificationDeletedSuccessfully {
+    return Intl.message(
+      'Đã xóa thông báo thành công',
+      name: 'notificationDeletedSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã xóa thông báo thất bại`
+  String get notificationDeletedFailed {
+    return Intl.message(
+      'Đã xóa thông báo thất bại',
+      name: 'notificationDeletedFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã đánh dấu đã đọc thành công`
+  String get notificationMarkedAsReadSuccessfully {
+    return Intl.message(
+      'Đã đánh dấu đã đọc thành công',
+      name: 'notificationMarkedAsReadSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã đánh dấu đã đọc thất bại`
+  String get notificationMarkedAsReadFailed {
+    return Intl.message(
+      'Đã đánh dấu đã đọc thất bại',
+      name: 'notificationMarkedAsReadFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn có chắc chắn muốn xóa thông báo này?`
+  String get areYouSureYouWantToDeleteNotification {
+    return Intl.message(
+      'Bạn có chắc chắn muốn xóa thông báo này?',
+      name: 'areYouSureYouWantToDeleteNotification',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

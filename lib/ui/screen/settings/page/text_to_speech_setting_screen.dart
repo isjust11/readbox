@@ -24,7 +24,6 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
   double _speechRate = 0.5;
   double _volume = 1.0;
   double _pitch = 1.0;
-  String _currentLanguage = '';
 
   // Available voices
   List<dynamic> _availableVoices = [];
@@ -52,7 +51,6 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
         _speechRate = _ttsService.speechRate;
         _volume = _ttsService.volume;
         _pitch = _ttsService.pitch;
-        _currentLanguage = _ttsService.language;
         _availableVoices = voices;
         _isLoading = false;
       });

@@ -10,9 +10,7 @@ import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/blocs/cubit.dart';
-import 'package:flutter/foundation.dart';
-import 'package:readbox/services/biometric_test_helper.dart';
-
+import 'package:light_dark_theme_toggle/light_dark_theme_toggle.dart';
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
 
@@ -271,17 +269,15 @@ class _SettingScreenState extends State<SettingScreen> {
             icon: Icons.palette,
             title: AppLocalizations.current.theme,
             subtitle: AppLocalizations.current.chooseAppAppearance,
-            trailing: Switch(
-              value: _themeMode,
-              onChanged: (value) async {
-                setState(() {
-                  _themeMode = value;
-                });
-                context.read<ThemeCubit>().changeTheme(
-                  value ? 'light' : 'dark',
-                );
+            trailing: LightDarkThemeToggle(
+              color: Theme.of(context).primaryColor,
+              themeIconType: ThemeIconType.expand,
+              highlightColor: Theme.of(context).primaryColor.withValues(alpha: 0.5),
+
+              value: context.read<ThemeCubit>().state == 'light',
+              onChanged: (value) {
+                context.read<ThemeCubit>().changeTheme(value ? 'light' : 'dark');
               },
-              activeColor: Theme.of(context).primaryColor,
             ),
           ),
           _buildDivider(),
@@ -311,44 +307,6 @@ class _SettingScreenState extends State<SettingScreen> {
               activeColor: Theme.of(context).primaryColor,
             ),
           ),
-          // Debug section chỉ hiển thị trong debug mode
-          if (kDebugMode) ...[
-            _buildDivider(),
-            _buildSettingItem(
-              icon: Icons.bug_report,
-              title: 'Debug: Test Secure Storage',
-              subtitle:
-                  'Test flutter_secure_storage and biometric capabilities',
-              trailing: IconButton(
-                icon: Icon(
-                  Icons.play_arrow,
-                  color: Theme.of(context).primaryColor,
-                ),
-                onPressed: () async {
-                  await BiometricTestHelper.runAllTests();
-                  _showSuccessMessage(
-                    'Debug test completed. Check console logs.',
-                  );
-                },
-              ),
-            ),
-            _buildDivider(),
-            _buildSettingItem(
-              icon: Icons.notifications,
-              title: 'Debug: Test FCM',
-              subtitle: 'Test FCM notifications',
-              trailing: IconButton(
-                icon: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Theme.of(context).primaryColor,
-                ),
-                onPressed: () async {
-                  // TODO: Navigate to FCM test screen when route is available
-                  // Navigator.of(context).pushNamed(Routes.fcmTestScreen);
-                },
-              ),
-            ),
-          ],
         ],
       ),
     );

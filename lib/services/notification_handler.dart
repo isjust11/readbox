@@ -213,6 +213,8 @@ class NotificationHandler {
         return Colors.teal;
       case 'announcement':
         return Colors.red;
+        case 'system':
+        return Colors.indigo;
       default:
         return Colors.grey;
     }

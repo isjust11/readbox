@@ -373,7 +373,7 @@ class _FeedbackBodyState extends State<FeedbackBody> {
                 AppLocalizations.current.feedbackSend,
                 fontSize: AppDimens.SIZE_16,
                 fontWeight: FontWeight.w600,
-                color: theme.colorScheme.secondary,
+                color: theme.colorScheme.onSecondary,
               ),
       ),
     );

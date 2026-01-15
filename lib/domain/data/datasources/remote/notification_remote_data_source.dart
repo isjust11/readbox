@@ -10,7 +10,7 @@ class NotificationRemoteDataSource {
   Future<Map<String, dynamic>> getNotifications({
     int? page,
     int? limit,
-    bool? isRead,
+    int? isRead,
   }) async {
     Map<String, dynamic> params = {};
     if (page != null) params['page'] = page;
@@ -93,7 +93,7 @@ class NotificationRemoteDataSource {
 
   /// Mark all notifications as read
   Future<bool> markAllAsRead() async {
-    ApiResponse apiResponse = await network.patch(
+    ApiResponse apiResponse = await network.post(
       url: '${ApiConstant.apiHost}${ApiConstant.markAllNotificationsRead}',
       body: {},
     );
@@ -118,7 +118,7 @@ class NotificationRemoteDataSource {
 
   /// Delete all notifications
   Future<bool> deleteAllNotifications() async {
-    ApiResponse apiResponse = await network.delete(
+    ApiResponse apiResponse = await network.post(
       url: '${ApiConstant.apiHost}${ApiConstant.deleteAllNotifications}',
     );
 

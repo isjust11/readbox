@@ -4,9 +4,12 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/services/notification_handler.dart';
+import 'package:readbox/ui/widget/base_appbar.dart';
+import 'package:readbox/ui/widget/base_screen.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -14,7 +17,9 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt.get<NotificationCubit>()..getNotifications(page: 1, limit: 20),
+      create:
+          (_) =>
+              getIt.get<NotificationCubit>(),
       child: const NotificationBodyScreen(),
     );
   }
@@ -22,21 +27,31 @@ class NotificationScreen extends StatelessWidget {
 
 class NotificationBodyScreen extends StatefulWidget {
   const NotificationBodyScreen({super.key});
+  
 
   @override
   State<NotificationBodyScreen> createState() => _NotificationBodyScreenState();
 }
 
 class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
-  final RefreshController _refreshController = RefreshController(initialRefresh: false);
+  final RefreshController _refreshController = RefreshController(
+    initialRefresh: false,
+  );
   int _currentPage = 1;
   final int _pageSize = 20;
-  bool? _filterRead; // null = all, true = read, false = unread
-
+  final ValueNotifier<int> _filterReadNotifier = ValueNotifier<int>(2);
+  final NotificationCubit _cubit = getIt.get<NotificationCubit>();
   @override
   void dispose() {
     _refreshController.dispose();
+    _filterReadNotifier.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _cubit.getNotifications(page: 1, limit: _pageSize, isRead: _filterReadNotifier.value);
   }
 
   void _onRefresh() async {
@@ -44,7 +59,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
     await context.read<NotificationCubit>().refreshNotifications(
       page: _currentPage,
       limit: _pageSize,
-      isRead: _filterRead,
+      isRead: _filterReadNotifier.value,
     );
     _refreshController.refreshCompleted();
   }
@@ -56,7 +71,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       await cubit.getNotifications(
         page: _currentPage,
         limit: _pageSize,
-        isRead: _filterRead,
+        isRead: _filterReadNotifier.value,
         isLoadMore: true,
       );
       _refreshController.loadComplete();
@@ -70,69 +85,43 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Lọc thông báo'),
+          title: Center(child: Text(AppLocalizations.current.filter, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500))),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(
-                title: const Text('Tất cả'),
-                leading: Radio<bool?>(
-                  value: null,
-                  groupValue: _filterRead,
-                  onChanged: (value) {
-                    Navigator.pop(dialogContext);
-                    setState(() {
-                      _filterRead = value;
-                      _currentPage = 1;
-                    });
-                    context.read<NotificationCubit>().getNotifications(
-                      page: _currentPage,
-                      limit: _pageSize,
-                      isRead: _filterRead,
-                    );
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('Chưa đọc'),
-                leading: Radio<bool?>(
-                  value: false,
-                  groupValue: _filterRead,
-                  onChanged: (value) {
-                    Navigator.pop(dialogContext);
-                    setState(() {
-                      _filterRead = value;
-                      _currentPage = 1;
-                    });
-                    context.read<NotificationCubit>().getNotifications(
-                      page: _currentPage,
-                      limit: _pageSize,
-                      isRead: _filterRead,
-                    );
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('Đã đọc'),
-                leading: Radio<bool?>(
-                  value: true,
-                  groupValue: _filterRead,
-                  onChanged: (value) {
-                    Navigator.pop(dialogContext);
-                    setState(() {
-                      _filterRead = value;
-                      _currentPage = 1;
-                    });
-                    context.read<NotificationCubit>().getNotifications(
-                      page: _currentPage,
-                      limit: _pageSize,
-                      isRead: _filterRead,
-                    );
-                  },
-                ),
-              ),
+              _buildFilterItem(context, AppLocalizations.current.all, 2),
+              _buildFilterItem(context, AppLocalizations.current.unread, 0),
+              _buildFilterItem(context, AppLocalizations.current.read, 1),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFilterItem(BuildContext context, String title, int filterValue) {
+    return ValueListenableBuilder<int?>(
+      valueListenable: _filterReadNotifier,
+      builder: (context, selectedValue, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+            Radio<int>(
+              value: filterValue,
+              groupValue: selectedValue,
+              onChanged: (newValue) {
+                _filterReadNotifier.value = newValue ?? 2;
+                // Reload notifications with new filter
+                _cubit.refreshNotifications(
+                  page: 1,
+                  limit: _pageSize,
+                  isRead: newValue,
+                );
+                Navigator.pop(context);
+              },
+            ),
+          ],
         );
       },
     );
@@ -143,8 +132,8 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: const Text('Xóa tất cả thông báo'),
-          content: const Text('Bạn có chắc chắn muốn xóa tất cả thông báo?'),
+          title: Center(child: Text(AppLocalizations.current.deleteAll, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500))),
+          content: Text(AppLocalizations.current.areYouSureYouWantToDeleteAllNotifications, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
@@ -155,35 +144,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                 Navigator.pop(dialogContext);
                 context.read<NotificationCubit>().deleteAllNotifications();
               },
-              child: const Text(
-                'Xóa',
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showMarkAllReadDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Đánh dấu tất cả đã đọc'),
-          content: const Text('Bạn có muốn đánh dấu tất cả thông báo là đã đọc?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Hủy'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-                context.read<NotificationCubit>().markAllAsRead();
-              },
-              child: const Text('Đồng ý'),
+              child: const Text('Xóa', style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -193,106 +154,128 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Thông báo'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-            tooltip: 'Lọc',
-          ),
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'mark_all_read') {
-                _showMarkAllReadDialog();
-              } else if (value == 'delete_all') {
-                _showDeleteAllDialog();
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'mark_all_read',
-                child: Text('Đánh dấu tất cả đã đọc'),
-              ),
-              const PopupMenuItem(
-                value: 'delete_all',
-                child: Text('Xóa tất cả'),
-              ),
-            ],
-          ),
-        ],
+    final theme = Theme.of(context);
+    return BaseScreen(
+      title: AppLocalizations.current.notifications,
+      colorTitle: theme.colorScheme.surfaceContainerHighest,
+      body: _buildBody(context),
+      colorBg: Theme.of(context).colorScheme.surface,
+      customAppBar: BaseAppBar(actions: _buildActions(context)),
+    );
+  }
+
+  List<Widget> _buildActions(BuildContext context) {
+    final theme = Theme.of(context);
+    return [
+      IconButton(
+        icon: Icon(Icons.filter_list, color: theme.colorScheme.onPrimary),
+        onPressed: _showFilterDialog,
+        tooltip: 'Lọc',
       ),
-      body: BlocBuilder<NotificationCubit, BaseState>(
-        builder: (context, state) {
-          if (state is LoadingState) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is ErrorState) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(state.data),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _onRefresh,
-                    child: const Text('Thử lại'),
-                  ),
-                ],
-              ),
-            );
-          }
-
+      PopupMenuButton<String>(
+        icon: Icon(Icons.more_vert, color: theme.colorScheme.onPrimary),
+        onSelected: (value) {
           final cubit = context.read<NotificationCubit>();
-          final notifications = cubit.notifications;
-
-          if (notifications.isEmpty) {
-            return _buildEmptyState();
+          if(cubit.notifications.isEmpty) {
+            return;
           }
-
-          return Column(
-            children: [
-              if (cubit.unreadCount > 0)
-                Container(
-                  padding: EdgeInsets.all(AppDimens.SIZE_12),
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.info_outline, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Bạn có ${cubit.unreadCount} thông báo chưa đọc',
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                ),
-              Expanded(
-                child: SmartRefresher(
-                  controller: _refreshController,
-                  enablePullDown: true,
-                  enablePullUp: cubit.hasMore,
-                  onRefresh: _onRefresh,
-                  onLoading: _onLoadMore,
-                  child: ListView.separated(
-                    padding: EdgeInsets.symmetric(vertical: AppDimens.SIZE_8),
-                    itemCount: notifications.length,
-                    separatorBuilder: (context, index) => const Divider(height: 1),
-                    itemBuilder: (context, index) {
-                      final notification = notifications[index];
-                      return _buildNotificationItem(context, notification);
-                    },
-                  ),
-                ),
+          if (value == 'mark_all_read') {
+            cubit.markAllAsRead();
+          } else if (value == 'delete_all') {
+            _showDeleteAllDialog();
+          }
+        },
+        itemBuilder:
+            (context) => [
+               PopupMenuItem(
+                value: 'mark_all_read',
+                child: Text(AppLocalizations.current.markAllAsRead),
+              ),
+               PopupMenuItem(
+                value: 'delete_all',
+                child: Text(AppLocalizations.current.deleteAll),
               ),
             ],
-          );
-        },
       ),
+    ];
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return BlocBuilder<NotificationCubit, BaseState>(
+      bloc: _cubit,
+      buildWhen: (previous, current) {
+        // Rebuild when state type changes OR when state data changes
+        return previous.runtimeType != current.runtimeType || previous != current;
+      },
+      builder: (context, state) {
+        if (state is LoadingState) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state is ErrorState) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 48, color: Theme.of(context).colorScheme.error),
+                const SizedBox(height: 16),
+                Text(state.data),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _onRefresh,
+                  child: Text(AppLocalizations.current.try_again),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final notifications = _cubit.notifications;
+
+        if (notifications.isEmpty) {
+          return _buildEmptyState();
+        }
+
+        return Column(
+          children: [
+            if (_cubit.unreadCount > 0)
+              Container(
+                padding: EdgeInsets.all(AppDimens.SIZE_12),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.1),
+                child: Row(
+                  children: [
+                    const Icon(Icons.info_outline, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${AppLocalizations.current.youHave} ${_cubit.unreadCount} ${AppLocalizations.current.unreadNotifications}',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ),
+            Expanded(
+              child: SmartRefresher(
+                controller: _refreshController,
+                enablePullDown: true,
+                enablePullUp: _cubit.hasMore,
+                onRefresh: _onRefresh,
+                onLoading: _onLoadMore,
+                child: ListView.separated(
+                  itemCount: _cubit.notifications.length,
+                  separatorBuilder:
+                      (context, index) => const Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final notification = _cubit.notifications[index];
+                    return _buildNotificationItem(context, notification);
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -301,11 +284,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.notifications_none,
-            size: 80,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.notifications_none, size: 80, color: Colors.grey[400]),
           const SizedBox(height: 16),
           Text(
             'Không có thông báo',
@@ -318,43 +297,43 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
           const SizedBox(height: 8),
           Text(
             'Bạn sẽ nhận được thông báo ở đây',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[500],
-            ),
+            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNotificationItem(BuildContext context, NotificationModel notification) {
+  Widget _buildNotificationItem(
+    BuildContext context,
+    NotificationModel notification,
+  ) {
     final notificationHandler = NotificationHandler();
-    
+    final theme = Theme.of(context);
     return Dismissible(
       key: Key(notification.id ?? ''),
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
-        color: Colors.red,
-        child: const Icon(Icons.delete, color: Colors.white),
+        color: theme.colorScheme.error,
+        child: Icon(Icons.delete, color: theme.colorScheme.onError),
       ),
       confirmDismiss: (direction) async {
         return await showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Xác nhận'),
-              content: const Text('Bạn có muốn xóa thông báo này?'),
+              title: Text(AppLocalizations.current.confirm, style: TextStyle(color: theme.colorScheme.onError)),
+              content: Text(AppLocalizations.current.areYouSureYouWantToDeleteNotification, style: TextStyle(color: theme.colorScheme.onError)),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Hủy'),
+                  child: Text(AppLocalizations.current.cancel, style: TextStyle(color: theme.colorScheme.onError)),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Xóa', style: TextStyle(color: Colors.red)),
+                  child: Text(AppLocalizations.current.delete, style: TextStyle(color: theme.colorScheme.onError)),
                 ),
               ],
             );
@@ -363,9 +342,9 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       },
       onDismissed: (direction) {
         context.read<NotificationCubit>().deleteNotification(notification.id!);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Đã xóa thông báo')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.current.notificationDeletedSuccessfully)));
       },
       child: InkWell(
         onTap: () {
@@ -373,15 +352,24 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
           if (notification.isUnread) {
             context.read<NotificationCubit>().markAsRead(notification.id!);
           }
-          
+
           // Handle navigation if needed
           // notificationHandler.handleNotificationTap(...);
         },
         child: Container(
-          color: notification.isUnread 
-              ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.05) 
-              : Colors.transparent,
-          padding: EdgeInsets.all(AppDimens.SIZE_16),
+          padding: EdgeInsets.symmetric(vertical: AppDimens.SIZE_16,horizontal: AppDimens.SIZE_12),
+          decoration: BoxDecoration(
+            color:
+              notification.isUnread
+                  ? theme.primaryColor.withValues(alpha: 0.05)
+                  : theme.colorScheme.surfaceContainerHighest,
+            border: Border(
+              bottom: BorderSide(
+                color: theme.secondaryHeaderColor,
+                width: 1,
+              ),
+            ),
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -390,17 +378,25 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: notificationHandler.getNotificationColor(notification.type?.toString().split('.').last).withOpacity(0.1),
+                  color: notificationHandler
+                      .getNotificationColor(
+                        notification.type?.toString().split('.').last,
+                      )
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: Icon(
-                  notificationHandler.getNotificationIcon(notification.type?.toString().split('.').last),
-                  color: notificationHandler.getNotificationColor(notification.type?.toString().split('.').last),
+                  notificationHandler.getNotificationIcon(
+                    notification.type?.toString().split('.').last,
+                  ),
+                  color: notificationHandler.getNotificationColor(
+                    notification.type?.toString().split('.').last,
+                  ),
                   size: 24,
                 ),
               ),
               const SizedBox(width: 12),
-              
+
               // Content
               Expanded(
                 child: Column(
@@ -413,7 +409,10 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                             notification.displayTitle,
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: notification.isUnread ? FontWeight.bold : FontWeight.w500,
+                              fontWeight:
+                                  notification.isUnread
+                                      ? FontWeight.bold
+                                      : FontWeight.w500,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -425,79 +424,63 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                             height: 8,
                             margin: const EdgeInsets.only(left: 8),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: theme.colorScheme.primary,
                               shape: BoxShape.circle,
                             ),
                           ),
                       ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      notification.displayBody,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.access_time, size: 14, color: Colors.grey[500]),
+                        Icon(
+                          Icons.access_time,
+                          size: 14,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           notification.formattedDate,
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[500],
+                            color: theme.colorScheme.secondary,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 16),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
-                            color: notificationHandler.getNotificationColor(notification.type?.toString().split('.').last).withOpacity(0.1),
+                            color: notificationHandler
+                                .getNotificationColor(
+                                  notification.type?.toString().split('.').last,
+                                )
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             notification.typeDisplay,
                             style: TextStyle(
                               fontSize: 11,
-                              color: notificationHandler.getNotificationColor(notification.type?.toString().split('.').last),
+                              color: notificationHandler.getNotificationColor(
+                                notification.type?.toString().split('.').last,
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
+                    const SizedBox(height: 4),
+                    Text(
+                      notification.displayBody,
+                      style: TextStyle(fontSize: 14, color: theme.colorScheme.onSurface),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    
                   ],
                 ),
-              ),
-              
-              // More options
-              PopupMenuButton<String>(
-                icon: Icon(Icons.more_vert, color: Colors.grey[600]),
-                onSelected: (value) {
-                  if (value == 'mark_read') {
-                    if (notification.isUnread) {
-                      context.read<NotificationCubit>().markAsRead(notification.id!);
-                    } else {
-                      context.read<NotificationCubit>().markAsUnread(notification.id!);
-                    }
-                  } else if (value == 'delete') {
-                    context.read<NotificationCubit>().deleteNotification(notification.id!);
-                  }
-                },
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    value: 'mark_read',
-                    child: Text(notification.isUnread ? 'Đánh dấu đã đọc' : 'Đánh dấu chưa đọc'),
-                  ),
-                  const PopupMenuItem(
-                    value: 'delete',
-                    child: Text('Xóa'),
-                  ),
-                ],
               ),
             ],
           ),

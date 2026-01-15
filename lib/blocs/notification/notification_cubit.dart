@@ -27,12 +27,12 @@ class NotificationCubit extends Cubit<BaseState> {
   bool _isLoadingMore = false;
   bool get isLoadingMore => _isLoadingMore;
   
-  bool? _currentFilter; // null = all, true = read, false = unread
+  int? _currentFilter; // 2 = all, 1 = read, 0 = unread
 
   Future<void> getNotifications({
     int? page,
     int? limit,
-    bool? isRead,
+    int? isRead,
     bool isLoadMore = false,
   }) async {
     try {
@@ -40,7 +40,7 @@ class NotificationCubit extends Cubit<BaseState> {
         emit(LoadingState());
         _notifications = [];
         _hasMore = true;
-        _currentFilter = isRead;
+        _currentFilter = isRead ?? 2;
       } else {
         _isLoadingMore = true;
       }
@@ -74,7 +74,7 @@ class NotificationCubit extends Cubit<BaseState> {
   Future<void> refreshNotifications({
     int? page,
     int? limit,
-    bool? isRead,
+    int? isRead,
   }) async {
     await getNotifications(
       page: page ?? 1,
@@ -93,7 +93,7 @@ class NotificationCubit extends Cubit<BaseState> {
       if (index != -1) {
         _notifications[index] = updatedNotification;
         _unreadCount = _unreadCount > 0 ? _unreadCount - 1 : 0;
-        emit(LoadedState(List.from(_notifications)));
+        emit(LoadedState(List.from(_notifications), timeEmit: DateTime.now().millisecondsSinceEpoch));
       }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -109,7 +109,7 @@ class NotificationCubit extends Cubit<BaseState> {
       if (index != -1) {
         _notifications[index] = updatedNotification;
         _unreadCount = _unreadCount + 1;
-        emit(LoadedState(List.from(_notifications)));
+        emit(LoadedState(List.from(_notifications), timeEmit: DateTime.now().millisecondsSinceEpoch));
       }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -123,7 +123,7 @@ class NotificationCubit extends Cubit<BaseState> {
       
       // Update all notifications in local list to read
       for (var notification in _notifications) {
-        notification.status = NotificationStatus.read;
+        notification.status = NotificationStatus.READ;
       }
       _unreadCount = 0;
       
@@ -147,7 +147,7 @@ class NotificationCubit extends Cubit<BaseState> {
       }
       _totalCount = _totalCount > 0 ? _totalCount - 1 : 0;
       
-      emit(LoadedState(List.from(_notifications)));
+      emit(LoadedState(List.from(_notifications), timeEmit: DateTime.now().millisecondsSinceEpoch));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }

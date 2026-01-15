@@ -11,19 +11,22 @@ class NotificationModel extends NotificationEntity {
     if (createdAt == null) return '';
     
     final now = DateTime.now();
-    final difference = now.difference(createdAt!);
+    // Tính từ 0h của mỗi ngày
+    final todayStart = DateTime(now.year, now.month, now.day);
+    final createdAtStart = DateTime(createdAt!.year, createdAt!.month, createdAt!.day);
+    final difference = todayStart.difference(createdAtStart).inDays;
     
-    if (difference.inDays == 0) {
+    if (difference == 0) {
       // Today
       final hour = createdAt!.hour.toString().padLeft(2, '0');
       final minute = createdAt!.minute.toString().padLeft(2, '0');
       return 'Hôm nay, $hour:$minute';
-    } else if (difference.inDays == 1) {
+    } else if (difference == 1) {
       // Yesterday
       final hour = createdAt!.hour.toString().padLeft(2, '0');
       final minute = createdAt!.minute.toString().padLeft(2, '0');
       return 'Hôm qua, $hour:$minute';
-    } else if (difference.inDays < 7) {
+    } else if (difference < 7) {
       // Within a week
       final weekdays = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
       final weekday = weekdays[createdAt!.weekday % 7];
@@ -39,7 +42,7 @@ class NotificationModel extends NotificationEntity {
     }
   }
 
-  bool get isUnread => !(status == NotificationStatus.unread);
+  bool get isUnread => status == NotificationStatus.UNREAD;
 
   String get typeDisplay {
     switch (type) {

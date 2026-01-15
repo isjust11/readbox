@@ -1,7 +1,7 @@
 import 'package:readbox/domain/data/datasources/datasource.dart';
 import 'package:readbox/domain/data/models/models.dart';
 
-class NotificationRepository {
+class NotificationRepository{
   final NotificationRemoteDataSource remoteDataSource;
 
   NotificationRepository({required this.remoteDataSource});
@@ -9,13 +9,13 @@ class NotificationRepository {
   Future<Map<String, dynamic>> getNotifications({
     int? page,
     int? limit,
-    bool? isRead,
+    int? isRead,
   }) async {
     try {
       return await remoteDataSource.getNotifications(
         page: page,
         limit: limit,
-        isRead: isRead,
+        isRead: isRead ?? 2,
       );
     } catch (e) {
       throw Exception('Failed to get notifications: $e');
