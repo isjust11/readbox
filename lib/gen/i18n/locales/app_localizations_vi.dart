@@ -120,7 +120,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get archived_books => 'Sách đã lưu';
 
   @override
-  String get all_books => 'Tất cả sách';
+  String get book_discover => 'Khám phá';
 
   @override
   String get public_books => 'Sách công khai';
@@ -1031,4 +1031,105 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get file_ebook_not_found => 'File ebook không tồn tại';
+
+  @override
+  String get filter => 'Lọc';
+
+  @override
+  String get all => 'Tất cả';
+
+  @override
+  String get unread => 'Chưa đọc';
+
+  @override
+  String get read => 'Đã đọc';
+
+  @override
+  String get deleteAll => 'Xóa tất cả';
+
+  @override
+  String get areYouSureYouWantToDeleteAllNotifications =>
+      'Bạn có chắc chắn muốn xóa tất cả thông báo?';
+
+  @override
+  String get markAllAsRead => 'Đánh dấu tất cả đã đọc';
+
+  @override
+  String get markAllAsUnread => 'Đánh dấu tất cả chưa đọc';
+
+  @override
+  String get markAllAsReadSuccess => 'Đánh dấu tất cả đã đọc thành công';
+
+  @override
+  String get markAllAsUnreadSuccess => 'Đánh dấu tất cả chưa đọc thành công';
+
+  @override
+  String get markAllAsReadFailed => 'Đánh dấu tất cả đã đọc thất bại';
+
+  @override
+  String get markAllAsUnreadFailed => 'Đánh dấu tất cả chưa đọc thất bại';
+
+  @override
+  String get deleteAllNotificationsSuccess => 'Xóa tất cả thông báo thành công';
+
+  @override
+  String get deleteAllNotificationsFailed => 'Xóa tất cả thông báo thất bại';
+
+  @override
+  String get markReadSuccess => 'Đánh dấu đã đọc thành công';
+
+  @override
+  String get markReadFailed => 'Đánh dấu đã đọc thất bại';
+
+  @override
+  String get markUnreadSuccess => 'Đánh dấu chưa đọc thành công';
+
+  @override
+  String get markUnreadFailed => 'Đánh dấu chưa đọc thất bại';
+
+  @override
+  String get deleteNotificationSuccess => 'Xóa thông báo thành công';
+
+  @override
+  String get deleteNotificationFailed => 'Xóa thông báo thất bại';
+
+  @override
+  String get markAsReadSuccess => 'Đánh dấu đã đọc thành công';
+
+  @override
+  String get markAsReadFailed => 'Đánh dấu đã đọc thất bại';
+
+  @override
+  String get markAsUnreadSuccess => 'Đánh dấu chưa đọc thành công';
+
+  @override
+  String get markAsUnreadFailed => 'Đánh dấu chưa đọc thất bại';
+
+  @override
+  String get deleteNotification => 'Xóa thông báo';
+
+  @override
+  String get markAsRead => 'Đánh dấu đã đọc';
+
+  @override
+  String get markAsUnread => 'Đánh dấu chưa đọc';
+
+  @override
+  String get youHave => 'Bạn có';
+
+  @override
+  String get unreadNotifications => 'thông báo chưa đọc';
+
+  @override
+  String get delete => 'Xóa';
+
+  @override
+  String get notificationDeletedSuccessfully => 'Đã xóa thông báo thành công';
+
+  @override
+  String get notificationDeletedFailed => 'Đã xóa thông báo thất bại';
+
+  @override
+  String get areYouSureYouWantToDeleteNotification =>
+      'Bạn có chắc chắn muốn xóa thông báo này?';
 }

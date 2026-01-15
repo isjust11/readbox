@@ -320,11 +320,11 @@ abstract class AppLocalizations {
   /// **'Archived books'**
   String get archived_books;
 
-  /// No description provided for @all_books.
+  /// No description provided for @book_discover.
   ///
   /// In en, this message translates to:
-  /// **'All books'**
-  String get all_books;
+  /// **'Discover'**
+  String get book_discover;
 
   /// No description provided for @public_books.
   ///
@@ -2095,6 +2095,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'File ebook not found'**
   String get file_ebook_not_found;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @unread.
+  ///
+  /// In en, this message translates to:
+  /// **'Unread'**
+  String get unread;
+
+  /// No description provided for @read.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get read;
+
+  /// No description provided for @deleteAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all'**
+  String get deleteAll;
+
+  /// No description provided for @areYouSureYouWantToDeleteAllNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete all notifications?'**
+  String get areYouSureYouWantToDeleteAllNotifications;
+
+  /// No description provided for @markAllAsRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get markAllAsRead;
+
+  /// No description provided for @markAllAsUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as unread'**
+  String get markAllAsUnread;
+
+  /// No description provided for @markAllAsReadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read successfully'**
+  String get markAllAsReadSuccess;
+
+  /// No description provided for @markAllAsUnreadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as unread successfully'**
+  String get markAllAsUnreadSuccess;
+
+  /// No description provided for @markAllAsReadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read failed'**
+  String get markAllAsReadFailed;
+
+  /// No description provided for @markAllAsUnreadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as unread failed'**
+  String get markAllAsUnreadFailed;
+
+  /// No description provided for @deleteAllNotificationsSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all notifications successfully'**
+  String get deleteAllNotificationsSuccess;
+
+  /// No description provided for @deleteAllNotificationsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all notifications failed'**
+  String get deleteAllNotificationsFailed;
+
+  /// No description provided for @markReadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark read successfully'**
+  String get markReadSuccess;
+
+  /// No description provided for @markReadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark read failed'**
+  String get markReadFailed;
+
+  /// No description provided for @markUnreadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark unread successfully'**
+  String get markUnreadSuccess;
+
+  /// No description provided for @markUnreadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark unread failed'**
+  String get markUnreadFailed;
+
+  /// No description provided for @deleteNotificationSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete notification successfully'**
+  String get deleteNotificationSuccess;
+
+  /// No description provided for @deleteNotificationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete notification failed'**
+  String get deleteNotificationFailed;
+
+  /// No description provided for @markAsReadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as read successfully'**
+  String get markAsReadSuccess;
+
+  /// No description provided for @markAsReadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as read failed'**
+  String get markAsReadFailed;
+
+  /// No description provided for @markAsUnreadSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as unread successfully'**
+  String get markAsUnreadSuccess;
+
+  /// No description provided for @markAsUnreadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as unread failed'**
+  String get markAsUnreadFailed;
+
+  /// No description provided for @deleteNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete notification'**
+  String get deleteNotification;
+
+  /// No description provided for @markAsRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as read'**
+  String get markAsRead;
+
+  /// No description provided for @markAsUnread.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as unread'**
+  String get markAsUnread;
+
+  /// No description provided for @youHave.
+  ///
+  /// In en, this message translates to:
+  /// **'You have'**
+  String get youHave;
+
+  /// No description provided for @unreadNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'unread notifications'**
+  String get unreadNotifications;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @notificationDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification deleted successfully'**
+  String get notificationDeletedSuccessfully;
+
+  /// No description provided for @notificationDeletedFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification deleted failed'**
+  String get notificationDeletedFailed;
+
+  /// No description provided for @areYouSureYouWantToDeleteNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this notification?'**
+  String get areYouSureYouWantToDeleteNotification;
 }
 
 class _AppLocalizationsDelegate

@@ -120,7 +120,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get archived_books => 'Archived books';
 
   @override
-  String get all_books => 'All books';
+  String get book_discover => 'Discover';
 
   @override
   String get public_books => 'Public books';
@@ -1029,4 +1029,107 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get file_ebook_not_found => 'File ebook not found';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get unread => 'Unread';
+
+  @override
+  String get read => 'Read';
+
+  @override
+  String get deleteAll => 'Delete all';
+
+  @override
+  String get areYouSureYouWantToDeleteAllNotifications =>
+      'Are you sure you want to delete all notifications?';
+
+  @override
+  String get markAllAsRead => 'Mark all as read';
+
+  @override
+  String get markAllAsUnread => 'Mark all as unread';
+
+  @override
+  String get markAllAsReadSuccess => 'Mark all as read successfully';
+
+  @override
+  String get markAllAsUnreadSuccess => 'Mark all as unread successfully';
+
+  @override
+  String get markAllAsReadFailed => 'Mark all as read failed';
+
+  @override
+  String get markAllAsUnreadFailed => 'Mark all as unread failed';
+
+  @override
+  String get deleteAllNotificationsSuccess =>
+      'Delete all notifications successfully';
+
+  @override
+  String get deleteAllNotificationsFailed => 'Delete all notifications failed';
+
+  @override
+  String get markReadSuccess => 'Mark read successfully';
+
+  @override
+  String get markReadFailed => 'Mark read failed';
+
+  @override
+  String get markUnreadSuccess => 'Mark unread successfully';
+
+  @override
+  String get markUnreadFailed => 'Mark unread failed';
+
+  @override
+  String get deleteNotificationSuccess => 'Delete notification successfully';
+
+  @override
+  String get deleteNotificationFailed => 'Delete notification failed';
+
+  @override
+  String get markAsReadSuccess => 'Mark as read successfully';
+
+  @override
+  String get markAsReadFailed => 'Mark as read failed';
+
+  @override
+  String get markAsUnreadSuccess => 'Mark as unread successfully';
+
+  @override
+  String get markAsUnreadFailed => 'Mark as unread failed';
+
+  @override
+  String get deleteNotification => 'Delete notification';
+
+  @override
+  String get markAsRead => 'Mark as read';
+
+  @override
+  String get markAsUnread => 'Mark as unread';
+
+  @override
+  String get youHave => 'You have';
+
+  @override
+  String get unreadNotifications => 'unread notifications';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get notificationDeletedSuccessfully =>
+      'Notification deleted successfully';
+
+  @override
+  String get notificationDeletedFailed => 'Notification deleted failed';
+
+  @override
+  String get areYouSureYouWantToDeleteNotification =>
+      'Are you sure you want to delete this notification?';
 }
