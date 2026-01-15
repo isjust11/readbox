@@ -2293,6 +2293,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete this notification?'**
   String get areYouSureYouWantToDeleteNotification;
+
+  /// No description provided for @add_new_book_to_library.
+  ///
+  /// In en, this message translates to:
+  /// **'Add new book to library'**
+  String get add_new_book_to_library;
+
+  /// No description provided for @please_upload_ebook_file_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Please upload ebook file first'**
+  String get please_upload_ebook_file_first;
+
+  /// No description provided for @book_has_been_added_to_local_library.
+  ///
+  /// In en, this message translates to:
+  /// **'Book has been added to local library'**
+  String get book_has_been_added_to_local_library;
 }
 
 class _AppLocalizationsDelegate

@@ -3,10 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/domain/data/entities/entities.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/dimens.dart';
+import 'package:readbox/routes.dart';
 import 'package:readbox/services/notification_handler.dart';
 import 'package:readbox/ui/widget/base_appbar.dart';
 import 'package:readbox/ui/widget/base_screen.dart';
@@ -17,9 +19,7 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create:
-          (_) =>
-              getIt.get<NotificationCubit>(),
+      create: (_) => getIt.get<NotificationCubit>(),
       child: const NotificationBodyScreen(),
     );
   }
@@ -27,7 +27,6 @@ class NotificationScreen extends StatelessWidget {
 
 class NotificationBodyScreen extends StatefulWidget {
   const NotificationBodyScreen({super.key});
-  
 
   @override
   State<NotificationBodyScreen> createState() => _NotificationBodyScreenState();
@@ -51,7 +50,11 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
   @override
   void initState() {
     super.initState();
-    _cubit.getNotifications(page: 1, limit: _pageSize, isRead: _filterReadNotifier.value);
+    _cubit.getNotifications(
+      page: 1,
+      limit: _pageSize,
+      isRead: _filterReadNotifier.value,
+    );
   }
 
   void _onRefresh() async {
@@ -85,7 +88,12 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Center(child: Text(AppLocalizations.current.filter, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500))),
+          title: Center(
+            child: Text(
+              AppLocalizations.current.filter,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -106,7 +114,10 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+            Text(
+              title,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
             Radio<int>(
               value: filterValue,
               groupValue: selectedValue,
@@ -131,11 +142,14 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return BaseScreen(
-      title: AppLocalizations.current.notifications,
       colorTitle: theme.colorScheme.surfaceContainerHighest,
       body: _buildBody(context),
       colorBg: Theme.of(context).colorScheme.surface,
-      customAppBar: BaseAppBar(actions: _buildActions(context)),
+      customAppBar: BaseAppBar(
+        title: AppLocalizations.current.notifications,
+        centerTitle: true,
+        actions: _buildActions(context),
+      ),
     );
   }
 
@@ -150,7 +164,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       PopupMenuButton<String>(
         icon: Icon(Icons.more_vert, color: theme.colorScheme.onPrimary),
         onSelected: (value) {
-          if(_cubit.notifications.isEmpty) {
+          if (_cubit.notifications.isEmpty) {
             return;
           }
           if (value == 'mark_all_read' && _cubit.unreadCount > 0) {
@@ -161,11 +175,11 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
         },
         itemBuilder:
             (context) => [
-               PopupMenuItem(
+              PopupMenuItem(
                 value: 'mark_all_read',
                 child: Text(AppLocalizations.current.markAllAsRead),
               ),
-               PopupMenuItem(
+              PopupMenuItem(
                 value: 'delete_all',
                 child: Text(AppLocalizations.current.deleteAll),
               ),
@@ -179,7 +193,8 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       bloc: _cubit,
       buildWhen: (previous, current) {
         // Rebuild when state type changes OR when state data changes
-        return previous.runtimeType != current.runtimeType || previous != current;
+        return previous.runtimeType != current.runtimeType ||
+            previous != current;
       },
       builder: (context, state) {
         if (state is LoadingState) {
@@ -191,7 +206,11 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.error_outline, size: 48, color: Theme.of(context).colorScheme.error),
+                Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: Theme.of(context).colorScheme.error,
+                ),
                 const SizedBox(height: 16),
                 Text(state.data),
                 const SizedBox(height: 16),
@@ -298,16 +317,28 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text(AppLocalizations.current.confirm, style: TextStyle(color: theme.colorScheme.onError)),
-              content: Text(AppLocalizations.current.areYouSureYouWantToDeleteNotification, style: TextStyle(color: theme.colorScheme.onError)),
+              title: Text(
+                AppLocalizations.current.confirm,
+                style: TextStyle(color: theme.colorScheme.onError),
+              ),
+              content: Text(
+                AppLocalizations.current.areYouSureYouWantToDeleteNotification,
+                style: TextStyle(color: theme.colorScheme.onError),
+              ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(AppLocalizations.current.cancel, style: TextStyle(color: theme.colorScheme.onError)),
+                  child: Text(
+                    AppLocalizations.current.cancel,
+                    style: TextStyle(color: theme.colorScheme.onError),
+                  ),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(AppLocalizations.current.delete, style: TextStyle(color: theme.colorScheme.onError)),
+                  child: Text(
+                    AppLocalizations.current.delete,
+                    style: TextStyle(color: theme.colorScheme.onError),
+                  ),
                 ),
               ],
             );
@@ -316,9 +347,13 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       },
       onDismissed: (direction) {
         context.read<NotificationCubit>().deleteNotification(notification.id!);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(AppLocalizations.current.notificationDeletedSuccessfully)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.current.notificationDeletedSuccessfully,
+            ),
+          ),
+        );
       },
       child: InkWell(
         onTap: () {
@@ -326,22 +361,34 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
           if (notification.isUnread) {
             context.read<NotificationCubit>().markAsRead(notification.id!);
           }
-
+          switch (notification.type) {
+            case NotificationType.ebook:
+              Navigator.pushNamed(context, Routes.bookDetailScreen, arguments: notification.metadata?['bookId']);
+              break;
+            case NotificationType.feedback:
+              break;
+            case NotificationType.new_article:
+              break;
+            case NotificationType.system:
+              break;
+            default:
+              break;
+          }
           // Handle navigation if needed
           // notificationHandler.handleNotificationTap(...);
         },
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: AppDimens.SIZE_16,horizontal: AppDimens.SIZE_12),
+          padding: EdgeInsets.symmetric(
+            vertical: AppDimens.SIZE_16,
+            horizontal: AppDimens.SIZE_12,
+          ),
           decoration: BoxDecoration(
             color:
-              notification.isUnread
-                  ? theme.primaryColor.withValues(alpha: 0.05)
-                  : theme.colorScheme.surfaceContainerHighest,
+                notification.isUnread
+                    ? theme.primaryColor.withValues(alpha: 0.05)
+                    : theme.colorScheme.surfaceContainerHighest,
             border: Border(
-              bottom: BorderSide(
-                color: theme.secondaryHeaderColor,
-                width: 1,
-              ),
+              bottom: BorderSide(color: theme.secondaryHeaderColor, width: 1),
             ),
           ),
           child: Row(
@@ -448,11 +495,13 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                     const SizedBox(height: 4),
                     Text(
                       notification.displayBody,
-                      style: TextStyle(fontSize: 14, color: theme.colorScheme.onSurface),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: theme.colorScheme.onSurface,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    
                   ],
                 ),
               ),
@@ -462,4 +511,5 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       ),
     );
   }
+  
 }

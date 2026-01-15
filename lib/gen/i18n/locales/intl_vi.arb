@@ -385,5 +385,8 @@
    "notificationDeletedFailed" : "Đã xóa thông báo thất bại",
    "notificationMarkedAsReadSuccessfully" : "Đã đánh dấu đã đọc thành công",
    "notificationMarkedAsReadFailed" : "Đã đánh dấu đã đọc thất bại",
-   "areYouSureYouWantToDeleteNotification" : "Bạn có chắc chắn muốn xóa thông báo này?"
+   "areYouSureYouWantToDeleteNotification" : "Bạn có chắc chắn muốn xóa thông báo này?",
+   "add_new_book_to_library" : "Thêm sách mới vào thư viện",
+   "please_upload_ebook_file_first" : "Vui lòng upload file ebook trước",
+   "book_has_been_added_to_local_library" : "Sách đã được thêm vào thư viện local"
 }

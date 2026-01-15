@@ -173,7 +173,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     if (cubit.ebookFileUrl == null) {
         ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please upload ebook file first'),
+          content: Text(AppLocalizations.current.please_upload_ebook_file_first),
           backgroundColor: Colors.red,
         ),
       );
@@ -270,7 +270,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Upload Sách',
+                  AppLocalizations.current.upload_book,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -278,7 +278,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                   ),
                 ),
                 Text(
-                  'Thêm sách mới vào thư viện',
+                  AppLocalizations.current.create_new_book,
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.white.withValues(alpha: 0.9),
@@ -295,7 +295,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           if (state is ErrorState) {
             // showCustomSnackBar(context, state.data, isError: true);
           } else if (state is LoadedState) {
-            if (state.msgError.contains('Book created')) {
+            final cubit = context.read<AdminCubit>();
+            if (cubit.uploadEbookSuccess) {
               _resetForm();
             }
           }
@@ -545,18 +546,28 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                           onPressed: () {
                                             setState(() {
                                               _ebookFile = null;
+                                              context.read<AdminCubit>().resetErrorUpload();
                                             });
                                           },
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 16),
+                                    SizedBox(height: 12),
+                                    if (cubit.errorUploadEbook != null)
+                                      Text(
+                                        cubit.errorUploadEbook!,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: theme.colorScheme.error,
+                                        ),
+                                      ),
                                     SizedBox(
                                       width: double.infinity,
                                       child: ElevatedButton(
                                         onPressed: _isUploadingEbook ? null : _uploadEbookFile,
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: theme.colorScheme.primary,
+                                          backgroundColor: theme.primaryColor,
                                           padding: EdgeInsets.symmetric(vertical: 8),
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(12),
@@ -575,16 +586,16 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                                 ),
                                               )
                                             else
-                                              Icon(Icons.upload_rounded, size: 20),
-                                            SizedBox(width: 8),
-                                            Text(
-                                              _isUploadingEbook ? AppLocalizations.current.uploading : AppLocalizations.current.upload_file,
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                                color: theme.colorScheme.secondary
+                                              Icon(Icons.upload_rounded, size: 20, color: theme.colorScheme.onSecondary),
+                                              SizedBox(width: 8),
+                                              Text(
+                                                _isUploadingEbook ? AppLocalizations.current.uploading : AppLocalizations.current.upload_file,
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: theme.colorScheme.onSecondary
+                                                ),
                                               ),
-                                            ),
                                           ],
                                         ),
                                       ),
@@ -748,12 +759,12 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                   height: 200,
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Colors.purple.withValues(alpha: 0.3),
+                                      color: theme.primaryColor.withValues(alpha: 0.3),
                                       width: 2,
                                       style: BorderStyle.solid,
                                     ),
                                     borderRadius: BorderRadius.circular(16),
-                                    color: Colors.purple.withValues(alpha: 0.02),
+                                    color: theme.primaryColor.withValues(alpha: 0.02),
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -763,7 +774,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                         Icon(
                                           Icons.add_photo_alternate_rounded,
                                           size: 48,
-                                          color: Colors.purple,
+                                          color: theme.primaryColor,
                                         ),
                                         SizedBox(height: 12),
                                         Text(
@@ -771,7 +782,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
-                                            color: Colors.purple,
+                                            color: theme.primaryColor,
                                           ),
                                         ),
                                         SizedBox(height: 4),
@@ -807,7 +818,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                           child: ElevatedButton(
                                             onPressed: _isUploadingCover ? null : _uploadCoverImage,
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.purple,
+                                              backgroundColor: theme.primaryColor,
                                               padding: EdgeInsets.symmetric(vertical: 14),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius: BorderRadius.circular(12),
@@ -822,17 +833,18 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                                     height: 20,
                                                     child: CircularProgressIndicator(
                                                       strokeWidth: 2,
-                                                      color: Colors.white,
+                                                      color: theme.colorScheme.onSecondary,
                                                     ),
                                                   )
                                                 else
-                                                  Icon(Icons.upload_rounded, size: 20),
+                                                  Icon(Icons.upload_rounded, size: 20, color: theme.colorScheme.onSecondary),
                                                 SizedBox(width: 8),
                                                 Text(
                                                   _isUploadingCover ? AppLocalizations.current.uploading : AppLocalizations.current.upload_cover_image,
                                                   style: TextStyle(
                                                     fontSize: 15,
                                                     fontWeight: FontWeight.bold,
+                                                    color: theme.colorScheme.onSecondary,
                                                   ),
                                                 ),
                                               ],

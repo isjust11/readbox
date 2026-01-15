@@ -160,11 +160,16 @@ class MainBodyState extends State<MainBody> {
                 Positioned(
                   top: 8,
                   right: 8,
-                  child: Badge(
-                    backgroundColor: Theme.of(context).colorScheme.error,
-                    label: Text(
-                      unreadCount.toString(),
-                      style: TextStyle(color: Colors.white),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, Routes.notificationScreen);
+                    },
+                    child: Badge(
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      label: Text(
+                        unreadCount.toString(),
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ),

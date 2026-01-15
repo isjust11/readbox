@@ -1132,4 +1132,15 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get areYouSureYouWantToDeleteNotification =>
       'Bạn có chắc chắn muốn xóa thông báo này?';
+
+  @override
+  String get add_new_book_to_library => 'Thêm sách mới vào thư viện';
+
+  @override
+  String get please_upload_ebook_file_first =>
+      'Vui lòng upload file ebook trước';
+
+  @override
+  String get book_has_been_added_to_local_library =>
+      'Sách đã được thêm vào thư viện local';
 }

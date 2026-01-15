@@ -1132,4 +1132,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get areYouSureYouWantToDeleteNotification =>
       'Are you sure you want to delete this notification?';
+
+  @override
+  String get add_new_book_to_library => 'Add new book to library';
+
+  @override
+  String get please_upload_ebook_file_first => 'Please upload ebook file first';
+
+  @override
+  String get book_has_been_added_to_local_library =>
+      'Book has been added to local library';
 }

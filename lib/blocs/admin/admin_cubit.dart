@@ -8,15 +8,19 @@ class AdminCubit extends Cubit<BaseState> {
   final AdminRemoteDataSource _adminRemoteDataSource;
 
   AdminCubit(this._adminRemoteDataSource) : super(InitState());
-
+  String? _errorUploadEbook;
+  String? _errorUploadCoverImage; 
   String? _ebookFileUrl;
   String? _coverImageUrl;
+  bool _uploadEbookSuccess = false;
   List<dynamic> _categories = [];
 
   String? get ebookFileUrl => _ebookFileUrl;
   String? get coverImageUrl => _coverImageUrl;
   List<dynamic> get categories => _categories;
-
+  String? get errorUploadEbook => _errorUploadEbook;
+  String? get errorUploadCoverImage => _errorUploadCoverImage;
+  bool get uploadEbookSuccess => _uploadEbookSuccess;
   /// Load categories
   Future<void> loadCategories() async {
     try {
@@ -29,6 +33,11 @@ class AdminCubit extends Cubit<BaseState> {
   }
 
   /// Upload ebook file
+  void resetErrorUpload() {
+    _errorUploadEbook = null;
+    _errorUploadCoverImage = null;
+  }
+
   Future<void> uploadEbook(File file) async {
     try {
       emit(LoadingState());
@@ -41,7 +50,8 @@ class AdminCubit extends Cubit<BaseState> {
           msgError: 'Ebook uploaded successfully',
         ));
       } else {
-        emit(ErrorState(BlocUtils.getMessageError(response.errMessage),));
+        _errorUploadEbook = BlocUtils.getMessageError(response.errMessage);
+        emit(ErrorState(_errorUploadEbook,));
       }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e),));
@@ -61,7 +71,8 @@ class AdminCubit extends Cubit<BaseState> {
           msgError: 'Cover image uploaded successfully',
         ));
       } else {
-        emit(ErrorState(BlocUtils.getMessageError(response.errMessage),));
+        _errorUploadCoverImage = BlocUtils.getMessageError(response.errMessage);
+        emit(ErrorState(_errorUploadCoverImage,));
       }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -107,7 +118,7 @@ class AdminCubit extends Cubit<BaseState> {
       // Reset uploaded files
       _ebookFileUrl = null;
       _coverImageUrl = null;
-      
+      _uploadEbookSuccess = true;
       emit(LoadedState(
         response,
         msgError: 'Book created successfully',
@@ -121,6 +132,7 @@ class AdminCubit extends Cubit<BaseState> {
   void reset() {
     _ebookFileUrl = null;
     _coverImageUrl = null;
+    _uploadEbookSuccess = false;
     emit(InitState());
   }
 }

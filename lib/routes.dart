@@ -96,9 +96,9 @@ class Routes {
           type: PageTransitionType.fade,
         );
       case bookDetailScreen:
-        final book = settings.arguments;
+        final bookId = settings.arguments as String;
         return PageTransition(
-          child: BookDetailScreen(book: book as BookModel),
+          child: BookDetailScreen(bookId: bookId),
           type: PageTransitionType.rightToLeft,
         );
       case settingsScreen:

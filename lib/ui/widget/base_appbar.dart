@@ -81,7 +81,7 @@ class _BaseAppBarState extends State<BaseAppBar> {
       ) : CustomTextLabel(
         widget.title,
         color: theme.colorScheme.onPrimary,
-        fontSize: AppDimens.SIZE_14,
+        fontSize: AppDimens.SIZE_16,
         fontWeight: FontWeight.w700,
         maxLines: 1,
       ),

@@ -42,7 +42,7 @@ class BookRemoteDataSource {
 
   Future<BookModel> getBookById(String id) async {
     ApiResponse apiResponse = await network.get(
-      url: '${ApiConstant.apiHost}${ApiConstant.getBooks}/$id',
+      url: '${ApiConstant.apiHost}${ApiConstant.getBookById}/$id',
     );
 
     if (apiResponse.isSuccess) {
@@ -70,7 +70,7 @@ class BookRemoteDataSource {
     );
 
     if (apiResponse.isSuccess) {
-      return BookModel.fromJson(apiResponse.data as Map<String, dynamic>);
+      return BookModel.fromJson(apiResponse.data['data'] as Map<String, dynamic>);
     }
     return Future.error(apiResponse.errMessage);
   }

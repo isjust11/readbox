@@ -46,18 +46,12 @@ class NotificationModel extends NotificationEntity {
 
   String get typeDisplay {
     switch (type) {
-      case NotificationType.book:
+      case NotificationType.ebook:
         return 'Sách';
-      case NotificationType.library:
-        return 'Thư viện';
-      case NotificationType.reminder:
-        return 'Nhắc nhở';
-      case NotificationType.update:
-        return 'Cập nhật';
-      case NotificationType.message:
-        return 'Tin nhắn';
-      case NotificationType.announcement:
-        return 'Thông báo';
+      case NotificationType.feedback:
+        return 'Phản hồi';
+      case NotificationType.new_article:
+        return 'Bài viết mới';
       case NotificationType.system:
         return 'Hệ thống';
       default:

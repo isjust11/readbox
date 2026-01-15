@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +11,7 @@ class NotificationHandler {
   NotificationHandler._internal();
 
   BuildContext? _context;
-  
+
   /// Set the navigation context
   void setContext(BuildContext context) {
     _context = context;
@@ -29,15 +30,13 @@ class NotificationHandler {
     }
 
     // Extract navigation info from data
-    final screen = data['screen'] as String?;
     final id = data['id'] as String?;
     final type = data['type'] as String?;
 
-    debugPrint('   Screen: $screen');
     debugPrint('   ID: $id');
     debugPrint('   Type: $type');
 
-    await _navigateToScreen(screen, id, type, data);
+    await _navigateToScreen(id, type, data);
   }
 
   /// Handle foreground notification tap
@@ -48,14 +47,17 @@ class NotificationHandler {
     }
 
     debugPrint('🔔 Handling foreground notification tap: $payload');
-    
+
     // Parse payload if it's JSON
     // For now, just log it
+    final data = jsonDecode(payload);
+    final id = data['id'] as String?;
+    final type = data['type'] as String?;
+    await _navigateToScreen(id, type, data);
   }
 
   /// Navigate to specific screen based on notification data
   Future<void> _navigateToScreen(
-    String? screen,
     String? id,
     String? type,
     Map<String, dynamic> data,
@@ -65,75 +67,38 @@ class NotificationHandler {
       return;
     }
 
-    if (screen == null) {
+    if (id == null) {
       debugPrint('⚠️ No screen specified in notification');
       return;
     }
 
-    debugPrint('🚀 Navigating to screen: $screen');
-
     try {
-      switch (screen) {
-        case 'book_detail':
-          if (id != null) {
-            // Navigate to book detail screen
-            // Need to fetch book data first
-            debugPrint('📖 Navigating to book detail: $id');
-            // Navigator.of(_context!).pushNamed(
-            //   Routes.bookDetailScreen,
-            //   arguments: bookModel,
-            // );
-          }
+      switch (type) {
+        case 'ebook':
+          // Navigate to book detail screen
+          debugPrint('📖 Navigating to book detail: $id');
+          Navigator.of(
+            _context!,
+          ).pushNamed(Routes.bookDetailScreen, arguments: id);
           break;
 
-        case 'library':
+        case 'feedback':
           debugPrint('📚 Navigating to library');
-          Navigator.of(_context!).pushNamed(Routes.libraryScreen);
+          Navigator.of(_context!).pushNamed(Routes.feedbackScreen);
           break;
 
-        case 'settings':
+        case 'new_article':
           debugPrint('⚙️ Navigating to settings');
           Navigator.of(_context!).pushNamed(Routes.settingsScreen);
           break;
 
-        case 'profile':
+        case 'system':
           debugPrint('👤 Navigating to profile');
           Navigator.of(_context!).pushNamed(Routes.profileScreen);
           break;
 
-        case 'main':
-          debugPrint('🏠 Navigating to main screen');
-          Navigator.of(_context!).pushNamedAndRemoveUntil(
-            Routes.mainScreen,
-            (route) => false,
-          );
-          break;
-
-        case 'pdf_viewer':
-          if (data.containsKey('fileUrl') && data.containsKey('title')) {
-            debugPrint('📄 Navigating to PDF viewer');
-            Navigator.of(_context!).pushNamed(
-              Routes.pdfViewerScreen,
-              arguments: {
-                'fileUrl': data['fileUrl'],
-                'title': data['title'],
-              },
-            );
-          }
-          break;
-
-        case 'notification_settings':
-          debugPrint('🔔 Navigating to notification settings');
-          Navigator.of(_context!).pushNamed(Routes.notificationSettingsScreen);
-          break;
-
         default:
-          debugPrint('⚠️ Unknown screen: $screen');
-          // Navigate to main screen as fallback
-          Navigator.of(_context!).pushNamedAndRemoveUntil(
-            Routes.mainScreen,
-            (route) => false,
-          );
+          debugPrint('⚠️ Unknown type: $type');
       }
     } catch (e) {
       debugPrint('❌ Error navigating to screen: $e');
@@ -154,10 +119,7 @@ class NotificationHandler {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           const SizedBox(height: 4),
           Text(body),
@@ -165,13 +127,14 @@ class NotificationHandler {
       ),
       duration: const Duration(seconds: 5),
       behavior: SnackBarBehavior.floating,
-      action: onTap != null
-          ? SnackBarAction(
-              label: 'Xem',
-              textColor: Colors.white,
-              onPressed: onTap,
-            )
-          : null,
+      action:
+          onTap != null
+              ? SnackBarAction(
+                label: 'Xem',
+                textColor: Colors.white,
+                onPressed: onTap,
+              )
+              : null,
       backgroundColor: Theme.of(context).primaryColor,
     );
 
@@ -213,7 +176,7 @@ class NotificationHandler {
         return Colors.teal;
       case 'announcement':
         return Colors.red;
-        case 'system':
+      case 'system':
         return Colors.indigo;
       default:
         return Colors.grey;

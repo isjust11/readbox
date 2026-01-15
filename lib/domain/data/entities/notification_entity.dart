@@ -1,14 +1,10 @@
 import 'base_entity.dart';
 
 enum NotificationType {
-  book,
-  library,
-  reminder,
-  update,
-  message,
-  announcement,
+  ebook,
+  feedback,
+  new_article,
   system,
-  other
 }
 
 enum NotificationStatus {
@@ -82,27 +78,21 @@ class NotificationEntity extends BaseEntity {
   }
 
   NotificationType _parseNotificationType(dynamic typeValue) {
-    if (typeValue == null) return NotificationType.other;
+    if (typeValue == null) return NotificationType.system;
     
     final typeString = typeValue.toString().toLowerCase();
     
     switch (typeString) {
-      case 'book':
-        return NotificationType.book;
-      case 'library':
-        return NotificationType.library;
+      case 'ebook':
+        return NotificationType.ebook;
+      case 'feedback':
+        return NotificationType.feedback;
       case 'reminder':
-        return NotificationType.reminder;
-      case 'update':
-        return NotificationType.update;
-      case 'message':
-        return NotificationType.message;
-      case 'announcement':
-        return NotificationType.announcement;
+        return NotificationType.new_article;
       case 'system':
         return NotificationType.system;
       default:
-        return NotificationType.other;
+        return NotificationType.system;
     }
   }
 
