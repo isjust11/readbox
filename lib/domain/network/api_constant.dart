@@ -14,7 +14,7 @@ class ApiConstant {
     } else if (Platform.isAndroid) {
       // Android emulator: dùng 10.0.2.2 để trỏ về localhost của máy host
       // Nếu là thiết bị thật, cần thay bằng IP của máy host
-      return '192.168.1.9';
+      return '10.59.91.142';
     } else if (Platform.isIOS) {
       // iOS simulator: localhost hoạt động bình thường
       return 'localhost';

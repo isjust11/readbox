@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:html_unescape/html_unescape.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
@@ -280,7 +282,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
           Icon(Icons.notifications_none, size: 80, color: Colors.grey[400]),
           const SizedBox(height: 16),
           Text(
-            'Không có thông báo',
+            AppLocalizations.current.noNotifications,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
@@ -289,11 +291,87 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Bạn sẽ nhận được thông báo ở đây',
+            AppLocalizations.current.youWillReceiveNotificationsHere,
             style: TextStyle(fontSize: 14, color: Colors.grey[500]),
           ),
         ],
       ),
+    );
+  }
+
+  /// Kiểm tra xem text có chứa HTML tags không
+  bool _containsHtmlTags(String text) {
+    final htmlTagRegex = RegExp(r'<[^>]+>');
+    return htmlTagRegex.hasMatch(text);
+  }
+
+  /// Render text với hỗ trợ HTML hoặc chỉ decode entities
+  Widget _buildTextWithHtml(
+    BuildContext context,
+    String text,
+    TextStyle style, {
+    int maxLines = 2,
+    TextOverflow overflow = TextOverflow.ellipsis,
+  }) {
+    final decodedText = HtmlUnescape().convert(text);
+    
+    // Nếu có HTML tags, dùng Html widget
+    if (_containsHtmlTags(decodedText)) {
+      final fontSize = style.fontSize ?? 16.0;
+      final lineHeight = 1.3;
+      final maxHeight = fontSize * lineHeight * maxLines;
+      
+      return SizedBox(
+        height: maxHeight,
+        child: ClipRect(
+          child: Html(
+            data: decodedText,
+            style: {
+              "body": Style(
+                fontSize: FontSize(fontSize),
+                fontWeight: style.fontWeight ?? FontWeight.normal,
+                color: style.color ?? Theme.of(context).colorScheme.onSurface,
+                margin: Margins.zero,
+                padding: HtmlPaddings.zero,
+                lineHeight: LineHeight(lineHeight),
+              ),
+              "p": Style(
+                fontSize: FontSize(fontSize),
+                fontWeight: style.fontWeight ?? FontWeight.normal,
+                color: style.color ?? Theme.of(context).colorScheme.onSurface,
+                margin: Margins.zero,
+                padding: HtmlPaddings.zero,
+                lineHeight: LineHeight(lineHeight),
+              ),
+              "strong": Style(
+                fontWeight: FontWeight.bold,
+                color: style.color ?? Theme.of(context).colorScheme.onSurface,
+              ),
+              "b": Style(
+                fontWeight: FontWeight.bold,
+                color: style.color ?? Theme.of(context).colorScheme.onSurface,
+              ),
+              "em": Style(
+                fontStyle: FontStyle.italic,
+                color: style.color ?? Theme.of(context).colorScheme.onSurface,
+              ),
+              "i": Style(
+                fontStyle: FontStyle.italic,
+                color: style.color ?? Theme.of(context).colorScheme.onSurface,
+              ),
+            },
+            shrinkWrap: true,
+          ),
+        ),
+      );
+    }
+    
+    // Nếu không có HTML tags, chỉ dùng Text với decoded entities
+    return Text(
+      decodedText,
+      style: style,
+      maxLines: maxLines,
+      overflow: overflow,
     );
   }
 
@@ -366,6 +444,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
               Navigator.pushNamed(context, Routes.bookDetailScreen, arguments: notification.metadata?['bookId']);
               break;
             case NotificationType.feedback:
+              Navigator.pushNamed(context, Routes.notificationDetailScreen, arguments: notification);
               break;
             case NotificationType.new_article:
               break;
@@ -426,14 +505,16 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(
+                          child: _buildTextWithHtml(
+                            context,
                             notification.displayTitle,
-                            style: TextStyle(
-                              fontSize: 16,
+                            TextStyle(
+                              fontSize: 14,
                               fontWeight:
                                   notification.isUnread
                                       ? FontWeight.bold
                                       : FontWeight.w500,
+                              color: theme.colorScheme.onSurface,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,

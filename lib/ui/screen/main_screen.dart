@@ -212,7 +212,6 @@ class MainBodyState extends State<MainBody> {
                   onChanged: (value) {
                     // Hủy timer trước đó nếu có
                     _debounceTimer?.cancel();
-
                     // Tạo timer mới, sau 700ms mới thực hiện search
                     _debounceTimer = Timer(
                       const Duration(milliseconds: 700),

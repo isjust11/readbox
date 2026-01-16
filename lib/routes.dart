@@ -32,8 +32,10 @@ class Routes {
   static const String profileScreen = "/profileScreen";
   static const String translateScreen = "/translateScreen";
   static const String textToSpeechSettingScreen = "/textToSpeechSettingScreen";
-  static const String notificationSettingsScreen = "/notificationSettingsScreen";
+  static const String notificationSettingsScreen =
+      "/notificationSettingsScreen";
   static const String notificationScreen = "/notificationScreen";
+  static const String notificationDetailScreen = "/notificationDetailScreen";
   // PDF text to speech screen
   static const String pdfTextToSpeechScreen = "/pdfTextToSpeechScreen";
   static const String ttsDemoScreen = "/ttsDemoScreen";
@@ -169,9 +171,15 @@ class Routes {
           child: TextToSpeechSettingScreen(),
           type: PageTransitionType.rightToLeft,
         );
-      case notificationSettingsScreen:
+      // case notificationSettingsScreen:
+      //   return PageTransition(
+      //     child: NotificationSettingsScreen(),
+      //     type: PageTransitionType.rightToLeft,
+      //   );
+      case notificationDetailScreen:
+        final notification = settings.arguments as NotificationModel;
         return PageTransition(
-          child: NotificationSettingsScreen(),
+          child: NotificationDetailScreen(notification: notification),
           type: PageTransitionType.rightToLeft,
         );
       case notificationScreen:

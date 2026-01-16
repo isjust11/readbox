@@ -52,6 +52,7 @@ dependencies:
   get_it: ^7.7.0
   get_storage: ^2.1.1
   google_sign_in: ^6.2.1
+  html_unescape: ^2.0.0
   image_picker: ^1.0.7
   intl: null
   intl_utils: ^2.8.13

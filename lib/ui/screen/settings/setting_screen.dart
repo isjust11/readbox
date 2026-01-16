@@ -210,15 +210,13 @@ class _SettingScreenState extends State<SettingScreen> {
             icon: Icons.translate_outlined,
             title: AppLocalizations.current.translate,
             subtitle: AppLocalizations.current.changeAppLanguage,
-            trailing: IconButton(
-              icon: Icon(
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.translateScreen);
+            },
+            trailing: Icon(
               Icons.arrow_forward_ios,
               size: AppDimens.SIZE_16,
               color: Theme.of(context).primaryColor,
-            ),
-              onPressed: () {
-                Navigator.of(context).pushNamed(Routes.translateScreen);
-              },
             ),
           ),
           _buildDivider(),
@@ -226,15 +224,13 @@ class _SettingScreenState extends State<SettingScreen> {
             icon: Icons.text_snippet_outlined,
             title: AppLocalizations.current.textToSpeech,
             subtitle: AppLocalizations.current.convertTextToSpeech,
-            trailing: IconButton(
-              icon: Icon(
-                Icons.arrow_forward_ios,
-                size: AppDimens.SIZE_16,
-                color: Theme.of(context).primaryColor,
-              ),
-              onPressed: () {
-                Navigator.of(context).pushNamed(Routes.textToSpeechSettingScreen);
-              },
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.textToSpeechSettingScreen);
+            },
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: AppDimens.SIZE_16,
+              color: Theme.of(context).primaryColor,
             ),
           ),
         ],

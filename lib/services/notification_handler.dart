@@ -164,20 +164,16 @@ class NotificationHandler {
   /// Parse notification type and return appropriate color
   Color getNotificationColor(String? type) {
     switch (type) {
-      case 'book':
+      case 'ebook':
         return Colors.blue;
-      case 'library':
-        return Colors.purple;
-      case 'reminder':
+      case 'feedback':
+        return Colors.purple; 
+      case 'new_article':
         return Colors.orange;
-      case 'update':
+      case 'system':
         return Colors.green;
-      case 'message':
-        return Colors.teal;
       case 'announcement':
         return Colors.red;
-      case 'system':
-        return Colors.indigo;
       default:
         return Colors.grey;
     }

@@ -47,7 +47,7 @@ class NotificationModel extends NotificationEntity {
   String get typeDisplay {
     switch (type) {
       case NotificationType.ebook:
-        return 'Sách';
+        return 'Ebook';
       case NotificationType.feedback:
         return 'Phản hồi';
       case NotificationType.new_article:
