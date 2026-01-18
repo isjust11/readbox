@@ -2311,6 +2311,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Book has been added to local library'**
   String get book_has_been_added_to_local_library;
+
+  /// No description provided for @youWillReceiveNotificationsHere.
+  ///
+  /// In en, this message translates to:
+  /// **'You will receive notifications here'**
+  String get youWillReceiveNotificationsHere;
+
+  /// No description provided for @reading_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading progress'**
+  String get reading_progress;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @continue_reading.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue reading'**
+  String get continue_reading;
+
+  /// No description provided for @start_reading.
+  ///
+  /// In en, this message translates to:
+  /// **'Start reading'**
+  String get start_reading;
+
+  /// No description provided for @size.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get size;
+
+  /// No description provided for @pages.
+  ///
+  /// In en, this message translates to:
+  /// **'Pages'**
+  String get pages;
+
+  /// No description provided for @last_read.
+  ///
+  /// In en, this message translates to:
+  /// **'Last read'**
+  String get last_read;
 }
 
 class _AppLocalizationsDelegate

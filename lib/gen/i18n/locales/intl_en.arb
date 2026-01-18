@@ -368,5 +368,12 @@
   "add_new_book_to_library" : "Add new book to library",
   "please_upload_ebook_file_first" : "Please upload ebook file first",
   "book_has_been_added_to_local_library" : "Book has been added to local library",
-  "youWillReceiveNotificationsHere" : "You will receive notifications here"
+  "youWillReceiveNotificationsHere" : "You will receive notifications here",
+  "reading_progress" : "Reading progress",
+  "completed" : "Completed",
+  "continue_reading" : "Continue reading",
+  "start_reading" : "Start reading",
+  "size" : "Size",
+  "pages" : "Pages",
+  "last_read" : "Last read"
 }

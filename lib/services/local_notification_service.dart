@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:readbox/ui/widget/base_html.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:readbox/services/notification_handler.dart';
@@ -173,7 +174,9 @@ class LocalNotificationService {
     );
 
     try {
-      await _notifications.show(id, title, body, details, payload: payload);
+      final unescapedTitle = BaseHtml(html: title );
+      final unescapedBody = BaseHtml(html: body);
+      await _notifications.show(id, unescapedTitle.toString(), unescapedBody.toString(), details, payload: payload);
       debugPrint('✅ Notification shown: $title');
     } catch (e) {
       debugPrint('❌ Error showing notification: $e');

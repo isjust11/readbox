@@ -2,7 +2,7 @@ enum InteractionType {
   favorite('favorite'),
   bookmark('bookmark'),
   save('save'),
-  read('read'),
+  reading('reading'),
   download('download'),
   archived('archived');
 
@@ -12,7 +12,7 @@ enum InteractionType {
   static InteractionType fromString(String value) {
     return InteractionType.values.firstWhere(
       (type) => type.value == value,
-      orElse: () => InteractionType.read,
+      orElse: () => InteractionType.reading,
     );
   }
 }

@@ -32,14 +32,6 @@ class _BookCardState extends State<BookCard> {
   }
 
   Future<void> _loadInteractionStats() async {
-    if (widget.book.id == null) {
-      setState(() {
-        _isFavorite = widget.book.isFavorite ?? false;
-        _isArchive = widget.book.isArchived ?? false;
-      });
-      return;
-    }
-
     await widget.userInteractionCubit.getStats(
       targetType: 'book',
       targetId: widget.book.id!,
@@ -188,7 +180,7 @@ class _BookCardState extends State<BookCard> {
                     Navigator.pushNamed(
                       context,
                       Routes.bookDetailScreen,
-                      arguments: book,
+                      arguments: book.id,
                     );
                   },
                 ),
@@ -201,8 +193,10 @@ class _BookCardState extends State<BookCard> {
                     if (state is LoadedState) {
                       final stats = state.data as InteractionStatsModel;
                         setState(() {
-                          _isFavorite = stats.favoriteStatus == true;
-                          _isArchive = stats.archiveStatus == true;
+                          _isFavorite = stats.favoriteStatus;
+                          _isArchive = stats.archiveStatus;
+                          book.isFavorite = stats.favoriteStatus;
+                          book.isArchived = stats.archiveStatus;
                         });
                     }
                   },

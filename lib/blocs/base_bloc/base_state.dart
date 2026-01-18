@@ -14,13 +14,20 @@ class LoadingState extends BaseState {}
 class LoadedState<T> extends BaseState {
   final T data;
   final String msgError;
-  final timeEmit;
   final bool isLocalizeMessage;
 
-  LoadedState(this.data, {this.msgError = "", this.timeEmit, this.isLocalizeMessage = true});
-
+  LoadedState(this.data, {this.msgError = "", this.isLocalizeMessage = true});
+  
+  LoadedState copyWith({
+    T? data,
+    String? msgError,
+    bool? isLocalizeMessage,
+  }) {
+    return LoadedState(data ?? this.data, msgError: msgError ?? this.msgError, isLocalizeMessage: isLocalizeMessage ?? this.isLocalizeMessage);
+  }
+  
   @override
-  List<Object> get props => [data as Object, timeEmit ?? ""];
+  List<Object> get props => [data as Object];
 }
 
 class ErrorState<T> extends BaseState {

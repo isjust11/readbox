@@ -1142,4 +1142,29 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get book_has_been_added_to_local_library =>
       'Book has been added to local library';
+
+  @override
+  String get youWillReceiveNotificationsHere =>
+      'You will receive notifications here';
+
+  @override
+  String get reading_progress => 'Reading progress';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get continue_reading => 'Continue reading';
+
+  @override
+  String get start_reading => 'Start reading';
+
+  @override
+  String get size => 'Size';
+
+  @override
+  String get pages => 'Pages';
+
+  @override
+  String get last_read => 'Last read';
 }

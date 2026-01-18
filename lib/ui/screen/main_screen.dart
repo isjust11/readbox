@@ -16,10 +16,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<LibraryCubit>(
       create: (_) => getIt.get<LibraryCubit>(),
-      child: BlocProvider<NotificationCubit>(
-        create: (_) => getIt.get<NotificationCubit>()..getUnreadCount(),
-        child: MainBody(),
-      ),
+      child: MainBody(),
     );
   }
 }
@@ -51,6 +48,7 @@ class MainBodyState extends State<MainBody> {
     title = AppLocalizations.current.my_library;
     // Load initial data after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<NotificationCubit>().getUnreadCount();
       getBooks();
     });
   }

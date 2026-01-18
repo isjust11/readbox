@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/user_interaction_cubit.dart';
+import 'package:readbox/domain/enums/enums.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:readbox/ui/widget/tts_control_widget.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 import 'package:readbox/utils/pdf_text_extractor.dart';
+import 'package:readbox/domain/data/models/models.dart';
 import 'dart:async';
+
 
 /// PDF Viewer với tính năng chọn text, copy và annotations
 /// Sử dụng Syncfusion PDF Viewer
@@ -45,6 +48,12 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
   // PDF data for text extraction
   Uint8List? _pdfBytes;
   bool _isLoadingPdf = false;
+  
+  // Reading progress tracking
+  Timer? _saveProgressTimer;
+  int _lastSavedPage = 0;
+  // ignore: unused_field
+  ReadingProgressModel? _currentProgress; // Giữ để theo dõi tiến trình hiện tại (có thể dùng để hiển thị sau)
 
   @override
   void initState() {
@@ -52,6 +61,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
     _initializeTTS();
     _loadPdfBytes();
     _userInteractionCubit = context.read<UserInteractionCubit>();
+    _loadReadingProgress();
   }
 
   /// Load PDF bytes để sử dụng cho text extraction
@@ -120,6 +130,8 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
   void dispose() {
     _ttsService.stop();
     _ttsProgressTimer?.cancel();
+    _saveProgressTimer?.cancel();
+    _saveReadingProgressNow(); // Lưu tiến trình cuối cùng khi dispose
     _pdfViewerController.dispose();
     super.dispose();
   }
@@ -144,6 +156,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
               setState(() {
                 _currentPage = details.newPageNumber;
               });
+              _onPageChanged(details.newPageNumber);
             },
             
             // Callback khi document load xong
@@ -209,7 +222,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
       leading: Container(
         margin: EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(12),
         ),
         child: IconButton(
@@ -236,14 +249,14 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
               margin: EdgeInsets.only(top: 4),
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 'Trang $_currentPage/$_totalPages',
                 style: TextStyle(
                   fontSize: 11,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -255,7 +268,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
         Container(
           margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
           ),
           child: IconButton(
@@ -272,7 +285,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
         Container(
           margin: EdgeInsets.only(right: 8, top: 8, bottom: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
           ),
           child: PopupMenuButton<String>(
@@ -360,7 +373,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
           Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -459,7 +472,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 12,
             offset: Offset(0, -4),
           ),
@@ -483,13 +496,13 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Theme.of(context).primaryColor.withOpacity(0.1),
-                  Theme.of(context).primaryColor.withOpacity(0.05),
+                  Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                  Theme.of(context).primaryColor.withValues(alpha: 0.05),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: Theme.of(context).primaryColor.withOpacity(0.2),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -525,7 +538,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
     return Container(
       decoration: BoxDecoration(
         color: isEnabled
-            ? Theme.of(context).primaryColor.withOpacity(0.1)
+            ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
             : Colors.grey[100],
         borderRadius: BorderRadius.circular(12),
       ),
@@ -673,7 +686,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
               Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -953,6 +966,92 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
         _ttsProgressTimer?.cancel();
       },
     );
+  }
+
+  // ========== Reading Progress Tracking Functions ==========
+
+  /// Load reading progress khi mở sách
+  Future<void> _loadReadingProgress() async {
+    try {
+      final interaction = await _userInteractionCubit.
+      getInteractionAction(targetType: InteractionTarget.book,
+       actionType: InteractionType.reading, targetId: widget.bookId);
+      if (mounted) {
+        if (interaction.isReading) {
+          _currentProgress = interaction.readingProgress;
+          if (_currentProgress?.currentPage != null 
+          && _currentProgress!.currentPage! > 0) {
+            _lastSavedPage = _currentProgress!.currentPage!;
+            _currentPage = _currentProgress!.currentPage!;
+            _pdfViewerController.jumpToPage(_currentProgress!.currentPage!);
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Error loading reading progress: $e');
+      // Không hiển thị lỗi cho user vì không quan trọng lắm
+    }
+  }
+
+  /// Xử lý khi trang thay đổi - lưu tiến trình với debounce
+  void _onPageChanged(int newPage) {
+    // Chỉ lưu nếu trang đã thay đổi đáng kể (tránh lưu quá nhiều)
+    if (newPage == _lastSavedPage) return;
+
+    // Hủy timer cũ nếu có
+    _saveProgressTimer?.cancel();
+
+    // Tạo timer mới với debounce 2 giây
+    _saveProgressTimer = Timer(const Duration(seconds: 2), () {
+      _saveReadingProgress(newPage);
+    });
+  }
+
+  /// Lưu tiến trình đọc (với debounce)
+  Future<void> _saveReadingProgress(int page) async {
+    if (page == _lastSavedPage) return; // Tránh lưu trùng
+
+    try {
+      // Tính toán progress percentage (0.0 to 1.0)
+      double progressValue = 0.0;
+      if (_totalPages > 0) {
+        progressValue = page / _totalPages;
+      }
+
+      // Tạo ReadingProgressModel từ JSON
+      final progressModel = ReadingProgressModel.fromJson({
+        'bookId': widget.bookId,
+        'currentPage': page,
+        'progress': progressValue,
+        'lastUpdated': DateTime.now().toIso8601String(),
+      });
+
+      // Lưu tiến trình
+      final savedProgress = await _userInteractionCubit.
+      saveReadingProgress
+      (targetType: InteractionTarget.book, actionType: InteractionType.reading, targetId: widget.bookId, readingProgress: progressModel);
+
+      if (mounted) {
+        setState(() {
+          _currentProgress = savedProgress;
+          _lastSavedPage = page;
+        });
+        debugPrint('Saved reading progress: page $page (${(progressValue * 100).toStringAsFixed(1)}%)');
+      }
+    } catch (e) {
+      debugPrint('Error saving reading progress: $e');
+      // Không hiển thị lỗi cho user để không làm gián đoạn việc đọc
+    }
+  }
+
+  /// Lưu tiến trình ngay lập tức (khi dispose hoặc khi cần)
+  Future<void> _saveReadingProgressNow() async {
+    _saveProgressTimer?.cancel(); // Hủy timer nếu có
+    
+    // Lưu trang hiện tại
+    if (_currentPage > 0 && _currentPage != _lastSavedPage) {
+      await _saveReadingProgress(_currentPage);
+    }
   }
 }
 

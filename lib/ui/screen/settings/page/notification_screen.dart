@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:html_unescape/html_unescape.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/entities/entities.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/notification_handler.dart';
 import 'package:readbox/ui/widget/base_appbar.dart';
+import 'package:readbox/ui/widget/base_html.dart';
 import 'package:readbox/ui/widget/base_screen.dart';
 
 class NotificationScreen extends StatelessWidget {
@@ -20,10 +18,7 @@ class NotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt.get<NotificationCubit>(),
-      child: const NotificationBodyScreen(),
-    );
+    return NotificationBodyScreen();
   }
 }
 
@@ -41,7 +36,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
   int _currentPage = 1;
   final int _pageSize = 20;
   final ValueNotifier<int> _filterReadNotifier = ValueNotifier<int>(2);
-  final NotificationCubit _cubit = getIt.get<NotificationCubit>();
+  late NotificationCubit _notificationCubit;
   @override
   void dispose() {
     _refreshController.dispose();
@@ -52,7 +47,8 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
   @override
   void initState() {
     super.initState();
-    _cubit.getNotifications(
+    _notificationCubit = context.read<NotificationCubit>();
+    _notificationCubit.getNotifications(
       page: 1,
       limit: _pageSize,
       isRead: _filterReadNotifier.value,
@@ -61,7 +57,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
 
   void _onRefresh() async {
     _currentPage = 1;
-    await context.read<NotificationCubit>().refreshNotifications(
+    await _notificationCubit.refreshNotifications(
       page: _currentPage,
       limit: _pageSize,
       isRead: _filterReadNotifier.value,
@@ -70,10 +66,9 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
   }
 
   void _onLoadMore() async {
-    final cubit = context.read<NotificationCubit>();
-    if (cubit.hasMore && !cubit.isLoadingMore) {
+    if (_notificationCubit.hasMore && !_notificationCubit.isLoadingMore) {
       _currentPage++;
-      await cubit.getNotifications(
+      await _notificationCubit.getNotifications(
         page: _currentPage,
         limit: _pageSize,
         isRead: _filterReadNotifier.value,
@@ -126,7 +121,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
               onChanged: (newValue) {
                 _filterReadNotifier.value = newValue ?? 2;
                 // Reload notifications with new filter
-                _cubit.refreshNotifications(
+                _notificationCubit.refreshNotifications(
                   page: 1,
                   limit: _pageSize,
                   isRead: newValue,
@@ -166,13 +161,13 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       PopupMenuButton<String>(
         icon: Icon(Icons.more_vert, color: theme.colorScheme.onPrimary),
         onSelected: (value) {
-          if (_cubit.notifications.isEmpty) {
+          if (_notificationCubit.notifications.isEmpty) {
             return;
           }
-          if (value == 'mark_all_read' && _cubit.unreadCount > 0) {
-            _cubit.markAllAsRead();
+          if (value == 'mark_all_read' && _notificationCubit.unreadCount > 0) {
+            _notificationCubit.markAllAsRead();
           } else if (value == 'delete_all') {
-            _cubit.deleteAllNotifications();
+            _notificationCubit.deleteAllNotifications();
           }
         },
         itemBuilder:
@@ -192,7 +187,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
 
   Widget _buildBody(BuildContext context) {
     return BlocBuilder<NotificationCubit, BaseState>(
-      bloc: _cubit,
+      bloc: _notificationCubit,
       buildWhen: (previous, current) {
         // Rebuild when state type changes OR when state data changes
         return previous.runtimeType != current.runtimeType ||
@@ -225,7 +220,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
           );
         }
 
-        final notifications = _cubit.notifications;
+        final notifications = _notificationCubit.notifications;
 
         if (notifications.isEmpty) {
           return _buildEmptyState();
@@ -233,7 +228,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
 
         return Column(
           children: [
-            if (_cubit.unreadCount > 0)
+            if (_notificationCubit.unreadCount > 0)
               Container(
                 padding: EdgeInsets.all(AppDimens.SIZE_12),
                 color: Theme.of(
@@ -244,8 +239,26 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                     const Icon(Icons.info_outline, size: 20),
                     const SizedBox(width: 8),
                     Text(
-                      '${AppLocalizations.current.youHave} ${_cubit.unreadCount} ${AppLocalizations.current.unreadNotifications}',
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                      '${AppLocalizations.current.youHave} ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                    Text(
+                      _notificationCubit.unreadCount.toString(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      AppLocalizations.current.unreadNotifications,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
                   ],
                 ),
@@ -254,15 +267,15 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
               child: SmartRefresher(
                 controller: _refreshController,
                 enablePullDown: true,
-                enablePullUp: _cubit.hasMore,
+                enablePullUp: _notificationCubit.hasMore,
                 onRefresh: _onRefresh,
                 onLoading: _onLoadMore,
                 child: ListView.separated(
-                  itemCount: _cubit.notifications.length,
+                  itemCount: _notificationCubit.notifications.length,
                   separatorBuilder:
                       (context, index) => const Divider(height: 1),
                   itemBuilder: (context, index) {
-                    final notification = _cubit.notifications[index];
+                    final notification = _notificationCubit.notifications[index];
                     return _buildNotificationItem(context, notification);
                   },
                 ),
@@ -296,82 +309,6 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  /// Kiểm tra xem text có chứa HTML tags không
-  bool _containsHtmlTags(String text) {
-    final htmlTagRegex = RegExp(r'<[^>]+>');
-    return htmlTagRegex.hasMatch(text);
-  }
-
-  /// Render text với hỗ trợ HTML hoặc chỉ decode entities
-  Widget _buildTextWithHtml(
-    BuildContext context,
-    String text,
-    TextStyle style, {
-    int maxLines = 2,
-    TextOverflow overflow = TextOverflow.ellipsis,
-  }) {
-    final decodedText = HtmlUnescape().convert(text);
-    
-    // Nếu có HTML tags, dùng Html widget
-    if (_containsHtmlTags(decodedText)) {
-      final fontSize = style.fontSize ?? 16.0;
-      final lineHeight = 1.3;
-      final maxHeight = fontSize * lineHeight * maxLines;
-      
-      return SizedBox(
-        height: maxHeight,
-        child: ClipRect(
-          child: Html(
-            data: decodedText,
-            style: {
-              "body": Style(
-                fontSize: FontSize(fontSize),
-                fontWeight: style.fontWeight ?? FontWeight.normal,
-                color: style.color ?? Theme.of(context).colorScheme.onSurface,
-                margin: Margins.zero,
-                padding: HtmlPaddings.zero,
-                lineHeight: LineHeight(lineHeight),
-              ),
-              "p": Style(
-                fontSize: FontSize(fontSize),
-                fontWeight: style.fontWeight ?? FontWeight.normal,
-                color: style.color ?? Theme.of(context).colorScheme.onSurface,
-                margin: Margins.zero,
-                padding: HtmlPaddings.zero,
-                lineHeight: LineHeight(lineHeight),
-              ),
-              "strong": Style(
-                fontWeight: FontWeight.bold,
-                color: style.color ?? Theme.of(context).colorScheme.onSurface,
-              ),
-              "b": Style(
-                fontWeight: FontWeight.bold,
-                color: style.color ?? Theme.of(context).colorScheme.onSurface,
-              ),
-              "em": Style(
-                fontStyle: FontStyle.italic,
-                color: style.color ?? Theme.of(context).colorScheme.onSurface,
-              ),
-              "i": Style(
-                fontStyle: FontStyle.italic,
-                color: style.color ?? Theme.of(context).colorScheme.onSurface,
-              ),
-            },
-            shrinkWrap: true,
-          ),
-        ),
-      );
-    }
-    
-    // Nếu không có HTML tags, chỉ dùng Text với decoded entities
-    return Text(
-      decodedText,
-      style: style,
-      maxLines: maxLines,
-      overflow: overflow,
     );
   }
 
@@ -441,10 +378,18 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
           }
           switch (notification.type) {
             case NotificationType.ebook:
-              Navigator.pushNamed(context, Routes.bookDetailScreen, arguments: notification.metadata?['bookId']);
+              Navigator.pushNamed(
+                context,
+                Routes.bookDetailScreen,
+                arguments: notification.metadata?['id'],
+              );
               break;
             case NotificationType.feedback:
-              Navigator.pushNamed(context, Routes.notificationDetailScreen, arguments: notification);
+              Navigator.pushNamed(
+                context,
+                Routes.notificationDetailScreen,
+                arguments: notification,
+              );
               break;
             case NotificationType.new_article:
               break;
@@ -465,7 +410,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
             color:
                 notification.isUnread
                     ? theme.primaryColor.withValues(alpha: 0.05)
-                    : theme.colorScheme.surfaceContainerHighest,
+                    : theme.colorScheme.surfaceContainer,
             border: Border(
               bottom: BorderSide(color: theme.secondaryHeaderColor, width: 1),
             ),
@@ -505,20 +450,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: _buildTextWithHtml(
-                            context,
-                            notification.displayTitle,
-                            TextStyle(
-                              fontSize: 14,
-                              fontWeight:
-                                  notification.isUnread
-                                      ? FontWeight.bold
-                                      : FontWeight.w500,
-                              color: theme.colorScheme.onSurface,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                          child: BaseHtml(html: notification.displayTitle),
                         ),
                         if (notification.isUnread)
                           Container(
@@ -574,15 +506,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      notification.displayBody,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: theme.colorScheme.onSurface,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    BaseHtml(html: notification.displayBody),
                   ],
                 ),
               ),
@@ -592,5 +516,4 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       ),
     );
   }
-  
 }

@@ -17,6 +17,19 @@ class ReadingProgressModel extends ReadingProgressEntity {
     }
     return '${minutes}m';
   }
+
+  copyWith({
+    double? progress,
+    int? totalReadingTime,
+    DateTime? lastUpdated,
+  }) {
+    return ReadingProgressModel.fromJson({
+      ...toJson(),
+      'progress': progress,
+      'totalReadingTime': totalReadingTime,
+      'lastUpdated': lastUpdated?.toIso8601String(),
+    });
+  }
   
   bool get hasProgress => progress != null && progress! > 0;
 }

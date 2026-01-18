@@ -1,10 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/utils.dart';
+import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/repositories/user_interaction_repository.dart';
 
 class UserInteractionCubit extends Cubit<BaseState> {
-  bool isLiked = false;
+  bool isFavorite = false;
+  bool isArchived = false;
   bool isBookmarked = false;
   bool hasTrackedBookmark = false;
   int viewCount = 0;
@@ -21,8 +24,7 @@ class UserInteractionCubit extends Cubit<BaseState> {
         targetType: targetType,
         targetId: targetId,
       );
-      isLiked = true;
-      likeCount++;
+      isFavorite = !isFavorite;
       emit(LoadedState(response));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -40,6 +42,17 @@ class UserInteractionCubit extends Cubit<BaseState> {
       emit(LoadedState(response));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
+
+  // save reading progress
+  Future<dynamic> saveReadingProgress({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId, required ReadingProgressModel readingProgress}) async {
+    try {
+      emit(LoadingState());
+      final response = await repository.saveReadingProgress(targetType: targetType, actionType: actionType, targetId: targetId, readingProgress: readingProgress);
+      return response;
+    } catch (e) {
+      throw Exception(BlocUtils.getMessageError(e));
     }
   }
 
@@ -156,7 +169,7 @@ class UserInteractionCubit extends Cubit<BaseState> {
         targetType: targetType,
         targetId: targetId,
       );
-      isLiked = response != null && response['like'] == true;
+      isFavorite = response != null && response['like'] == true;
         emit(LoadedState(response));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -170,34 +183,45 @@ class UserInteractionCubit extends Cubit<BaseState> {
         targetType: targetType,
         targetId: targetId,
       );
+      isFavorite = response.favoriteStatus == true;
+      isArchived = response.archiveStatus == true;
       emit(LoadedState(response));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
 
-  void getMyInteractions({Map<String, dynamic>? query}) async {
+  Future<dynamic> getMyInteractions({Map<String, dynamic>? query}) async {
     try {
       emit(LoadingState());
-      // final response = await repository.getMyInteractions(query: query);
-      // emit(LoadedState(response));
+      final response = await repository.getMyInteractions(query: query);
+      emit(LoadedState(response));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
 
+  // get interaction by target 
+  Future<UserInteractionModel> getInteractionAction({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId}) async {
+    try {
+      final response = await repository.getInteractionAction(targetType: targetType, actionType: actionType, targetId: targetId);
+      return response;
+    } catch (e) {
+      throw Exception(BlocUtils.getMessageError(e));
+    }
+  }
   void initInteraction({
     required bool isView,
-    required bool isLiked,
+    required bool isFavorite,
     required bool isBookmarked,
   }) {
-    this.isLiked = isLiked;
+    this.isFavorite = isFavorite;
     this.isBookmarked = isBookmarked;
   }
 
   // Reset state when switching to different target
   void resetState() {
-    isLiked = false;
+    isFavorite = false;
     isBookmarked = false;
     viewCount = 0;
     likeCount = 0;

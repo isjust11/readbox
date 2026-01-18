@@ -389,5 +389,12 @@
    "add_new_book_to_library" : "Thêm sách mới vào thư viện",
    "please_upload_ebook_file_first" : "Vui lòng upload file ebook trước",
    "book_has_been_added_to_local_library" : "Sách đã được thêm vào thư viện local",
-   "youWillReceiveNotificationsHere" : "Bạn sẽ nhận được thông báo ở đây"
+   "youWillReceiveNotificationsHere" : "Bạn sẽ nhận được thông báo ở đây",
+   "reading_progress" : "Tiến độ đọc",
+   "completed" : "Hoàn thành",
+   "continue_reading" : "Đọc tiếp",
+   "start_reading" : "Bắt đầu đọc",
+   "size" : "Kích thước",
+   "pages" : "Trang",
+   "last_read" : "Đọc lần cuối"
 }

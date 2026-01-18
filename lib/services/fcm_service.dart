@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -304,14 +305,20 @@ class FCMService {
     );
 
     try {
+      // Convert data map to JSON string for payload
+      final payload = message.data.isNotEmpty 
+          ? jsonEncode(message.data) 
+          : null;
+      
       await _localNotifications.show(
         message.hashCode,
         notification.title,
         notification.body,
         details,
-        payload: message.data.toString(),
+        payload: payload,
       );
       debugPrint('✅ Local notification shown successfully');
+      debugPrint('   Payload: $payload');
     } catch (e) {
       debugPrint('❌ Error showing local notification: $e');
     }

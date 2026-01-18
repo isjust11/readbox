@@ -97,12 +97,7 @@ class NotificationCubit extends Cubit<BaseState> {
         _notifications[index] = updatedNotification;
         _unreadCount = _unreadCount > 0 ? _unreadCount - 1 : 0;
         unreadCountNotifier.value = _unreadCount;
-        emit(
-          LoadedState(
-            List.from(_notifications),
-            timeEmit: DateTime.now().millisecondsSinceEpoch,
-          ),
-        );
+        emit(LoadedState(List.from(_notifications)));
       }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -122,7 +117,6 @@ class NotificationCubit extends Cubit<BaseState> {
         emit(
           LoadedState(
             List.from(_notifications),
-            timeEmit: DateTime.now().millisecondsSinceEpoch,
           ),
         );
       }
@@ -167,7 +161,6 @@ class NotificationCubit extends Cubit<BaseState> {
       emit(
         LoadedState(
           List.from(_notifications),
-          timeEmit: DateTime.now().millisecondsSinceEpoch,
         ),
       );
     } catch (e) {

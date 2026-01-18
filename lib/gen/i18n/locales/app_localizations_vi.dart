@@ -1143,4 +1143,29 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get book_has_been_added_to_local_library =>
       'Sách đã được thêm vào thư viện local';
+
+  @override
+  String get youWillReceiveNotificationsHere =>
+      'Bạn sẽ nhận được thông báo ở đây';
+
+  @override
+  String get reading_progress => 'Tiến độ đọc';
+
+  @override
+  String get completed => 'Hoàn thành';
+
+  @override
+  String get continue_reading => 'Đọc tiếp';
+
+  @override
+  String get start_reading => 'Bắt đầu đọc';
+
+  @override
+  String get size => 'Kích thước';
+
+  @override
+  String get pages => 'Trang';
+
+  @override
+  String get last_read => 'Đọc lần cuối';
 }

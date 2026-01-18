@@ -5,6 +5,7 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/res/dimens.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 
@@ -17,23 +18,39 @@ class BookDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<BookDetailCubit>(
       create: (_) => getIt.get<BookDetailCubit>()..getBookById(bookId),
-      child: BookDetailBody(),
+      child: BookDetailBody(bookId: bookId),
     );
   }
 }
 
 class BookDetailBody extends StatefulWidget {
-
-  const BookDetailBody({super.key});
+  final String bookId;
+  const BookDetailBody({super.key, required this.bookId});
 
   @override
   BookDetailBodyState createState() => BookDetailBodyState();
 }
 
 class BookDetailBodyState extends State<BookDetailBody> {
+  bool _isFavorite = false;
+  bool _isArchived = false;
+
+  bool get isFavorite => _isFavorite;
+  bool get isArchived => _isArchived;
   @override
   void initState() {
     super.initState();
+    // Đảm bảo listener được đăng ký trước khi gọi getStats()
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadInteractionStats();
+    });
+  }
+
+  void _loadInteractionStats() async {
+    await context.read<UserInteractionCubit>().getStats(
+      targetType: 'book',
+      targetId: widget.bookId,
+    );
   }
 
   String _getImageUrl(String? imagePath) {
@@ -41,13 +58,28 @@ class BookDetailBodyState extends State<BookDetailBody> {
     return '${ApiConstant.apiHostStorage}$imagePath';
   }
 
-  void _toggleFavorite(BookModel book) {
-    if (book.id == null) return;
-    
-    final newValue = !(book.isFavorite ?? false);
-    context.read<BookDetailCubit>().toggleFavorite(book.id!.toString(), newValue);
+  void _toggleFavorite() {
+    if (widget.bookId.isEmpty) return;
+
+    final newValue = !_isFavorite;
+    context.read<UserInteractionCubit>().toggleFavorite(
+      targetType: 'book',
+      targetId: widget.bookId,
+    );
     setState(() {
-      book.isFavorite = newValue;
+      _isFavorite = newValue;
+    });
+  }
+
+  void _toggleArchive() {
+    if (widget.bookId.isEmpty) return;
+    final newValue = !_isArchived;
+    context.read<UserInteractionCubit>().toggleArchive(
+      targetType: 'book',
+      targetId: widget.bookId,
+    );
+    setState(() {
+      _isArchived = newValue;
     });
   }
 
@@ -66,18 +98,32 @@ class BookDetailBodyState extends State<BookDetailBody> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BookDetailCubit, BaseState>(
-      builder: (context, state) {
-        if (state is LoadingState) {
-          return const Center(child: CircularProgressIndicator());
+    return BlocListener<UserInteractionCubit, BaseState>(
+      listener: (context, state) {
+        if (state is LoadedState && state.data != null) {
+          final stats = state.data as InteractionStatsModel;
+          setState(() {
+            _isFavorite = stats.favoriteStatus == true;
+            _isArchived = stats.archiveStatus == true;
+          });
         }
-        if (state is LoadedState) {
-          return _buildBody(context, state.data as BookModel);
-        }
-        return Center(child: Text(AppLocalizations.current.error_common,
-        style: TextStyle(color: Theme.of(context).colorScheme.onError),
-        ));
       },
+      child: BlocBuilder<BookDetailCubit, BaseState>(
+        builder: (context, state) {
+          if (state is LoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is LoadedState) {
+            return _buildBody(context, state.data as BookModel);
+          }
+          return Center(
+            child: Text(
+              AppLocalizations.current.error_common,
+              style: TextStyle(color: Theme.of(context).colorScheme.onError),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -96,19 +142,23 @@ class BookDetailBodyState extends State<BookDetailBody> {
                   // Cover Image
                   book.coverImageUrl != null
                       ? Image.network(
-                          _getImageUrl(book.coverImageUrl),
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: Colors.grey[300],
-                              child: Icon(Icons.book, size: 100, color: Colors.grey),
-                            );
-                          },
-                        )
+                        _getImageUrl(book.coverImageUrl),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: Icon(
+                              Icons.book,
+                              size: 100,
+                              color: Colors.grey,
+                            ),
+                          );
+                        },
+                      )
                       : Container(
-                          color: Colors.grey[300],
-                          child: Icon(Icons.book, size: 100, color: Colors.grey),
-                        ),
+                        color: Colors.grey[300],
+                        child: Icon(Icons.book, size: 100, color: Colors.grey),
+                      ),
                   // Gradient overlay
                   Container(
                     decoration: BoxDecoration(
@@ -117,7 +167,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          Colors.black.withValues(alpha:0.7),
+                          Colors.black.withValues(alpha: 0.7),
                         ],
                       ),
                     ),
@@ -126,12 +176,33 @@ class BookDetailBodyState extends State<BookDetailBody> {
               ),
             ),
             actions: [
-              IconButton(
-                icon: Icon(
-                  book.isFavorite == true ? Icons.favorite : Icons.favorite_border,
-                  color: book.isFavorite == true ? Colors.red : Colors.white,
-                ),
-                onPressed: () => _toggleFavorite(book),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      isArchived
+                          ? Icons.archive_rounded
+                          : Icons.archive_outlined,
+                      color:
+                          isArchived
+                              ? Theme.of(context).primaryColor
+                              : Theme.of(context).colorScheme.onSurface,
+                    ),
+                    onPressed: () => _toggleArchive(),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      isFavorite
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
+                      color:
+                          isFavorite
+                              ? Theme.of(context).colorScheme.error
+                              : Theme.of(context).colorScheme.onSurface,
+                    ),
+                    onPressed: () => _toggleFavorite(),
+                  ),
+                ],
               ),
             ],
           ),
@@ -146,10 +217,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                   // Title
                   Text(
                     book.displayTitle,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
 
@@ -160,10 +228,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                       SizedBox(width: 8),
                       Text(
                         book.displayAuthor,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey[700],
-                        ),
+                        style: TextStyle(fontSize: 18, color: Colors.grey[700]),
                       ),
                     ],
                   ),
@@ -172,12 +237,15 @@ class BookDetailBodyState extends State<BookDetailBody> {
                   // Rating
                   if (book.rating != null && book.rating! > 0)
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.amber.withValues(alpha:0.1),
+                        color: Colors.amber.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: Colors.amber.withValues(alpha:0.3),
+                          color: Colors.amber.withValues(alpha: 0.3),
                           width: 1,
                         ),
                       ),
@@ -198,7 +266,10 @@ class BookDetailBodyState extends State<BookDetailBody> {
                           }),
                           SizedBox(width: 12),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.amber[700],
                               borderRadius: BorderRadius.circular(12),
@@ -223,7 +294,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                       Expanded(
                         child: _buildInfoCard(
                           icon: Icons.library_books,
-                          label: 'Trang',
+                          label: AppLocalizations.current.pages,
                           value: '${book.totalPages ?? 0}',
                         ),
                       ),
@@ -231,7 +302,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                       Expanded(
                         child: _buildInfoCard(
                           icon: Icons.insert_drive_file,
-                          label: 'Kích thước',
+                          label: AppLocalizations.current.size,
                           value: book.fileSizeFormatted,
                         ),
                       ),
@@ -239,7 +310,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                       Expanded(
                         child: _buildInfoCard(
                           icon: Icons.language,
-                          label: 'Ngôn ngữ',
+                          label: AppLocalizations.current.language,
                           value: book.language?.toUpperCase() ?? 'VI',
                         ),
                       ),
@@ -249,22 +320,30 @@ class BookDetailBodyState extends State<BookDetailBody> {
 
                   // Publisher & ISBN
                   if (book.publisher != null) ...[
-                    _buildDetailRow('Nhà xuất bản', book.publisher!),
+                    _buildDetailRow(
+                      AppLocalizations.current.publisher,
+                      book.publisher!,
+                    ),
                     SizedBox(height: 8),
                   ],
                   if (book.isbn != null) ...[
-                    _buildDetailRow('ISBN', book.isbn!),
+                    _buildDetailRow(AppLocalizations.current.isbn, book.isbn!),
                     SizedBox(height: 8),
                   ],
-                  if (book.categories != null && book.categories!.isNotEmpty) ...[
-                    _buildDetailRow('Thể loại', book.categoriesDisplay),
+                  if (book.categories != null &&
+                      book.categories!.isNotEmpty) ...[
+                    _buildDetailRow(
+                      AppLocalizations.current.category,
+                      book.categoriesDisplay,
+                    ),
                     SizedBox(height: 24),
                   ],
 
                   // Description
-                  if (book.description != null && book.description!.isNotEmpty) ...[
+                  if (book.description != null &&
+                      book.description!.isNotEmpty) ...[
                     Text(
-                      'Mô tả',
+                      AppLocalizations.current.description,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -285,7 +364,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                   // Reading Progress (if available)
                   if (book.progressPercentage > 0) ...[
                     Text(
-                      'Tiến độ đọc',
+                      AppLocalizations.current.reading_progress,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -302,7 +381,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      '${book.progressPercentage.toStringAsFixed(0)}% hoàn thành',
+                      '${AppLocalizations.current.completed}${book.progressPercentage.toStringAsFixed(0)}%',
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                     SizedBox(height: 24),
@@ -311,11 +390,9 @@ class BookDetailBodyState extends State<BookDetailBody> {
                   // Last Read Date
                   if (book.lastRead != null) ...[
                     Text(
-                      'Đọc lần cuối: ${_formatDate(book.lastRead!)}',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
+                      AppLocalizations.current.last_read +
+                          _formatDate(book.lastRead!),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                     SizedBox(height: 24),
                   ],
@@ -329,12 +406,12 @@ class BookDetailBodyState extends State<BookDetailBody> {
       // Read Button
       bottomNavigationBar: SafeArea(
         child: Container(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.all(AppDimens.SIZE_8),
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha:0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: Offset(0, -5),
               ),
@@ -345,12 +422,12 @@ class BookDetailBodyState extends State<BookDetailBody> {
               gradient: LinearGradient(
                 colors: [
                   Theme.of(context).primaryColor,
-                  Theme.of(context).primaryColor.withValues(alpha:0.8),
+                  Theme.of(context).primaryColor.withValues(alpha: 0.8),
                 ],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
                   color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
@@ -364,9 +441,9 @@ class BookDetailBodyState extends State<BookDetailBody> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
-                padding: EdgeInsets.symmetric(vertical: 18),
+                padding: EdgeInsets.symmetric(vertical: 8),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: Row(
@@ -386,7 +463,9 @@ class BookDetailBodyState extends State<BookDetailBody> {
                   ),
                   SizedBox(width: 12),
                   Text(
-                    book.progressPercentage > 0 ? 'Đọc tiếp' : 'Bắt đầu đọc',
+                    book.progressPercentage > 0
+                        ? AppLocalizations.current.continue_reading
+                        : AppLocalizations.current.start_reading,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -397,7 +476,10 @@ class BookDetailBodyState extends State<BookDetailBody> {
                   if (book.progressPercentage > 0) ...[
                     SizedBox(width: 8),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
@@ -439,12 +521,12 @@ class BookDetailBodyState extends State<BookDetailBody> {
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Theme.of(context).primaryColor.withValues(alpha:0.1),
+          color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha:0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -455,14 +537,10 @@ class BookDetailBodyState extends State<BookDetailBody> {
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withValues(alpha:0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              color: Theme.of(context).primaryColor,
-              size: 24,
-            ),
+            child: Icon(icon, color: Theme.of(context).primaryColor, size: 24),
           ),
           SizedBox(height: 12),
           Text(
@@ -497,19 +575,13 @@ class BookDetailBodyState extends State<BookDetailBody> {
           width: 120,
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
           ),
         ),
         Expanded(
           child: Text(
             value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
         ),
       ],

@@ -1,5 +1,6 @@
 import 'package:readbox/domain/data/datasources/remote/user_interaction_data_source.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/domain/enums/enums.dart';
 
 class UserInteractionRepository {
   final UserInteractionRemoteDataSource remoteDataSource;
@@ -76,6 +77,13 @@ class UserInteractionRepository {
     required dynamic targetId,
   }) => remoteDataSource.getStats(targetType: targetType, targetId: targetId);
 
-  // Future<dynamic> getMyInteractions({Map<String, dynamic>? query}) =>
-  //     remoteDataSource.getMyInteractions(query: query);
+  // save reading progress
+  Future<UserInteractionModel> saveReadingProgress({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId, required ReadingProgressModel readingProgress}) 
+  => remoteDataSource.saveReadingProgress(targetType: targetType, actionType: actionType, targetId: targetId, readingProgress: readingProgress);
+
+    Future<dynamic> getMyInteractions({Map<String, dynamic>? query}) =>
+      remoteDataSource.getMyInteractions(query: query);
+
+  Future<UserInteractionModel> getInteractionAction({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId}) =>
+    remoteDataSource.getInteractionAction(targetType: targetType, actionType: actionType, targetId: targetId);
 }
