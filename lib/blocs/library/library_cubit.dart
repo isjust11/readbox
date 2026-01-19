@@ -35,6 +35,7 @@ class LibraryCubit extends Cubit<BaseState> {
     int? limit,
     String? categoryId,
     bool isLoadMore = false,
+    bool isDiscover = false,
   }) async {
     try {
       
@@ -52,6 +53,7 @@ class LibraryCubit extends Cubit<BaseState> {
         page: page,
         limit: limit,
         categoryId: categoryId,
+        isDiscover: isDiscover,
       );
 
 
@@ -151,6 +153,7 @@ class LibraryCubit extends Cubit<BaseState> {
       limit: limit,
       categoryId: categoryId,
       isLoadMore: false,
+      isDiscover: false,
     );
   }
 }

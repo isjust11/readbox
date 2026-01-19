@@ -13,12 +13,14 @@ class BookRemoteDataSource {
     FilterType? filterType,
     String? categoryId,
     String? searchQuery,
+    bool isDiscover = false,
   }) async {
     Map<String, dynamic> params = {};
     if (page != null) params['page'] = page;
     if (limit != null) params['limit'] = limit;
     if (categoryId != null) params['categoryId'] = categoryId;
     if (filterType != null) params['filterType'] = filterType.name;
+    if (isDiscover) params['fromMe'] = !isDiscover;
     if (searchQuery != null && searchQuery.isNotEmpty) {
       params['search'] = searchQuery;
     }

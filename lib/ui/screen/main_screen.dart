@@ -37,7 +37,7 @@ class MainBodyState extends State<MainBody> {
   int page = 1;
   int limit = 10;
   String title = "";
-  FilterType filterType = FilterType.all;
+  FilterType filterType = FilterType.discover;
   Timer? _debounceTimer;
   String categoryId = "";
   String? _currentSearchQuery;
@@ -67,6 +67,7 @@ class MainBodyState extends State<MainBody> {
       limit: limit,
       categoryId: categoryId,
       isLoadMore: isLoadMore,
+      isDiscover: filterType == FilterType.discover,
     );
   }
 

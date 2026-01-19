@@ -13,6 +13,7 @@ class GetBookListUseCase {
     int? page,
     int? limit,
     String? categoryId,
+    bool isDiscover = false,
   }) async {
     return await repository.getPublicBooks(
       filterType: filterType,
@@ -20,6 +21,7 @@ class GetBookListUseCase {
       page: page,
       limit: limit,
       categoryId: categoryId,
+      isDiscover: isDiscover,
     );
   }
 }

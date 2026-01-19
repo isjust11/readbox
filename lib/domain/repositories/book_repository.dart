@@ -21,6 +21,7 @@ class BookRepository {
     int? page,
     int? limit,
     String? categoryId,
+    bool isDiscover = false,
   }) async {
     try {
       return await remoteDataSource.getPublicBooks(
@@ -29,6 +30,7 @@ class BookRepository {
         page: page,
         limit: limit,
         categoryId: categoryId,
+        isDiscover: isDiscover,
       );
     } catch (e) {
       throw Exception('Failed to get books: $e');

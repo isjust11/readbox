@@ -37,6 +37,24 @@ class UserLocalDataSource {
       return false;
     }
   }
+  Future<bool> saveRefreshToken(String refreshToken) async {
+    try {
+      await _secureStorage.saveRefreshToken(refreshToken);
+      return true;
+    } catch (e) {
+      print('❌ Error saving refresh token: $e');
+      return false;
+    }
+  }
+
+  Future<String?> getRefreshToken() async {
+    try {
+      return await _secureStorage.getRefreshToken();
+    } catch (e) {
+      print('❌ Error getting refresh token: $e');
+      return null;
+    }
+  }
 
   /// Lấy token từ secure storage
   Future<String?> getToken() async {
