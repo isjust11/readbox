@@ -396,5 +396,13 @@
    "start_reading" : "Bắt đầu đọc",
    "size" : "Kích thước",
    "pages" : "Trang",
-   "last_read" : "Đọc lần cuối"
+   "last_read" : "Đọc lần cuối",
+   "search_filter" : "Bộ lọc tìm kiếm",
+   "reset" : "Đặt lại",
+   "i_uploaded" : "Tôi đăng tải",
+   "format" : "Định dạng",
+   "epub" : "EPUB",
+   "pdf" : "PDF",
+   "apply_filters" : "Áp dụng bộ lọc",
+   "no_name" : "Không tên"
 }

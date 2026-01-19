@@ -18,4 +18,5 @@ export 'card_row_item.dart';
 export 'card_col_item.dart';
 export 'app_widgets/app_drawer.dart';
 export 'app_widgets/book_card.dart';
+export 'app_widgets/search_filter_bottom_sheet.dart';
 export 'base_appbar.dart';

@@ -375,5 +375,13 @@
   "start_reading" : "Start reading",
   "size" : "Size",
   "pages" : "Pages",
-  "last_read" : "Last read"
+  "last_read" : "Last read",
+  "search_filter" : "Search filter",
+  "reset" : "Reset",
+  "i_uploaded" : "I uploaded",
+  "format" : "Format",
+  "epub" : "EPUB",
+  "pdf" : "PDF",
+  "apply_filters" : "Apply filters",
+  "no_name" : "No name"
 }

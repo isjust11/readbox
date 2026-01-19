@@ -171,7 +171,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get loading_more_books_no_data => 'Không có dữ liệu để tải thêm';
 
   @override
-  String get local_library => 'Thư viện Local';
+  String get local_library => 'Thư viện của tôi';
 
   @override
   String get upload_book => 'Tải sách lên';
@@ -1168,4 +1168,28 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get last_read => 'Đọc lần cuối';
+
+  @override
+  String get search_filter => 'Bộ lọc tìm kiếm';
+
+  @override
+  String get reset => 'Đặt lại';
+
+  @override
+  String get i_uploaded => 'Tôi đăng tải';
+
+  @override
+  String get format => 'Định dạng';
+
+  @override
+  String get epub => 'EPUB';
+
+  @override
+  String get pdf => 'PDF';
+
+  @override
+  String get apply_filters => 'Áp dụng bộ lọc';
+
+  @override
+  String get no_name => 'Không tên';
 }

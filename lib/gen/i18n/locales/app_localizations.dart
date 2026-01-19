@@ -425,7 +425,7 @@ abstract class AppLocalizations {
   /// No description provided for @local_library.
   ///
   /// In en, this message translates to:
-  /// **'Local library'**
+  /// **'My library'**
   String get local_library;
 
   /// No description provided for @upload_book.
@@ -2359,6 +2359,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Last read'**
   String get last_read;
+
+  /// No description provided for @search_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Search filter'**
+  String get search_filter;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @i_uploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'I uploaded'**
+  String get i_uploaded;
+
+  /// No description provided for @format.
+  ///
+  /// In en, this message translates to:
+  /// **'Format'**
+  String get format;
+
+  /// No description provided for @epub.
+  ///
+  /// In en, this message translates to:
+  /// **'EPUB'**
+  String get epub;
+
+  /// No description provided for @pdf.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF'**
+  String get pdf;
+
+  /// No description provided for @apply_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply filters'**
+  String get apply_filters;
+
+  /// No description provided for @no_name.
+  ///
+  /// In en, this message translates to:
+  /// **'No name'**
+  String get no_name;
 }
 
 class _AppLocalizationsDelegate

@@ -171,7 +171,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading_more_books_no_data => 'Loading more books no data';
 
   @override
-  String get local_library => 'Local library';
+  String get local_library => 'My library';
 
   @override
   String get upload_book => 'Upload book';
@@ -1167,4 +1167,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get last_read => 'Last read';
+
+  @override
+  String get search_filter => 'Search filter';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get i_uploaded => 'I uploaded';
+
+  @override
+  String get format => 'Format';
+
+  @override
+  String get epub => 'EPUB';
+
+  @override
+  String get pdf => 'PDF';
+
+  @override
+  String get apply_filters => 'Apply filters';
+
+  @override
+  String get no_name => 'No name';
 }

@@ -4,10 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/domain/data/entities/book_entity.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
+import 'package:readbox/ui/widget/app_widgets/search_filter_bottom_sheet.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
 class MainScreen extends StatelessWidget {
@@ -41,6 +43,10 @@ class MainBodyState extends State<MainBody> {
   Timer? _debounceTimer;
   String categoryId = "";
   String? _currentSearchQuery;
+  // Filter state
+  String? _filterCategoryId;
+  bool _filterIsMyUpload = false;
+  BookType? _filterFormat;
 
   @override
   void initState() {
@@ -60,14 +66,24 @@ class MainBodyState extends State<MainBody> {
       page = 1;
     }
 
+    // Use filter category if in search mode, otherwise use drawer category
+    final effectiveCategoryId = _isSearching && _filterCategoryId != null
+        ? _filterCategoryId
+        : categoryId;
+    
+    // Use filter "my upload" if in search mode, otherwise use filterType
+    final effectiveIsDiscover = _isSearching && _filterIsMyUpload
+        ? false  // fromMe = true means isDiscover = false
+        : filterType == FilterType.discover;
+
     await context.read<LibraryCubit>().getBooks(
       filterType: filterType,
       searchQuery: _currentSearchQuery,
       page: page,
       limit: limit,
-      categoryId: categoryId,
+      categoryId: effectiveCategoryId,
       isLoadMore: isLoadMore,
-      isDiscover: filterType == FilterType.discover,
+      isDiscover: effectiveIsDiscover,
     );
   }
 
@@ -86,6 +102,10 @@ class MainBodyState extends State<MainBody> {
         _debounceTimer?.cancel();
         _searchController.clear();
         _currentSearchQuery = null;
+        // Reset filters when closing search
+        _filterCategoryId = null;
+        _filterIsMyUpload = false;
+        _filterFormat = null;
         page = 1;
         getBooks();
       }
@@ -95,12 +115,15 @@ class MainBodyState extends State<MainBody> {
   void _onRefresh() async {
     page = 1;
     try {
+      final effectiveCategoryId = _isSearching && _filterCategoryId != null
+          ? _filterCategoryId
+          : categoryId;
       await context.read<LibraryCubit>().refreshBooks(
         filterType: filterType,
         searchQuery: _currentSearchQuery,
         page: page,
         limit: limit,
-        categoryId: categoryId,
+        categoryId: effectiveCategoryId,
       );
     } finally {
       if (mounted) {
@@ -138,6 +161,29 @@ class MainBodyState extends State<MainBody> {
         _refreshController.loadFailed();
       }
     }
+  }
+
+  void _showFilterBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => SearchFilterBottomSheet(
+        selectedCategoryId: _filterCategoryId,
+        isMyUpload: _filterIsMyUpload,
+        selectedFormat: _filterFormat,
+        onApplyFilters: (categoryId, isMyUpload, format) {
+          setState(() {
+            _filterCategoryId = categoryId;
+            _filterIsMyUpload = isMyUpload;
+            _filterFormat = format;
+          });
+          // Reset page and reload with filters
+          page = 1;
+          getBooks();
+        },
+      ),
+    );
   }
 
   Widget _buildNotificationButton() {
@@ -225,6 +271,33 @@ class MainBodyState extends State<MainBody> {
                 )
                 : Text(title, style: TextStyle(color: colorScheme.onSurface)),
         actions: [
+          if (_isSearching)
+            IconButton(
+              icon: Stack(
+                children: [
+                  Icon(
+                    Icons.tune,
+                    color: colorScheme.onSurface,
+                  ),
+                  if (_filterCategoryId != null ||
+                      _filterIsMyUpload ||
+                      _filterFormat != null)
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              onPressed: _showFilterBottomSheet,
+            ),
           IconButton(
             icon: Icon(
               _isSearching ? Icons.close : Icons.search,
@@ -323,6 +396,14 @@ class MainBodyState extends State<MainBody> {
               );
             }
 
+            // Apply format filter client-side if needed
+            var filteredBooks = books;
+            if (_isSearching && _filterFormat != null) {
+              filteredBooks = books.where((book) {
+                return book.fileType == _filterFormat;
+              }).toList();
+            }
+
             return SmartRefresher(
               enablePullDown: true,
               enablePullUp: cubit.hasMore,
@@ -362,22 +443,43 @@ class MainBodyState extends State<MainBody> {
                   return body;
                 },
               ),
-              child: GridView.builder(
-                padding: EdgeInsets.all(16),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.65,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: books.length,
-                itemBuilder: (context, index) {
-                  return BookCard(
-                    book: books[index],
-                    userInteractionCubit: context.read<UserInteractionCubit>(),
-                  );
-                },
-              ),
+              child: filteredBooks.isEmpty && _isSearching && (_filterFormat != null)
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.filter_alt_outlined,
+                            size: 64,
+                            color: colorScheme.onSurface.withValues(alpha: 0.5),
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'Không tìm thấy sách với bộ lọc đã chọn',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: colorScheme.onSurface.withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : GridView.builder(
+                      padding: EdgeInsets.all(16),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.65,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: filteredBooks.length,
+                      itemBuilder: (context, index) {
+                        return BookCard(
+                          book: filteredBooks[index],
+                          userInteractionCubit: context.read<UserInteractionCubit>(),
+                        );
+                      },
+                    ),
             );
           },
         ),
