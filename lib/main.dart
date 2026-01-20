@@ -37,5 +37,8 @@ void main() async {
     BlocProvider(
       create: (_) => NotificationCubit(notificationRepository: di.getIt<NotificationRepository>()),
     ),
+    BlocProvider(
+      create: (_) => CategoryCubit(repository: di.getIt<CategoryRepository>()),
+    ),
   ], child: MyApp()));
 }

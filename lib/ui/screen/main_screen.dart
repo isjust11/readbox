@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
-import 'package:readbox/domain/data/entities/book_entity.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
-import 'package:readbox/ui/widget/app_widgets/search_filter_bottom_sheet.dart';
 import 'package:readbox/ui/widget/widget.dart';
+
+import '../../domain/data/models/models.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -44,9 +44,7 @@ class MainBodyState extends State<MainBody> {
   String categoryId = "";
   String? _currentSearchQuery;
   // Filter state
-  String? _filterCategoryId;
-  bool _filterIsMyUpload = false;
-  BookType? _filterFormat;
+  FilterModel? _filterModel;
 
   @override
   void initState() {
@@ -67,14 +65,16 @@ class MainBodyState extends State<MainBody> {
     }
 
     // Use filter category if in search mode, otherwise use drawer category
-    final effectiveCategoryId = _isSearching && _filterCategoryId != null
-        ? _filterCategoryId
-        : categoryId;
-    
+    final effectiveCategoryId =
+        _isSearching && _filterModel?.categoryId != null
+            ? _filterModel?.categoryId
+            : categoryId;
+
     // Use filter "my upload" if in search mode, otherwise use filterType
-    final effectiveIsDiscover = _isSearching && _filterIsMyUpload
-        ? false  // fromMe = true means isDiscover = false
-        : filterType == FilterType.discover;
+    final effectiveIsDiscover =
+        _isSearching && (_filterModel?.isMyUpload ?? false)
+            ? false // fromMe = true means isDiscover = false
+            : filterType == FilterType.discover;
 
     await context.read<LibraryCubit>().getBooks(
       filterType: filterType,
@@ -103,9 +103,7 @@ class MainBodyState extends State<MainBody> {
         _searchController.clear();
         _currentSearchQuery = null;
         // Reset filters when closing search
-        _filterCategoryId = null;
-        _filterIsMyUpload = false;
-        _filterFormat = null;
+        _filterModel = null;
         page = 1;
         getBooks();
       }
@@ -115,9 +113,10 @@ class MainBodyState extends State<MainBody> {
   void _onRefresh() async {
     page = 1;
     try {
-      final effectiveCategoryId = _isSearching && _filterCategoryId != null
-          ? _filterCategoryId
-          : categoryId;
+      final effectiveCategoryId =
+          _isSearching && _filterModel?.categoryId != null
+              ? _filterModel?.categoryId
+              : categoryId;
       await context.read<LibraryCubit>().refreshBooks(
         filterType: filterType,
         searchQuery: _currentSearchQuery,
@@ -168,21 +167,17 @@ class MainBodyState extends State<MainBody> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => SearchFilterBottomSheet(
-        selectedCategoryId: _filterCategoryId,
-        isMyUpload: _filterIsMyUpload,
-        selectedFormat: _filterFormat,
-        onApplyFilters: (categoryId, isMyUpload, format) {
-          setState(() {
-            _filterCategoryId = categoryId;
-            _filterIsMyUpload = isMyUpload;
-            _filterFormat = format;
-          });
-          // Reset page and reload with filters
-          page = 1;
-          getBooks();
-        },
-      ),
+      builder:
+          (context) => SearchFilterBottomSheet(
+            filterModel: _filterModel,
+            onApplyFilters: (filterModel) {
+              setState(() {
+                _filterModel = filterModel;
+              });
+              page = 1;
+              getBooks();
+            },
+          ),
     );
   }
 
@@ -193,7 +188,7 @@ class MainBodyState extends State<MainBody> {
         return unreadCount > 0
             ? Stack(
               children: [
-                 IconButton(
+                IconButton(
                   icon: Icon(
                     Icons.notifications,
                     color: Theme.of(context).colorScheme.primary,
@@ -218,7 +213,6 @@ class MainBodyState extends State<MainBody> {
                     ),
                   ),
                 ),
-               
               ],
             )
             : IconButton(
@@ -275,13 +269,10 @@ class MainBodyState extends State<MainBody> {
             IconButton(
               icon: Stack(
                 children: [
-                  Icon(
-                    Icons.tune,
-                    color: colorScheme.onSurface,
-                  ),
-                  if (_filterCategoryId != null ||
-                      _filterIsMyUpload ||
-                      _filterFormat != null)
+                  Icon(Icons.tune, color: colorScheme.onSurface),
+                  if (_filterModel?.categoryId != null ||
+                      (_filterModel?.isMyUpload ?? false) ||
+                      _filterModel?.format != null)
                     Positioned(
                       top: 0,
                       right: 0,
@@ -398,10 +389,11 @@ class MainBodyState extends State<MainBody> {
 
             // Apply format filter client-side if needed
             var filteredBooks = books;
-            if (_isSearching && _filterFormat != null) {
-              filteredBooks = books.where((book) {
-                return book.fileType == _filterFormat;
-              }).toList();
+            if (_isSearching && _filterModel?.format != null) {
+              filteredBooks =
+                  books.where((book) {
+                    return book.fileType == _filterModel?.format;
+                  }).toList();
             }
 
             return SmartRefresher(
@@ -443,43 +435,51 @@ class MainBodyState extends State<MainBody> {
                   return body;
                 },
               ),
-              child: filteredBooks.isEmpty && _isSearching && (_filterFormat != null)
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.filter_alt_outlined,
-                            size: 64,
-                            color: colorScheme.onSurface.withValues(alpha: 0.5),
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            'Không tìm thấy sách với bộ lọc đã chọn',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: colorScheme.onSurface.withValues(alpha: 0.7),
+              child:
+                  filteredBooks.isEmpty &&
+                          _isSearching &&
+                          (_filterModel?.format != null)
+                      ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.filter_alt_outlined,
+                              size: 64,
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 16),
+                            Text(
+                              'Không tìm thấy sách với bộ lọc đã chọn',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      : GridView.builder(
+                        padding: EdgeInsets.all(16),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.65,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                        ),
+                        itemCount: filteredBooks.length,
+                        itemBuilder: (context, index) {
+                          return BookCard(
+                            book: filteredBooks[index],
+                            userInteractionCubit:
+                                context.read<UserInteractionCubit>(),
+                          );
+                        },
                       ),
-                    )
-                  : GridView.builder(
-                      padding: EdgeInsets.all(16),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.65,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
-                      ),
-                      itemCount: filteredBooks.length,
-                      itemBuilder: (context, index) {
-                        return BookCard(
-                          book: filteredBooks[index],
-                          userInteractionCubit: context.read<UserInteractionCubit>(),
-                        );
-                      },
-                    ),
             );
           },
         ),

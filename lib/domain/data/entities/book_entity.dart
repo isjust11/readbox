@@ -1,6 +1,6 @@
 import 'base_entity.dart';
 
-enum BookType { epub, pdf, unknown }
+enum BookType { EPUB_BOOK, PDF_BOOK }
 
 class BookEntity extends BaseEntity {
   String? id;
@@ -55,9 +55,9 @@ class BookEntity extends BaseEntity {
     fileType = json['fileType'] != null
         ? BookType.values.firstWhere(
             (e) => e.toString() == 'BookType.${json['fileType']}',
-            orElse: () => BookType.unknown,
+            orElse: () => BookType.EPUB_BOOK,
           )
-        : BookType.unknown;
+        : BookType.EPUB_BOOK;
     fileSize = json['fileSize'];
     categories = json['categories'] != null
         ? List<String>.from(json['categories'])

@@ -12,3 +12,4 @@ export 'page_cubit.dart';
 export 'feedback_cubit.dart';
 export 'notification/notification_cubit.dart';
 export 'user_interaction_cubit.dart';
+export 'category_cubit.dart';

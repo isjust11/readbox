@@ -14,3 +14,5 @@ export 'page_model.dart';
 export 'notification_model.dart';
 export 'user_interaction_model.dart';
 export 'interactioin_stats_model.dart';
+export 'category_model.dart';
+export 'filter_model.dart';

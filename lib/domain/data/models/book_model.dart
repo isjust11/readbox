@@ -7,8 +7,8 @@ class BookModel extends BookEntity {
   String get displayTitle => title ?? 'Untitled';
   String get displayAuthor => author ?? 'Unknown Author';
   
-  bool get isEpub => fileType == BookType.epub;
-  bool get isPdf => fileType == BookType.pdf;
+  bool get isEpub => fileType == BookType.EPUB_BOOK;
+  bool get isPdf => fileType == BookType.PDF_BOOK;
   
   String get fileSizeFormatted {
     if (fileSize == null) return 'Unknown';

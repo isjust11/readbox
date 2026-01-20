@@ -60,9 +60,9 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
         // Common directories to scan on Android
         final directories = [
           Directory('/storage/emulated/0/Download'),
-          Directory('/storage/emulated/0/Downloads'),
-          Directory('/storage/emulated/0/Documents'),
-          Directory('/storage/emulated/0/DCIM'),
+          // Directory('/storage/emulated/0/Downloads'),
+          // Directory('/storage/emulated/0/Documents'),
+          // Directory('/storage/emulated/0/DCIM'),
           await getExternalStorageDirectory(),
           await getApplicationDocumentsDirectory(),
         ];
@@ -98,14 +98,18 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
   ) async {
     try {
       final entities = directory.listSync(recursive: true, followLinks: false);
-      
+
       for (var entity in entities) {
-        if (entity is File) {
-          final path = entity.path.toLowerCase();
-          if (path.endsWith('.pdf') || 
-              path.endsWith('.epub') || 
-              path.endsWith('.mobi')) {
-            pdfFiles.add(entity);
+        if (entity is Directory) {
+          _scanDirectory(entity, pdfFiles);
+        }else{
+          if (entity is File) {
+            final path = entity.path.toLowerCase();
+            if (path.endsWith('.pdf') || 
+                path.endsWith('.epub') || 
+                path.endsWith('.mobi')) {
+              pdfFiles.add(entity);
+            }
           }
         }
       }
