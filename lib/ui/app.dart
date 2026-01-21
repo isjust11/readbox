@@ -18,7 +18,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final FCMService _fcmService = FCMService();
   final LocalNotificationService _localNotificationService = LocalNotificationService();
   final NotificationHandler _notificationHandler = NotificationHandler();
@@ -27,7 +27,22 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initializeNotifications();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // App từ background/terminated trở lại -> nếu có thông báo mới lúc background thì refresh
+      _fcmService.checkAndNotifyIfReceivedInBackground();
+    }
   }
 
   Future<void> _initializeNotifications() async {

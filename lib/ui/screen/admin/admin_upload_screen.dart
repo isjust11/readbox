@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:readbox/blocs/admin/admin_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/book_refresh/book_refresh_cubit.dart';
@@ -10,21 +11,26 @@ import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/pdf_thumbnail_service.dart';
 
 class AdminUploadScreen extends StatelessWidget {
-  const AdminUploadScreen({super.key});
+  final String? fileUrl;
+  final String? title;
+  const AdminUploadScreen({super.key, this.fileUrl, this.title});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AdminCubit>(
       create: (_) => getIt.get<AdminCubit>()..loadCategories(),
-      child: AdminUploadBody(),
+      child: AdminUploadBody(fileUrl: fileUrl, title: title),
     );
   }
 }
 
 class AdminUploadBody extends StatefulWidget {
-  const AdminUploadBody({super.key});
+  final String? fileUrl;
+  final String? title;
+  const AdminUploadBody({super.key, this.fileUrl, this.title});
   @override
   AdminUploadBodyState createState() => AdminUploadBodyState();
 }
@@ -65,6 +71,50 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     context.read<BookRefreshCubit>().reset();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.fileUrl != null) {
+      _ebookFile = File(widget.fileUrl!);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadThumbnailFromPdf(_ebookFile);
+      });
+    }
+    if (widget.title != null) {
+      _titleController.text = widget.title!;
+    }
+  }
+
+  /// Tạo thumbnail từ trang đầu PDF và gán làm ảnh bìa để upload.
+  Future<void> _loadThumbnailFromPdf(File? ebookFile) async {
+    if (ebookFile == null || !mounted) return;
+    final path = ebookFile.path.toLowerCase();
+    if (!path.endsWith('.pdf')) return;
+
+    final bytes = await PdfThumbnailService.getThumbnail(
+      ebookFile.path,
+      width: 300,
+      height: 420,
+    );
+    if (bytes == null || !mounted) return;
+    if (_ebookFile?.path != ebookFile.path) return;
+
+    final dir = await getTemporaryDirectory();
+    final thumbPath =
+        '${dir.path}/readbox_pdf_cover_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final thumbFile = File(thumbPath);
+    await thumbFile.writeAsBytes(bytes);
+
+    if (!mounted || _ebookFile?.path != ebookFile.path) return;
+    setState(() {
+      _coverImageFile = thumbFile;
+    });
+    if (!mounted) return;
+    if (context.read<AdminCubit>().coverImageUrl != null) {
+      context.read<AdminCubit>().resetCoverImage();
+    }
+  }
+
   Future<void> _pickEbookFile() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -77,6 +127,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         setState(() {
           _ebookFile = File(result.files.single.path!);
         });
+        await _loadThumbnailFromPdf(_ebookFile);
       }
     } catch (e) {
       // showCustomSnackBar(context, 'Error picking file: $e', isError: true);
@@ -546,8 +597,10 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                           onPressed: () {
                                             setState(() {
                                               _ebookFile = null;
-                                              context.read<AdminCubit>().resetErrorUpload();
+                                              _coverImageFile = null;
                                             });
+                                            context.read<AdminCubit>().resetCoverImage();
+                                            context.read<AdminCubit>().resetErrorUpload();
                                           },
                                         ),
                                       ],

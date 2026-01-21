@@ -406,5 +406,15 @@
    "apply_filters" : "Áp dụng bộ lọc",
    "no_name" : "Không tên",
    "book_removed_from_library" : "Đã xóa sách khỏi thư viện",
-   "no_books_found" : "Không tìm thấy sách"
+   "no_books_found" : "Không tìm thấy sách",
+   "no_book_found" : "Không tìm thấy sách",
+   "unselect_all" : "Bỏ chọn tất cả",
+   "select_all" : "Chọn tất cả",
+   "use_select_file_to_browse_directory" : "Dùng 'Chọn file' để duyệt thư mục (ví dụ Download/Telegram)",
+   "no_pdf_epub_mobi_found" : "Không tìm thấy file PDF, EPUB, hoặc MOBI",
+   "find_book" : "Tìm sách",
+   "search_book" : "Tìm sách",
+   "select_all_books" : "Chọn tất cả sách",
+   "unselect_all_books" : "Bỏ chọn tất cả sách",
+   "scan_again" : "Quét lại"
 }

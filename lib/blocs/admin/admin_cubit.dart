@@ -38,6 +38,13 @@ class AdminCubit extends Cubit<BaseState> {
     _errorUploadCoverImage = null;
   }
 
+  /// Reset cover image (URL và lỗi) khi đổi ảnh bìa hoặc xóa ebook.
+  void resetCoverImage() {
+    _coverImageUrl = null;
+    _errorUploadCoverImage = null;
+    emit(LoadedState(_categories));
+  }
+
   Future<void> uploadEbook(File file) async {
     try {
       emit(LoadingState());

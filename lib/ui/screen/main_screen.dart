@@ -39,7 +39,7 @@ class MainBodyState extends State<MainBody> {
   int page = 1;
   int limit = 10;
   String title = "";
-  FilterType filterType = FilterType.discover;
+  FilterType filterType = FilterType.all;
   Timer? _debounceTimer;
   String categoryId = "";
   String? _currentSearchQuery;
@@ -49,7 +49,7 @@ class MainBodyState extends State<MainBody> {
   @override
   void initState() {
     super.initState();
-    title = AppLocalizations.current.my_library;
+    title = AppLocalizations.current.book_discover;
     // Load initial data after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NotificationCubit>().getUnreadCount();

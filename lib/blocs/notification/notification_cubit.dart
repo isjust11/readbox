@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
@@ -5,13 +7,27 @@ import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/data/entities/notification_entity.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
+import 'package:readbox/services/fcm_service.dart';
 
 class NotificationCubit extends Cubit<BaseState> {
   final NotificationRepository notificationRepository;
   ValueNotifier<int> unreadCountNotifier = ValueNotifier<int>(0);
 
+  StreamSubscription<void>? _newNotificationSubscription;
+
   NotificationCubit({required this.notificationRepository})
-    : super(InitState());
+    : super(InitState()) {
+    // Khi nhận thông báo mới (foreground/background/tap) -> load lại danh sách
+    _newNotificationSubscription = FCMService.onNewNotification.listen((_) {
+      refreshNotifications(page: 1, limit: 20);
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _newNotificationSubscription?.cancel();
+    return super.close();
+  }
 
   List<NotificationModel> _notifications = [];
   List<NotificationModel> get notifications => _notifications;

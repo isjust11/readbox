@@ -14,7 +14,6 @@ class Routes {
   static const String registerScreen = "/registerScreen";
   static const String confirmPinScreen = "/confirmPinScreen";
   static const String mainScreen = "/mainScreen";
-  static const String libraryScreen = "/libraryScreen";
   static const String localLibraryScreen = "/localLibraryScreen";
   static const String adminUploadScreen = "/adminUploadScreen";
   static const String bookDetailScreen = "/bookDetailScreen";
@@ -77,19 +76,18 @@ class Routes {
           child: ConfirmPinScreen(email: email ?? ''),
           type: PageTransitionType.rightToLeft,
         );
-      case libraryScreen:
-        return PageTransition(
-          child: LibraryScreen(),
-          type: PageTransitionType.fade,
-        );
       case localLibraryScreen:
         return PageTransition(
           child: LocalLibraryScreen(),
           type: PageTransitionType.fade,
         );
       case adminUploadScreen:
+        final args = settings.arguments as Map<String, dynamic>;
         return PageTransition(
-          child: AdminUploadScreen(),
+          child: AdminUploadScreen(
+            fileUrl: args['fileUrl'] as String,
+            title: args['title'] as String,
+          ),
           type: PageTransitionType.fade,
         );
       case pdfTextToSpeechScreen:

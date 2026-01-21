@@ -1,10 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:readbox/services/secure_storage_service.dart';
+import 'package:html_unescape/html_unescape.dart';
+
+/// Key for flag: app nhận thông báo khi ở background (dùng để refresh khi resume)
+const String _keyNewNotificationInBackground = 'fcm_new_notification_in_background';
 
 /// Background message handler - must be a top-level function
 @pragma('vm:entry-point')
@@ -12,6 +17,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   debugPrint('Received background message: ${message.messageId}');
   debugPrint('Title: ${message.notification?.title}');
   debugPrint('Body: ${message.notification?.body}');
+  // Ghi cờ để khi app resume sẽ load lại danh sách thông báo
+  await GetStorage().write(_keyNewNotificationInBackground, true);
   // Note: Do not show notifications here as it's handled by the system
 }
 
@@ -20,6 +27,23 @@ class FCMService {
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
   final GetStorage _storage = GetStorage();
+
+  /// Stream để báo có thông báo mới (foreground/background/tap) -> load lại danh sách
+  static final _newNotificationController = StreamController<void>.broadcast();
+  static Stream<void> get onNewNotification => _newNotificationController.stream;
+
+  /// Gọi khi nhận thông báo foreground, tap notification, hoặc mở app từ notification
+  void _notifyNewNotificationReceived() {
+    _newNotificationController.add(null);
+  }
+
+  /// Gọi khi app resume: nếu có thông báo mới lúc background thì báo để refresh
+  void checkAndNotifyIfReceivedInBackground() {
+    if (_storage.read(_keyNewNotificationInBackground) == true) {
+      _storage.remove(_keyNewNotificationInBackground);
+      _notifyNewNotificationReceived();
+    }
+  }
 
   // Notification channels
   static const String _channelId = 'readbox_channel';
@@ -33,7 +57,8 @@ class FCMService {
 
   String? _fcmToken;
   bool _notificationsEnabled = true;
-
+  String? _deviceId;
+  String? _appVersion;
   String? get fcmToken => _fcmToken;
   bool get notificationsEnabled => _notificationsEnabled;
 
@@ -63,6 +88,10 @@ class FCMService {
       // Load notification settings
       await _loadNotificationSettings();
 
+      // Get device id and app version
+      await _getDeviceId();
+      await _getAppVersion();
+
       debugPrint('FCM Service initialized successfully');
     } catch (e) {
       debugPrint('Error initializing FCM Service: $e');
@@ -70,8 +99,8 @@ class FCMService {
   }
 
   String get platform => Platform.isIOS ? 'ios' : 'android';
-  String get deviceId => Platform.isIOS ? 'ios' : 'android';
-  String get appVersion => '1.0.0';
+  String? get deviceId =>  _deviceId;
+  String? get appVersion => _appVersion;
 
   /// Ensure APNS token is ready for iOS
   Future<void> _ensureAPNSTokenReady() async {
@@ -93,6 +122,32 @@ class FCMService {
     debugPrint(
       'APNS Token not available after $maxRetries retries, proceeding...',
     );
+  }
+
+  Future<String?> _getDeviceId() async {
+  var deviceInfo = DeviceInfoPlugin();
+  
+  if (Platform.isIOS) {
+    var iosDeviceInfo = await deviceInfo.iosInfo;
+    return iosDeviceInfo.identifierForVendor; // ID duy nhất cho iOS
+  } else if (Platform.isAndroid) {
+    var androidDeviceInfo = await deviceInfo.androidInfo;
+    return androidDeviceInfo.id; // Trên Android, 'id' thường là Android ID
+  }
+  
+  return null;
+}
+
+   Future<String?> _getAppVersion() async {
+    var deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      var iosDeviceInfo = await deviceInfo.iosInfo;
+      return iosDeviceInfo.systemVersion;
+    } else if (Platform.isAndroid) {
+      var androidDeviceInfo = await deviceInfo.androidInfo;
+      return androidDeviceInfo.version.sdkInt.toString();
+    }
+    return '1.0.0';
   }
 
   /// Initialize local notifications
@@ -253,11 +308,14 @@ class FCMService {
 
     // Show local notification
     await _showLocalNotification(message);
+    // Báo để load lại danh sách thông báo
+    _notifyNewNotificationReceived();
   }
 
   /// Handle notification tap
   Future<void> _handleNotificationTap(RemoteMessage message) async {
     debugPrint('Notification tapped: ${message.messageId}');
+    _notifyNewNotificationReceived();
     // Handle navigation based on message data
     _navigateToScreen(message.data);
   }
@@ -267,6 +325,7 @@ class FCMService {
     final RemoteMessage? message = await _messaging.getInitialMessage();
     if (message != null) {
       debugPrint('App opened from notification: ${message.messageId}');
+      _notifyNewNotificationReceived();
       _navigateToScreen(message.data);
     }
   }
@@ -309,11 +368,15 @@ class FCMService {
       final payload = message.data.isNotEmpty 
           ? jsonEncode(message.data) 
           : null;
-      
+
+      // Decode HTML entities (&amp;, &lt;, &quot;, ...) trong title/body
+      final decodedTitle = HtmlUnescape().convert(notification.title ?? '');
+      final decodedBody = HtmlUnescape().convert(notification.body ?? '');
+
       await _localNotifications.show(
         message.hashCode,
-        notification.title,
-        notification.body,
+        decodedTitle,
+        decodedBody,
         details,
         payload: payload,
       );
@@ -324,9 +387,10 @@ class FCMService {
     }
   }
 
-  /// Handle notification tap
+  /// Handle notification tap (local notification - khi user tap thông báo hiển thị lúc foreground)
   void _onNotificationTapped(NotificationResponse response) {
     debugPrint('Local notification tapped: ${response.payload}');
+    _notifyNewNotificationReceived();
     // Handle navigation based on payload
   }
 

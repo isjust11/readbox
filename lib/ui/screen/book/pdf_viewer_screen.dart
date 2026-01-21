@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:pdfx/pdfx.dart';
@@ -89,13 +90,17 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
         _isLoading = true;
         _error = null;
       });
-
-      // Load PDF from network
-      _pdfController = PdfController(
-        document: PdfDocument.openData(
-          _downloadPdf(),
-        ),
-      );
+      if (File(widget.fileUrl).existsSync()) {
+        _pdfController = PdfController(
+          document: PdfDocument.openFile(File(widget.fileUrl).path),
+        );
+      } else {
+        _pdfController = PdfController(
+          document: PdfDocument.openData(
+            _downloadPdf(),
+          ),
+        );
+      }
 
       // Wait for document to load
       _pdfDocument = await _pdfController.document;

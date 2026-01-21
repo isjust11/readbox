@@ -1,11 +1,16 @@
+import 'package:html_unescape/html_unescape.dart';
 import 'package:readbox/domain/data/entities/notification_entity.dart';
 
 class NotificationModel extends NotificationEntity {
+  static final _htmlUnescape = HtmlUnescape();
+
   NotificationModel.fromJson(Map<String, dynamic> json) : super.fromJson(json);
 
-  // Helper methods
-  String get displayTitle => title ?? 'Thông báo';
-  String get displayBody => message ?? body ?? 'Không có nội dung';
+  // Helper methods - decode HTML entities (&amp;, &lt;, &quot;, ...) để hiển thị đúng
+  String get displayTitle =>
+      _htmlUnescape.convert(title ?? 'Thông báo');
+  String get displayBody =>
+      _htmlUnescape.convert(message ?? body ?? 'Không có nội dung');
 
   String get formattedDate {
     if (createdAt == null) return '';

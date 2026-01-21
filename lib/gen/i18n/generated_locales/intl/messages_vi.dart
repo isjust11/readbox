@@ -213,6 +213,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "file_ebook_not_found":
             MessageLookupByLibrary.simpleMessage("File ebook không tồn tại"),
         "filter": MessageLookupByLibrary.simpleMessage("Lọc"),
+        "find_book": MessageLookupByLibrary.simpleMessage("Tìm sách"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Quên mật khẩu"),
         "format": MessageLookupByLibrary.simpleMessage("Định dạng"),
@@ -369,6 +370,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Chưa có tài khoản? "),
         "no_available_camera":
             MessageLookupByLibrary.simpleMessage("Không có camera khả dụng"),
+        "no_book_found":
+            MessageLookupByLibrary.simpleMessage("Không tìm thấy sách"),
         "no_books": MessageLookupByLibrary.simpleMessage("Chưa có sách nào"),
         "no_books_found":
             MessageLookupByLibrary.simpleMessage("Không tìm thấy sách"),
@@ -376,6 +379,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Không có nội dung để hiển thị"),
         "no_info": MessageLookupByLibrary.simpleMessage("Không có thông tin"),
         "no_name": MessageLookupByLibrary.simpleMessage("Không tên"),
+        "no_pdf_epub_mobi_found": MessageLookupByLibrary.simpleMessage(
+            "Không tìm thấy file PDF, EPUB, hoặc MOBI"),
         "normal": MessageLookupByLibrary.simpleMessage("Bình thường"),
         "notificationBadge": MessageLookupByLibrary.simpleMessage("Badge"),
         "notificationCategories":
@@ -564,7 +569,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "roles": MessageLookupByLibrary.simpleMessage("Vai trò"),
         "save": MessageLookupByLibrary.simpleMessage("Lưu"),
         "saving": MessageLookupByLibrary.simpleMessage("Đang lưu..."),
+        "scan_again": MessageLookupByLibrary.simpleMessage("Quét lại"),
         "search": MessageLookupByLibrary.simpleMessage("Tìm kiếm"),
+        "search_book": MessageLookupByLibrary.simpleMessage("Tìm sách"),
         "search_books":
             MessageLookupByLibrary.simpleMessage("Tìm kiếm sách..."),
         "search_filter":
@@ -575,6 +582,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "selectTTSLanguage":
             MessageLookupByLibrary.simpleMessage("Chọn ngôn ngữ đọc"),
         "selectVoice": MessageLookupByLibrary.simpleMessage("Chọn giọng đọc"),
+        "select_all": MessageLookupByLibrary.simpleMessage("Chọn tất cả"),
+        "select_all_books":
+            MessageLookupByLibrary.simpleMessage("Chọn tất cả sách"),
         "select_cover_image":
             MessageLookupByLibrary.simpleMessage("Chọn ảnh bìa"),
         "select_file": MessageLookupByLibrary.simpleMessage("Chọn file"),
@@ -631,6 +641,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "unread": MessageLookupByLibrary.simpleMessage("Chưa đọc"),
         "unreadNotifications":
             MessageLookupByLibrary.simpleMessage("thông báo chưa đọc"),
+        "unselect_all": MessageLookupByLibrary.simpleMessage("Bỏ chọn tất cả"),
+        "unselect_all_books":
+            MessageLookupByLibrary.simpleMessage("Bỏ chọn tất cả sách"),
         "update": MessageLookupByLibrary.simpleMessage("Cập nhật"),
         "updateYourInfo":
             MessageLookupByLibrary.simpleMessage("Cập nhật thông tin"),
@@ -657,6 +670,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "uploading": MessageLookupByLibrary.simpleMessage("Đang upload..."),
         "useFingerprintOrFaceID": MessageLookupByLibrary.simpleMessage(
             "Sử dụng vân tay hoặc Face ID"),
+        "use_select_file_to_browse_directory":
+            MessageLookupByLibrary.simpleMessage(
+                "Dùng \'Chọn file\' để duyệt thư mục (ví dụ Download/Telegram)"),
         "user_cancelled_apple_sign_in": MessageLookupByLibrary.simpleMessage(
             "Người dùng đã hủy đăng nhập Apple"),
         "user_cancelled_bitbucket_sign_in":

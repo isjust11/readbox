@@ -4129,6 +4129,106 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Không tìm thấy sách`
+  String get no_book_found {
+    return Intl.message(
+      'Không tìm thấy sách',
+      name: 'no_book_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bỏ chọn tất cả`
+  String get unselect_all {
+    return Intl.message(
+      'Bỏ chọn tất cả',
+      name: 'unselect_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn tất cả`
+  String get select_all {
+    return Intl.message(
+      'Chọn tất cả',
+      name: 'select_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dùng 'Chọn file' để duyệt thư mục (ví dụ Download/Telegram)`
+  String get use_select_file_to_browse_directory {
+    return Intl.message(
+      'Dùng \'Chọn file\' để duyệt thư mục (ví dụ Download/Telegram)',
+      name: 'use_select_file_to_browse_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không tìm thấy file PDF, EPUB, hoặc MOBI`
+  String get no_pdf_epub_mobi_found {
+    return Intl.message(
+      'Không tìm thấy file PDF, EPUB, hoặc MOBI',
+      name: 'no_pdf_epub_mobi_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tìm sách`
+  String get find_book {
+    return Intl.message(
+      'Tìm sách',
+      name: 'find_book',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tìm sách`
+  String get search_book {
+    return Intl.message(
+      'Tìm sách',
+      name: 'search_book',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn tất cả sách`
+  String get select_all_books {
+    return Intl.message(
+      'Chọn tất cả sách',
+      name: 'select_all_books',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bỏ chọn tất cả sách`
+  String get unselect_all_books {
+    return Intl.message(
+      'Bỏ chọn tất cả sách',
+      name: 'unselect_all_books',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quét lại`
+  String get scan_again {
+    return Intl.message(
+      'Quét lại',
+      name: 'scan_again',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

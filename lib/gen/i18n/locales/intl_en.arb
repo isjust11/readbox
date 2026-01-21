@@ -385,5 +385,15 @@
   "apply_filters" : "Apply filters",
   "no_name" : "No name",
   "book_removed_from_library" : "Book removed from library",
-  "no_books_found" : "No books found"
+  "no_books_found" : "No books found",
+  "no_book_found" : "No book found",
+  "unselect_all" : "Unselect all",
+  "select_all" : "Select all",
+  "use_select_file_to_browse_directory" : "Use 'Select file' to browse directory (e.g. Download/Telegram)",
+  "no_pdf_epub_mobi_found" : "No PDF, EPUB, or MOBI found",
+  "find_book" : "Find book",
+  "search_book" : "Search book",
+  "select_all_books" : "Select all books",
+  "unselect_all_books" : "Unselect all books",
+  "scan_again" : "Scan again"
 }
