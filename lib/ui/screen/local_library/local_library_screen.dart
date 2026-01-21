@@ -42,7 +42,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
                 ? fileName.split('.').last.toLowerCase()
                 : 'pdf';
         final fileType = ['pdf', 'epub', 'mobi'].contains(ext) ? ext : 'pdf';
-
+       
         try {
           final file = File(path);
           if (await file.exists()) {
@@ -53,6 +53,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
                 fileName: fileName,
                 fileType: fileType,
                 fileSize: fileSize,
+                totalPages: 0,
               ),
             );
           } else {
@@ -63,6 +64,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
                 fileName: fileName,
                 fileType: fileType,
                 fileSize: 0,
+                totalPages: 0,
               ),
             );
           }
@@ -73,6 +75,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
               fileName: fileName,
               fileType: fileType,
               fileSize: 0,
+              totalPages: 0,
             ),
           );
         }
@@ -155,7 +158,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     Navigator.pushNamed(
       context,
       Routes.adminUploadScreen,
-      arguments: {'fileUrl': book.filePath, 'title': book.fileName},
+      arguments: book,
     );
   }
 

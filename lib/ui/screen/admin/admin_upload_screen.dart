@@ -12,25 +12,24 @@ import 'package:readbox/injection_container.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/pdf_thumbnail_service.dart';
+import 'package:readbox/domain/data/models/models.dart';
 
 class AdminUploadScreen extends StatelessWidget {
-  final String? fileUrl;
-  final String? title;
-  const AdminUploadScreen({super.key, this.fileUrl, this.title});
+  final LocalBook? localBook;
+  const AdminUploadScreen({super.key, this.localBook});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AdminCubit>(
       create: (_) => getIt.get<AdminCubit>()..loadCategories(),
-      child: AdminUploadBody(fileUrl: fileUrl, title: title),
+      child: AdminUploadBody(localBook: localBook),
     );
   }
 }
 
 class AdminUploadBody extends StatefulWidget {
-  final String? fileUrl;
-  final String? title;
-  const AdminUploadBody({super.key, this.fileUrl, this.title});
+  final LocalBook? localBook;
+  const AdminUploadBody({super.key, this.localBook});
   @override
   AdminUploadBodyState createState() => AdminUploadBodyState();
 }
@@ -51,8 +50,6 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
   String _language = 'vi';
   int? _selectedCategoryId;
   
-  bool _isUploadingEbook = false;
-  bool _isUploadingCover = false;
 
   @override
   void dispose() {
@@ -74,14 +71,14 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (widget.fileUrl != null) {
-      _ebookFile = File(widget.fileUrl!);
+    if (widget.localBook != null) {
+      _ebookFile = File(widget.localBook!.filePath);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _loadThumbnailFromPdf(_ebookFile);
       });
     }
-    if (widget.title != null) {
-      _titleController.text = widget.title!;
+    if (widget.localBook != null) {
+      _titleController.text = widget.localBook!.title;
     }
   }
 
@@ -90,7 +87,6 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     if (ebookFile == null || !mounted) return;
     final path = ebookFile.path.toLowerCase();
     if (!path.endsWith('.pdf')) return;
-
     final bytes = await PdfThumbnailService.getThumbnail(
       ebookFile.path,
       width: 300,
@@ -109,10 +105,6 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     setState(() {
       _coverImageFile = thumbFile;
     });
-    if (!mounted) return;
-    if (context.read<AdminCubit>().coverImageUrl != null) {
-      context.read<AdminCubit>().resetCoverImage();
-    }
   }
 
   Future<void> _pickEbookFile() async {
@@ -180,38 +172,10 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     }
   }
 
-  Future<void> _uploadEbookFile() async {
-    if (_ebookFile == null) {
-      // showCustomSnackBar(context, 'Please select an ebook file first', isError: true);
-      return;
-    }
-
-    setState(() {
-      _isUploadingEbook = true;
-    });
-
-    await context.read<AdminCubit>().uploadEbook(_ebookFile!);
-
-    setState(() {
-      _isUploadingEbook = false;
-    });
-  }
-
-  Future<void> _uploadCoverImage() async {
-    if (_coverImageFile == null) {
-      // showCustomSnackBar(context, 'Please select a cover image first', isError: true);
-      return;
-    }
-
-    setState(() {
-      _isUploadingCover = true;
-    });
-
-    await context.read<AdminCubit>().uploadCoverImage(_coverImageFile!);
-
-    setState(() {
-      _isUploadingCover = false;
-    });
+  String _formatFileSize(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
   }
 
   Future<void> _submitForm() async {
@@ -219,10 +183,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
       return;
     }
 
-    final cubit = context.read<AdminCubit>();
-    
-    if (cubit.ebookFileUrl == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
+    if (_ebookFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.current.please_upload_ebook_file_first),
           backgroundColor: Colors.red,
@@ -231,21 +193,21 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
       return;
     }
 
-    await cubit.createBook(
+    // Tự tạo ảnh bìa từ trang đầu PDF nếu chưa chọn ảnh
+    if (_ebookFile!.path.toLowerCase().endsWith('.pdf') && _coverImageFile == null) {
+      await _loadThumbnailFromPdf(_ebookFile);
+    }
+
+    final cubit = context.read<AdminCubit>();
+    await cubit.createBookWithUpload(
+      ebookFile: _ebookFile!,
+      coverImageFile: _coverImageFile,
       title: _titleController.text,
       author: _authorController.text,
-      description: _descriptionController.text.isEmpty 
-          ? null 
-          : _descriptionController.text,
-      publisher: _publisherController.text.isEmpty 
-          ? null 
-          : _publisherController.text,
-      isbn: _isbnController.text.isEmpty 
-          ? null 
-          : _isbnController.text,
-      totalPages: _totalPagesController.text.isEmpty 
-          ? null 
-          : int.tryParse(_totalPagesController.text),
+      description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
+      publisher: _publisherController.text.isEmpty ? null : _publisherController.text,
+      isbn: _isbnController.text.isEmpty ? null : _isbnController.text,
+      totalPages: _totalPagesController.text.isEmpty ? null : int.tryParse(_totalPagesController.text),
       language: _language,
       isPublic: _isPublic,
       categoryId: _selectedCategoryId,
@@ -539,133 +501,11 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 ],
                               ),
                             ]
-                            else if (cubit.ebookFileUrl == null)
-                              Container(
-                                padding: EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primary.withValues(alpha: 0.05),
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                    color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                          child: Icon(
-                                            Icons.insert_drive_file_rounded,
-                                            color: theme.colorScheme.primary,
-                                            size: 24,
-                                          ),
-                                        ),
-                                        SizedBox(width: 12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                _ebookFile!.path.split('/').last,
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: theme.colorScheme.secondary.withValues(alpha: 0.8),
-                                                ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              Text(
-                                                AppLocalizations.current.ready_to_upload,
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: theme.colorScheme.secondary.withValues(alpha: 0.6),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: Icon(Icons.close_rounded,
-                                           color: theme.iconTheme.color),
-                                          onPressed: () {
-                                            setState(() {
-                                              _ebookFile = null;
-                                              _coverImageFile = null;
-                                            });
-                                            context.read<AdminCubit>().resetCoverImage();
-                                            context.read<AdminCubit>().resetErrorUpload();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 12),
-                                    if (cubit.errorUploadEbook != null)
-                                      Text(
-                                        cubit.errorUploadEbook!,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          color: theme.colorScheme.error,
-                                        ),
-                                      ),
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: ElevatedButton(
-                                        onPressed: _isUploadingEbook ? null : _uploadEbookFile,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: theme.primaryColor,
-                                          padding: EdgeInsets.symmetric(vertical: 8),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            if (_isUploadingEbook)
-                                              SizedBox(
-                                                width: 20,
-                                                height: 20,
-                                                child: CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  color: theme.primaryColor,
-                                                ),
-                                              )
-                                            else
-                                              Icon(Icons.upload_rounded, size: 20, color: theme.colorScheme.onSecondary),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                _isUploadingEbook ? AppLocalizations.current.uploading : AppLocalizations.current.upload_file,
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: theme.colorScheme.onSecondary
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
                             else
                               Container(
                                 padding: EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      theme.colorScheme.primary.withValues(alpha: 0.05),
-                                      theme.colorScheme.primary.withValues(alpha: 0.3),
-                                    ],
-                                  ),
+                                  color: theme.colorScheme.primary.withValues(alpha: 0.05),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
                                     color: theme.colorScheme.primary.withValues(alpha: 0.3),
@@ -677,12 +517,12 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                     Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        shape: BoxShape.circle,
+                                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Icon(
-                                        Icons.check_rounded,
-                                        color: Colors.white,
+                                        Icons.insert_drive_file_rounded,
+                                        color: theme.colorScheme.primary,
                                         size: 24,
                                       ),
                                     ),
@@ -692,24 +532,33 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            AppLocalizations.current.upload_success,
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              color: theme.colorScheme.primary,
-                                            ),
-                                          ),
-                                          Text(
                                             _ebookFile!.path.split('/').last,
                                             style: TextStyle(
-                                              fontSize: 12,
-                                              color: theme.colorScheme.secondary.withValues(alpha: 0.6),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: theme.colorScheme.secondary.withValues(alpha: 0.8),
                                             ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
+                                          Text(
+                                            widget.localBook?.formattedSize ?? _formatFileSize(_ebookFile!.lengthSync()),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: theme.colorScheme.secondary.withValues(alpha: 0.6),
+                                            ),
+                                          ),
                                         ],
                                       ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.close_rounded, color: theme.iconTheme.color),
+                                      onPressed: () {
+                                        setState(() {
+                                          _ebookFile = null;
+                                          _coverImageFile = null;
+                                        });
+                                      },
                                     ),
                                   ],
                                 ),
@@ -846,6 +695,14 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                             color: theme.colorScheme.secondary.withValues(alpha: 0.6),
                                           ),
                                         ),
+                                        SizedBox(height: 2),
+                                        Text(
+                                          'Tự động từ trang đầu PDF nếu để trống',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: theme.colorScheme.secondary.withValues(alpha: 0.5),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -853,6 +710,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                               )
                             else
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(16),
@@ -864,86 +722,20 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                     ),
                                   ),
                                   SizedBox(height: 12),
-                                  if (cubit.coverImageUrl == null)
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: ElevatedButton(
-                                            onPressed: _isUploadingCover ? null : _uploadCoverImage,
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: theme.primaryColor,
-                                              padding: EdgeInsets.symmetric(vertical: 14),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                if (_isUploadingCover)
-                                                  SizedBox(
-                                                    width: 20,
-                                                    height: 20,
-                                                    child: CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                      color: theme.colorScheme.onSecondary,
-                                                    ),
-                                                  )
-                                                else
-                                                  Icon(Icons.upload_rounded, size: 20, color: theme.colorScheme.onSecondary),
-                                                SizedBox(width: 8),
-                                                Text(
-                                                  _isUploadingCover ? AppLocalizations.current.uploading : AppLocalizations.current.upload_cover_image,
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: theme.colorScheme.onSecondary,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 12),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[100],
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                          child: IconButton(
-                                            icon: Icon(Icons.close_rounded, color: Colors.grey[700]),
-                                            onPressed: () {
-                                              setState(() {
-                                                _coverImageFile = null;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  else
-                                    Container(
-                                      padding: EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: Colors.green[50],
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.check_circle_rounded, color: Colors.green, size: 24),
-                                          SizedBox(width: 12),
-                                          Expanded(
-                                            child: Text(
-                                              AppLocalizations.current.cover_image_uploaded_successfully,
-                                              style: TextStyle(
-                                                color: Colors.green[900],
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
+                                    child: IconButton(
+                                      icon: Icon(Icons.close_rounded, color: Colors.grey[700]),
+                                      onPressed: () {
+                                        setState(() {
+                                          _coverImageFile = null;
+                                        });
+                                      },
+                                    ),
+                                  ),
                                 ],
                               ),
                           ],
@@ -1166,7 +958,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                       ),
                     ),
                     
-                    SizedBox(height: 32),
+                    SizedBox(height: 24),
                     
                     // Submit Button
                     Container(
@@ -1175,8 +967,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            Colors.green[600]!,
-                            Colors.green[500]!,
+                            Theme.of(context).primaryColor.withValues(alpha: 0.8),
+                            Theme.of(context).primaryColor.withValues(alpha: 0.5),
                           ],
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
@@ -1184,7 +976,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.green.withValues(alpha: 0.3),
+                            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                             blurRadius: 12,
                             offset: Offset(0, 6),
                           ),

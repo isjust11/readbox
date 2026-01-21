@@ -155,7 +155,8 @@ class SocialLoginService {
 
       // Thực hiện đăng nhập Facebook
       print('🔐 Starting Facebook login...');
-      final LoginResult result = await FacebookAuth.instance.login();
+      final LoginResult result = await FacebookAuth.instance.login(
+      );
 
       if (result.status == LoginStatus.success) {
         final userData = await FacebookAuth.instance.getUserData();

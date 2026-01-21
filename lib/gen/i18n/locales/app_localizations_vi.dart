@@ -171,7 +171,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get loading_more_books_no_data => 'Không có dữ liệu để tải thêm';
 
   @override
-  String get local_library => 'Thư viện của tôi';
+  String get local_library => 'Thư viện Local';
 
   @override
   String get upload_book => 'Tải sách lên';
@@ -1192,4 +1192,42 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get no_name => 'Không tên';
+
+  @override
+  String get book_removed_from_library => 'Đã xóa sách khỏi thư viện';
+
+  @override
+  String get no_books_found => 'Không tìm thấy sách';
+
+  @override
+  String get no_book_found => 'Không tìm thấy sách';
+
+  @override
+  String get unselect_all => 'Bỏ chọn tất cả';
+
+  @override
+  String get select_all => 'Chọn tất cả';
+
+  @override
+  String get use_select_file_to_browse_directory =>
+      'Dùng \'Chọn file\' để duyệt thư mục (ví dụ Download/Telegram)';
+
+  @override
+  String get no_pdf_epub_mobi_found =>
+      'Không tìm thấy file PDF, EPUB, hoặc MOBI';
+
+  @override
+  String get find_book => 'Tìm sách';
+
+  @override
+  String get search_book => 'Tìm sách';
+
+  @override
+  String get select_all_books => 'Chọn tất cả sách';
+
+  @override
+  String get unselect_all_books => 'Bỏ chọn tất cả sách';
+
+  @override
+  String get scan_again => 'Quét lại';
 }

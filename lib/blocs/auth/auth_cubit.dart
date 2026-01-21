@@ -12,69 +12,71 @@ class AuthCubit extends Cubit<BaseState> {
   final AuthRepository repository;
   final SecureStorageService _secureStorage = SecureStorageService();
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-
-  AuthCubit({required this.repository}) : super(InitState());
+  final FCMService fcmService = FCMService();
+  AuthCubit({required this.repository}) : super(InitState()){
+     fcmService.initialize();
+  }
 
   /// Lấy FCM token hiện tại
-  Future<String?> _getFCMToken() async {
-    try {
-      print('🔍 Attempting to get FCM token...');
+  // Future<String?> _getFCMToken() async {
+  //   try {
+  //     print('🔍 Attempting to get FCM token...');
       
-      // Retry logic for SERVICE_NOT_AVAILABLE
-      for (int attempt = 1; attempt <= 3; attempt++) {
-        try {
-          print('   Attempt $attempt/3...');
-          final token = await _messaging.getToken().timeout(
-            const Duration(seconds: 10),
-            onTimeout: () {
-              print('   ⏰ Timeout on attempt $attempt');
-              return null;
-            },
-          );
+  //     // Retry logic for SERVICE_NOT_AVAILABLE
+  //     for (int attempt = 1; attempt <= 3; attempt++) {
+  //       try {
+  //         print('   Attempt $attempt/3...');
+  //         final token = await _messaging.getToken().timeout(
+  //           const Duration(seconds: 10),
+  //           onTimeout: () {
+  //             print('   ⏰ Timeout on attempt $attempt');
+  //             return null;
+  //           },
+  //         );
           
-          if (token != null) {
-            print('✅ FCM token retrieved: ${token.substring(0, 20)}...');
-            return token;
-          }
+  //         if (token != null) {
+  //           print('✅ FCM token retrieved: ${token.substring(0, 20)}...');
+  //           return token;
+  //         }
           
-          // Wait before retry
-          if (attempt < 3) {
-            print('   ⚠️ Token null, waiting before retry...');
-            await Future.delayed(Duration(seconds: attempt * 2));
-          }
-        } catch (e) {
-          print('   ❌ Attempt $attempt failed: $e');
+  //         // Wait before retry
+  //         if (attempt < 3) {
+  //           print('   ⚠️ Token null, waiting before retry...');
+  //           await Future.delayed(Duration(seconds: attempt * 2));
+  //         }
+  //       } catch (e) {
+  //         print('   ❌ Attempt $attempt failed: $e');
           
-          // Check if it's SERVICE_NOT_AVAILABLE
-          if (e.toString().contains('SERVICE_NOT_AVAILABLE')) {
-            print('   ⚠️ Google Play Services not available!');
-            print('   → Check if device has Google Play Services');
-            print('   → Check internet connection');
-            print('   → Try restarting device');
-          }
+  //         // Check if it's SERVICE_NOT_AVAILABLE
+  //         if (e.toString().contains('SERVICE_NOT_AVAILABLE')) {
+  //           print('   ⚠️ Google Play Services not available!');
+  //           print('   → Check if device has Google Play Services');
+  //           print('   → Check internet connection');
+  //           print('   → Try restarting device');
+  //         }
           
-          // Wait before retry
-          if (attempt < 3) {
-            await Future.delayed(Duration(seconds: attempt * 2));
-          }
-        }
-      }
+  //         // Wait before retry
+  //         if (attempt < 3) {
+  //           await Future.delayed(Duration(seconds: attempt * 2));
+  //         }
+  //       }
+  //     }
       
-      print('❌ Failed to get FCM token after 3 attempts');
-      return null;
+  //     print('❌ Failed to get FCM token after 3 attempts');
+  //     return null;
       
-    } catch (e) {
-      print('❌ Error getting FCM token: $e');
-      return null;
-    }
-  }
+  //   } catch (e) {
+  //     print('❌ Error getting FCM token: $e');
+  //     return null;
+  //   }
+  // }
 
   Future doLogin({String? username, String? password}) async {
     try {
       emit(LoadingState());
       
       // Lấy FCM token để gửi kèm theo request
-      final fcmToken = await _getFCMToken();
+      final fcmToken = fcmService.fcmToken;
       
       AuthenModel userModel = await repository.login({
         "username": username,
@@ -204,13 +206,14 @@ class AuthCubit extends Cubit<BaseState> {
       }
 
       // Lấy FCM token để gửi kèm theo request
-      final fcmToken = await _getFCMToken();
-      
+      final fcmToken = fcmService.fcmToken;
       // Thêm fcmToken vào socialData
       final loginData = Map<String, dynamic>.from(socialData);
       if (fcmToken != null) {
         loginData['fcmToken'] = fcmToken;
       }
+      final deviceId = fcmService.deviceId;
+      loginData['deviceId'] = deviceId;
 
       AuthenModel authModel = await repository.mobileSocialLogin(loginData);
 
@@ -235,7 +238,7 @@ class AuthCubit extends Cubit<BaseState> {
       }
 
       // Lấy FCM token để gửi kèm theo request
-      final fcmToken = await _getFCMToken();
+      final fcmToken = fcmService.fcmToken;
       
       // Thêm fcmToken vào socialData
       final loginData = Map<String, dynamic>.from(socialData);
@@ -267,7 +270,7 @@ class AuthCubit extends Cubit<BaseState> {
       emit(LoadingState());
       
       // Lấy FCM token để gửi kèm theo request
-      final fcmToken = await _getFCMToken();
+      final fcmToken = fcmService.fcmToken;
       
       AuthenModel authModel = await repository.mobileSocialLogin({
         "platformId": platformId,
@@ -298,7 +301,7 @@ class AuthCubit extends Cubit<BaseState> {
           final socialData = result.data!;
           
           // Lấy FCM token để gửi kèm theo request
-          final fcmToken = await _getFCMToken();
+          final fcmToken = fcmService.fcmToken;
           
           // Thêm fcmToken vào socialData
           final loginData = Map<String, dynamic>.from(socialData);

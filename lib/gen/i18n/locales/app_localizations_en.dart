@@ -171,7 +171,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading_more_books_no_data => 'Loading more books no data';
 
   @override
-  String get local_library => 'My library';
+  String get local_library => 'Local library';
 
   @override
   String get upload_book => 'Upload book';
@@ -1191,4 +1191,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no_name => 'No name';
+
+  @override
+  String get book_removed_from_library => 'Book removed from library';
+
+  @override
+  String get no_books_found => 'No books found';
+
+  @override
+  String get no_book_found => 'No book found';
+
+  @override
+  String get unselect_all => 'Unselect all';
+
+  @override
+  String get select_all => 'Select all';
+
+  @override
+  String get use_select_file_to_browse_directory =>
+      'Use \'Select file\' to browse directory (e.g. Download/Telegram)';
+
+  @override
+  String get no_pdf_epub_mobi_found => 'No PDF, EPUB, or MOBI found';
+
+  @override
+  String get find_book => 'Find book';
+
+  @override
+  String get search_book => 'Search book';
+
+  @override
+  String get select_all_books => 'Select all books';
+
+  @override
+  String get unselect_all_books => 'Unselect all books';
+
+  @override
+  String get scan_again => 'Scan again';
 }

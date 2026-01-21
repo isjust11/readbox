@@ -5,6 +5,8 @@ import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:page_transition/page_transition.dart';
 
+import 'domain/data/models/local_book.dart';
+
 class Routes {
   Routes._();
 
@@ -82,11 +84,10 @@ class Routes {
           type: PageTransitionType.fade,
         );
       case adminUploadScreen:
-        final args = settings.arguments as Map<String, dynamic>;
+        final args = settings.arguments as LocalBook;
         return PageTransition(
           child: AdminUploadScreen(
-            fileUrl: args['fileUrl'] as String,
-            title: args['title'] as String,
+            localBook: args,
           ),
           type: PageTransitionType.fade,
         );
