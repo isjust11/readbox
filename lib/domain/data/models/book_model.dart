@@ -1,14 +1,30 @@
 import 'package:readbox/domain/data/entities/entities.dart';
 
 class BookModel extends BookEntity {
+
   BookModel.fromJson(Map<String, dynamic> json) : super.fromJson(json);
   
+  factory BookModel.local(
+    String filePath,
+    String fileName,
+    String fileType,
+    int fileSize,
+    int totalPages,
+  ){
+    return BookModel.fromJson(
+      {
+        'fileUrl': filePath,
+        'title': fileName,
+        'fileType': fileType,
+        'fileSize': fileSize,
+        'totalPages': totalPages,
+        'isLocalBook': true,
+      }
+    );
+  }
   // Helper methods
-  String get displayTitle => title ?? 'Untitled';
-  String get displayAuthor => author ?? 'Unknown Author';
-  final bool _isLocalBook = false;
-  bool get isEpub => fileType == BookType.EPUB_BOOK;
-  bool get isPdf => fileType == BookType.PDF_BOOK;
+  bool get isEpub => fileType == BookType.epub;
+  bool get isPdf => fileType == BookType.pdf;
   
   String get fileSizeFormatted {
     if (fileSize == null) return 'Unknown';
@@ -17,12 +33,6 @@ class BookModel extends BookEntity {
     return '${(fileSize! / (1024 * 1024)).toStringAsFixed(1)}MB';
   }
 
-  set isLocalBook(bool value) {
-    isLocalBook = value;
-  }
-
-  bool get isLocalBook => _isLocalBook;
-  
   double get progressPercentage {
     // This will be calculated from reading progress
     return 0.0;
@@ -31,6 +41,23 @@ class BookModel extends BookEntity {
   String get categoriesDisplay {
     if (categories == null || categories!.isEmpty) return 'No category';
     return categories!.join(', ');
+  }
+
+    // Extract author if filename format is "Title - Author.pdf"
+  String get displayAuthor {
+    if (title?.contains(' - ') ?? false) {
+      final parts = title?.split(' - ') ?? [];
+      return parts.length > 1 ? parts[1].trim() : 'Unknown';
+    }
+    return 'Unknown';
+  }
+
+  // Get clean title without author
+  String get displayTitle {
+    if (title?.contains(' - ') ?? false) {
+      return title?.split(' - ')[0].trim() ?? '';
+    }
+    return title ?? '';
   }
 }
 

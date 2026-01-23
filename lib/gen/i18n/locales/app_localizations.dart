@@ -2479,6 +2479,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan again'**
   String get scan_again;
+
+  /// No description provided for @delete_book_confirmation_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this book?'**
+  String get delete_book_confirmation_message;
+
+  /// No description provided for @delete_book_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Book deleted successfully'**
+  String get delete_book_success;
+
+  /// No description provided for @delete_book_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Book deleted failed'**
+  String get delete_book_failed;
+
+  /// No description provided for @edit_book_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Book edited successfully'**
+  String get edit_book_success;
+
+  /// No description provided for @edit_book_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Book edited failed'**
+  String get edit_book_failed;
+
+  /// No description provided for @current_ebook_file_cannot_be_changed_from_this_screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Current ebook file cannot be changed from this screen.'**
+  String get current_ebook_file_cannot_be_changed_from_this_screen;
+
+  /// No description provided for @update_book_info.
+  ///
+  /// In en, this message translates to:
+  /// **'Update book information'**
+  String get update_book_info;
+
+  /// No description provided for @update_book_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Book updated successfully!'**
+  String get update_book_success;
+
+  /// No description provided for @create_book_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Book created successfully!'**
+  String get create_book_success;
+
+  /// No description provided for @error_occurred.
+  ///
+  /// In en, this message translates to:
+  /// **'Error occurred'**
+  String get error_occurred;
+
+  /// No description provided for @update_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Update book'**
+  String get update_book;
+
+  /// No description provided for @updating_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Updating book...'**
+  String get updating_book;
 }
 
 class _AppLocalizationsDelegate

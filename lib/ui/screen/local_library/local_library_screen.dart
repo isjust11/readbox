@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:readbox/domain/data/models/local_book.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/routes.dart';
@@ -19,7 +18,7 @@ class LocalLibraryScreen extends StatefulWidget {
 }
 
 class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
-  List<LocalBook> _books = [];
+  List<BookModel> _books = [];
   bool _isLoading = true;
   String _searchQuery = '';
 
@@ -34,7 +33,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
 
     try {
       final filePaths = await SharedPreferenceUtil.getLocalBooks();
-      final books = <LocalBook>[];
+      final books = <BookModel>[];
 
       for (var path in filePaths) {
         final fileName = path.split(Platform.pathSeparator).last;
@@ -49,34 +48,34 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
           if (await file.exists()) {
             final fileSize = await file.length();
             books.add(
-              LocalBook(
-                filePath: path,
-                fileName: fileName,
-                fileType: fileType,
-                fileSize: fileSize,
-                totalPages: 0,
+              BookModel.local(
+                path,
+                fileName,
+                fileType,
+                fileSize,
+                0,
               ),
             );
           } else {
             // Vẫn hiển thị để user có thể thử mở hoặc xóa (file có thể bị di chuyển / Scoped Storage)
             books.add(
-              LocalBook(
-                filePath: path,
-                fileName: fileName,
-                fileType: fileType,
-                fileSize: 0,
-                totalPages: 0,
+              BookModel.local(
+                path,
+                fileName,
+                fileType,
+                0,
+                0,
               ),
             );
           }
         } catch (_) {
           books.add(
-            LocalBook(
-              filePath: path,
-              fileName: fileName,
-              fileType: fileType,
-              fileSize: 0,
-              totalPages: 0,
+            BookModel.local(
+              path,
+              fileName,
+              fileType,
+              0,
+              0,
             ),
           );
         }
@@ -96,14 +95,14 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     }
   }
 
-  List<LocalBook> get _filteredBooks {
+  List<BookModel> get _filteredBooks {
     if (_searchQuery.isEmpty) return _books;
 
     return _books.where((book) {
       final query = _searchQuery.toLowerCase();
-      return book.cleanTitle.toLowerCase().contains(query) ||
-          book.author.toLowerCase().contains(query) ||
-          book.fileName.toLowerCase().contains(query);
+      return book.displayTitle.toLowerCase().contains(query) ||
+          book.displayAuthor.toLowerCase().contains(query) ||
+          book.fileUrl!.toLowerCase().contains(query);
     }).toList();
   }
 
@@ -118,13 +117,13 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     }
   }
 
-  Future<void> _removeBook(LocalBook book) async {
+  Future<void> _removeBook(BookModel book) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder:
           (ctx) => AlertDialog(
             title: Text(AppLocalizations.current.delete_book),
-            content: Text('Xóa "${book.cleanTitle}" khỏi thư viện?'),
+            content: Text('Xóa "${book.displayTitle}" khỏi thư viện?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
@@ -140,8 +139,8 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     );
 
     if (confirm == true) {
-      PdfThumbnailService.removeFromCache(book.filePath);
-      await SharedPreferenceUtil.removeLocalBook(book.filePath);
+      PdfThumbnailService.removeFromCache(book.fileUrl!);
+      await SharedPreferenceUtil.removeLocalBook(book.fileUrl!);
       _loadBooks();
 
       if (mounted) {
@@ -155,7 +154,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     }
   }
 
-  Future<void> _uploadBook(LocalBook book) async {
+  Future<void> _uploadBook(BookModel book) async {
     Navigator.pushNamed(
       context,
       Routes.adminUploadScreen,
@@ -163,11 +162,11 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     );
   }
 
-  void _openBook(LocalBook book) {
+  void _openBook(BookModel book) {
     Navigator.pushNamed(
       context,
       Routes.pdfViewerScreen,
-      arguments: BookModel.fromJson({'fileUrl': book.filePath, 'title': book.fileName, 'isLocalBook': true}),
+      arguments: BookModel.fromJson({'fileUrl': book.fileUrl!, 'title': book.displayTitle, 'isLocalBook': true}),
     );
   }
 
@@ -241,26 +240,26 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     );
   }
 
-  Widget _buildBookCover(BuildContext context, LocalBook book) {
+  Widget _buildBookCover(BuildContext context, BookModel book) {
     const w = 50.0;
     const h = 70.0;
-    final color = _getFileColor(context, book.fileType);
+    final color = _getFileColor(context, book.fileType?.name ?? '');
     final decor = BoxDecoration(
-      color: color.withOpacity(0.1),
+      color: color.withValues(alpha: 0.1),
       borderRadius: BorderRadius.circular(8),
     );
 
-    if (book.fileType != 'pdf') {
+    if (book.fileType?.name != 'pdf') {
       return Container(
         width: w,
         height: h,
         decoration: decor,
-        child: Icon(_getFileIcon(book.fileType), color: color, size: 32),
+        child: Icon(_getFileIcon(book.fileType?.name ?? ''), color: color, size: 32),
       );
     }
 
     return FutureBuilder<Uint8List?>(
-      future: PdfThumbnailService.getThumbnail(book.filePath, width: 140, height: 200),
+      future: PdfThumbnailService.getThumbnail(book.fileUrl!, width: 140, height: 200),
       builder: (context, snapshot) {
         final bytes = snapshot.data;
         if (snapshot.connectionState == ConnectionState.done && bytes != null) {
@@ -287,9 +286,9 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     );
   }
 
-  Widget _buildBookCard(BuildContext context, LocalBook book) {
+  Widget _buildBookCard(BuildContext context, BookModel book) {
     final colorScheme = Theme.of(context).colorScheme;
-    final color = _getFileColor(context, book.fileType);
+    final color = _getFileColor(context, book.fileType?.name ?? '');
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,
@@ -309,7 +308,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      book.cleanTitle,
+                      book.displayTitle,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -320,7 +319,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      book.author,
+                      book.displayAuthor,
                       style: TextStyle(
                         fontSize: 14,
                         color: colorScheme.onSurfaceVariant,
@@ -335,11 +334,11 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: color.withOpacity(0.1),
+                            color: color.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            book.fileType.toUpperCase(),
+                            book.fileType?.name.toUpperCase() ?? '',
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
@@ -349,7 +348,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          book.formattedSize,
+                          book.fileSizeFormatted,
                           style: TextStyle(
                             fontSize: 12,
                             color: colorScheme.outline,

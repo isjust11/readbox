@@ -74,7 +74,7 @@ class AdminCubit extends Cubit<BaseState> {
     int? totalPages,
     String language = 'vi',
     bool isPublic = true,
-    int? categoryId,
+    String? categoryId,
   }) async {
     emit(LoadingState());
     try {

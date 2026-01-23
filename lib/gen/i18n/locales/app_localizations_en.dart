@@ -1228,4 +1228,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scan_again => 'Scan again';
+
+  @override
+  String get delete_book_confirmation_message =>
+      'Are you sure you want to delete this book?';
+
+  @override
+  String get delete_book_success => 'Book deleted successfully';
+
+  @override
+  String get delete_book_failed => 'Book deleted failed';
+
+  @override
+  String get edit_book_success => 'Book edited successfully';
+
+  @override
+  String get edit_book_failed => 'Book edited failed';
+
+  @override
+  String get current_ebook_file_cannot_be_changed_from_this_screen =>
+      'Current ebook file cannot be changed from this screen.';
+
+  @override
+  String get update_book_info => 'Update book information';
+
+  @override
+  String get update_book_success => 'Book updated successfully!';
+
+  @override
+  String get create_book_success => 'Book created successfully!';
+
+  @override
+  String get error_occurred => 'Error occurred';
+
+  @override
+  String get update_book => 'Update book';
+
+  @override
+  String get updating_book => 'Updating book...';
 }

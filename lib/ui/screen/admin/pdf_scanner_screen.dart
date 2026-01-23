@@ -8,7 +8,8 @@ import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
 class PdfScannerScreen extends StatefulWidget {
-  const PdfScannerScreen({super.key});
+  final bool isSelectedMode;
+  const PdfScannerScreen({super.key, this.isSelectedMode = false});
 
   @override
   State<PdfScannerScreen> createState() => _PdfScannerScreenState();
@@ -289,7 +290,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
             icon: Icon(Icons.folder_open, color: colorScheme.onPrimary),
             label: Text(AppLocalizations.current.select_file, style: TextStyle(color: colorScheme.onPrimary)),
           ),
-          if (_pdfFiles.isNotEmpty)
+          if (_pdfFiles.isNotEmpty && !widget.isSelectedMode)
             TextButton.icon(
               onPressed:
                   _selectedFiles.length == _pdfFiles.length
@@ -421,7 +422,10 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                         Icon(Icons.info_outline, color: colorScheme.primary),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: Text(
+                          child: widget.isSelectedMode ? Text(
+                            'Nhấn vào file để chọn hoặc long press để xem đường dẫn',
+                            style: TextStyle(fontWeight: FontWeight.w500, color: colorScheme.onPrimaryContainer),
+                          ): Text(
                             'Tìm thấy ${_pdfFiles.length} file • Đã chọn ${_selectedFiles.length}',
                             style: TextStyle(fontWeight: FontWeight.w500, color: colorScheme.onPrimaryContainer),
                           ),
@@ -484,11 +488,15 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                                 ),
                               ],
                             ),
-                            trailing: Checkbox(
+                            trailing: widget.isSelectedMode ? null : Checkbox(
                               value: isSelected,
                               onChanged: (_) => _toggleFileSelection(file),
                             ),
                             onTap: () => _toggleFileSelection(file),
+                            onLongPress: () {
+                              // Long press để chọn file và trả về
+                              Navigator.pop(context, file.path);
+                            },
                           ),
                         );
                       },
@@ -497,7 +505,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                 ],
               ),
       floatingButton:
-          _selectedFiles.isNotEmpty
+          _selectedFiles.isNotEmpty && !widget.isSelectedMode
               ? FloatingActionButton.extended(
                 onPressed: _importSelected,
                 icon: const Icon(Icons.check),

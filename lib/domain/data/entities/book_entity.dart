@@ -1,6 +1,6 @@
 import 'base_entity.dart';
 
-enum BookType { EPUB_BOOK, PDF_BOOK }
+enum BookType { epub, pdf }
 
 class BookEntity extends BaseEntity {
   String? id;
@@ -26,7 +26,7 @@ class BookEntity extends BaseEntity {
   DateTime? createAt;
   DateTime? updatedAt;
   String? categoryId;
-
+  bool? isLocalBook;
   BookEntity({
     this.id,
     this.title,
@@ -63,9 +63,9 @@ class BookEntity extends BaseEntity {
     fileType = json['fileType'] != null
         ? BookType.values.firstWhere(
             (e) => e.toString() == 'BookType.${json['fileType']}',
-            orElse: () => BookType.EPUB_BOOK,
+            orElse: () => BookType.epub,
           )
-        : BookType.EPUB_BOOK;
+        : BookType.epub;
     fileSize = json['fileSize'];
     categories = json['categories'] != null
         ? List<String>.from(json['categories'])
@@ -87,6 +87,7 @@ class BookEntity extends BaseEntity {
     createAt = json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null;
     updatedAt = json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null;
     categoryId = json['categoryId'];
+    isLocalBook = json['isLocalBook'] ?? false;
   }
 
   @override

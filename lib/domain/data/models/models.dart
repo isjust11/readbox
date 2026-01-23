@@ -16,4 +16,3 @@ export 'user_interaction_model.dart';
 export 'interactioin_stats_model.dart';
 export 'category_model.dart';
 export 'filter_model.dart';
-export 'local_book.dart';

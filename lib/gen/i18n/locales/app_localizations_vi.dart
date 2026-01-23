@@ -1230,4 +1230,42 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get scan_again => 'Quét lại';
+
+  @override
+  String get delete_book_confirmation_message =>
+      'Bạn có chắc chắn muốn xóa sách này?';
+
+  @override
+  String get delete_book_success => 'Đã xóa sách thành công';
+
+  @override
+  String get delete_book_failed => 'Đã xóa sách thất bại';
+
+  @override
+  String get edit_book_success => 'Đã sửa sách thành công';
+
+  @override
+  String get edit_book_failed => 'Đã sửa sách thất bại';
+
+  @override
+  String get current_ebook_file_cannot_be_changed_from_this_screen =>
+      'File ebook hiện tại không thể thay đổi từ màn hình này.';
+
+  @override
+  String get update_book_info => 'Cập nhật thông tin sách';
+
+  @override
+  String get update_book_success => 'Cập nhật sách thành công!';
+
+  @override
+  String get create_book_success => 'Tạo sách mới thành công!';
+
+  @override
+  String get error_occurred => 'Có lỗi xảy ra';
+
+  @override
+  String get update_book => 'Cập nhật sách';
+
+  @override
+  String get updating_book => 'Đang cập nhật...';
 }

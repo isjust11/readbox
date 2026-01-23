@@ -5,7 +5,6 @@ import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'domain/data/models/local_book.dart';
 
 class Routes {
   Routes._();
@@ -84,6 +83,12 @@ class Routes {
           type: PageTransitionType.fade,
         );
       case adminUploadScreen:
+        if (settings.arguments == null) {
+          return PageTransition(
+            child: AdminUploadScreen(),
+            type: PageTransitionType.fade,
+          );
+        }
         final book = settings.arguments as BookModel;
         return PageTransition(
           child: AdminUploadScreen(
@@ -113,30 +118,30 @@ class Routes {
           type: PageTransitionType.rightToLeft,
         );
       case pdfViewerScreen:
-        final args = settings.arguments as Map<String, dynamic>;
+        final args = settings.arguments as BookModel;
         return PageTransition(
           child: PdfViewerScreen(
-            fileUrl: args['fileUrl'] as String,
-            title: args['title'] as String,
+            fileUrl: args.fileUrl!,
+            title: args.displayTitle,
           ),
           type: PageTransitionType.rightToLeft,
         );
       case pdfViewerWithSelectionScreen:
-        final args = settings.arguments as Map<String, dynamic>;
+        final args = settings.arguments as BookModel;
         return PageTransition(
           child: PdfViewerWithSelectionScreen(
-            fileUrl: args['fileUrl'] as String,
-            title: args['title'] as String,
-            bookId: args['bookId'] as String,
+            fileUrl: args.fileUrl!,
+            title: args.displayTitle,
+            bookId: args.id!,
           ),
           type: PageTransitionType.rightToLeft,
         );
       case pdfViewerAdvancedScreen:
-        final args = settings.arguments as Map<String, dynamic>;
+        final args = settings.arguments as BookModel;
         return PageTransition(
           child: PdfViewerAdvancedScreen(
-            fileUrl: args['fileUrl'] as String,
-            title: args['title'] as String,
+            fileUrl: args.fileUrl!,
+            title: args.displayTitle,
           ),
           type: PageTransitionType.rightToLeft,
         );
