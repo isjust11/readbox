@@ -4,12 +4,14 @@ class LocalBook {
   final String fileType; // pdf, epub, mobi
   final int fileSize;
   final DateTime addedDate;
+  final int totalPages;
 
   LocalBook({
     required this.filePath,
     required this.fileName,
     required this.fileType,
     required this.fileSize,
+    required this.totalPages,
     DateTime? addedDate,
   }) : addedDate = addedDate ?? DateTime.now();
 
@@ -20,6 +22,7 @@ class LocalBook {
       'fileType': fileType,
       'fileSize': fileSize,
       'addedDate': addedDate.toIso8601String(),
+      'totalPages': totalPages,
     };
   }
 
@@ -30,6 +33,7 @@ class LocalBook {
       fileType: json['fileType'] as String,
       fileSize: json['fileSize'] as int,
       addedDate: DateTime.parse(json['addedDate'] as String),
+      totalPages: json['totalPages'] as int,
     );
   }
 

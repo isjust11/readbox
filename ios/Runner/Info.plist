@@ -33,6 +33,7 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<dict>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -40,7 +41,16 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>fb884129041238432</string> </array>
+		</dict>
 	</array>
+	<key>FacebookAppID</key>
+	<string>884129041238432</string> <key>FacebookClientToken</key>
+	<string>fa9a622a5b0786ac54a76767a2118bcb</string> <key>FacebookDisplayName</key>
+	<string>ReadBox</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

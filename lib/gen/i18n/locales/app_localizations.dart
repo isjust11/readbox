@@ -425,7 +425,7 @@ abstract class AppLocalizations {
   /// No description provided for @local_library.
   ///
   /// In en, this message translates to:
-  /// **'My library'**
+  /// **'Local library'**
   String get local_library;
 
   /// No description provided for @upload_book.
@@ -2407,6 +2407,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No name'**
   String get no_name;
+
+  /// No description provided for @book_removed_from_library.
+  ///
+  /// In en, this message translates to:
+  /// **'Book removed from library'**
+  String get book_removed_from_library;
+
+  /// No description provided for @no_books_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No books found'**
+  String get no_books_found;
+
+  /// No description provided for @no_book_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No book found'**
+  String get no_book_found;
+
+  /// No description provided for @unselect_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Unselect all'**
+  String get unselect_all;
+
+  /// No description provided for @select_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all'**
+  String get select_all;
+
+  /// No description provided for @use_select_file_to_browse_directory.
+  ///
+  /// In en, this message translates to:
+  /// **'Use \'Select file\' to browse directory (e.g. Download/Telegram)'**
+  String get use_select_file_to_browse_directory;
+
+  /// No description provided for @no_pdf_epub_mobi_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No PDF, EPUB, or MOBI found'**
+  String get no_pdf_epub_mobi_found;
+
+  /// No description provided for @find_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Find book'**
+  String get find_book;
+
+  /// No description provided for @search_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Search book'**
+  String get search_book;
+
+  /// No description provided for @select_all_books.
+  ///
+  /// In en, this message translates to:
+  /// **'Select all books'**
+  String get select_all_books;
+
+  /// No description provided for @unselect_all_books.
+  ///
+  /// In en, this message translates to:
+  /// **'Unselect all books'**
+  String get unselect_all_books;
+
+  /// No description provided for @scan_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan again'**
+  String get scan_again;
 }
 
 class _AppLocalizationsDelegate

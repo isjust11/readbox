@@ -299,7 +299,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         existingFileUrl:
             _existingRemoteFileUrl, // File URL từ server nếu không upload mới
         existingCoverImageUrl:
-           context.read<AdminCubit>().coverImageUrl ?? widget
+           context.read<AdminCubit>().coverImageUrl != null ? context.read<AdminCubit>().coverImageUrl : widget
                 .book
                 .coverImageUrl, // Cover URL từ server nếu không upload mới
       );

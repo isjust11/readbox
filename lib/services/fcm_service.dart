@@ -89,8 +89,8 @@ class FCMService {
       await _loadNotificationSettings();
 
       // Get device id and app version
-      await _getDeviceId();
-      await _getAppVersion();
+      _deviceId = await _getDeviceId();
+      _appVersion = await _getAppVersion();
 
       debugPrint('FCM Service initialized successfully');
     } catch (e) {
