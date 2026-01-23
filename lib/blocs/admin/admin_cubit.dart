@@ -32,56 +32,70 @@ class AdminCubit extends Cubit<BaseState> {
     }
   }
 
-  /// Upload ebook file
   void resetErrorUpload() {
     _errorUploadEbook = null;
     _errorUploadCoverImage = null;
   }
 
-  /// Reset cover image (URL và lỗi) khi đổi ảnh bìa hoặc xóa ebook.
   void resetCoverImage() {
     _coverImageUrl = null;
     _errorUploadCoverImage = null;
     emit(LoadedState(_categories));
   }
 
-  Future<void> uploadEbook(File file) async {
-    try {
-      emit(LoadingState());
-      final response = await _adminRemoteDataSource.uploadEbook(file);
-      
-      if (response.isSuccess) {
-        _ebookFileUrl = response.data['publicRelativePath'];
-        emit(LoadedState(
-          response,
-          msgError: 'Ebook uploaded successfully',
-        ));
-      } else {
-        _errorUploadEbook = BlocUtils.getMessageError(response.errMessage);
-        emit(ErrorState(_errorUploadEbook,));
-      }
-    } catch (e) {
-      emit(ErrorState(BlocUtils.getMessageError(e),));
+  Future<void> _uploadEbookInternal(File file) async {
+    final response = await _adminRemoteDataSource.uploadEbook(file);
+    if (response.isSuccess) {
+      _ebookFileUrl = response.data['publicRelativePath'];
+      return;
     }
+    throw Exception(BlocUtils.getMessageError(response.errMessage));
   }
 
-  /// Upload cover image
-  Future<void> uploadCoverImage(File file) async {
+  Future<void> _uploadCoverImageInternal(File file) async {
+    final response = await _adminRemoteDataSource.uploadCoverImage(file);
+    if (response.isSuccess) {
+      _coverImageUrl = response.data['publicRelativePath'];
+      return;
+    }
+    throw Exception(BlocUtils.getMessageError(response.errMessage));
+  }
+
+  /// Thực hiện từng bước: upload file → upload ảnh bìa (nếu có) → tạo sách.
+  /// Không tạo file rác vì chỉ upload khi người dùng bấm Tạo.
+  Future<void> createBookWithUpload({
+    required File ebookFile,
+    File? coverImageFile,
+    required String title,
+    required String author,
+    String? description,
+    String? publisher,
+    String? isbn,
+    int? totalPages,
+    String language = 'vi',
+    bool isPublic = true,
+    int? categoryId,
+  }) async {
+    emit(LoadingState());
     try {
-      emit(LoadingState());
-      final response = await _adminRemoteDataSource.uploadCoverImage(file);
-      
-      if (response.isSuccess) {
-        _coverImageUrl = response.data['publicRelativePath'];
-        emit(LoadedState(
-          response,
-          msgError: 'Cover image uploaded successfully',
-        ));
-      } else {
-        _errorUploadCoverImage = BlocUtils.getMessageError(response.errMessage);
-        emit(ErrorState(_errorUploadCoverImage,));
+      await _uploadEbookInternal(ebookFile);
+      if (coverImageFile != null) {
+        await _uploadCoverImageInternal(coverImageFile);
       }
+      await createBook(
+        title: title,
+        author: author,
+        description: description,
+        publisher: publisher,
+        isbn: isbn,
+        totalPages: totalPages,
+        language: language,
+        isPublic: isPublic,
+        categoryId: categoryId,
+      );
     } catch (e) {
+      _ebookFileUrl = null;
+      _coverImageUrl = null;
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }

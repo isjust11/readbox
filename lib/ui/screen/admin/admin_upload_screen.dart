@@ -17,6 +17,7 @@ import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/pdf_thumbnail_service.dart';
+import 'package:readbox/domain/data/models/models.dart';
 
 class AdminUploadScreen extends StatelessWidget {
   final BookModel book;
@@ -134,7 +135,6 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     if (ebookFile == null || !mounted) return;
     final path = ebookFile.path.toLowerCase();
     if (!path.endsWith('.pdf')) return;
-
     final bytes = await PdfThumbnailService.getThumbnail(
       ebookFile.path,
       width: 300,
@@ -153,10 +153,6 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     setState(() {
       _coverImageFile = thumbFile;
     });
-    if (!mounted) return;
-    if (context.read<AdminCubit>().coverImageUrl != null) {
-      context.read<AdminCubit>().resetCoverImage();
-    }
   }
 
   Future<void> _pickEbookFile() async {
@@ -219,38 +215,10 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     }
   }
 
-  Future<void> _uploadEbookFile() async {
-    if (_ebookFile == null) {
-      // showCustomSnackBar(context, 'Please select an ebook file first', isError: true);
-      return;
-    }
-
-    setState(() {
-      _isUploadingEbook = true;
-    });
-
-    await context.read<AdminCubit>().uploadEbook(_ebookFile!);
-
-    setState(() {
-      _isUploadingEbook = false;
-    });
-  }
-
-  Future<void> _uploadCoverImage() async {
-    if (_coverImageFile == null) {
-      // showCustomSnackBar(context, 'Please select a cover image first', isError: true);
-      return;
-    }
-
-    setState(() {
-      _isUploadingCover = true;
-    });
-
-    await context.read<AdminCubit>().uploadCoverImage(_coverImageFile!);
-
-    setState(() {
-      _isUploadingCover = false;
-    });
+  String _formatFileSize(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
   }
 
   Future<void> _submitForm() async {
@@ -944,12 +912,12 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                     Container(
                                       padding: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        shape: BoxShape.circle,
+                                        color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Icon(
-                                        Icons.check_rounded,
-                                        color: Colors.white,
+                                        Icons.insert_drive_file_rounded,
+                                        color: theme.colorScheme.primary,
                                         size: 24,
                                       ),
                                     ),
@@ -979,8 +947,24 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
+                                          Text(
+                                            widget.localBook?.formattedSize ?? _formatFileSize(_ebookFile!.lengthSync()),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: theme.colorScheme.secondary.withValues(alpha: 0.6),
+                                            ),
+                                          ),
                                         ],
                                       ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(Icons.close_rounded, color: theme.iconTheme.color),
+                                      onPressed: () {
+                                        setState(() {
+                                          _ebookFile = null;
+                                          _coverImageFile = null;
+                                        });
+                                      },
                                     ),
                                   ],
                                 ),
@@ -1204,6 +1188,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 )
                             else
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(16),
@@ -1334,6 +1319,15 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                         ],
                                       ),
                                     ),
+                                    child: IconButton(
+                                      icon: Icon(Icons.close_rounded, color: Colors.grey[700]),
+                                      onPressed: () {
+                                        setState(() {
+                                          _coverImageFile = null;
+                                        });
+                                      },
+                                    ),
+                                  ),
                                 ],
                               ),
                           ],

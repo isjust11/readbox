@@ -5,6 +5,8 @@ import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:page_transition/page_transition.dart';
 
+import 'domain/data/models/local_book.dart';
+
 class Routes {
   Routes._();
 
