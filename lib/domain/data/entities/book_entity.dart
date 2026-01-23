@@ -22,6 +22,10 @@ class BookEntity extends BaseEntity {
   String? publisher;
   String? isbn;
   String? language;
+  String? createById;
+  DateTime? createAt;
+  DateTime? updatedAt;
+  String? categoryId;
 
   BookEntity({
     this.id,
@@ -43,6 +47,10 @@ class BookEntity extends BaseEntity {
     this.publisher,
     this.isbn,
     this.language,
+    this.createById,
+    this.createAt,
+    this.updatedAt,
+    this.categoryId,
   });
 
   BookEntity.fromJson(Map<String, dynamic> json) {
@@ -75,6 +83,10 @@ class BookEntity extends BaseEntity {
     publisher = json['publisher'];
     isbn = json['isbn'];
     language = json['language'];
+    createById = json['createById'];
+    createAt = json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null;
+    updatedAt = json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null;
+    categoryId = json['categoryId'];
   }
 
   @override
@@ -99,6 +111,9 @@ class BookEntity extends BaseEntity {
     data['publisher'] = publisher;
     data['isbn'] = isbn;
     data['language'] = language;
+    data['createById'] = createById;
+    data['createdAt'] = createAt?.toIso8601String();
+    data['updatedAt'] = updatedAt?.toIso8601String();
     return data;
   }
 }

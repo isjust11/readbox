@@ -395,5 +395,10 @@
   "search_book" : "Search book",
   "select_all_books" : "Select all books",
   "unselect_all_books" : "Unselect all books",
-  "scan_again" : "Scan again"
+  "scan_again" : "Scan again",
+  "delete_book_confirmation_message" : "Are you sure you want to delete this book?",
+  "delete_book_success" : "Book deleted successfully",
+  "delete_book_failed" : "Book deleted failed",
+  "edit_book_success" : "Book edited successfully",
+  "edit_book_failed" : "Book edited failed"
 }

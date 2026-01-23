@@ -416,5 +416,10 @@
    "search_book" : "Tìm sách",
    "select_all_books" : "Chọn tất cả sách",
    "unselect_all_books" : "Bỏ chọn tất cả sách",
-   "scan_again" : "Quét lại"
+   "scan_again" : "Quét lại",
+   "delete_book_confirmation_message" : "Bạn có chắc chắn muốn xóa sách này?",
+   "delete_book_success" : "Đã xóa sách thành công",
+   "delete_book_failed" : "Đã xóa sách thất bại",
+   "edit_book_success" : "Đã sửa sách thành công",
+   "edit_book_failed" : "Đã sửa sách thất bại"
 }

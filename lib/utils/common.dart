@@ -1,5 +1,5 @@
 import 'dart:math' as Math;
-
+import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -127,5 +127,10 @@ static String formatDate(dynamic dateValue, {String? format}) {
 
   static shareContent(String content) {
     SharePlus.instance.share(ShareParams(text: content));
+  }
+
+  // base64 decode
+  static String base64Decode(String base64String) {
+    return utf8.decode(base64.decode(base64String));
   }
 }

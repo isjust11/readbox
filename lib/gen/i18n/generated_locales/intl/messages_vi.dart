@@ -123,6 +123,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteNotificationSuccess":
             MessageLookupByLibrary.simpleMessage("Xóa thông báo thành công"),
         "delete_book": MessageLookupByLibrary.simpleMessage("Xóa sách"),
+        "delete_book_confirmation_message":
+            MessageLookupByLibrary.simpleMessage(
+                "Bạn có chắc chắn muốn xóa sách này?"),
+        "delete_book_failed":
+            MessageLookupByLibrary.simpleMessage("Đã xóa sách thất bại"),
+        "delete_book_success":
+            MessageLookupByLibrary.simpleMessage("Đã xóa sách thành công"),
         "description": MessageLookupByLibrary.simpleMessage("Mô tả"),
         "disableNotifications":
             MessageLookupByLibrary.simpleMessage("Tắt thông báo"),
@@ -131,6 +138,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit": MessageLookupByLibrary.simpleMessage("Sửa"),
         "editProfile": MessageLookupByLibrary.simpleMessage("Chỉnh sửa hồ sơ"),
         "edit_book": MessageLookupByLibrary.simpleMessage("Sửa sách"),
+        "edit_book_failed":
+            MessageLookupByLibrary.simpleMessage("Đã sửa sách thất bại"),
+        "edit_book_success":
+            MessageLookupByLibrary.simpleMessage("Đã sửa sách thành công"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "email_invalid":
             MessageLookupByLibrary.simpleMessage("Email không hợp lệ"),

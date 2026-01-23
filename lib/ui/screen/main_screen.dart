@@ -8,7 +8,9 @@ import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
+import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/extension_utils.dart';
 
 import '../../domain/data/models/models.dart';
 
@@ -45,7 +47,7 @@ class MainBodyState extends State<MainBody> {
   String? _currentSearchQuery;
   // Filter state
   FilterModel? _filterModel;
-
+  UserModel? userInfo;
   @override
   void initState() {
     super.initState();
@@ -55,6 +57,16 @@ class MainBodyState extends State<MainBody> {
       context.read<NotificationCubit>().getUnreadCount();
       getBooks();
     });
+    loadUserInfo();
+  }
+
+  Future<void> loadUserInfo() async {
+    final user = await SecureStorageService().getUserInfo();
+    if (user != null) {
+      setState(() {
+        userInfo = user;
+      });
+    }
   }
 
   Future<void> getBooks({bool isLoadMore = false}) async {
@@ -475,8 +487,12 @@ class MainBodyState extends State<MainBody> {
                         itemBuilder: (context, index) {
                           return BookCard(
                             book: filteredBooks[index],
+                            ownerId: userInfo?.id,
                             userInteractionCubit:
                                 context.read<UserInteractionCubit>(),
+                                onDelete: (book) {
+                                  context.read<LibraryCubit>().deleteBook(book.id!);
+                                },
                           );
                         },
                       ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/domain/network/network.dart';
@@ -67,8 +68,22 @@ class AdminRemoteDataSource {
     }
   }
 
+  /// Update book with uploaded file URLs
+  Future<Map<String, dynamic>> updateBook(String bookId, Map<String, dynamic> bookData) async {
+    try {
+      final response = await network.put(
+        url: '${ApiConstant.apiHost}${ApiConstant.updateBook}/$bookId',
+        body: bookData,
+      );
+
+      return response.data;
+    } catch (e) {
+      return Future.error(BlocUtils.getMessageError(e));
+    }
+  }
+
   /// Get all categories
-  Future<List<dynamic>> getCategories() async {
+  Future<List<Category>> getCategories() async {
     try {
       final response = await network.get(
         url: '${ApiConstant.apiHost}${ApiConstant.getCategories}',

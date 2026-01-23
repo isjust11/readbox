@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:readbox/domain/data/models/local_book.dart';
+import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
@@ -163,7 +164,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     Navigator.pushNamed(
       context,
       Routes.pdfViewerScreen,
-      arguments: {'fileUrl': book.filePath, 'title': book.fileName},
+      arguments: BookModel.fromJson({'fileUrl': book.filePath, 'title': book.fileName, 'isLocalBook': true}),
     );
   }
 

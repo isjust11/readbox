@@ -122,6 +122,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteNotificationSuccess": MessageLookupByLibrary.simpleMessage(
             "Delete notification successfully"),
         "delete_book": MessageLookupByLibrary.simpleMessage("Delete book"),
+        "delete_book_confirmation_message":
+            MessageLookupByLibrary.simpleMessage(
+                "Are you sure you want to delete this book?"),
+        "delete_book_failed":
+            MessageLookupByLibrary.simpleMessage("Book deleted failed"),
+        "delete_book_success":
+            MessageLookupByLibrary.simpleMessage("Book deleted successfully"),
         "description": MessageLookupByLibrary.simpleMessage("Description"),
         "disableNotifications":
             MessageLookupByLibrary.simpleMessage("Disable notifications"),
@@ -129,6 +136,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "done": MessageLookupByLibrary.simpleMessage("Done"),
         "editProfile": MessageLookupByLibrary.simpleMessage("Edit profile"),
         "edit_book": MessageLookupByLibrary.simpleMessage("Edit book"),
+        "edit_book_failed":
+            MessageLookupByLibrary.simpleMessage("Book edited failed"),
+        "edit_book_success":
+            MessageLookupByLibrary.simpleMessage("Book edited successfully"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
         "email_invalid": MessageLookupByLibrary.simpleMessage("Email invalid"),
         "empty": MessageLookupByLibrary.simpleMessage("No data"),

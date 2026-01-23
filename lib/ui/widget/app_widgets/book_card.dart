@@ -11,10 +11,14 @@ import 'package:readbox/routes.dart';
 class BookCard extends StatefulWidget {
   final BookModel book;
   final UserInteractionCubit userInteractionCubit;
+  final String? ownerId;
+  final Function(BookModel book) onDelete;
   const BookCard({
     super.key,
     required this.book,
     required this.userInteractionCubit,
+    required this.ownerId,
+    required this.onDelete,
   });
 
   @override
@@ -24,7 +28,6 @@ class BookCard extends StatefulWidget {
 class _BookCardState extends State<BookCard> {
   bool? _isFavorite;
   bool? _isArchive;
-
   @override
   void initState() {
     super.initState();
@@ -73,6 +76,31 @@ class _BookCardState extends State<BookCard> {
         ),
       );
     }
+  }
+
+  void _editBook(BuildContext context, BookModel book) {
+    Navigator.pushNamed(
+      context,
+      Routes.adminUploadScreen,
+      arguments: book,
+    );
+  }
+
+  void _deleteBook(BuildContext context, BookModel book) {
+    Navigator.pop(context);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.current.delete_book),
+        content: Text(AppLocalizations.current.delete_book_confirmation_message),
+        actions: [
+          TextButton(onPressed: () {
+            Navigator.pop(context);
+          }, child: Text(AppLocalizations.current.cancel)),
+          TextButton(onPressed: () => widget.onDelete(book), child: Text(AppLocalizations.current.delete)),
+        ],
+      ),
+    );
   }
 
   void _showBookOptions(BuildContext context, BookModel book) {
@@ -150,6 +178,41 @@ class _BookCardState extends State<BookCard> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
+                          // action delete and edit book
+                          if (book.createById == widget.ownerId) ...[
+                            Row(
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    _editBook(context, book);
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.edit, color: Theme.of(context).primaryColor),
+                                      SizedBox(width: 4),
+                                      Text(
+                                    AppLocalizations.current.edit_book,
+                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                    )],
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    _deleteBook(context, book);
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
+                                      SizedBox(width: 4),
+                                      Text(
+                                      AppLocalizations.current.delete_book,
+                                      style: TextStyle(color: Theme.of(context).colorScheme.error),
+                                    )],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -192,12 +255,12 @@ class _BookCardState extends State<BookCard> {
                   listener: (context, state) {
                     if (state is LoadedState) {
                       final stats = state.data as InteractionStatsModel;
-                        setState(() {
-                          _isFavorite = stats.favoriteStatus;
-                          _isArchive = stats.archiveStatus;
-                          book.isFavorite = stats.favoriteStatus;
-                          book.isArchived = stats.archiveStatus;
-                        });
+                      setState(() {
+                        _isFavorite = stats.favoriteStatus;
+                        _isArchive = stats.archiveStatus;
+                        book.isFavorite = stats.favoriteStatus;
+                        book.isArchived = stats.archiveStatus;
+                      });
                     }
                   },
                   builder: (context, state) {
@@ -208,7 +271,10 @@ class _BookCardState extends State<BookCard> {
                               _favoriteStatus
                                   ? Icons.favorite_rounded
                                   : Icons.favorite_border_rounded,
-                          label: _favoriteStatus ? AppLocalizations.current.remove_favorite : AppLocalizations.current.add_favorite,
+                          label:
+                              _favoriteStatus
+                                  ? AppLocalizations.current.remove_favorite
+                                  : AppLocalizations.current.add_favorite,
                           color: Theme.of(context).colorScheme.error,
                           onTap: () async {
                             Navigator.pop(context);
@@ -224,7 +290,7 @@ class _BookCardState extends State<BookCard> {
                         _buildActionButton(
                           icon:
                               _archiveStatus
-                                  ?  Icons.close_rounded
+                                  ? Icons.close_rounded
                                   : Icons.archive_rounded,
                           label:
                               _archiveStatus

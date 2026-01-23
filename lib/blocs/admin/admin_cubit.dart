@@ -96,7 +96,7 @@ class AdminCubit extends Cubit<BaseState> {
     int? totalPages,
     String language = 'vi',
     bool isPublic = true,
-    int? categoryId,
+    String? categoryId,
   }) async {
     try {
       if (_ebookFileUrl == null) {
@@ -129,6 +129,53 @@ class AdminCubit extends Cubit<BaseState> {
       emit(LoadedState(
         response,
         msgError: 'Book created successfully',
+      ));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e),));
+    }
+  }
+
+  /// Update book with all information
+  Future<void> updateBook({
+    required String bookId,
+    required String title,
+    required String author,
+    String? description,
+    String? publisher,
+    String? isbn,
+    int? totalPages,
+    String language = 'vi',
+    bool isPublic = true,
+    String? categoryId,
+    String? existingFileUrl, // File URL từ server (nếu không upload file mới)
+    String? existingCoverImageUrl, // Cover URL từ server (nếu không upload cover mới)
+  }) async {
+    try {
+      emit(LoadingState());
+
+      final bookData = {
+        'title': title,
+        'author': author,
+        'description': description,
+        'fileUrl': _ebookFileUrl ?? existingFileUrl, // Dùng file mới nếu có, không thì dùng file cũ
+        'coverImageUrl': _coverImageUrl ?? existingCoverImageUrl, // Dùng cover mới nếu có, không thì dùng cover cũ
+        'publisher': publisher,
+        'isbn': isbn,
+        'totalPages': totalPages,
+        'language': language,
+        'isPublic': isPublic,
+        if (categoryId != null) 'category': categoryId,
+      };
+
+      final response = await _adminRemoteDataSource.updateBook(bookId, bookData);
+      
+      // Reset uploaded files
+      _ebookFileUrl = null;
+      _coverImageUrl = null;
+      _uploadEbookSuccess = true;
+      emit(LoadedState(
+        response,
+        msgError: 'Book updated successfully',
       ));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e),));

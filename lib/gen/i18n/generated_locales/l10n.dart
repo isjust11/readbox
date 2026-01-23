@@ -4229,6 +4229,56 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Bạn có chắc chắn muốn xóa sách này?`
+  String get delete_book_confirmation_message {
+    return Intl.message(
+      'Bạn có chắc chắn muốn xóa sách này?',
+      name: 'delete_book_confirmation_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã xóa sách thành công`
+  String get delete_book_success {
+    return Intl.message(
+      'Đã xóa sách thành công',
+      name: 'delete_book_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã xóa sách thất bại`
+  String get delete_book_failed {
+    return Intl.message(
+      'Đã xóa sách thất bại',
+      name: 'delete_book_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã sửa sách thành công`
+  String get edit_book_success {
+    return Intl.message(
+      'Đã sửa sách thành công',
+      name: 'edit_book_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã sửa sách thất bại`
+  String get edit_book_failed {
+    return Intl.message(
+      'Đã sửa sách thất bại',
+      name: 'edit_book_failed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

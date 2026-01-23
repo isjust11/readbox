@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:readbox/res/resources.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
 
 class CustomDropDown extends StatefulWidget {

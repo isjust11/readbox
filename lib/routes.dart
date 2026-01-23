@@ -82,11 +82,10 @@ class Routes {
           type: PageTransitionType.fade,
         );
       case adminUploadScreen:
-        final args = settings.arguments as Map<String, dynamic>;
+        final book = settings.arguments as BookModel;
         return PageTransition(
           child: AdminUploadScreen(
-            fileUrl: args['fileUrl'] as String,
-            title: args['title'] as String,
+            book: book,
           ),
           type: PageTransitionType.fade,
         );

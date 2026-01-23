@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/cubit.dart';
-import 'package:readbox/ui/widget/base_appbar.dart';
 import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
