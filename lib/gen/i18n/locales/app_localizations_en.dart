@@ -1266,4 +1266,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updating_book => 'Updating book...';
+
+  @override
+  String get book_deleted_successfully => 'Book deleted successfully';
+
+  @override
+  String get error_deleting_book =>
+      'Error deleting book! Please try again later.';
 }

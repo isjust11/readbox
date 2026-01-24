@@ -61,6 +61,7 @@ void registerCubit(GetIt getIt) {
       addBookUseCase: getIt.get<AddBookUseCase>(),
       deleteBookUseCase: getIt.get<DeleteBookUseCase>(),
       searchBooksUseCase: getIt.get<SearchBooksUseCase>(),
+      adminRemoteDataSource: getIt.get<AdminRemoteDataSource>(),
     ),
   );
   getIt.registerFactory(

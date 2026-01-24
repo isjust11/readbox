@@ -4,10 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:readbox/blocs/admin/admin_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
-import 'package:readbox/blocs/book_refresh/book_refresh_cubit.dart';
-import 'package:readbox/blocs/category_cubit.dart';
+import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/book_model.dart';
 import 'package:readbox/domain/data/models/category_model.dart';
 import 'package:readbox/domain/network/api_constant.dart';
@@ -24,8 +22,8 @@ class AdminUploadScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AdminCubit>(
-      create: (_) => getIt.get<AdminCubit>(),
+    return BlocProvider<LibraryCubit>(
+      create: (_) => getIt.get<LibraryCubit>(),
       child: AdminUploadBody(book: book ?? BookModel.fromJson({})),
     );
   }

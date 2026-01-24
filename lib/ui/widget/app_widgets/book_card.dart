@@ -7,6 +7,7 @@ import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/resources.dart';
 import 'package:readbox/routes.dart';
+import 'package:readbox/ui/widget/widget.dart';
 
 class BookCard extends StatefulWidget {
   final BookModel book;
@@ -79,27 +80,18 @@ class _BookCardState extends State<BookCard> {
   }
 
   void _editBook(BuildContext context, BookModel book) {
-    Navigator.pushNamed(
-      context,
-      Routes.adminUploadScreen,
-      arguments: book,
-    );
+    Navigator.pushNamed(context, Routes.adminUploadScreen, arguments: book);
   }
 
   void _deleteBook(BuildContext context, BookModel book) {
-    Navigator.pop(context);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.current.delete_book),
-        content: Text(AppLocalizations.current.delete_book_confirmation_message),
-        actions: [
-          TextButton(onPressed: () {
-            Navigator.pop(context);
-          }, child: Text(AppLocalizations.current.cancel)),
-          TextButton(onPressed: () => widget.onDelete(book), child: Text(AppLocalizations.current.delete)),
-        ],
-      ),
+    CustomDialogUtil.showDialogConfirm(
+      context,
+      title: AppLocalizations.current.delete_book,
+      content: AppLocalizations.current.delete_book_confirmation_message,
+      onSubmit: () {
+        widget.onDelete(book);
+        Navigator.pop(context);
+      },
     );
   }
 
@@ -188,12 +180,18 @@ class _BookCardState extends State<BookCard> {
                                   },
                                   child: Row(
                                     children: [
-                                      Icon(Icons.edit, color: Theme.of(context).primaryColor),
+                                      Icon(
+                                        Icons.edit,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
                                       SizedBox(width: 4),
                                       Text(
-                                    AppLocalizations.current.edit_book,
-                                    style: TextStyle(color: Theme.of(context).primaryColor),
-                                    )],
+                                        AppLocalizations.current.edit_book,
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 TextButton(
@@ -202,12 +200,22 @@ class _BookCardState extends State<BookCard> {
                                   },
                                   child: Row(
                                     children: [
-                                      Icon(Icons.delete, color: Theme.of(context).colorScheme.error),
+                                      Icon(
+                                        Icons.delete,
+                                        color:
+                                            Theme.of(context).colorScheme.error,
+                                      ),
                                       SizedBox(width: 4),
                                       Text(
-                                      AppLocalizations.current.delete_book,
-                                      style: TextStyle(color: Theme.of(context).colorScheme.error),
-                                    )],
+                                        AppLocalizations.current.delete_book,
+                                        style: TextStyle(
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.error,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],

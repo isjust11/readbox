@@ -32,6 +32,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_certificate.svg
   String get icCertificate => 'assets/icons/ic_certificate.svg';
 
+  /// File path: assets/icons/ic_check.svg
+  String get icCheck => 'assets/icons/ic_check.svg';
+
   /// File path: assets/icons/ic_close_circle.svg
   String get icCloseCircle => 'assets/icons/ic_close_circle.svg';
 
@@ -83,6 +86,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_time.svg
   String get icTime => 'assets/icons/ic_time.svg';
 
+  /// File path: assets/icons/ic_trash.svg
+  String get icTrash => 'assets/icons/ic_trash.svg';
+
   /// List of all assets
   List<String> get values => [
     boxEmpty,
@@ -91,6 +97,7 @@ class $AssetsIconsGen {
     icCalendar,
     icCaythuoc,
     icCertificate,
+    icCheck,
     icCloseCircle,
     icComplant,
     icDotHorizontal,
@@ -108,6 +115,7 @@ class $AssetsIconsGen {
     icRing,
     icSetting,
     icTime,
+    icTrash,
   ];
 }
 
@@ -122,13 +130,6 @@ class $AssetsImagesGen {
   AssetGenImage get appLogo =>
       const AssetGenImage('assets/images/app_logo.png');
 
-  /// File path: assets/images/background.jpg
-  AssetGenImage get background =>
-      const AssetGenImage('assets/images/background.jpg');
-
-  /// File path: assets/images/camera.png
-  AssetGenImage get camera => const AssetGenImage('assets/images/camera.png');
-
   /// File path: assets/images/checkered_pattern.svg
   String get checkeredPattern => 'assets/images/checkered_pattern.svg';
 
@@ -141,10 +142,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_gallery.png
   AssetGenImage get icGallery =>
       const AssetGenImage('assets/images/ic_gallery.png');
-
-  /// File path: assets/images/ic_intro_1.png
-  AssetGenImage get icIntro1 =>
-      const AssetGenImage('assets/images/ic_intro_1.png');
 
   /// File path: assets/images/ic_intro_2.png
   AssetGenImage get icIntro2 =>
@@ -165,16 +162,6 @@ class $AssetsImagesGen {
   AssetGenImage get icSplash =>
       const AssetGenImage('assets/images/ic_splash.png');
 
-  /// File path: assets/images/ic_suspected.svg
-  String get icSuspected => 'assets/images/ic_suspected.svg';
-
-  /// File path: assets/images/ic_verified.svg
-  String get icVerified => 'assets/images/ic_verified.svg';
-
-  /// File path: assets/images/ic_vneid.png
-  AssetGenImage get icVneid =>
-      const AssetGenImage('assets/images/ic_vneid.png');
-
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
@@ -182,45 +169,21 @@ class $AssetsImagesGen {
   AssetGenImage get profileBackground =>
       const AssetGenImage('assets/images/profile_background.png');
 
-  /// File path: assets/images/sample-medicine.jpg
-  AssetGenImage get sampleMedicine =>
-      const AssetGenImage('assets/images/sample-medicine.jpg');
-
-  /// File path: assets/images/sample-product.png
-  AssetGenImage get sampleProduct =>
-      const AssetGenImage('assets/images/sample-product.png');
-
-  /// File path: assets/images/video.png
-  AssetGenImage get video => const AssetGenImage('assets/images/video.png');
-
-  /// File path: assets/images/welcome.png
-  AssetGenImage get welcome => const AssetGenImage('assets/images/welcome.png');
-
   /// List of all assets
   List<dynamic> get values => [
     appBarBackground,
     appLogo,
-    background,
-    camera,
     checkeredPattern,
     icBack,
     icBackSvg,
     icGallery,
-    icIntro1,
     icIntro2,
     icQrCode,
     icScanQr,
     icSearch,
     icSplash,
-    icSuspected,
-    icVerified,
-    icVneid,
     logo,
     profileBackground,
-    sampleMedicine,
-    sampleProduct,
-    video,
-    welcome,
   ];
 }
 

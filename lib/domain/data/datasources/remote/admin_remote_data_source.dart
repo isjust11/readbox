@@ -1,95 +1,91 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:readbox/blocs/utils.dart';
-import 'package:readbox/domain/network/api_constant.dart';
+import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/network.dart';
 
 class AdminRemoteDataSource {
-    final Network network;
+  final Network network;
 
   AdminRemoteDataSource({required this.network});
 
   /// Upload ebook file (PDF, EPUB, MOBI)
   Future<ApiResponse<dynamic>> uploadEbook(File file) async {
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(file.path, filename: fileName),
+    });
+
+    final response = await network.postWithFormData(
+      url: '${ApiConstant.apiHost}${ApiConstant.uploadMedia}',
+      formData: formData,
+      contentType: 'multipart/form-data',
+    );
+
+    if (response.isSuccess) {
+      return response;
+    }
+    return Future.error(response.errMessage);
+  }
+
+  /// Upload cover image
+  Future<ApiResponse<dynamic>> uploadCoverImage(File file) async {
       String fileName = file.path.split('/').last;
       FormData formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(
-          file.path,
-          filename: fileName,
-        ),
+        'file': await MultipartFile.fromFile(file.path, filename: fileName),
       });
 
       final response = await network.postWithFormData(
         url: '${ApiConstant.apiHost}${ApiConstant.uploadMedia}',
         formData: formData,
-        contentType: 'multipart/form-data',
       );
 
       if (response.isSuccess) {
         return response;
       }
-      return ApiResponse.error(BlocUtils.getMessageError(response.errMessage));
-  }
-
-  /// Upload cover image
-  Future<ApiResponse<dynamic>> uploadCoverImage(File file) async {
-    try {
-      String fileName = file.path.split('/').last;
-      FormData formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(
-          file.path,
-          filename: fileName,
-        ),
-      });
-
-      final response = await network.postWithFormData(
-        url: '${ApiConstant.apiHost}${ApiConstant.uploadMedia}',
-        formData: formData,
-      );
-
-      return response;
-    } catch (e) {
-      return ApiResponse.error(BlocUtils.getMessageError(e));
-    }
+      return ApiResponse.error(response.errMessage);
   }
 
   /// Create book with uploaded file URLs
-  Future<Map<String, dynamic>> createBook(Map<String, dynamic> bookData) async {
-    try {
-      final response = await network.post(
-        url: '${ApiConstant.apiHost}${ApiConstant.addBook}',
-        body: bookData,
-      );
+  Future<BookModel> createBook(Map<String, dynamic> bookData) async {
+    ApiResponse response = await network.post(
+      url: '${ApiConstant.apiHost}${ApiConstant.books}',
+      body: bookData,
+    );
 
-      return response.data;
-    } catch (e) {
-      return Future.error(BlocUtils.getMessageError(e));
+    if (response.isSuccess) {
+      return BookModel.fromJson(response.data);
     }
+    return Future.error(response.errMessage);
   }
 
   /// Update book with uploaded file URLs
-  Future<Map<String, dynamic>> updateBook(String bookId, Map<String, dynamic> bookData) async {
-    try {
-      final response = await network.put(
-        url: '${ApiConstant.apiHost}${ApiConstant.updateBook}/$bookId',
-        body: bookData,
-      );
+  Future<BookModel> updateBook(
+    String bookId,
+    Map<String, dynamic> bookData,
+  ) async {
+    ApiResponse response = await network.put(
+      url: '${ApiConstant.apiHost}${ApiConstant.books}/$bookId',
+      body: bookData,
+    );
 
-      return response.data;
-    } catch (e) {
-      return Future.error(BlocUtils.getMessageError(e));
+    if (response.isSuccess) {
+      return BookModel.fromJson(response.data);
     }
+    return Future.error(response.errMessage);
   }
 
   /// Get all categories
-  Future<List<Category>> getCategories() async {
+  Future<List<CategoryModel>> getCategories() async {
     try {
-      final response = await network.get(
+      ApiResponse response = await network.get(
         url: '${ApiConstant.apiHost}${ApiConstant.getCategories}',
       );
 
-      return response.data;
+      if (response.isSuccess) {
+        return (response.data as List).map((item) => CategoryModel.fromJson(item)).toList();
+      }
+      return Future.error(response.errMessage);
     } catch (e) {
       return Future.error(BlocUtils.getMessageError(e));
     }

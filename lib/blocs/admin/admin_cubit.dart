@@ -131,7 +131,7 @@ class AdminCubit extends Cubit<BaseState> {
         'totalPages': totalPages,
         'language': language,
         'isPublic': isPublic,
-        if (categoryId != null) 'category': {'id': categoryId},
+        if (categoryId != null) 'category': categoryId,
       };
 
       final response = await _adminRemoteDataSource.createBook(bookData);

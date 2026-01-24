@@ -69,6 +69,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "birth_date": MessageLookupByLibrary.simpleMessage("Ngày sinh"),
     "bookUpdates": MessageLookupByLibrary.simpleMessage("Cập nhật sách"),
+    "book_deleted_successfully": MessageLookupByLibrary.simpleMessage(
+      "Đã xóa sách thành công",
+    ),
     "book_discover": MessageLookupByLibrary.simpleMessage("Khám phá"),
     "book_has_been_added_to_local_library":
         MessageLookupByLibrary.simpleMessage(
@@ -212,6 +215,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "error_connection": MessageLookupByLibrary.simpleMessage(
       "Không có kết nối internet",
+    ),
+    "error_deleting_book": MessageLookupByLibrary.simpleMessage(
+      "Có lỗi xảy ra trong quá trình thực hiện! Vui lòng thử lại sau.",
     ),
     "error_loading_books": MessageLookupByLibrary.simpleMessage("Lỗi tải sách"),
     "error_occurred": MessageLookupByLibrary.simpleMessage("Có lỗi xảy ra"),

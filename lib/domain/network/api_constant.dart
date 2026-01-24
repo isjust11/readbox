@@ -47,10 +47,7 @@ class ApiConstant {
   static final getPage = "pages";
   // Book endpoints
   static final getBooksPublic =  "books/public";
-  static final getBookById = "books";
-  static final addBook = "books";
-  static final updateBook = "books";
-  static final deleteBook = "books";
+  static final books = "books";
   static final toggleFavorite = "user-interactions/toggle-favorite";
   static final getFavorite = "books/favorite";
   static final getUnfavorite = "books/unfavorite";

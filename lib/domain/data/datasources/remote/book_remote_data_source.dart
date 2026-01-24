@@ -44,7 +44,7 @@ class BookRemoteDataSource {
 
   Future<BookModel> getBookById(String id) async {
     ApiResponse apiResponse = await network.get(
-      url: '${ApiConstant.apiHost}${ApiConstant.getBookById}/$id',
+      url: '${ApiConstant.apiHost}${ApiConstant.books}/$id',
     );
 
     if (apiResponse.isSuccess) {
@@ -55,7 +55,7 @@ class BookRemoteDataSource {
 
   Future<BookModel> addBook(BookModel book) async {
     ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.apiHost}${ApiConstant.addBook}',
+      url: '${ApiConstant.apiHost}${ApiConstant.books}',
       body: book.toJson(),
     );
 
@@ -67,7 +67,7 @@ class BookRemoteDataSource {
 
   Future<BookModel> updateBook(BookModel book) async {
     ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.apiHost}${ApiConstant.updateBook}/${book.id}',
+      url: '${ApiConstant.apiHost}${ApiConstant.books}/${book.id}',
       body: book.toJson(),
     );
 
@@ -78,8 +78,8 @@ class BookRemoteDataSource {
   }
 
   Future<bool> deleteBook(String id) async {
-    ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.apiHost}${ApiConstant.deleteBook}/$id',
+    ApiResponse apiResponse = await network.delete(
+      url: '${ApiConstant.apiHost}${ApiConstant.books}/$id',
     );
 
     if (apiResponse.isSuccess) {

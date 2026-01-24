@@ -3,7 +3,7 @@ import 'package:readbox/domain/data/entities/entities.dart';
 class BookModel extends BookEntity {
 
   BookModel.fromJson(Map<String, dynamic> json) : super.fromJson(json);
-  
+
   factory BookModel.local(
     String filePath,
     String fileName,
@@ -58,6 +58,27 @@ class BookModel extends BookEntity {
       return title?.split(' - ')[0].trim() ?? '';
     }
     return title ?? '';
+  }
+
+  BookModel copyWith({
+    String? title,
+    String? author,
+    String? description,
+    String? coverImageUrl,
+    String? fileUrl,
+    BookType? fileType,
+    int? fileSize,
+  }) {
+    return BookModel.fromJson({
+      ...toJson(),
+      'title': title,
+      'author': author,
+      'description': description,
+      'coverImageUrl': coverImageUrl,
+      'fileUrl': fileUrl,
+      'fileType': fileType,
+      'fileSize': fileSize,
+    });
   }
 }
 

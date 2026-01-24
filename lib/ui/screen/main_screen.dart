@@ -10,7 +10,6 @@ import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/widget.dart';
-import 'package:readbox/utils/extension_utils.dart';
 
 import '../../domain/data/models/models.dart';
 
@@ -117,7 +116,7 @@ class MainBodyState extends State<MainBody> {
         // Reset filters when closing search
         _filterModel = null;
         page = 1;
-        getBooks();
+        getBooks( isLoadMore: false);
       }
     });
   }
@@ -187,7 +186,7 @@ class MainBodyState extends State<MainBody> {
                 _filterModel = filterModel;
               });
               page = 1;
-              getBooks();
+              getBooks( isLoadMore: false);
             },
           ),
     );
@@ -269,7 +268,7 @@ class MainBodyState extends State<MainBody> {
                       () {
                         if (mounted) {
                           _currentSearchQuery = value;
-                          getBooks();
+                          getBooks( isLoadMore: false);
                         }
                       },
                     );
@@ -317,7 +316,7 @@ class MainBodyState extends State<MainBody> {
             filterType = FilterType.values.firstWhere((e) => e.name == filter);
             this.title = title;
           });
-          getBooks();
+          getBooks( isLoadMore: false);
         },
       ),
       body: BlocListener<BookRefreshCubit, int>(
@@ -325,7 +324,7 @@ class MainBodyState extends State<MainBody> {
           // Lắng nghe sự thay đổi từ BookRefreshCubit
           // Khi có sự thay đổi (thêm/sửa/xóa sách), tự động refresh
           if (state > 0) {
-            getBooks();
+            getBooks(isLoadMore: true);
           }
         },
         child: BlocBuilder<LibraryCubit, BaseState>(
@@ -359,7 +358,7 @@ class MainBodyState extends State<MainBody> {
                     ),
                     SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () => getBooks(),
+                      onPressed: () => getBooks(isLoadMore: true),
                       child: Text(AppLocalizations.current.try_again),
                     ),
                   ],
@@ -490,8 +489,24 @@ class MainBodyState extends State<MainBody> {
                             ownerId: userInfo?.id,
                             userInteractionCubit:
                                 context.read<UserInteractionCubit>(),
-                                onDelete: (book) {
-                                  context.read<LibraryCubit>().deleteBook(book.id!);
+                                onDelete: (book) async {
+                                  final result = await context.read<LibraryCubit>().deleteBook(book.id!);
+                                  if(result) {
+                                    getBooks(isLoadMore: true);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(AppLocalizations.current.book_deleted_successfully),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(AppLocalizations.current.error_deleting_book),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
                                 },
                           );
                         },

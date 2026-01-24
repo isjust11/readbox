@@ -61,6 +61,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Biometric setup successful",
     ),
     "bookUpdates": MessageLookupByLibrary.simpleMessage("Book Updates"),
+    "book_deleted_successfully": MessageLookupByLibrary.simpleMessage(
+      "Book deleted successfully",
+    ),
     "book_discover": MessageLookupByLibrary.simpleMessage("Discover"),
     "book_has_been_added_to_local_library":
         MessageLookupByLibrary.simpleMessage(
@@ -204,6 +207,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "error_connection": MessageLookupByLibrary.simpleMessage(
       "No internet connection",
+    ),
+    "error_deleting_book": MessageLookupByLibrary.simpleMessage(
+      "Error deleting book! Please try again later.",
     ),
     "error_loading_books": MessageLookupByLibrary.simpleMessage(
       "Error loading books",

@@ -2551,6 +2551,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Updating book...'**
   String get updating_book;
+
+  /// No description provided for @book_deleted_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Book deleted successfully'**
+  String get book_deleted_successfully;
+
+  /// No description provided for @error_deleting_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Error deleting book! Please try again later.'**
+  String get error_deleting_book;
 }
 
 class _AppLocalizationsDelegate

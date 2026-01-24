@@ -3758,6 +3758,26 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Đã xóa sách thành công`
+  String get book_deleted_successfully {
+    return Intl.message(
+      'Đã xóa sách thành công',
+      name: 'book_deleted_successfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Có lỗi xảy ra trong quá trình thực hiện! Vui lòng thử lại sau.`
+  String get error_deleting_book {
+    return Intl.message(
+      'Có lỗi xảy ra trong quá trình thực hiện! Vui lòng thử lại sau.',
+      name: 'error_deleting_book',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

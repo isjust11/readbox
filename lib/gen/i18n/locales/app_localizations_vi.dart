@@ -1268,4 +1268,11 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get updating_book => 'Đang cập nhật...';
+
+  @override
+  String get book_deleted_successfully => 'Đã xóa sách thành công';
+
+  @override
+  String get error_deleting_book =>
+      'Có lỗi xảy ra trong quá trình thực hiện! Vui lòng thử lại sau.';
 }

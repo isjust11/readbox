@@ -4,6 +4,7 @@ import 'package:readbox/ui/widget/widget.dart';
 
 class BaseButton extends StatelessWidget {
   final String? title;
+  final Color? titleColor;
   final BoxDecoration? decoration;
   final GestureTapCallback? onTap;
   final Widget? child;
@@ -18,6 +19,7 @@ class BaseButton extends StatelessWidget {
   final bool wrapChild;
 
   const BaseButton({
+    this.titleColor,
     this.child,
     super.key,
     this.decoration,
@@ -34,44 +36,32 @@ class BaseButton extends StatelessWidget {
     this.title,
   });
 
-
-
-
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     BorderRadius? borderRadiusInWell = BorderRadius.circular(0);
     if (borderRadius != null) {
       borderRadiusInWell = BorderRadius.circular(borderRadius!);
     }
-    return Container(
-      margin: margin ?? EdgeInsets.zero,
-      alignment: alignment,
-      decoration: decoration ??
-          BoxDecoration(
-              gradient: backgroundColor == null ? AppColors.baseColorGradient : null,
-              color: backgroundColor ?? Colors.white,
-              border: Border.all(color: borderColor!),
-              borderRadius: BorderRadius.circular(borderRadius ?? 10)),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: borderRadiusInWell,
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-            onTap?.call();
-          },
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: margin ?? EdgeInsets.zero,
+        alignment: alignment,
+        decoration: decoration ??
+            BoxDecoration(
+                gradient: backgroundColor == null ? AppColors.baseColorGradient : null,
+                color: backgroundColor ?? Colors.white,
+                border: Border.all(color: borderColor!),
+                borderRadius: BorderRadius.circular(borderRadius ?? 10)),
+        child: Material(
+          color: Colors.transparent,
           child: Container(
-              alignment: wrapChild ? null : Alignment.center,
-              width: width,
-              height: height,
-              padding: padding ?? EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-              child: renderChild()),
+                alignment: wrapChild ? null : Alignment.center,
+                width: width,
+                height: height,
+                padding: padding ?? EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+              child: renderChild(),
+            ),
         ),
       ),
     );
@@ -83,7 +73,7 @@ class BaseButton extends StatelessWidget {
         title,
         fontWeight: FontWeight.w600,
         fontSize: 16,
-        color: AppColors.white,
+        color: titleColor ?? AppColors.white,
       );
     }
     return child ?? Container();

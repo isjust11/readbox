@@ -407,5 +407,7 @@
   "create_book_success" : "Book created successfully!",
   "error_occurred" : "Error occurred",
   "update_book" : "Update book",
-  "updating_book" : "Updating book..."
+  "updating_book" : "Updating book...",
+  "book_deleted_successfully" : "Book deleted successfully",
+  "error_deleting_book" : "Error deleting book! Please try again later."
 }
