@@ -430,5 +430,6 @@
    "update_book" : "Cập nhật sách",
    "updating_book" : "Đang cập nhật...",
    "book_deleted_successfully" : "Đã xóa sách thành công",
-   "error_deleting_book" : "Có lỗi xảy ra trong quá trình thực hiện! Vui lòng thử lại sau."
+   "error_deleting_book" : "Có lỗi xảy ra trong quá trình thực hiện! Vui lòng thử lại sau.",
+   "go_back": "Quay lại"
 }

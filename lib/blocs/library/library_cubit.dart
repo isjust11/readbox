@@ -4,18 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/data/models/models.dart';
-import 'package:readbox/domain/usecases/add_book_usecase.dart';
-import 'package:readbox/domain/usecases/get_book_list_usecase.dart';
-import 'package:readbox/domain/usecases/delete_book_usecase.dart';
-import 'package:readbox/domain/usecases/search_books_usecase.dart';
+import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/res/res.dart';
 import 'package:readbox/domain/data/datasources/remote/admin_remote_data_source.dart';
 
 class LibraryCubit extends Cubit<BaseState> {
-  final GetBookListUseCase getBookListUseCase;
-  final AddBookUseCase addBookUseCase;
-  final DeleteBookUseCase deleteBookUseCase;
-  final SearchBooksUseCase searchBooksUseCase;
   final AdminRemoteDataSource adminRemoteDataSource;
     String? _errorUploadEbook;
   String? _errorUploadCoverImage; 
@@ -30,11 +23,10 @@ class LibraryCubit extends Cubit<BaseState> {
   String? get errorUploadEbook => _errorUploadEbook;
   String? get errorUploadCoverImage => _errorUploadCoverImage;
   bool get uploadEbookSuccess => _uploadEbookSuccess;
+  final BookRepository repository;
+
   LibraryCubit({
-    required this.getBookListUseCase,
-    required this.addBookUseCase,
-    required this.deleteBookUseCase,
-    required this.searchBooksUseCase,
+    required this.repository,
     required this.adminRemoteDataSource,
   }) : super(InitState());
 
@@ -63,11 +55,11 @@ class LibraryCubit extends Cubit<BaseState> {
         _isLoadingMore = true;
       }
 
-      final newBooks = await getBookListUseCase(
+      final newBooks = await repository.getPublicBooks(
         filterType: filterType,
         searchQuery: searchQuery,
-        page: page,
-        limit: limit,
+        page: page ?? 1,
+        limit: limit ?? 10,
         categoryId: categoryId,
         isDiscover: isDiscover,
       );
@@ -106,12 +98,12 @@ class LibraryCubit extends Cubit<BaseState> {
         _isLoadingMore = true;
       }
 
-      final newBooks = await searchBooksUseCase(
-        filterType: filterType,
+      final newBooks = await repository.getPublicBooks(
+        filterType: filterType ?? FilterType.all,
         searchQuery: searchQuery,
-        page: page,
-        limit: limit,
-        categoryId: categoryId,
+        page: page ?? 1,
+        limit: limit ?? 10,
+        categoryId: categoryId ?? '',
       );
 
       if (isLoadMore) {
@@ -292,16 +284,10 @@ class LibraryCubit extends Cubit<BaseState> {
       };
 
       final response = await adminRemoteDataSource.updateBook(bookId, bookData);
-      final bookUpdated = _books.firstWhere((book) => book.id == bookId);
-      final bookUpdatedModel = bookUpdated.copyWith(
-        title: title,
-        author: author,
-        description: description,
-        fileUrl: _ebookFileUrl ?? existingFileUrl,
-        coverImageUrl: _coverImageUrl ?? existingCoverImageUrl,
-      );
-      _books.removeWhere((book) => book.id == bookId);
-      _books.add(bookUpdatedModel);
+      if(_books.isNotEmpty) {
+        _books.removeWhere((book) => book.id == bookId);
+        _books.add(response);
+      }
       // Reset uploaded files
       _ebookFileUrl = null;
       _coverImageUrl = null;
@@ -325,7 +311,7 @@ class LibraryCubit extends Cubit<BaseState> {
 
   Future<bool> deleteBook(String bookId) async {
     try {
-      final result = await deleteBookUseCase(bookId);
+      final result = await repository.deleteBook(bookId);
       if (result) {
         // Remove from local list
         _books.removeWhere((book) => book.id == bookId);

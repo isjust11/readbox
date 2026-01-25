@@ -2563,6 +2563,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error deleting book! Please try again later.'**
   String get error_deleting_book;
+
+  /// No description provided for @go_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get go_back;
 }
 
 class _AppLocalizationsDelegate

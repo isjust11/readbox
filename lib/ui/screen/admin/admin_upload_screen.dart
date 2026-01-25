@@ -10,7 +10,6 @@ import 'package:readbox/domain/data/models/book_model.dart';
 import 'package:readbox/domain/data/models/category_model.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -22,10 +21,7 @@ class AdminUploadScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<LibraryCubit>(
-      create: (_) => getIt.get<LibraryCubit>(),
-      child: AdminUploadBody(book: book ?? BookModel.fromJson({})),
-    );
+    return AdminUploadBody(book: book ?? BookModel.fromJson({}));
   }
 }
 
@@ -155,8 +151,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
       _coverImageFile = thumbFile;
     });
     if (!mounted) return;
-    if (context.read<AdminCubit>().coverImageUrl != null) {
-      context.read<AdminCubit>().resetCoverImage();
+    if (context.read<LibraryCubit>().coverImageUrl != null) {
+      context.read<LibraryCubit>().resetCoverImage();
     }
   }
 
@@ -240,7 +236,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
       return;
     }
 
-    final cubit = context.read<AdminCubit>();
+    final cubit = context.read<LibraryCubit>();
     final isEditMode = widget.book.id != null;
 
     // Cập nhật: có thể dùng file hiện tại từ server hoặc upload file mới
@@ -268,7 +264,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         existingFileUrl:
             _existingRemoteFileUrl, // File URL từ server nếu không upload mới
         existingCoverImageUrl:
-           context.read<AdminCubit>().coverImageUrl ?? widget
+           context.read<LibraryCubit>().coverImageUrl ?? widget
                 .book
                 .coverImageUrl, // Cover URL từ server nếu không upload mới
       );
@@ -316,7 +312,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
       _selectedCategoryId = null;
     });
 
-    context.read<AdminCubit>().reset();
+    context.read<LibraryCubit>().reset();
 
     // Notify toàn app rằng danh sách sách đã thay đổi
     context.read<BookRefreshCubit>().notifyBookListChanged();
@@ -396,7 +392,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         ),
       ),
       backgroundColor: theme.scaffoldBackgroundColor,
-      body: BlocListener<AdminCubit, BaseState>(
+      body: BlocListener<LibraryCubit, BaseState>(
         listener: (context, state) {
           if (state is ErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -406,7 +402,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
               ),
             );
           } else if (state is LoadedState) {
-            final cubit = context.read<AdminCubit>();
+            final cubit = context.read<LibraryCubit>();
             if (cubit.uploadEbookSuccess) {
               final isEditMode = widget.book.id != null;
               ScaffoldMessenger.of(context).showSnackBar(
@@ -433,15 +429,15 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                   _existingRemoteFileUrl =
                       widget.book.fileUrl; // Giữ lại file URL từ server
                 });
-                context.read<AdminCubit>().reset();
+                context.read<LibraryCubit>().reset();
                 context.read<BookRefreshCubit>().notifyBookListChanged();
               }
             }
           }
         },
-        child: BlocBuilder<AdminCubit, BaseState>(
+        child: BlocBuilder<LibraryCubit, BaseState>(
           builder: (context, state) {
-            final cubit = context.read<AdminCubit>();
+            final cubit = context.read<LibraryCubit>();
 
             return SingleChildScrollView(
               padding: EdgeInsets.all(16),
@@ -801,10 +797,10 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                               _existingRemoteFileUrl = null;
                                             });
                                             context
-                                                .read<AdminCubit>()
+                                                .read<LibraryCubit>()
                                                 .resetCoverImage();
                                             context
-                                                .read<AdminCubit>()
+                                                .read<LibraryCubit>()
                                                 .resetErrorUpload();
                                           },
                                         ),

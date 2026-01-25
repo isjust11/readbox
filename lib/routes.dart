@@ -127,12 +127,12 @@ class Routes {
           type: PageTransitionType.rightToLeft,
         );
       case pdfViewerWithSelectionScreen:
-        final args = settings.arguments as BookModel;
+        final book = settings.arguments as BookModel;
         return PageTransition(
           child: PdfViewerWithSelectionScreen(
-            fileUrl: args.fileUrl!,
-            title: args.displayTitle,
-            bookId: args.id!,
+            fileUrl: book.fileUrl!,
+            title: book.displayTitle,
+            bookId: book.id!,
           ),
           type: PageTransitionType.rightToLeft,
         );

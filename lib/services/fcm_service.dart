@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:readbox/utils/html_content_processor.dart';
 
 /// Key for flag: app nhận thông báo khi ở background (dùng để refresh khi resume)
 const String _keyNewNotificationInBackground = 'fcm_new_notification_in_background';
@@ -27,7 +28,7 @@ class FCMService {
   final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
   final GetStorage _storage = GetStorage();
-
+  final HtmlUnescape _htmlUnescape = HtmlUnescape();
   /// Stream để báo có thông báo mới (foreground/background/tap) -> load lại danh sách
   static final _newNotificationController = StreamController<void>.broadcast();
   static Stream<void> get onNewNotification => _newNotificationController.stream;
@@ -330,6 +331,8 @@ class FCMService {
     }
   }
 
+ 
+
   /// Show local notification
   Future<void> _showLocalNotification(RemoteMessage message) async {
     final notification = message.notification;
@@ -369,10 +372,11 @@ class FCMService {
           ? jsonEncode(message.data) 
           : null;
 
-      // Decode HTML entities (&amp;, &lt;, &quot;, ...) trong title/body
-      final decodedTitle = HtmlUnescape().convert(notification.title ?? '');
-      final decodedBody = HtmlUnescape().convert(notification.body ?? '');
-
+      // Decode HTML entities (&amp;, &lt;, &quot;, ...) và strip HTML tags
+      final decodedTitle = HtmlContentProcessor.stripHtmlTags(notification.title ?? '');
+      final decodedBody = HtmlContentProcessor.stripHtmlTags(notification.body ?? '');
+      debugPrint('   Title decoded: $decodedTitle');
+      debugPrint('   Body decoded: $decodedBody');
       await _localNotifications.show(
         message.hashCode,
         decodedTitle,

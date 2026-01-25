@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/domain/data/datasources/remote/admin_remote_data_source.dart';
 import 'package:readbox/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -39,6 +40,12 @@ void main() async {
     ),
     BlocProvider(
       create: (_) => CategoryCubit(repository: di.getIt<CategoryRepository>()),
+    ),
+    BlocProvider(
+      create: (_) => LibraryCubit(
+        repository: di.getIt<BookRepository>(),
+        adminRemoteDataSource: di.getIt<AdminRemoteDataSource>(),
+      ),
     ),
   ], child: MyApp()));
 }

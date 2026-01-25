@@ -288,6 +288,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "getHelpAndSupport": MessageLookupByLibrary.simpleMessage(
       "Get help and support",
     ),
+    "go_back": MessageLookupByLibrary.simpleMessage("Go back"),
     "google_developer_error": MessageLookupByLibrary.simpleMessage(
       "Google developer error",
     ),

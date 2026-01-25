@@ -1,3 +1,5 @@
+import 'package:html_unescape/html_unescape.dart';
+
 class HtmlContentProcessor {
   /// Decode HTML entities to proper HTML
   static String decodeHtmlEntities(String htmlString) {
@@ -94,7 +96,34 @@ class HtmlContentProcessor {
 
     return html;
   }
-
+  
+   /// Strip HTML tags and convert to plain text
+  /// Converts common HTML tags to plain text equivalents
+  /// Also decodes HTML entities (&amp;, &lt;, &quot;, etc.)
+  static String stripHtmlTags(String html) {
+    if (html.isEmpty) return html;
+    
+    // First decode HTML entities
+    String text = HtmlUnescape().convert(html);
+    
+    // Convert common HTML line breaks to newlines
+    text = text
+        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'</p>', caseSensitive: false), '\n')
+        .replaceAll(RegExp(r'<p\s+[^>]*>', caseSensitive: false), '')
+        .replaceAll(RegExp(r'<b>', caseSensitive: false), '')
+        .replaceAll(RegExp(r'<i>', caseSensitive: false), '')
+        .replaceAll(RegExp(r'<p>', caseSensitive: false), '');
+    
+    // Remove all remaining HTML tags
+    text = text.replaceAll(RegExp(r'<[^>]+>'), '');
+    
+    // Clean up multiple consecutive newlines
+    text = text.replaceAll(RegExp(r'\n{3,}'), '\n\n');
+    
+    // Trim whitespace
+    return text.trim();
+  }
   /// Check if content is HTML code block
   static bool isHtmlCodeBlock(String content) {
     return content.contains('<pre><code') && content.contains('</code></pre>');

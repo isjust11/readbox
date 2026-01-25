@@ -3778,6 +3778,11 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Quay lại`
+  String get go_back {
+    return Intl.message('Quay lại', name: 'go_back', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -8,6 +8,7 @@ import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/ui/widget/widget.dart';
 
 class BookDetailScreen extends StatelessWidget {
   final String bookId;
@@ -101,11 +102,13 @@ class BookDetailBodyState extends State<BookDetailBody> {
     return BlocListener<UserInteractionCubit, BaseState>(
       listener: (context, state) {
         if (state is LoadedState && state.data != null) {
-          final stats = state.data as InteractionStatsModel;
-          setState(() {
-            _isFavorite = stats.favoriteStatus == true;
-            _isArchived = stats.archiveStatus == true;
-          });
+          if (state.data is InteractionStatsModel) {
+            final stats = state.data as InteractionStatsModel;
+            setState(() {
+              _isFavorite = stats.favoriteStatus == true;
+              _isArchived = stats.archiveStatus == true;
+            });
+          }
         }
       },
       child: BlocBuilder<BookDetailCubit, BaseState>(
@@ -115,6 +118,9 @@ class BookDetailBodyState extends State<BookDetailBody> {
           }
           if (state is LoadedState) {
             return _buildBody(context, state.data as BookModel);
+          }
+          if (state is ErrorState) {
+            return _buildErrorContent(context, state.data);
           }
           return Center(
             child: Text(
@@ -127,6 +133,32 @@ class BookDetailBodyState extends State<BookDetailBody> {
     );
   }
 
+ Widget _buildErrorContent(BuildContext context, String message) {
+    return BaseScreen(
+     title: AppLocalizations.current.view_details,
+      body: Padding(
+        padding: EdgeInsets.all(AppDimens.SIZE_16),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                message,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+              SizedBox(height: AppDimens.SIZE_16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(AppLocalizations.current.go_back),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
   Widget _buildBody(BuildContext context, BookModel book) {
     return Scaffold(
       body: CustomScrollView(
@@ -227,7 +259,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                       Icon(Icons.person, size: 20, color: Colors.grey),
                       SizedBox(width: 8),
                       Text(
-                        book.displayAuthor,
+                        book.author ?? book.displayAuthor,
                         style: TextStyle(fontSize: 18, color: Colors.grey[700]),
                       ),
                     ],

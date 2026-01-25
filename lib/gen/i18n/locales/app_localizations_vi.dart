@@ -1275,4 +1275,7 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get error_deleting_book =>
       'Có lỗi xảy ra trong quá trình thực hiện! Vui lòng thử lại sau.';
+
+  @override
+  String get go_back => 'Quay lại';
 }

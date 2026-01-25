@@ -2,11 +2,6 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/datasources/datasource.dart';
 import 'package:readbox/domain/network/network.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
-import 'package:readbox/domain/usecases/add_book_usecase.dart';
-import 'package:readbox/domain/usecases/get_book_list_usecase.dart';
-import 'package:readbox/domain/usecases/delete_book_usecase.dart';
-import 'package:readbox/domain/usecases/search_books_usecase.dart';
-import 'package:readbox/domain/usecases/save_reading_progress_usecase.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -42,8 +37,6 @@ Future<void> init({GetIt? getIt}) async {
   registerDataSource(getIt);
   // repositories
   registerRepositories(getIt);
-  // use cases
-  registerUseCases(getIt);
   // bloc cubit
   registerCubit(getIt);
 }
@@ -57,10 +50,7 @@ void registerCubit(GetIt getIt) {
   );
   getIt.registerFactory(
     () => LibraryCubit(
-      getBookListUseCase: getIt.get<GetBookListUseCase>(),
-      addBookUseCase: getIt.get<AddBookUseCase>(),
-      deleteBookUseCase: getIt.get<DeleteBookUseCase>(),
-      searchBooksUseCase: getIt.get<SearchBooksUseCase>(),
+      repository: getIt.get<BookRepository>(),
       adminRemoteDataSource: getIt.get<AdminRemoteDataSource>(),
     ),
   );
@@ -123,13 +113,6 @@ void registerRepositories(GetIt getIt) {
   );
 }
 
-void registerUseCases(GetIt getIt) {
-  getIt.registerLazySingleton(() => GetBookListUseCase(getIt.get<BookRepository>()));
-  getIt.registerLazySingleton(() => AddBookUseCase(getIt.get<BookRepository>()));
-  getIt.registerLazySingleton(() => DeleteBookUseCase(getIt.get<BookRepository>()));
-  getIt.registerLazySingleton(() => SearchBooksUseCase(getIt.get<BookRepository>()));
-  getIt.registerLazySingleton(() => SaveReadingProgressUseCase(getIt.get<BookRepository>()));
-}
 
 void registerDataSource(GetIt getIt) {
   getIt.registerLazySingleton(() => AuthRemoteDataSource(network: getIt.get()));

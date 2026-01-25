@@ -205,6 +205,9 @@ class UserInteractionRemoteDataSource {
           '${ApiConstant.apiHost}${ApiConstant.interactionAction}/${actionType.value}/${targetType.value}/$targetId',
     );
     if (apiResponse.isSuccess) {
+      if (apiResponse.data == null) {
+        return UserInteractionModel.fromJson({});
+      }
       return UserInteractionModel.fromJson(apiResponse.data);
     }
     return Future.error(apiResponse.data);

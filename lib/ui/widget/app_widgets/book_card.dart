@@ -59,11 +59,7 @@ class _BookCardState extends State<BookCard> {
       Navigator.pushNamed(
         context,
         Routes.pdfViewerWithSelectionScreen,
-        arguments: {
-          'fileUrl': '${ApiConstant.apiHostStorage}${book.fileUrl}',
-          'title': book.displayTitle,
-          'bookId': book.id!,
-        },
+        arguments: book,
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -162,7 +158,7 @@ class _BookCardState extends State<BookCard> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            book.displayAuthor,
+                            book.author ?? book.displayAuthor,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],
@@ -262,13 +258,15 @@ class _BookCardState extends State<BookCard> {
                   bloc: widget.userInteractionCubit,
                   listener: (context, state) {
                     if (state is LoadedState) {
-                      final stats = state.data as InteractionStatsModel;
-                      setState(() {
-                        _isFavorite = stats.favoriteStatus;
-                        _isArchive = stats.archiveStatus;
-                        book.isFavorite = stats.favoriteStatus;
-                        book.isArchived = stats.archiveStatus;
-                      });
+                      if (state.data is InteractionStatsModel) {
+                        final stats = state.data as InteractionStatsModel;
+                        setState(() {
+                          _isFavorite = stats.favoriteStatus;
+                          _isArchive = stats.archiveStatus;
+                          book.isFavorite = stats.favoriteStatus;
+                          book.isArchived = stats.archiveStatus;
+                        });
+                      }
                     }
                   },
                   builder: (context, state) {
@@ -570,7 +568,7 @@ class _BookCardState extends State<BookCard> {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              widget.book.displayAuthor,
+                              widget.book.author ?? widget.book.displayAuthor,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey[600],

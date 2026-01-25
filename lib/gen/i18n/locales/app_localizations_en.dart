@@ -1273,4 +1273,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get error_deleting_book =>
       'Error deleting book! Please try again later.';
+
+  @override
+  String get go_back => 'Go back';
 }

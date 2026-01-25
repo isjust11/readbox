@@ -48,6 +48,9 @@ class BookRemoteDataSource {
     );
 
     if (apiResponse.isSuccess) {
+      if (apiResponse.data == null) {
+        return Future.error('Book not found');
+      }
       return BookModel.fromJson(apiResponse.data as Map<String, dynamic>);
     }
     return Future.error(apiResponse.errMessage);

@@ -291,6 +291,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "getHelpAndSupport": MessageLookupByLibrary.simpleMessage(
       "Nhận trợ giúp và hỗ trợ",
     ),
+    "go_back": MessageLookupByLibrary.simpleMessage("Quay lại"),
     "google_developer_error": MessageLookupByLibrary.simpleMessage(
       "Lỗi phát triển Google",
     ),
