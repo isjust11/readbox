@@ -2,41 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/routes.dart';
-import 'package:readbox/services/services.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/assets.gen.dart';
 
-class AppProfile extends StatefulWidget {
+class AppProfile extends StatelessWidget {
   final UserModel? user;
   const AppProfile({super.key, this.user,});
 
-  @override
-  State<AppProfile> createState() => _AppProfileState();
-}
-
-class _AppProfileState extends State<AppProfile> {
-  UserModel? _currentUser;
-  bool _isLoadingUser = true;
-  final SecureStorageService _secureStorage = SecureStorageService();
-  @override
-  void initState() {
-    super.initState();
-    _loadUserInfo();
-  }
-
-  Future<void> _loadUserInfo() async {
-    try {
-      _currentUser = await _secureStorage.getUserInfo();
-    } catch (e) {
-      print(e);
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingUser = false;
-        });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +47,7 @@ class _AppProfileState extends State<AppProfile> {
                   // User Avatar
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, Routes.profileScreen, arguments: _currentUser);
+                      Navigator.pushNamed(context, Routes.profileScreen, arguments: user);
                     },
                     child: Container(
                       padding: EdgeInsets.all(4),
@@ -90,7 +62,7 @@ class _AppProfileState extends State<AppProfile> {
                           ),
                         ],
                       ),
-                      child: _buildAvatar(),
+                      child: _buildAvatar(context),
                     ),
                   ),
                   SizedBox(width: 16),
@@ -102,8 +74,8 @@ class _AppProfileState extends State<AppProfile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _currentUser?.fullName ??
-                              _currentUser?.username ??
+                          user?.fullName ??
+                              user?.username ??
                               '',
                           style: TextStyle(
                             color: Colors.white,
@@ -117,10 +89,10 @@ class _AppProfileState extends State<AppProfile> {
                         SizedBox(height: 4),
 
                         // User Email
-                        if (_currentUser?.email != null &&
-                            _currentUser!.email!.isNotEmpty)
+                        if (user?.email != null &&
+                            user!.email!.isNotEmpty)
                           Text(
-                            _currentUser!.email!,
+                            user!.email!,
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.9),
                               fontSize: 14,
@@ -141,8 +113,8 @@ class _AppProfileState extends State<AppProfile> {
   }
 
   /// Build avatar widget dựa trên thông tin user
-  Widget _buildAvatar() {
-    if (_isLoadingUser) {
+  Widget _buildAvatar(BuildContext context) {
+    if (user == null) {
       return CircleAvatar(
         radius: 40,
         backgroundColor: Colors.white,
@@ -152,7 +124,7 @@ class _AppProfileState extends State<AppProfile> {
           child: CircularProgressIndicator(
             strokeWidth: 2,
             valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).primaryColor,
+              Theme.of(context).colorScheme.primary,
             ),
           ),
         ),
@@ -160,12 +132,12 @@ class _AppProfileState extends State<AppProfile> {
     }
 
     // Nếu có ảnh avatar
-    if (_currentUser?.picture != null && _currentUser!.picture!.isNotEmpty) {
+    if (user?.picture != null && user!.picture!.isNotEmpty) {
       return CircleAvatar(
         radius: 40,
         backgroundImage: CachedNetworkImageProvider( 
-          _isSocialPlatform() ? _currentUser!.picture! :
-           ApiConstant.storageHost + (_currentUser!.picture ?? '')),
+          _isSocialPlatform() ? user!.picture! :
+           ApiConstant.storageHost + (user!.picture ?? '')),
         backgroundColor: Colors.white,
         onBackgroundImageError: (_, __) {
           // Fallback sẽ hiển thị initials bên dưới
@@ -174,12 +146,12 @@ class _AppProfileState extends State<AppProfile> {
     }
 
     // Nếu có tên, hiển thị chữ cái đầu
-    if (_currentUser?.fullName != null && _currentUser!.fullName!.isNotEmpty) {
+    if (user?.fullName != null && user!.fullName!.isNotEmpty) {
       return CircleAvatar(
         radius: 40,
         backgroundColor: Colors.white,
         child: Text(
-          _getInitials(_currentUser!.fullName!),
+          _getInitials(user!.fullName!),
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -214,6 +186,6 @@ class _AppProfileState extends State<AppProfile> {
   }
 
   bool _isSocialPlatform() {
-    return _currentUser?.isGoogleUser == true || _currentUser?.isFacebookUser == true || _currentUser?.isAppleUser == true;
+    return user?.isGoogleUser == true || user?.isFacebookUser == true || user?.isAppleUser == true;
   }
 }

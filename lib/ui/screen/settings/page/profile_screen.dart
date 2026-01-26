@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -64,44 +65,21 @@ class ProfileScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       // Avatar với border và shadow
-                      Container(
-                        width: AppDimens.SIZE_100,
-                        height: AppDimens.SIZE_100,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.white, width: 4),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: ClipOval(
-                          child:
-                              userModel?.picture != null
-                                  ? BaseNetworkImage(
-                                    url:
-                                        userModel?.isSocialPlatform ?? false
-                                            ? userModel?.picture
-                                            : ApiConstant.storageHost +
-                                                (userModel?.picture ?? ''),
-                                    fit: BoxFit.cover,
-                                    showShimmer: false,
-                                  )
-                                  : Container(
-                                    color: AppColors.border.withValues(
-                                      alpha: 0.3,
-                                    ),
-                                    child: const Icon(
-                                      Icons.person,
-                                      size: AppDimens.SIZE_60,
-                                      color: AppColors.white,
-                                    ),
-                                  ),
-                        ),
+                     Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 3),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 12,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
                       ),
+                      child: _buildAvatar(context),
+                    ),
                       const SizedBox(width: AppDimens.SIZE_16),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -308,5 +286,82 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+   /// Build avatar widget dựa trên thông tin user
+  Widget _buildAvatar(BuildContext context) {
+    if (user == null) {
+      return CircleAvatar(
+        radius: 40,
+        backgroundColor: Colors.white,
+        child: SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Nếu có ảnh avatar
+    if (user?.picture != null && user!.picture!.isNotEmpty) {
+      return CircleAvatar(
+        radius: 40,
+        backgroundImage: CachedNetworkImageProvider( 
+          _isSocialPlatform() ? user!.picture! :
+           ApiConstant.storageHost + (user!.picture ?? '')),
+        backgroundColor: Colors.white,
+        onBackgroundImageError: (_, __) {
+          // Fallback sẽ hiển thị initials bên dưới
+        },
+      );
+    }
+
+    // Nếu có tên, hiển thị chữ cái đầu
+    if (user?.fullName != null && user!.fullName!.isNotEmpty) {
+      return CircleAvatar(
+        radius: 40,
+        backgroundColor: Colors.white,
+        child: Text(
+          _getInitials(user!.fullName!),
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+      );
+    }
+
+    // Default: icon person
+    return CircleAvatar(
+      radius: 40,
+      backgroundColor: Colors.white,
+      child: Icon(
+        Icons.person,
+        size: 48,
+        color: Theme.of(context).primaryColor,
+      ),
+    );
+  }
+
+   /// Lấy chữ cái đầu của tên để hiển thị trong avatar
+  String _getInitials(String name) {
+    if (name.isEmpty) return '?';
+    final parts = name.trim().split(' ');
+    if (parts.length == 1) {
+      return parts[0].substring(0, 1).toUpperCase();
+    }
+    // Lấy chữ cái đầu của tên và họ
+    return '${parts[0].substring(0, 1)}${parts[parts.length - 1].substring(0, 1)}'
+        .toUpperCase();
+  }
+  
+    bool _isSocialPlatform() {
+    return user?.isGoogleUser == true || user?.isFacebookUser == true || user?.isAppleUser == true;
   }
 }

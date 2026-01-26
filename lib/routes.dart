@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:readbox/ui/screen/auth/forgot_password_screen.dart';
-import 'package:readbox/ui/screen/book/pdf_viewer_demo_screen.dart';
 import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:page_transition/page_transition.dart';
@@ -36,9 +35,6 @@ class Routes {
       "/notificationSettingsScreen";
   static const String notificationScreen = "/notificationScreen";
   static const String notificationDetailScreen = "/notificationDetailScreen";
-  // PDF text to speech screen
-  static const String pdfTextToSpeechScreen = "/pdfTextToSpeechScreen";
-  static const String ttsDemoScreen = "/ttsDemoScreen";
 
   static const String search = "/search";
   //init screen name
@@ -96,11 +92,6 @@ class Routes {
           ),
           type: PageTransitionType.fade,
         );
-      case pdfTextToSpeechScreen:
-        return PageTransition(
-          child: PdfViewerDemoScreen(),
-          type: PageTransitionType.fade,
-        );
       case bookDetailScreen:
         final bookId = settings.arguments as String;
         return PageTransition(
@@ -108,8 +99,9 @@ class Routes {
           type: PageTransitionType.rightToLeft,
         );
       case settingsScreen:
+      final user = settings.arguments as UserModel;
         return PageTransition(
-          child: SettingScreen(),
+          child: SettingScreen(user: user),
           type: PageTransitionType.rightToLeft,
         );
       case feedbackScreen:

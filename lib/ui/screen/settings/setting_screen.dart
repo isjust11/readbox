@@ -11,8 +11,10 @@ import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:light_dark_theme_toggle/light_dark_theme_toggle.dart';
+import 'package:readbox/domain/data/models/models.dart';
 class SettingScreen extends StatefulWidget {
-  const SettingScreen({super.key});
+  final UserModel? user;
+  const SettingScreen({super.key, this.user});
 
   @override
   State<SettingScreen> createState() => _SettingScreenState();
@@ -79,7 +81,7 @@ class _SettingScreenState extends State<SettingScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          AppProfile(),
+          AppProfile(user: widget.user),
           const SizedBox(height: AppDimens.SIZE_12),
           _buildQuickActions(),
           const SizedBox(height: AppDimens.SIZE_12),

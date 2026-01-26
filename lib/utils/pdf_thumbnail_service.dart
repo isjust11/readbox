@@ -80,4 +80,6 @@ class PdfThumbnailService {
   static void clearCache() {
     _cache.clear();
   }
+
+
 }

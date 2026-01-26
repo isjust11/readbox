@@ -14,6 +14,7 @@ import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/pdf_thumbnail_service.dart';
+import 'package:readbox/utils/book_metadata_service.dart';
 
 class AdminUploadScreen extends StatelessWidget {
   final BookModel? book;
@@ -48,8 +49,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
   String _language = 'vi';
   String? _selectedCategoryId;
 
-  bool _isUploadingEbook = false;
-  bool _isUploadingCover = false;
+  final bool _isUploadingEbook = false;
+  final bool _isUploadingCover = false;
 
   /// Đã khởi tạo từ [widget.book] (tránh chạy lại khi didChangeDependencies gọi nhiều lần).
   bool _hasInitializedFromBook = false;
@@ -57,6 +58,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
   /// URL file từ server (chỉnh sửa): khi [fileUrl] là https://... thì không dùng File(path).
   String? _existingRemoteFileUrl;
   List<CategoryModel> _categories = [];
+  BookMetadata bookMetadata = BookMetadata(totalPages: 0);
   @override
   void dispose() {
     _titleController.dispose();
@@ -103,7 +105,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     if (b.description != null) _descriptionController.text = b.description!;
     if (b.publisher != null) _publisherController.text = b.publisher!;
     if (b.isbn != null) _isbnController.text = b.isbn!;
-    if (b.totalPages != null) {
+    if (b.totalPages != null && _totalPagesController.text.trim() != "0") {
       _totalPagesController.text = b.totalPages!.toString();
     }
     if (b.language != null) _language = b.language!;
@@ -118,6 +120,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
       if (f.existsSync()) {
         _ebookFile = f;
         WidgetsBinding.instance.addPostFrameCallback((_) {
+          _extractAndPrefillMetadata(f);
           _loadThumbnailFromPdf(_ebookFile);
         });
       }
@@ -156,6 +159,61 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     }
   }
 
+  /// Extract metadata từ file và prefill form (chỉ prefill khi field còn trống).
+  Future<void> _extractAndPrefillMetadata(File file) async {
+    try {
+      bookMetadata = await BookMetadataService.extractFromFile(file.path);
+      
+      if (!mounted) return;
+      
+      // Chỉ prefill khi field còn trống để không ghi đè dữ liệu user đã nhập
+      setState(() {
+        if (bookMetadata.title != null && _titleController.text.trim().isEmpty) {
+          _titleController.text = bookMetadata.title!;
+        }
+        if (bookMetadata.author != null && _authorController.text.trim().isEmpty) {
+          _authorController.text = bookMetadata.author!;
+        }
+        if (bookMetadata.totalPages != null) {
+          _totalPagesController.text = bookMetadata.totalPages!.toString();
+        }
+        if (bookMetadata.isbn != null && _isbnController.text.trim().isEmpty) {
+          _isbnController.text = bookMetadata.isbn!;
+        }
+        if (bookMetadata.publisher != null && _publisherController.text.trim().isEmpty) {
+          _publisherController.text = bookMetadata.publisher!;
+        }
+        if (bookMetadata.language != null && _language == 'vi') {
+          // Chỉ đổi language nếu đang là mặc định
+          _language = bookMetadata.language!;
+        }
+        // Có thể dùng subject làm description nếu có
+        if (bookMetadata.subject != null && _descriptionController.text.trim().isEmpty) {
+          _descriptionController.text = bookMetadata.subject!;
+        }
+      });
+      
+      // Hiển thị thông báo nếu extract được metadata
+      // if (bookMetadata.title != null || bookMetadata.author != null || bookMetadata.totalPages != null) {
+      //   if (mounted) {
+      //     ScaffoldMessenger.of(context).showSnackBar(
+      //       SnackBar(
+      //         content: Text(
+      //           'Đã tự động điền thông tin từ file${bookMetadata.totalPages != null ? ' (${bookMetadata.totalPages} trang)' : ''}',
+      //         ),
+      //         backgroundColor: Colors.blue,
+      //         duration: const Duration(seconds: 2),
+      //       ),
+      //     );
+      //   }
+      // }
+    } catch (e) {
+      // Metadata extraction failed, continue silently
+      // Không hiển thị lỗi vì không phải lỗi nghiêm trọng
+      debugPrint('Failed to extract metadata: $e');
+    }
+  }
+
   Future<void> _pickEbookFile() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -165,9 +223,15 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
       );
 
       if (result != null && result.files.single.path != null) {
+        final file = File(result.files.single.path!);
         setState(() {
-          _ebookFile = File(result.files.single.path!);
+          _ebookFile = file;
         });
+        
+        // Extract metadata và prefill form
+        await _extractAndPrefillMetadata(file);
+        
+        // Load thumbnail từ PDF
         await _loadThumbnailFromPdf(_ebookFile);
       }
     } catch (e) {
@@ -189,7 +253,13 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           setState(() {
             _ebookFile = file;
           });
+          
+          // Extract metadata và prefill form
+          await _extractAndPrefillMetadata(file);
+          
+          // Load thumbnail từ PDF
           await _loadThumbnailFromPdf(_ebookFile);
+          
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Đã chọn file: ${file.path.split('/').last}'),
@@ -1348,6 +1418,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                   AppLocalizations.current.please_enter_title,
                               isRequired: true,
                               prefixIcon: Icon(Icons.title_rounded),
+                              // enabled: bookMetadata.title == null,
                               validator:
                                   (value) =>
                                       value.isEmpty
@@ -1365,6 +1436,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                   AppLocalizations.current.please_enter_author,
                               isRequired: true,
                               prefixIcon: Icon(Icons.person_outline_rounded),
+                              // enabled: bookMetadata.author == null,
                               validator:
                                   (value) =>
                                       value.isEmpty
@@ -1384,13 +1456,6 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                               prefixIcon: Icon(Icons.description_outlined),
                               maxLines: 4,
                               minLines: 4,
-                              validator:
-                                  (value) =>
-                                      value.isEmpty
-                                          ? AppLocalizations
-                                              .current
-                                              .please_enter_description
-                                          : null,
                             ),
 
                             SizedBox(height: 16),
@@ -1406,6 +1471,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                             .current
                                             .please_enter_publisher,
                                     prefixIcon: Icon(Icons.business_rounded),
+                                    // enabled: bookMetadata.publisher == null,
                                   ),
                                 ),
                                 SizedBox(width: 12),
@@ -1418,6 +1484,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                             .current
                                             .please_enter_isbn,
                                     prefixIcon: Icon(Icons.tag_rounded),
+                                    enabled: bookMetadata.isbn == null,
                                   ),
                                 ),
                               ],
@@ -1431,10 +1498,14 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                   child: CustomTextInput(
                                     textController: _totalPagesController,
                                     title: AppLocalizations.current.total_pages,
-                                    hintText: '0',
+                                    hintText: '',
                                     formatCurrency: true,
                                     prefixIcon: Icon(Icons.numbers_rounded),
                                     keyboardType: TextInputType.number,
+                                    enabled: bookMetadata.totalPages == null && 
+                                    bookMetadata.totalPages == 0   
+                                    
+                                    ,
                                   ),
                                 ),
                                 SizedBox(width: 12),

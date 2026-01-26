@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:dio/dio.dart';
-import 'package:readbox/ui/widget/tts_control_widget.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 import 'dart:async';
 
@@ -12,16 +11,16 @@ class PdfViewerScreen extends StatefulWidget {
   final String title;
 
   const PdfViewerScreen({
-    Key? key,
+    super.key,
     required this.fileUrl,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
-  _PdfViewerScreenState createState() => _PdfViewerScreenState();
+  PdfViewerScreenState createState() => PdfViewerScreenState();
 }
 
-class _PdfViewerScreenState extends State<PdfViewerScreen> {
+class PdfViewerScreenState extends State<PdfViewerScreen> {
   late PdfController _pdfController;
   bool _isLoading = true;
   String? _error;
@@ -30,9 +29,6 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   
   // TTS related
   final TextToSpeechService _ttsService = TextToSpeechService();
-  bool _isTTSActive = false;
-  bool _showTTSControls = false;
-  bool _isReadingContinuous = false;
   Timer? _ttsProgressTimer;
   PdfDocument? _pdfDocument;
 
@@ -40,48 +36,6 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
   void initState() {
     super.initState();
     _initializePdf();
-    _initializeTTS();
-  }
-
-  Future<void> _initializeTTS() async {
-    await _ttsService.initialize();
-    _setupTTSCallbacks();
-  }
-
-  void _setupTTSCallbacks() {
-    _ttsService.onSpeechStart = (_) {
-      setState(() {
-        _isTTSActive = true;
-      });
-    };
-
-    _ttsService.onSpeechComplete = (_) {
-      setState(() {
-        _isTTSActive = false;
-      });
-      
-      // Nếu đang đọc liên tục, chuyển sang trang tiếp theo
-      if (_isReadingContinuous && _currentPage < _totalPages) {
-        _readNextPage();
-      } else {
-        _isReadingContinuous = false;
-        _ttsProgressTimer?.cancel();
-      }
-    };
-
-    _ttsService.onSpeechError = (error) {
-      setState(() {
-        _isTTSActive = false;
-        _isReadingContinuous = false;
-      });
-      _ttsProgressTimer?.cancel();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lỗi đọc: $error'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    };
   }
 
   Future<void> _initializePdf() async {
@@ -93,6 +47,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
       if (File(widget.fileUrl).existsSync()) {
         _pdfController = PdfController(
           document: PdfDocument.openFile(File(widget.fileUrl).path),
+          viewportFraction: 1.5
         );
       } else {
         _pdfController = PdfController(
@@ -190,30 +145,9 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
         ),
         actions: [
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: IconButton(
-              icon: Icon(Icons.bookmark_border_rounded, color: Colors.white),
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Đã đánh dấu trang $_currentPage'),
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          Container(
             margin: EdgeInsets.only(right: 8, top: 8, bottom: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: PopupMenuButton<String>(
@@ -233,12 +167,6 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                         ),
                       ),
                     );
-                    break;
-                  case 'read_page':
-                    _readCurrentPage();
-                    break;
-                  case 'read_continuous':
-                    _readContinuousPages();
                     break;
                 }
               },
@@ -285,49 +213,6 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
                       ),
                       SizedBox(width: 12),
                       Text('Chia sẻ'),
-                    ],
-                  ),
-                ),
-                PopupMenuDivider(),
-                PopupMenuItem(
-                  value: 'read_page',
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          Icons.volume_up,
-                          color: Colors.orange,
-                          size: 20,
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Text('Đọc trang này'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 'read_continuous',
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.teal.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          Icons.play_circle_outline,
-                          color: Colors.teal,
-                          size: 20,
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Text('Đọc liên tục'),
                     ],
                   ),
                 ),
@@ -413,14 +298,6 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
         ],
       ),
       
-      // Floating TTS button
-      floatingActionButton: _buildFloatingTTSButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      
-      // TTS Controls (hiện ở bottom khi đang đọc)
-      bottomSheet: _showTTSControls ? _buildTTSControls() : null,
-      
-      // Page navigation buttons
       bottomNavigationBar: _isLoading || _error != null
           ? null
           : Container(
@@ -679,136 +556,6 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
     );
   }
 
-  // ========== TTS Functions ==========
-
-  /// Floating TTS button
-  Widget _buildFloatingTTSButton() {
-    return FloatingActionButton(
-      heroTag: 'tts',
-      onPressed: _toggleTTS,
-      backgroundColor: _isTTSActive ? Colors.red : Colors.green,
-      tooltip: _isTTSActive ? 'Dừng đọc' : 'Đọc trang',
-      child: Icon(
-        _isTTSActive ? Icons.stop : Icons.volume_up,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  /// Toggle TTS - đọc trang hiện tại hoặc dừng
-  Future<void> _toggleTTS() async {
-    if (_isTTSActive) {
-      await _ttsService.stop();
-      setState(() {
-        _isTTSActive = false;
-        _isReadingContinuous = false;
-        _showTTSControls = false;
-      });
-      _ttsProgressTimer?.cancel();
-    } else {
-      await _readCurrentPage();
-    }
-  }
-
-  /// Đọc trang hiện tại
-  Future<void> _readCurrentPage() async {
-    if (_isLoading || _error != null || _pdfDocument == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Vui lòng đợi PDF tải xong'),
-          backgroundColor: Colors.orange,
-        ),
-      );
-      return;
-    }
-
-    try {
-      // Trích xuất text từ trang hiện tại
-      final pageText = await _extractPageText(_currentPage);
-      
-      if (pageText != null && pageText.isNotEmpty) {
-        await _ttsService.speak(pageText);
-        setState(() {
-          _showTTSControls = true;
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Trích xuất text chưa hỗ trợ với pdfx.\nVui lòng dùng PDF Viewer With Selection.'),
-            backgroundColor: Colors.orange,
-            duration: Duration(seconds: 4),
-            action: SnackBarAction(
-              label: 'OK',
-              textColor: Colors.white,
-              onPressed: () {},
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lỗi khi đọc trang: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
-  /// Đọc trang tiếp theo (dùng cho đọc liên tục)
-  Future<void> _readNextPage() async {
-    if (_currentPage >= _totalPages) {
-      setState(() {
-        _isReadingContinuous = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Đã đọc hết tài liệu'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      return;
-    }
-
-    // Chuyển sang trang tiếp theo
-    await _pdfController.nextPage(
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-    
-    // Đợi một chút để trang load
-    await Future.delayed(const Duration(milliseconds: 500));
-    
-    // Đọc trang mới
-    try {
-      final pageText = await _extractPageText(_currentPage + 1);
-      if (pageText != null && pageText.isNotEmpty) {
-        await _ttsService.speak(pageText);
-      } else {
-        // Nếu trang không có text, chuyển tiếp
-        if (_currentPage < _totalPages) {
-          _readNextPage();
-        }
-      }
-    } catch (e) {
-      debugPrint('Error reading next page: $e');
-      if (_currentPage < _totalPages) {
-        _readNextPage();
-      }
-    }
-  }
-
-  /// Đọc liên tục từ trang hiện tại
-  Future<void> _readContinuousPages() async {
-    setState(() {
-      _isReadingContinuous = true;
-      _showTTSControls = true;
-    });
-
-    // Bắt đầu đọc từ trang hiện tại
-    await _readCurrentPage();
-  }
-
   /// Trích xuất text từ một trang PDF sử dụng pdfx
   /// Note: Package pdfx không hỗ trợ trực tiếp trích xuất text
   /// Cần dùng package khác như pdf_text hoặc syncfusion_pdf để parse text
@@ -836,27 +583,5 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
       debugPrint('Error extracting page text: $e');
       return null;
     }
-  }
-
-  /// Build TTS Controls widget
-  Widget? _buildTTSControls() {
-    if (!_showTTSControls) return null;
-
-    return TTSControlWidget(
-      textToRead: null, // Không cần truyền text vì đã đọc rồi
-      onStart: () {
-        setState(() {
-          _isTTSActive = true;
-        });
-      },
-      onStop: () {
-        setState(() {
-          _isTTSActive = false;
-          _isReadingContinuous = false;
-          _showTTSControls = false;
-        });
-        _ttsProgressTimer?.cancel();
-      },
-    );
   }
 }

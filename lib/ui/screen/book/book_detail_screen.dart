@@ -259,7 +259,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                       Icon(Icons.person, size: 20, color: Colors.grey),
                       SizedBox(width: 8),
                       Text(
-                        book.author ?? book.displayAuthor,
+                        book.author ?? '',
                         style: TextStyle(fontSize: 18, color: Colors.grey[700]),
                       ),
                     ],

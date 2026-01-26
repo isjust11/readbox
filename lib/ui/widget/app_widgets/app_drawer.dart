@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/app_widgets/app_profile.dart';
 
 class AppDrawer extends StatefulWidget {
+  final UserModel? user;
   final Function(String, String) onSelected;
-  const AppDrawer({super.key, required this.onSelected});
+  const AppDrawer({super.key, required this.onSelected, this.user});
 
   @override
   State<AppDrawer> createState() => _AppDrawerState();
@@ -51,7 +53,7 @@ class _AppDrawerState extends State<AppDrawer> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppProfile(),
+            AppProfile(user: widget.user),
             SizedBox(height: 8),
             Expanded(
               child: ListView(
@@ -124,7 +126,7 @@ class _AppDrawerState extends State<AppDrawer> {
                     title: AppLocalizations.current.settings,
                     onTap: () {
                       Navigator.pop(context);
-                      Navigator.pushNamed(context, Routes.settingsScreen);
+                      Navigator.pushNamed(context, Routes.settingsScreen, arguments: widget.user);
                     },
                     iconColor: Colors.blueGrey,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color

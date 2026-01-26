@@ -6,19 +6,30 @@ class BookModel extends BookEntity {
 
   factory BookModel.local(
     String filePath,
-    String fileName,
+    String title,
+    String author,
+    String description,
+    String publisher,
+    String isbn,
+    String language,
+    String fileUrl,
+    int totalPages,
     String fileType,
     int fileSize,
-    int totalPages,
   ){
     return BookModel.fromJson(
       {
         'fileUrl': filePath,
-        'title': fileName,
+        'title': title,
+        'author': author,
+        'description': description,
+        'publisher': publisher,
+        'isbn': isbn,
+        'language': language,
+        'isLocalBook': true,
+        'totalPages': totalPages,
         'fileType': fileType,
         'fileSize': fileSize,
-        'totalPages': totalPages,
-        'isLocalBook': true,
       }
     );
   }
@@ -43,14 +54,6 @@ class BookModel extends BookEntity {
     return categories!.join(', ');
   }
 
-    // Extract author if filename format is "Title - Author.pdf"
-  String get displayAuthor {
-    if (title?.contains(' - ') ?? false) {
-      final parts = title?.split(' - ') ?? [];
-      return parts.length > 1 ? parts[1].trim() : 'Unknown';
-    }
-    return 'Unknown';
-  }
 
   // Get clean title without author
   String get displayTitle {

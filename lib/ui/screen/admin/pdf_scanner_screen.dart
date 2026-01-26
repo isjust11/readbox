@@ -103,6 +103,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
           Directory('/storage/emulated/0/Downloads'),
           Directory('/storage/emulated/0/Documents'),
           Directory('/storage/emulated/0/DCIM'),
+          Directory('/mnt/shared'),
           await getExternalStorageDirectory(),
           await getApplicationDocumentsDirectory(),
         ];

@@ -7,6 +7,7 @@ import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/book_metadata_service.dart';
 import 'package:readbox/utils/pdf_thumbnail_service.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
@@ -36,48 +37,37 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
       final books = <BookModel>[];
 
       for (var path in filePaths) {
-        final fileName = path.split(Platform.pathSeparator).last;
-        final ext =
-            fileName.contains('.')
-                ? fileName.split('.').last.toLowerCase()
-                : 'pdf';
-        final fileType = ['pdf', 'epub', 'mobi'].contains(ext) ? ext : 'pdf';
-       
         try {
           final file = File(path);
           if (await file.exists()) {
+            final filename = path.split(Platform.pathSeparator).last;
+            final bookMetadata = await BookMetadataService.extractFromFile(
+              path,
+            );
             final fileSize = await file.length();
+            final ext = filename.split('.').last;
+            final fileType =
+                ['pdf', 'epub', 'mobi'].contains(ext) ? ext : 'pdf';
             books.add(
               BookModel.local(
                 path,
-                fileName,
+                bookMetadata.title ?? filename,
+                bookMetadata.author ?? '',
+                bookMetadata.subject ?? '',
+                bookMetadata.publisher ?? '',
+                bookMetadata.isbn ?? '',
+                bookMetadata.language ?? '',
+                path,
+                bookMetadata.totalPages ?? 0,
                 fileType,
                 fileSize,
-                0,
               ),
             );
           } else {
-            // Vẫn hiển thị để user có thể thử mở hoặc xóa (file có thể bị di chuyển / Scoped Storage)
-            books.add(
-              BookModel.local(
-                path,
-                fileName,
-                fileType,
-                0,
-                0,
-              ),
-            );
+            await SharedPreferenceUtil.removeLocalBook(path);
           }
         } catch (_) {
-          books.add(
-            BookModel.local(
-              path,
-              fileName,
-              fileType,
-              0,
-              0,
-            ),
-          );
+          await SharedPreferenceUtil.removeLocalBook(path);
         }
       }
 
@@ -89,7 +79,10 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Lỗi: $e'), backgroundColor: Theme.of(context).colorScheme.error),
+          SnackBar(
+            content: Text('Lỗi: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
         );
       }
     }
@@ -101,7 +94,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     return _books.where((book) {
       final query = _searchQuery.toLowerCase();
       return book.displayTitle.toLowerCase().contains(query) ||
-          book.displayAuthor.toLowerCase().contains(query) ||
+          (book.author?.toLowerCase().contains(query) ?? false) ||
           book.fileUrl!.toLowerCase().contains(query);
     }).toList();
   }
@@ -131,7 +124,9 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
               ),
               TextButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                style: TextButton.styleFrom(foregroundColor: Theme.of(ctx).colorScheme.error),
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(ctx).colorScheme.error,
+                ),
                 child: Text(AppLocalizations.current.delete_book),
               ),
             ],
@@ -155,18 +150,36 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
   }
 
   Future<void> _uploadBook(BookModel book) async {
-    Navigator.pushNamed(
-      context,
-      Routes.adminUploadScreen,
-      arguments: book,
-    );
+    Navigator.pushNamed(context, Routes.adminUploadScreen, arguments: book);
   }
 
   void _openBook(BookModel book) {
-    Navigator.pushNamed(
-      context,
-      Routes.pdfViewerScreen,
-      arguments: BookModel.fromJson({'fileUrl': book.fileUrl!, 'title': book.displayTitle, 'isLocalBook': true}),
+    Navigator.pushNamed(context, Routes.pdfViewerScreen, arguments: book);
+  }
+
+  void _showBookInfoDrawer(BookModel book) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(1.0, 0.0),
+            end: Offset.zero,
+          ).animate(CurvedAnimation(
+            parent: animation,
+            curve: Curves.easeOut,
+          )),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child:
+              AppDrawerInfo(book: book),
+          ),
+        );
+      },
     );
   }
 
@@ -203,7 +216,11 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.library_books, size: 80, color: colorScheme.outlineVariant),
+          Icon(
+            Icons.library_books,
+            size: 80,
+            color: colorScheme.outlineVariant,
+          ),
           const SizedBox(height: 16),
           Text(
             AppLocalizations.current.no_books,
@@ -241,8 +258,8 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
   }
 
   Widget _buildBookCover(BuildContext context, BookModel book) {
-    const w = 50.0;
-    const h = 70.0;
+    const w = 70.0;
+    const h = 100.0;
     final color = _getFileColor(context, book.fileType?.name ?? '');
     final decor = BoxDecoration(
       color: color.withValues(alpha: 0.1),
@@ -254,12 +271,20 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
         width: w,
         height: h,
         decoration: decor,
-        child: Icon(_getFileIcon(book.fileType?.name ?? ''), color: color, size: 32),
+        child: Icon(
+          _getFileIcon(book.fileType?.name ?? ''),
+          color: color,
+          size: 32,
+        ),
       );
     }
 
     return FutureBuilder<Uint8List?>(
-      future: PdfThumbnailService.getThumbnail(book.fileUrl!, width: 140, height: 200),
+      future: PdfThumbnailService.getThumbnail(
+        book.fileUrl!,
+        width: 240,
+        height: 300,
+      ),
       builder: (context, snapshot) {
         final bytes = snapshot.data;
         if (snapshot.connectionState == ConnectionState.done && bytes != null) {
@@ -269,7 +294,11 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
-                BoxShadow(color: Colors.black12, blurRadius: 2, offset: const Offset(0, 1)),
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 2,
+                  offset: const Offset(0, 1),
+                ),
               ],
             ),
             clipBehavior: Clip.antiAlias,
@@ -306,12 +335,13 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       book.displayTitle,
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                         color: colorScheme.onSurface,
                       ),
                       maxLines: 2,
@@ -319,39 +349,77 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      book.displayAuthor,
+                      book.author ?? 'unknown',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: color.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            book.fileType?.name.toUpperCase() ?? '',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: color,
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: color.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                book.fileType?.name.toUpperCase() ?? '',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: color,
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 8),
+                            Text(
+                              book.fileSizeFormatted,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: colorScheme.outline,
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          book.fileSizeFormatted,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: colorScheme.outline,
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.numbers_rounded,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimaryContainer,
+                                size: 12,
+                              ),
+                              const SizedBox(width: 2),
+                              Text(
+                                '${book.totalPages} ${AppLocalizations.current.pages}',
+                                style: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 10,
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimaryContainer,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -361,11 +429,33 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
               ),
               PopupMenuButton<String>(
                 onSelected: (value) {
+                  if (value == 'info') _showBookInfoDrawer(book);
                   if (value == 'delete') _removeBook(book);
                   if (value == 'upload') _uploadBook(book);
                 },
+                borderRadius: BorderRadius.circular(20),
+                color: Theme.of(context).colorScheme.surface,
+                padding: EdgeInsets.zero,
+
                 itemBuilder:
                     (context) => [
+                      PopupMenuItem(
+                        value: 'info',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline,
+                              color:
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.onSurfaceVariant,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(AppLocalizations.current.info),
+                          ],
+                        ),
+                      ),
                       PopupMenuItem(
                         value: 'delete',
                         child: Row(
@@ -373,7 +463,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
                             Icon(
                               Icons.delete,
                               color: Theme.of(context).colorScheme.error,
-                              size: 20,
+                              size: 16,
                             ),
                             const SizedBox(width: 8),
                             Text(AppLocalizations.current.delete_book),
@@ -384,7 +474,11 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
                         value: 'upload',
                         child: Row(
                           children: [
-                            Icon(Icons.upload, color: Theme.of(context).colorScheme.primary, size: 20,),
+                            Icon(
+                              Icons.cloud_upload,
+                              color: Theme.of(context).colorScheme.primary,
+                              size: 16,
+                            ),
                             const SizedBox(width: 8),
                             Text(AppLocalizations.current.upload_book),
                           ],
@@ -409,10 +503,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.refresh,
-              color: colorScheme.onPrimary,
-            ),
+            icon: Icon(Icons.refresh, color: colorScheme.onPrimary),
             onPressed: _loadBooks,
           ),
         ],
@@ -432,10 +523,9 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
                   return _buildBookCard(context, book);
                 },
               ),
-      floatingButton: FloatingActionButton.extended(
+      floatingButton: FloatingActionButton.small(
         onPressed: _scanAndAddBooks,
-        icon: const Icon(Icons.add),
-        label: Text(AppLocalizations.current.add_book),
+          child: Icon(Icons.add, color: Theme.of(context).primaryColor),
       ),
     );
   }

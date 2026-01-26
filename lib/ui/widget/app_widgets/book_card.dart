@@ -158,7 +158,7 @@ class _BookCardState extends State<BookCard> {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            book.author ?? book.displayAuthor,
+                            book.author ?? '',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[600],
@@ -568,7 +568,7 @@ class _BookCardState extends State<BookCard> {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              widget.book.author ?? widget.book.displayAuthor,
+                              widget.book.author ?? '',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey[600],

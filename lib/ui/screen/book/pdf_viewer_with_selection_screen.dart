@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pdfx/pdfx.dart';
 import 'package:readbox/blocs/user_interaction_cubit.dart';
 import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
@@ -66,7 +69,6 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
     _userInteractionCubit = context.read<UserInteractionCubit>();
     _loadReadingProgress();
   }
-
   /// Load PDF bytes để sử dụng cho text extraction
   Future<void> _loadPdfBytes() async {
     setState(() {

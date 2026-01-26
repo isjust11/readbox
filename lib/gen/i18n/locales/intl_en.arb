@@ -53,7 +53,7 @@
   "loading_more_books_failed": "Loading more books failed",
   "loading_more_books_completed": "Loading more books completed",
   "loading_more_books_no_data": "Loading more books no data",
-  "local_library": "Local library",
+  "local_library": "On device",
   "upload_book": "Upload book",
   "feedback": "Feedback",
   "google_play_services_not_available": "Google Play Services not available",
@@ -410,5 +410,8 @@
   "updating_book" : "Updating book...",
   "book_deleted_successfully" : "Book deleted successfully",
   "error_deleting_book" : "Error deleting book! Please try again later.",
-  "go_back": "Go back"
+  "go_back": "Go back",
+  "file_type": "File type",
+  "file_size": "File size",
+  "file_path": "File path"
 }

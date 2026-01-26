@@ -307,6 +307,7 @@ class MainBodyState extends State<MainBody> {
         ],
       ),
       drawer: AppDrawer(
+        user: userInfo,
         onSelected: (filter, title) {
           setState(() {
             filterType = FilterType.values.firstWhere((e) => e.name == filter);
@@ -442,75 +443,297 @@ class MainBodyState extends State<MainBody> {
                   return body;
                 },
               ),
-              child:
-                  filteredBooks.isEmpty &&
-                          _isSearching &&
-                          (_filterModel?.format != null)
-                      ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.filter_alt_outlined,
-                              size: 64,
-                              color: colorScheme.onSurface.withValues(
-                                alpha: 0.5,
-                              ),
-                            ),
-                            SizedBox(height: 16),
-                            Text(
-                              'Không tìm thấy sách với bộ lọc đã chọn',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: colorScheme.onSurface.withValues(
-                                  alpha: 0.7,
-                                ),
-                              ),
-                            ),
-                          ],
+              child: filteredBooks.isEmpty &&
+                      _isSearching &&
+                      (_filterModel?.format != null)
+                  ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.filter_alt_outlined,
+                          size: 64,
+                          color: colorScheme.onSurface.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
-                      )
-                      : GridView.builder(
-                        padding: EdgeInsets.all(16),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.65,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
+                        SizedBox(height: 16),
+                        Text(
+                          'Không tìm thấy sách với bộ lọc đã chọn',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: colorScheme.onSurface.withValues(
+                              alpha: 0.7,
+                            ),
+                          ),
                         ),
-                        itemCount: filteredBooks.length,
-                        itemBuilder: (context, index) {
-                          return BookCard(
-                            book: filteredBooks[index],
-                            ownerId: userInfo?.id,
-                            userInteractionCubit:
-                                context.read<UserInteractionCubit>(),
-                                onDelete: (book) async {
-                                  final result = await context.read<LibraryCubit>().deleteBook(book.id!);
-                                  if(result) {
-                                    getBooks(isLoadMore: true);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(AppLocalizations.current.book_deleted_successfully),
-                                        backgroundColor: Colors.green,
-                                      ),
-                                    );
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(AppLocalizations.current.error_deleting_book),
-                                        backgroundColor: Colors.red,
-                                      ),
-                                    );
-                                  }
-                                },
-                          );
-                        },
-                      ),
+                      ],
+                    ),
+                  )
+                  : GridView.builder(
+                    padding: EdgeInsets.all(16),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.65,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: filteredBooks.length,
+                    itemBuilder: (context, index) {
+                      return BookCard(
+                        book: filteredBooks[index],
+                        ownerId: userInfo?.id,
+                        userInteractionCubit:
+                            context.read<UserInteractionCubit>(),
+                            onDelete: (book) async {
+                              final result = await context.read<LibraryCubit>().deleteBook(book.id!);
+                              if(result) {
+                                getBooks(isLoadMore: true);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(AppLocalizations.current.book_deleted_successfully),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(AppLocalizations.current.error_deleting_book),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            },
+                      );
+                    },
+                  ),
             );
           },
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: _buildContinueReadingFab(context),
     );
+  }
+
+  Widget _buildContinueReadingFab(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return FloatingActionButton.extended(
+      heroTag: 'continue-reading-fab',
+      onPressed: () => _showContinueReadingBottomSheet(context),
+      icon: Icon(
+        Icons.menu_book_rounded,
+        color: colorScheme.onPrimary,
+      ),
+      label: Text(
+        'Đọc tiếp',
+        style: TextStyle(
+          color: colorScheme.onPrimary,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      backgroundColor: colorScheme.primary,
+    );
+  }
+
+  void _showContinueReadingBottomSheet(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final books = context.read<LibraryCubit>().books;
+
+    // Lọc các ebook đang đọc (dựa vào lastRead khác null)
+    final readingBooks = books
+        .where((b) => b.lastRead != null)
+        .toList()
+      ..sort(
+        (a, b) => b.lastRead!.compareTo(a.lastRead!),
+      );
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: false,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        final topThree = readingBooks.take(3).toList();
+
+        return Container(
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(20),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 12,
+                offset: const Offset(0, -4),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: colorScheme.outlineVariant,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Đang đọc dở',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                  if (readingBooks.isNotEmpty)
+                    Text(
+                      '${readingBooks.length} ebook',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              if (readingBooks.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Center(
+                    child: Text(
+                      'Bạn chưa có ebook nào đang đọc.',
+                      style: TextStyle(
+                        color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ),
+                )
+              else ...[
+                const SizedBox(height: 4),
+                ...topThree.map(
+                  (book) => _buildContinueReadingItem(context, book),
+                ),
+                const SizedBox(height: 4),
+                if (readingBooks.length > 3)
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(
+                      Icons.list_alt_rounded,
+                      color: colorScheme.primary,
+                    ),
+                    title: const Text('Xem tất cả'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _openAllReadingScreen(context);
+                    },
+                  ),
+              ],
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildContinueReadingItem(BuildContext context, BookModel book) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+        _openBook(context, book);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                width: 44,
+                height: 64,
+                color: colorScheme.surfaceContainerHighest,
+                child: book.coverImageUrl != null
+                    ? Image.network(
+                        book.coverImageUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Icon(
+                            Icons.menu_book_rounded,
+                            color: colorScheme.onSurface.withValues(alpha: 0.5),
+                          );
+                        },
+                      )
+                    : Icon(
+                        Icons.menu_book_rounded,
+                        color: colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    book.displayTitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  if (book.author != null && book.author!.isNotEmpty)
+                    Text(
+                      book.author!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _openBook(BuildContext context, BookModel book) {
+    if (book.fileUrl == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.current.file_ebook_not_found),
+        ),
+      );
+      return;
+    }
+
+    Navigator.pushNamed(
+      context,
+      Routes.pdfViewerWithSelectionScreen,
+      arguments: book,
+    );
+  }
+
+  void _openAllReadingScreen(BuildContext context) {
+    Navigator.pushNamed(context, Routes.localLibraryScreen);
   }
 }

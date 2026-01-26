@@ -53,7 +53,7 @@
   "loading_more_books_failed": "Lỗi tải thêm sách",
   "loading_more_books_completed": "Đã tải thêm sách",
   "loading_more_books_no_data": "Không có dữ liệu để tải thêm",
-  "local_library": "Thư viện Local",
+  "local_library": "Trên thiết bị",
   "upload_book": "Tải sách lên",
   "feedback": "Phản hồi",
   "google_play_services_not_available": "Google Play Services không khả dụng",
@@ -431,5 +431,8 @@
    "updating_book" : "Đang cập nhật...",
    "book_deleted_successfully" : "Đã xóa sách thành công",
    "error_deleting_book" : "Có lỗi xảy ra trong quá trình thực hiện! Vui lòng thử lại sau.",
-   "go_back": "Quay lại"
+   "go_back": "Quay lại",
+   "file_type": "Loại file",
+   "file_size": "Kích thước file",
+   "file_path": "Đường dẫn file"
 }
