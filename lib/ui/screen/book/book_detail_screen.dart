@@ -88,11 +88,8 @@ class BookDetailBodyState extends State<BookDetailBody> {
     if (book.fileUrl != null) {
       Navigator.pushNamed(
         context,
-        Routes.pdfViewerScreen,
-        arguments: {
-          'fileUrl': '${ApiConstant.apiHostStorage}${book.fileUrl}',
-          'title': book.displayTitle,
-        },
+        Routes.pdfViewerWithSelectionScreen,
+        arguments: book,
       );
     }
   }

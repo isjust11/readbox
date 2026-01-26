@@ -13,6 +13,7 @@ class UserInteractionCubit extends Cubit<BaseState> {
   int viewCount = 0;
   int likeCount = 0;
   bool hasTrackedView = false;
+  List<UserInteractionModel> readingBooks = [];
   final UserInteractionRepository repository;
   UserInteractionCubit({required this.repository}) : super(InitState());
 
@@ -191,11 +192,12 @@ class UserInteractionCubit extends Cubit<BaseState> {
     }
   }
 
-  Future<dynamic> getMyInteractions({Map<String, dynamic>? query}) async {
+  Future<void> getMyInteractions({Map<String, dynamic>? query}) async {
     try {
       emit(LoadingState());
       final response = await repository.getMyInteractions(query: query);
-      emit(LoadedState(response));
+      readingBooks = response;
+      emit(LoadedState(readingBooks));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }

@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/domain/enums/enums.dart';
+import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:scale_size/scale_size.dart';
 
 import '../../domain/data/models/models.dart';
 
@@ -51,8 +54,21 @@ class MainBodyState extends State<MainBody> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NotificationCubit>().getUnreadCount();
       getBooks();
+      //my interactions
+      loadUserInteractions();
     });
     loadUserInfo();
+  }
+
+  // load user interactions
+  Future<void> loadUserInteractions() async {
+    Map<String, dynamic> query = {
+      'page': 1,
+      'limit': 10,
+      'interactionType': InteractionType.reading.name,
+      'targetType': InteractionTarget.book.name,
+    };
+    await context.read<UserInteractionCubit>().getMyInteractions(query: query);
   }
 
   Future<void> loadUserInfo() async {
@@ -112,7 +128,7 @@ class MainBodyState extends State<MainBody> {
         // Reset filters when closing search
         _filterModel = null;
         page = 1;
-        getBooks( isLoadMore: false);
+        getBooks(isLoadMore: false);
       }
     });
   }
@@ -182,7 +198,7 @@ class MainBodyState extends State<MainBody> {
                 _filterModel = filterModel;
               });
               page = 1;
-              getBooks( isLoadMore: false);
+              getBooks(isLoadMore: false);
             },
           ),
     );
@@ -264,7 +280,7 @@ class MainBodyState extends State<MainBody> {
                       () {
                         if (mounted) {
                           _currentSearchQuery = value;
-                          getBooks( isLoadMore: false);
+                          getBooks(isLoadMore: false);
                         }
                       },
                     );
@@ -313,7 +329,7 @@ class MainBodyState extends State<MainBody> {
             filterType = FilterType.values.firstWhere((e) => e.name == filter);
             this.title = title;
           });
-          getBooks( isLoadMore: false);
+          getBooks(isLoadMore: false);
         },
       ),
       body: BlocListener<BookRefreshCubit, int>(
@@ -443,70 +459,81 @@ class MainBodyState extends State<MainBody> {
                   return body;
                 },
               ),
-              child: filteredBooks.isEmpty &&
-                      _isSearching &&
-                      (_filterModel?.format != null)
-                  ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.filter_alt_outlined,
-                          size: 64,
-                          color: colorScheme.onSurface.withValues(
-                            alpha: 0.5,
-                          ),
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          'Không tìm thấy sách với bộ lọc đã chọn',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: colorScheme.onSurface.withValues(
-                              alpha: 0.7,
+              child:
+                  filteredBooks.isEmpty &&
+                          _isSearching &&
+                          (_filterModel?.format != null)
+                      ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.filter_alt_outlined,
+                              size: 64,
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
-                          ),
+                            SizedBox(height: 16),
+                            Text(
+                              AppLocalizations.current.no_book_found,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: colorScheme.onSurface.withValues(
+                                  alpha: 0.7,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  )
-                  : GridView.builder(
-                    padding: EdgeInsets.all(16),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 0.65,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                    ),
-                    itemCount: filteredBooks.length,
-                    itemBuilder: (context, index) {
-                      return BookCard(
-                        book: filteredBooks[index],
-                        ownerId: userInfo?.id,
-                        userInteractionCubit:
-                            context.read<UserInteractionCubit>(),
+                      )
+                      : GridView.builder(
+                        padding: EdgeInsets.all(16),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.65,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                        ),
+                        itemCount: filteredBooks.length,
+                        itemBuilder: (context, index) {
+                          return BookCard(
+                            book: filteredBooks[index],
+                            ownerId: userInfo?.id,
+                            userInteractionCubit:
+                                context.read<UserInteractionCubit>(),
                             onDelete: (book) async {
-                              final result = await context.read<LibraryCubit>().deleteBook(book.id!);
-                              if(result) {
+                              final result = await context
+                                  .read<LibraryCubit>()
+                                  .deleteBook(book.id!);
+                              if (result) {
                                 getBooks(isLoadMore: true);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(AppLocalizations.current.book_deleted_successfully),
+                                    content: Text(
+                                      AppLocalizations
+                                          .current
+                                          .book_deleted_successfully,
+                                    ),
                                     backgroundColor: Colors.green,
                                   ),
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(AppLocalizations.current.error_deleting_book),
+                                    content: Text(
+                                      AppLocalizations
+                                          .current
+                                          .error_deleting_book,
+                                    ),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
                               }
                             },
-                      );
-                    },
-                  ),
+                          );
+                        },
+                      ),
             );
           },
         ),
@@ -517,50 +544,48 @@ class MainBodyState extends State<MainBody> {
   }
 
   Widget _buildContinueReadingFab(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return FloatingActionButton.extended(
-      heroTag: 'continue-reading-fab',
-      onPressed: () => _showContinueReadingBottomSheet(context),
-      icon: Icon(
-        Icons.menu_book_rounded,
-        color: colorScheme.onPrimary,
-      ),
-      label: Text(
-        'Đọc tiếp',
-        style: TextStyle(
-          color: colorScheme.onPrimary,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      backgroundColor: colorScheme.primary,
+    final theme = Theme.of(context);
+
+    return BlocBuilder<UserInteractionCubit, BaseState>(
+      buildWhen: (prev, curr) => curr is LoadedState<List<UserInteractionModel>>,
+      builder: (context, state) {
+        if (state is LoadedState<List<UserInteractionModel>>) {
+          final readingBooks = state.data;
+          return readingBooks.isNotEmpty
+              ? FloatingActionButton.extended(
+                heroTag: 'continue-reading-fab',
+                onPressed: () => _showContinueReadingBottomSheet(context),
+                icon: Icon(Icons.menu_book_rounded, color: theme.colorScheme.onPrimary),
+                label: Text(
+                  AppLocalizations.current.continue_reading,
+                  style: TextStyle(
+                    color: theme.colorScheme.onPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                backgroundColor: theme.primaryColor,
+              )
+              : SizedBox.shrink();
+        }
+        return SizedBox.shrink();
+      },
     );
   }
 
   void _showContinueReadingBottomSheet(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final books = context.read<LibraryCubit>().books;
+    final interactions = context.read<UserInteractionCubit>().readingBooks;
 
     // Lọc các ebook đang đọc (dựa vào lastRead khác null)
-    final readingBooks = books
-        .where((b) => b.lastRead != null)
-        .toList()
-      ..sort(
-        (a, b) => b.lastRead!.compareTo(a.lastRead!),
-      );
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: false,
       backgroundColor: Colors.transparent,
       builder: (context) {
-        final topThree = readingBooks.take(3).toList();
-
         return Container(
           decoration: BoxDecoration(
             color: colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(20),
-            ),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.1),
@@ -588,31 +613,39 @@ class MainBodyState extends State<MainBody> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Đang đọc dở',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                  if (readingBooks.isNotEmpty)
-                    Text(
-                      '${readingBooks.length} ebook',
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Text(
+                      AppLocalizations.current.reading_books,
                       style: TextStyle(
-                        fontSize: 13,
-                        color: colorScheme.onSurface.withValues(alpha: 0.7),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
                       ),
                     ),
+                  ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     Navigator.pop(context);
+                    //     _openAllReadingScreen(context);
+                    //   },
+                    //   child: Text(
+                    //     AppLocalizations.current.all,
+                    //     style: TextStyle(
+                    //       fontSize: 13,
+                    //       color: colorScheme.primary,
+                    //     ),
+                    //   ),
+                    // ),
                 ],
               ),
               const SizedBox(height: 8),
-              if (readingBooks.isEmpty)
+              if (interactions.isEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Center(
                     child: Text(
-                      'Bạn chưa có ebook nào đang đọc.',
+                      AppLocalizations.current.you_have_no_book_reading,
                       style: TextStyle(
                         color: colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
@@ -621,24 +654,19 @@ class MainBodyState extends State<MainBody> {
                 )
               else ...[
                 const SizedBox(height: 4),
-                ...topThree.map(
-                  (book) => _buildContinueReadingItem(context, book),
+                SingleChildScrollView(
+                  padding: EdgeInsets.zero,
+                  child: SizedBox(
+                    height: 300.sh,
+                    child: ListView.builder(
+                      itemCount: interactions.length,
+                      itemBuilder: (context, index) {
+                        return _buildContinueReadingItem(context, interactions[index]);
+                      },
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 4),
-                if (readingBooks.length > 3)
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(
-                      Icons.list_alt_rounded,
-                      color: colorScheme.primary,
-                    ),
-                    title: const Text('Xem tất cả'),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      Navigator.pop(context);
-                      _openAllReadingScreen(context);
-                    },
-                  ),
               ],
             ],
           ),
@@ -647,70 +675,215 @@ class MainBodyState extends State<MainBody> {
     );
   }
 
-  Widget _buildContinueReadingItem(BuildContext context, BookModel book) {
+   Widget _buildContinueReadingItem(BuildContext context, UserInteractionModel interaction) {
     final colorScheme = Theme.of(context).colorScheme;
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-        _openBook(context, book);
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                width: 44,
-                height: 64,
-                color: colorScheme.surfaceContainerHighest,
-                child: book.coverImageUrl != null
-                    ? Image.network(
-                        book.coverImageUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Icon(
-                            Icons.menu_book_rounded,
-                            color: colorScheme.onSurface.withValues(alpha: 0.5),
-                          );
-                        },
-                      )
-                    : Icon(
-                        Icons.menu_book_rounded,
-                        color: colorScheme.onSurface.withValues(alpha: 0.5),
-                      ),
+    final theme = Theme.of(context);
+    final book = interaction.book!;
+    final readingProgress = interaction.readingProgress;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: colorScheme.outlineVariant,
+          width: 0.5,
+        ),
+      ),
+      child: InkWell(
+        onTap: () => _openBook(context, interaction.book!),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BaseNetworkImage(
+                borderRadius: 8,
+                height: 160.sh,
+                width: 120.sw,
+                url: '${ApiConstant.apiHostStorage}${book.coverImageUrl}',
+                fit: BoxFit.cover,
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    book.displayTitle,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  if (book.author != null && book.author!.isNotEmpty)
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
                     Text(
-                      book.author!,
-                      maxLines: 1,
+                      book.displayTitle,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: colorScheme.onSurface,
+                      ),
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      book.author ?? '',
                       style: TextStyle(
                         fontSize: 12,
-                        color: colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
-                ],
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colorScheme.primary.withValues(alpha: 0.5),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                book.fileType?.name.toUpperCase() ?? '',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: colorScheme.primary,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              book.fileSizeFormatted,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: colorScheme.outline,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(width: 8),
+                        Visibility(
+                          visible: book.totalPages != null,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            decoration: BoxDecoration(
+                              color:
+                                  Theme.of(context).colorScheme.primaryContainer,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.numbers_rounded,
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimaryContainer,
+                                  size: 12,
+                                ),
+                                const SizedBox(width: 2),
+                                Text(
+                                  '${book.totalPages} ${AppLocalizations.current.pages}',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                    fontSize: 10,
+                                    color:
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimaryContainer,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      
+                      ],
+                    ),
+
+                    if (readingProgress != null) ...[
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      AppLocalizations.current.reading_time,
+                                      style: TextStyle(
+                                        fontSize: AppDimens.SIZE_12,
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Icon(
+                                      Icons.access_time_rounded,
+                                      color: colorScheme.onSurfaceVariant,
+                                      size: 12,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      readingProgress.readingTimeFormatted,
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (readingProgress.currentPage != null && book.totalPages != null) ...[
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${readingProgress.currentPage} / ${book.totalPages} ${AppLocalizations.current.pages}',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                          // Circular progress chart
+                          SizedBox(
+                            width: 48,
+                            height: 48,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                CircularProgressIndicator(
+                                  value: readingProgress.progress ?? 0.0,
+                                  strokeWidth: 4,
+                                  backgroundColor: theme.primaryColor.withValues(alpha: 0.5),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    theme.primaryColor,
+                                  ),
+                                ),
+                                Text(
+                                  readingProgress.progressFormatted,
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: theme.primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -719,9 +892,7 @@ class MainBodyState extends State<MainBody> {
   void _openBook(BuildContext context, BookModel book) {
     if (book.fileUrl == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.current.file_ebook_not_found),
-        ),
+        SnackBar(content: Text(AppLocalizations.current.file_ebook_not_found)),
       );
       return;
     }

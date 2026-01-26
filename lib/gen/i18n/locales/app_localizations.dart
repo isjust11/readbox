@@ -425,7 +425,7 @@ abstract class AppLocalizations {
   /// No description provided for @local_library.
   ///
   /// In en, this message translates to:
-  /// **'Local library'**
+  /// **'On device'**
   String get local_library;
 
   /// No description provided for @upload_book.
@@ -2569,6 +2569,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go back'**
   String get go_back;
+
+  /// No description provided for @file_type.
+  ///
+  /// In en, this message translates to:
+  /// **'File type'**
+  String get file_type;
+
+  /// No description provided for @file_size.
+  ///
+  /// In en, this message translates to:
+  /// **'File size'**
+  String get file_size;
+
+  /// No description provided for @file_path.
+  ///
+  /// In en, this message translates to:
+  /// **'File path'**
+  String get file_path;
+
+  /// No description provided for @reading_books.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading books'**
+  String get reading_books;
+
+  /// No description provided for @you_have_no_book_reading.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no book reading.'**
+  String get you_have_no_book_reading;
+
+  /// No description provided for @continue_reading_books.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue reading books'**
+  String get continue_reading_books;
+
+  /// No description provided for @continue_reading_books_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue reading books'**
+  String get continue_reading_books_description;
+
+  /// No description provided for @reading_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading time:'**
+  String get reading_time;
 }
 
 class _AppLocalizationsDelegate

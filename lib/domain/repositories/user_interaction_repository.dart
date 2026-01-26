@@ -81,7 +81,7 @@ class UserInteractionRepository {
   Future<UserInteractionModel> saveReadingProgress({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId, required ReadingProgressModel readingProgress}) 
   => remoteDataSource.saveReadingProgress(targetType: targetType, actionType: actionType, targetId: targetId, readingProgress: readingProgress);
 
-    Future<dynamic> getMyInteractions({Map<String, dynamic>? query}) =>
+    Future<List<UserInteractionModel>> getMyInteractions({Map<String, dynamic>? query}) =>
       remoteDataSource.getMyInteractions(query: query);
 
   Future<UserInteractionModel> getInteractionAction({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId}) =>

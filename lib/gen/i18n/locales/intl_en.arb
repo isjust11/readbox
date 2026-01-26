@@ -413,5 +413,10 @@
   "go_back": "Go back",
   "file_type": "File type",
   "file_size": "File size",
-  "file_path": "File path"
+  "file_path": "File path",
+  "reading_books": "Reading books",
+  "you_have_no_book_reading": "You have no book reading.",
+  "continue_reading_books": "Continue reading books",
+  "continue_reading_books_description": "Continue reading books",
+  "reading_time": "Reading time:"
 }

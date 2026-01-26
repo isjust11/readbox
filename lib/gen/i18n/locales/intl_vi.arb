@@ -434,5 +434,10 @@
    "go_back": "Quay lại",
    "file_type": "Loại file",
    "file_size": "Kích thước file",
-   "file_path": "Đường dẫn file"
+   "file_path": "Đường dẫn file",
+   "reading_books": "Đang đọc",
+   "you_have_no_book_reading": "Bạn chưa có sách nào đang đọc.",
+   "continue_reading_books": "Đọc tiếp",
+   "continue_reading_books_description": "Đọc tiếp sách",
+   "reading_time": "Thời gian đọc:"
 }

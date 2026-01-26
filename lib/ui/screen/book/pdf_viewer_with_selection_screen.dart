@@ -1,9 +1,7 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pdfx/pdfx.dart';
 import 'package:readbox/blocs/user_interaction_cubit.dart';
 import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
@@ -58,6 +56,11 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
   int _lastSavedPage = 0;
   // ignore: unused_field
   ReadingProgressModel? _currentProgress; // Giữ để theo dõi tiến trình hiện tại (có thể dùng để hiển thị sau)
+  
+  // Reading time tracking
+  DateTime? _readingStartTime;
+  int _accumulatedReadingTime = 0; // Tổng thời gian đã đọc (từ lần trước + lần này)
+  Timer? _readingTimeTimer;
 
   // get bind host url
   String get bindHostUrl => '${ApiConstant.apiHostStorage}${widget.fileUrl}';
@@ -136,6 +139,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
     _ttsService.stop();
     _ttsProgressTimer?.cancel();
     _saveProgressTimer?.cancel();
+    _readingTimeTimer?.cancel();
     _saveReadingProgressNow(); // Lưu tiến trình cuối cùng khi dispose
     _pdfViewerController.dispose();
     super.dispose();
@@ -917,6 +921,9 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
       if (mounted) {
         if (interaction.isReading) {
           _currentProgress = interaction.readingProgress;
+          // Lấy thời gian đã đọc trước đó
+          _accumulatedReadingTime = _currentProgress?.totalReadingTime ?? 0;
+          
           if (_currentProgress?.currentPage != null 
           && _currentProgress!.currentPage! > 0) {
             _lastSavedPage = _currentProgress!.currentPage!;
@@ -925,10 +932,39 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
           }
         }
       }
+      
+      // Bắt đầu timer theo dõi thời gian đọc
+      _startReadingTimeTracker();
     } catch (e) {
       debugPrint('Error loading reading progress: $e');
       // Không hiển thị lỗi cho user vì không quan trọng lắm
+      // Vẫn bắt đầu timer ngay cả khi load progress lỗi
+      _startReadingTimeTracker();
     }
+  }
+  
+  /// Bắt đầu timer theo dõi thời gian đọc
+  void _startReadingTimeTracker() {
+    _readingStartTime = DateTime.now();
+    _readingTimeTimer?.cancel();
+    
+    // Cập nhật thời gian đọc mỗi 10 giây (để tiết kiệm tài nguyên)
+    _readingTimeTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      if (_readingStartTime != null) {
+        final elapsedSeconds = DateTime.now().difference(_readingStartTime!).inSeconds;
+        // Không cần setState vì chỉ cập nhật khi lưu progress
+        debugPrint('Reading time: ${_accumulatedReadingTime + elapsedSeconds} seconds');
+      }
+    });
+  }
+  
+  /// Tính tổng thời gian đọc (đã đọc trước đó + thời gian hiện tại)
+  int _calculateTotalReadingTime() {
+    if (_readingStartTime == null) {
+      return _accumulatedReadingTime;
+    }
+    final currentSessionTime = DateTime.now().difference(_readingStartTime!).inSeconds;
+    return _accumulatedReadingTime + currentSessionTime;
   }
 
   /// Xử lý khi trang thay đổi - lưu tiến trình với debounce
@@ -956,12 +992,16 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
         progressValue = page / _totalPages;
       }
 
+      // Tính tổng thời gian đọc
+      final totalReadingTime = _calculateTotalReadingTime();
+
       // Tạo ReadingProgressModel từ JSON
       final progressModel = ReadingProgressModel.fromJson({
         'bookId': widget.bookId,
         'currentPage': page,
         'progress': progressValue,
         'lastUpdated': DateTime.now().toIso8601String(),
+        'totalReadingTime': totalReadingTime,
       });
 
       // Lưu tiến trình
@@ -970,11 +1010,16 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
       (targetType: InteractionTarget.book, actionType: InteractionType.reading, targetId: widget.bookId, readingProgress: progressModel);
 
       if (mounted) {
+        // Cập nhật thời gian đã tích lũy và reset thời gian session hiện tại
+        final savedTime = savedProgress?.totalReadingTime ?? totalReadingTime;
+        _accumulatedReadingTime = savedTime;
+        _readingStartTime = DateTime.now(); // Reset để tiếp tục đếm từ 0 cho session mới
+        
         setState(() {
           _currentProgress = savedProgress;
           _lastSavedPage = page;
         });
-        debugPrint('Saved reading progress: page $page (${(progressValue * 100).toStringAsFixed(1)}%)');
+        debugPrint('Saved reading progress: page $page (${(progressValue * 100).toStringAsFixed(1)}%), total time: ${savedTime}s');
       }
     } catch (e) {
       debugPrint('Error saving reading progress: $e');
@@ -986,9 +1031,15 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
   Future<void> _saveReadingProgressNow() async {
     _saveProgressTimer?.cancel(); // Hủy timer nếu có
     
-    // Lưu trang hiện tại
-    if (_currentPage > 0 && _currentPage != _lastSavedPage) {
-      await _saveReadingProgress(_currentPage);
+    // Lưu trang hiện tại và thời gian đọc
+    if (_currentPage > 0) {
+      // Tính thời gian cuối cùng trước khi lưu
+      final totalReadingTime = _calculateTotalReadingTime();
+      
+      // Nếu có thay đổi trang hoặc có thời gian đọc mới, lưu lại
+      if (_currentPage != _lastSavedPage || totalReadingTime > _accumulatedReadingTime) {
+        await _saveReadingProgress(_currentPage);
+      }
     }
   }
 }

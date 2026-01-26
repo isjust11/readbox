@@ -38,7 +38,7 @@ class BookModel extends BookEntity {
   bool get isPdf => fileType == BookType.pdf;
   
   String get fileSizeFormatted {
-    if (fileSize == null) return 'Unknown';
+    if (fileSize == null) return '';
     if (fileSize! < 1024) return '${fileSize}B';
     if (fileSize! < 1024 * 1024) return '${(fileSize! / 1024).toStringAsFixed(1)}KB';
     return '${(fileSize! / (1024 * 1024)).toStringAsFixed(1)}MB';

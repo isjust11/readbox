@@ -186,14 +186,14 @@ class UserInteractionRemoteDataSource {
     return Future.error(apiResponse.data);
   }
 
-  Future<UserInteractionModel> getMyInteractions({Map<String, dynamic>? query}) async {
+  Future<List<UserInteractionModel>> getMyInteractions({Map<String, dynamic>? query}) async {
     final ApiResponse apiResponse = await network.get(
       url:
           '${ApiConstant.apiHost}${ApiConstant.getMyInteractions}',
       params: query,
     );
     if (apiResponse.isSuccess) {
-      return UserInteractionModel.fromJson(apiResponse.data);
+      return (apiResponse.data['data'] as List).map((e) => UserInteractionModel.fromJson(e)).toList();
     }
     return Future.error(apiResponse.data);
   }

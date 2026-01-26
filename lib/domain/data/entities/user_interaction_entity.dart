@@ -1,6 +1,7 @@
 import 'package:readbox/domain/data/entities/base_entity.dart';
 import 'package:readbox/domain/data/entities/book_entity.dart';
 import 'package:readbox/domain/data/entities/user_entity.dart';
+import 'package:readbox/domain/data/models/book_model.dart';
 import 'package:readbox/domain/enums/enums.dart';
 
 class UserInteractionEntity extends BaseEntity {
@@ -15,7 +16,7 @@ class UserInteractionEntity extends BaseEntity {
   String? bookId;
 
   // Related entities
-  BookEntity? book;
+  BookModel? book;
 
   // Additional data for specific interaction types (for example: reading progress)
   Map<String, dynamic>? metadata;
@@ -52,7 +53,7 @@ class UserInteractionEntity extends BaseEntity {
       user = UserEntity.fromJson(json['user']);
     }
     if (json['book'] != null) {
-      book = BookEntity.fromJson(json['book']);
+      book = BookModel.fromJson(json['book']);
     }
 
     // Additional data
