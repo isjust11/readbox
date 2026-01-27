@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:pdfx/pdfx.dart';
 import 'package:dio/dio.dart';
-import 'package:readbox/utils/text_to_speech_service.dart';
-import 'dart:async';
+import 'package:readbox/utils/shared_preference.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PdfViewerScreen extends StatefulWidget {
   final String fileUrl;
@@ -21,80 +20,249 @@ class PdfViewerScreen extends StatefulWidget {
 }
 
 class PdfViewerScreenState extends State<PdfViewerScreen> {
-  late PdfController _pdfController;
+  final PdfViewerController _pdfController = PdfViewerController();
+  final TextEditingController _searchQueryController = TextEditingController();
   bool _isLoading = true;
   String? _error;
   int _currentPage = 1;
   int _totalPages = 0;
-  
-  // TTS related
-  final TextToSpeechService _ttsService = TextToSpeechService();
-  Timer? _ttsProgressTimer;
-  PdfDocument? _pdfDocument;
-
+  bool _isLocal = false;
+  Uint8List? _pdfBytes;
+  bool _isSearchVisible = false;
+  PdfTextSearchResult? _searchResult;
+  VoidCallback? _searchResultListener;
+  bool showToolbar = true;
   @override
   void initState() {
     super.initState();
-    _initializePdf();
+    final file = File(widget.fileUrl);
+    _isLocal = file.existsSync();
+    if (_isLocal) {
+      setState(() => _isLoading = false);
+    } else {
+      _loadFromNetwork();
+    }
+      _loadUserDataSettings();
+  } 
+
+  // load user data settings
+  Future<void> _loadUserDataSettings() async{
+    final hideNavigationBar = await SharedPreferenceUtil.getHideNavigationBar();
+    setState(() {
+        showToolbar = !hideNavigationBar;
+    });
   }
 
-  Future<void> _initializePdf() async {
+  Future<void> _loadFromNetwork() async {
     try {
       setState(() {
         _isLoading = true;
         _error = null;
       });
-      if (File(widget.fileUrl).existsSync()) {
-        _pdfController = PdfController(
-          document: PdfDocument.openFile(File(widget.fileUrl).path),
-          viewportFraction: 1.5
-        );
-      } else {
-        _pdfController = PdfController(
-          document: PdfDocument.openData(
-            _downloadPdf(),
-          ),
-        );
+      final bytes = await _downloadPdf();
+      if (mounted) {
+        setState(() {
+          _pdfBytes = bytes;
+          _isLoading = false;
+        });
       }
-
-      // Wait for document to load
-      _pdfDocument = await _pdfController.document;
-      
-      setState(() {
-        _isLoading = false;
-        _totalPages = _pdfController.pagesCount ?? 0;
-      });
     } catch (e) {
-      setState(() {
-        _error = e.toString();
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+          _isLoading = false;
+        });
+      }
     }
   }
 
   Future<Uint8List> _downloadPdf() async {
-    try {
-      final dio = Dio();
-      final response = await dio.get<List<int>>(
-        widget.fileUrl,
-        options: Options(responseType: ResponseType.bytes),
-      );
-      return Uint8List.fromList(response.data!);
-    } catch (e) {
-      throw Exception('Không thể tải file PDF: $e');
-    }
+    final dio = Dio();
+    final response = await dio.get<List<int>>(
+      widget.fileUrl,
+      options: Options(responseType: ResponseType.bytes),
+    );
+    return Uint8List.fromList(response.data!);
+  }
+
+  void _onDocumentLoaded(PdfDocumentLoadedDetails details) {
+    final total = details.document.pages.count;
+    setState(() => _totalPages = total);
+    SharedPreferenceUtil.getPdfReadingPosition(widget.fileUrl).then((savedPage) {
+      if (savedPage != null && savedPage >= 1 && savedPage <= total && mounted) {
+        _pdfController.jumpToPage(savedPage);
+        setState(() => _currentPage = savedPage);
+      }
+    });
+  }
+
+  void _onPageChanged(PdfPageChangedDetails details) {
+    final page = details.newPageNumber;
+    setState(() => _currentPage = page);
+    SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, page);
+  }
+
+  void _onDocumentLoadFailed(PdfDocumentLoadFailedDetails details) {
+    setState(() => _error = details.description);
   }
 
   @override
   void dispose() {
-    _ttsService.stop();
-    _ttsProgressTimer?.cancel();
+    SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, _currentPage);
+    if (_searchResult != null && _searchResultListener != null) {
+      _searchResult!.removeListener(_searchResultListener!);
+    }
+    _searchResult?.clear();
+    _searchQueryController.dispose();
     _pdfController.dispose();
     super.dispose();
   }
 
+  void _runSearch(String text) {
+    if (_searchResult != null && _searchResultListener != null) {
+      _searchResult!.removeListener(_searchResultListener!);
+    }
+    _searchResult?.clear();
+    if (text.trim().isEmpty) {
+      setState(() => _searchResult = null);
+      return;
+    }
+    final result = _pdfController.searchText(text.trim());
+    _searchResult = result;
+    _searchResultListener = () {
+      if (mounted) setState(() {});
+    };
+    result.addListener(_searchResultListener!);
+    setState(() {});
+  }
+
+  void _clearSearch() {
+    if (_searchResult != null && _searchResultListener != null) {
+      _searchResult!.removeListener(_searchResultListener!);
+    }
+    _searchResult?.clear();
+    _searchResult = null;
+    _searchResultListener = null;
+    _searchQueryController.clear();
+    setState(() => _isSearchVisible = false);
+  }
+
+  Widget _buildPdfViewer() {
+    return SfPdfViewer.file(
+      File(widget.fileUrl),
+      controller: _pdfController,
+      onDocumentLoaded: _onDocumentLoaded,
+      onPageChanged: _onPageChanged,
+      onDocumentLoadFailed: _onDocumentLoadFailed,
+      canShowScrollHead: false,
+      canShowScrollStatus: false,
+      scrollDirection: PdfScrollDirection.vertical,
+    );
+  }
+
+  Widget _buildPdfViewerFromMemory() {
+    return SfPdfViewer.memory(
+      _pdfBytes!,
+      controller: _pdfController,
+      onDocumentLoaded: _onDocumentLoaded,
+      onPageChanged: _onPageChanged,
+      onDocumentLoadFailed: _onDocumentLoadFailed,
+      canShowScrollHead: false,
+      canShowScrollStatus: false,
+      scrollDirection: PdfScrollDirection.vertical,
+    );
+  }
+
+  Widget _buildAppBarSearchTitle() {
+    return TextField(
+      controller: _searchQueryController,
+      autofocus: true,
+      style: TextStyle(color: Colors.white, fontSize: 16),
+      decoration: InputDecoration(
+        hintText: 'Tìm trong PDF...',
+        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+        prefixIcon: Icon(Icons.search_rounded, color: Colors.white.withValues(alpha: 0.9), size: 22),
+        suffixIcon: IconButton(
+          icon: Icon(Icons.arrow_forward_rounded, color: Colors.white),
+          onPressed: () => _runSearch(_searchQueryController.text),
+          tooltip: 'Tìm',
+        ),
+        border: InputBorder.none,
+        contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+        isDense: true,
+      ),
+      onSubmitted: _runSearch,
+    );
+  }
+
+  List<Widget> _buildAppBarSearchActions() {
+    final total = _searchResult?.totalInstanceCount ?? 0;
+    final current = _searchResult?.currentInstanceIndex ?? 0;
+    final canPrev = _searchResult != null && total > 0 && current > 1;
+    final canNext = _searchResult != null && total > 0 && current < total;
+    final searching = _searchResult != null && !_searchResult!.isSearchCompleted && total == 0;
+    final noResults = _searchResult != null && _searchResult!.isSearchCompleted && total == 0 &&
+        _searchQueryController.text.trim().isNotEmpty;
+
+    return [
+      if (_searchResult != null && total > 0) ...[
+        Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4),
+            child: Text(
+              '$current/$total',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.keyboard_arrow_up_rounded, color: canPrev ? Colors.white : Colors.white54),
+          onPressed: canPrev ? () => _searchResult!.previousInstance() : null,
+          iconSize: 24,
+        ),
+        IconButton(
+          icon: Icon(Icons.keyboard_arrow_down_rounded, color: canNext ? Colors.white : Colors.white54),
+          onPressed: canNext ? () => _searchResult!.nextInstance() : null,
+          iconSize: 24,
+        ),
+      ]
+      else if (searching)
+        Center(
+          child: Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white70),
+            ),
+          ),
+        )
+      else if (noResults)
+        Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              '0',
+              style: TextStyle(fontSize: 12, color: Colors.white70),
+            ),
+          ),
+        ),
+      IconButton(
+        icon: Icon(Icons.close_rounded, color: Colors.white),
+        onPressed: _clearSearch,
+        iconSize: 24,
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
+    final showViewer = !_isLoading && _error == null && (_isLocal || _pdfBytes != null);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -102,7 +270,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         leading: Container(
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
           ),
           child: IconButton(
@@ -111,39 +279,44 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             iconSize: 24,
           ),
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            if (_totalPages > 0)
-              Container(
-                margin: EdgeInsets.only(top: 4),
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'Trang $_currentPage/$_totalPages',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.white.withOpacity(0.9),
-                    fontWeight: FontWeight.w500,
+        title: _isSearchVisible
+            ? _buildAppBarSearchTitle()
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
+                  if (_totalPages > 0)
+                    Container(
+                      margin: EdgeInsets.only(top: 4),
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'Trang $_currentPage/$_totalPages',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.white.withValues(alpha: 0.9),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                ],
               ),
-          ],
-        ),
-        actions: [
+        actions: _isSearchVisible
+            ? _buildAppBarSearchActions()
+            : [
           Container(
             margin: EdgeInsets.only(right: 8, top: 8, bottom: 8),
             decoration: BoxDecoration(
@@ -154,6 +327,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               icon: Icon(Icons.more_vert_rounded, color: Colors.white),
               onSelected: (value) {
                 switch (value) {
+                  case 'search':
+                    setState(() => _isSearchVisible = true);
+                    break;
                   case 'jump':
                     _showJumpToPage();
                     break;
@@ -168,6 +344,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                       ),
                     );
                     break;
+                  case 'hide_navigation_bar':
+                    setState(() {
+                      showToolbar = !showToolbar;
+                    });
+                    SharedPreferenceUtil.saveHideNavigationBar(showToolbar);
+                    break;
                 }
               },
               shape: RoundedRectangleBorder(
@@ -175,13 +357,34 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               ),
               itemBuilder: (BuildContext context) => [
                 PopupMenuItem(
+                  value: 'search',
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.teal.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          Icons.search_rounded,
+                          color: Colors.teal,
+                          size: 20,
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Text('Tìm kiếm'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
                   value: 'jump',
                   child: Row(
                     children: [
                       Container(
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
@@ -202,7 +405,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                       Container(
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
+                          color: Colors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
@@ -213,6 +416,29 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                       ),
                       SizedBox(width: 12),
                       Text('Chia sẻ'),
+                    ],
+                  ),
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem(
+                  value: 'hide_navigation_bar',
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          showToolbar ? Icons.keyboard_arrow_down 
+                          : Icons.keyboard_arrow_up,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Text(showToolbar ? 'Ẩn thanh điều hướng' : 'Hiện thanh điều hướng'),
                     ],
                   ),
                 ),
@@ -245,37 +471,19 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   ),
                   SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () {
-                      _initializePdf();
-                    },
+                    onPressed: _isLocal ? null : () => _loadFromNetwork(),
                     child: Text('Thử lại'),
                   ),
                   SizedBox(height: 16),
                   TextButton(
-                    onPressed: () {
-                      _showPdfInfo();
-                    },
+                    onPressed: () => _showPdfInfo(),
                     child: Text('Xem thông tin file'),
                   ),
                 ],
               ),
             )
-          else if (!_isLoading)
-            PdfView(
-              controller: _pdfController,
-              scrollDirection: Axis.vertical,
-              onPageChanged: (page) {
-                setState(() {
-                  _currentPage = page;
-                });
-              },
-              onDocumentLoaded: (document) {
-                setState(() {
-                  _totalPages = document.pagesCount;
-                });
-              },
-            ),
-          
+          else if (showViewer)
+            _isLocal ? _buildPdfViewer() : _buildPdfViewerFromMemory(),
           if (_isLoading)
             Container(
               color: Colors.white,
@@ -297,8 +505,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             ),
         ],
       ),
-      
-      bottomNavigationBar: _isLoading || _error != null
+      bottomNavigationBar: !showToolbar || !showViewer
           ? null
           : Container(
               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
@@ -307,7 +514,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: Colors.black.withValues(alpha: 0.08),
                     blurRadius: 12,
                     offset: Offset(0, -4),
                   ),
@@ -319,28 +526,25 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   _buildNavButton(
                     icon: Icons.first_page_rounded,
                     isEnabled: _currentPage > 1,
-                    onPressed: () => _pdfController.jumpToPage(0),
+                    onPressed: () => _pdfController.jumpToPage(1),
                   ),
                   _buildNavButton(
                     icon: Icons.chevron_left_rounded,
                     isEnabled: _currentPage > 1,
-                    onPressed: () => _pdfController.previousPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    ),
+                    onPressed: () => _pdfController.previousPage(),
                   ),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Theme.of(context).primaryColor.withOpacity(0.1),
-                          Theme.of(context).primaryColor.withOpacity(0.05),
+                          Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                          Theme.of(context).primaryColor.withValues(alpha: 0.05),
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Theme.of(context).primaryColor.withOpacity(0.2),
+                        color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),
@@ -348,7 +552,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                       '$_currentPage / $_totalPages',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 14,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),
@@ -356,15 +560,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   _buildNavButton(
                     icon: Icons.chevron_right_rounded,
                     isEnabled: _currentPage < _totalPages,
-                    onPressed: () => _pdfController.nextPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    ),
+                    onPressed: () => _pdfController.nextPage(),
                   ),
                   _buildNavButton(
                     icon: Icons.last_page_rounded,
                     isEnabled: _currentPage < _totalPages,
-                    onPressed: () => _pdfController.jumpToPage(_totalPages - 1),
+                    onPressed: () => _pdfController.jumpToPage(_totalPages),
                   ),
                 ],
               ),
@@ -380,7 +581,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     return Container(
       decoration: BoxDecoration(
         color: isEnabled
-            ? Theme.of(context).primaryColor.withOpacity(0.1)
+            ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
             : Colors.grey[100],
         borderRadius: BorderRadius.circular(12),
       ),
@@ -390,14 +591,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           color: isEnabled ? Theme.of(context).primaryColor : Colors.grey[400],
         ),
         onPressed: isEnabled ? onPressed : null,
-        iconSize: 28,
+        iconSize: 18,
       ),
     );
   }
 
   void _showJumpToPage() {
     final pageController = TextEditingController();
-    
     showDialog(
       context: context,
       builder: (context) {
@@ -410,7 +610,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -482,7 +682,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               onPressed: () {
                 final page = int.tryParse(pageController.text);
                 if (page != null && page >= 1 && page <= _totalPages) {
-                  _pdfController.jumpToPage(page - 1);
+                  _pdfController.jumpToPage(page);
                   Navigator.pop(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -534,7 +734,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('URL:'),
+              Text('Đường dẫn:'),
               SizedBox(height: 8),
               Text(
                 widget.fileUrl,
@@ -554,34 +754,5 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         );
       },
     );
-  }
-
-  /// Trích xuất text từ một trang PDF sử dụng pdfx
-  /// Note: Package pdfx không hỗ trợ trực tiếp trích xuất text
-  /// Cần dùng package khác như pdf_text hoặc syncfusion_pdf để parse text
-  Future<String?> _extractPageText(int pageNumber) async {
-    if (_pdfDocument == null) return null;
-    
-    try {
-      // Package pdfx chủ yếu cho rendering, không có API extract text
-      // Để implement tính năng này, cần:
-      // 1. Dùng package pdf_text để trích xuất text
-      // 2. Hoặc chuyển sang dùng Syncfusion PDF (có API extractText)
-      // 3. Hoặc dùng package pdf để parse document
-      
-      // Ví dụ với package pdf (cần thêm vào pubspec.yaml):
-      // import 'package:pdf/pdf.dart' as pdf_lib;
-      // final bytes = await _pdfDocument!.getPage(pageNumber).render(...);
-      // Sau đó parse để lấy text
-      
-      // Tạm thời return null và hiển thị thông báo cho user
-      debugPrint('PDF text extraction not implemented yet for pdfx package');
-      debugPrint('Consider using Syncfusion PDF Viewer for text extraction');
-      
-      return null;
-    } catch (e) {
-      debugPrint('Error extracting page text: $e');
-      return null;
-    }
   }
 }

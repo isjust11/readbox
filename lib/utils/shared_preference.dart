@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +19,8 @@ class SPrefCache {
   static const String KEY_TOKEN = "auth_token";
   @Deprecated('Use SecureStorageService.saveUserInfo() instead')
   static const String PREF_KEY_USER_INFO = "pref_key_user_info";
+    static const String PREF_KEY_HIDE_NAVIGATION_BAR = "pref_key_hide_navigation_bar";
+  static const String PREF_KEY_PDF_READING_POSITIONS = "pref_key_pdf_reading_positions";
 }
 
 class SharedPreferenceUtil {
@@ -85,6 +89,44 @@ class SharedPreferenceUtil {
       return await saveLocalBooks(books);
     }
     return false; // Already exists
+  }
+
+  static Future<bool> saveHideNavigationBar(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return await prefs.setBool(SPrefCache.PREF_KEY_HIDE_NAVIGATION_BAR, value);
+  }
+
+  /// Lấy trạng thái "Hide navigation bar"
+  static Future<bool> getHideNavigationBar() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(SPrefCache.PREF_KEY_HIDE_NAVIGATION_BAR) ?? true;
+  }
+
+  // ==================== PDF READING POSITION ====================
+
+  /// Lưu trang đang đọc của PDF (key thường là fileUrl hoặc đường dẫn file)
+  static Future<bool> savePdfReadingPosition(String key, int page) async {
+    if (key.isEmpty || page < 1) return false;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final json = prefs.getString(SPrefCache.PREF_KEY_PDF_READING_POSITIONS);
+    final Map<String, dynamic> map = json != null
+        ? Map<String, dynamic>.from(jsonDecode(json) as Map)
+        : {};
+    map[key] = page;
+    return prefs.setString(SPrefCache.PREF_KEY_PDF_READING_POSITIONS, jsonEncode(map));
+  }
+
+  /// Lấy trang đã lưu của PDF, trả về null nếu chưa có
+  static Future<int?> getPdfReadingPosition(String key) async {
+    if (key.isEmpty) return null;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final json = prefs.getString(SPrefCache.PREF_KEY_PDF_READING_POSITIONS);
+    if (json == null) return null;
+    final map = jsonDecode(json) as Map<String, dynamic>?;
+    final v = map?[key];
+    if (v is int) return v;
+    if (v is num) return v.toInt();
+    return null;
   }
 
   /// Xóa một sách local
