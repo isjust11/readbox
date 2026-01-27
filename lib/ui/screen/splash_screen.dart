@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:readbox/gen/assets.gen.dart';
@@ -269,10 +270,28 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
       print('⚠️ Migration failed, but app will continue: $e');
     }
 
-    // Kiểm tra token từ secure storage
-    final hasToken = await _secureStorage.hasToken();
     await Future.delayed(Duration(milliseconds: 2500));
-    
+
+    // Khi không có internet: xem ebook chế độ local, không cần đăng nhập
+    try {
+      final results = await Connectivity().checkConnectivity();
+      final hasInternet = results.isNotEmpty &&
+          !(results.length == 1 && results.first == ConnectivityResult.none);
+      if (!hasInternet && context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Routes.localLibraryScreen,
+          (route) => false,
+        );
+        return;
+      }
+    } catch (_) {
+      // Nếu không kiểm tra được (permission, v.v.) coi như có mạng, đi tiếp logic token
+    }
+
+    // Có internet: kiểm tra token để quyết định đăng nhập hay vào app
+    final hasToken = await _secureStorage.hasToken();
+    if (!context.mounted) return;
     if (!hasToken) {
       Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
     } else {

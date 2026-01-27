@@ -46,6 +46,7 @@ class MainBodyState extends State<MainBody> {
   // Filter state
   FilterModel? _filterModel;
   UserModel? userInfo;
+  List<CategoryModel> categories = [];
   @override
   void initState() {
     super.initState();
@@ -58,6 +59,19 @@ class MainBodyState extends State<MainBody> {
       loadUserInteractions();
     });
     loadUserInfo();
+    loadCategories();
+  }
+
+  // load category
+  Future<void> loadCategories() async {
+    final categories = await context.read<CategoryCubit>().getCategoriesByCode(
+      categoryTypeCode: CategoryTypeEnum.BOOK_CATEGORY.name,
+    );
+    if (mounted) {
+      setState(() {
+        this.categories = categories;
+      });
+    }
   }
 
   // load user interactions
@@ -204,6 +218,110 @@ class MainBodyState extends State<MainBody> {
     );
   }
 
+  Widget _buildCategoryBar(ColorScheme colorScheme) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: AppDimens.SIZE_16,
+       vertical: AppDimens.SIZE_8),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        border: Border(
+          bottom: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
+        ),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            _buildCategoryChip(
+              colorScheme: colorScheme,
+              label: AppLocalizations.current.all,
+              isSelected: categoryId.isEmpty,
+              onTap: () {
+                setState(() {
+                  categoryId = '';
+                });
+                page = 1;
+                getBooks(isLoadMore: false);
+              },
+            ),
+            ...categories.map((category) {
+              final id = category.id ?? '';
+              final idStr = id.toString();
+              final label = category.name ?? AppLocalizations.current.no_name;
+              return _buildCategoryChip(
+                colorScheme: colorScheme,
+                label: label,
+                isSelected: categoryId == idStr,
+                onTap: () {
+                  setState(() {
+                    categoryId = idStr;
+                  });
+                  page = 1;
+                  getBooks(isLoadMore: false);
+                },
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryChip({
+    required ColorScheme colorScheme,
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(right: AppDimens.SIZE_8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: AppDimens.SIZE_8,
+            vertical: AppDimens.SIZE_4,
+          ),
+          decoration: BoxDecoration(
+            color:
+                isSelected
+                    ? colorScheme.primary
+                    : colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(20),
+            border:
+                isSelected
+                    ? null
+                    : Border.all(
+                      color: colorScheme.outline.withValues(alpha: 0.3),
+                    ),
+          ),
+          child: Row(
+            children: [
+             isSelected ? Padding(
+               padding: EdgeInsets.only(right: AppDimens.SIZE_4),
+               child: Icon(
+                  Icons.check,
+                  color: colorScheme.onPrimary,
+                  size: AppDimens.SIZE_12,
+                ),
+             ) : SizedBox.shrink(),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: AppDimens.SIZE_10,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected ? colorScheme.onPrimary : colorScheme.onSurface,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildNotificationButton() {
     return ValueListenableBuilder<int>(
       valueListenable: context.read<NotificationCubit>().unreadCountNotifier,
@@ -345,19 +463,14 @@ class MainBodyState extends State<MainBody> {
             // Lấy books và cubit từ state
             final books = context.read<LibraryCubit>().books;
             final cubit = context.read<LibraryCubit>();
-
-            // Hiển thị loading khi đang tải lần đầu
-            if (state is LoadingState && books.isEmpty) {
-              return Center(child: CircularProgressIndicator());
-            }
-
-            // Hiển thị error khi có lỗi và chưa có data
-            if (state is ErrorState && books.isEmpty) {
-              return Center(
+            Widget widgetView = SizedBox.shrink();
+            if (state is LoadingState) {
+              widgetView = Center(child: CircularProgressIndicator());
+            } else if (state is ErrorState) {
+              widgetView = Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
+                  children: [Icon(
                       Icons.error_outline,
                       size: 64,
                       color: colorScheme.error,
@@ -381,7 +494,7 @@ class MainBodyState extends State<MainBody> {
 
             // Hiển thị empty state
             if (books.isEmpty) {
-              return Center(
+              widgetView = Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -420,7 +533,8 @@ class MainBodyState extends State<MainBody> {
                   }).toList();
             }
 
-            return SmartRefresher(
+            // Khi không ở chế độ tìm kiếm: hiển thị thanh chọn category phía trên danh sách
+            final content = SmartRefresher(
               enablePullDown: true,
               enablePullUp: cubit.hasMore,
               controller: _refreshController,
@@ -499,6 +613,7 @@ class MainBodyState extends State<MainBody> {
                         itemBuilder: (context, index) {
                           return BookCard(
                             book: filteredBooks[index],
+                            onRead: (book) => _openBook(context, book),
                             ownerId: userInfo?.id,
                             userInteractionCubit:
                                 context.read<UserInteractionCubit>(),
@@ -535,6 +650,18 @@ class MainBodyState extends State<MainBody> {
                         },
                       ),
             );
+            widgetView = filteredBooks.isNotEmpty ? content : widgetView;
+            // Luôn dùng cùng một cấu trúc Column + Expanded để SmartRefresher
+            // luôn nằm cùng một vị trí, tránh lỗi một RefreshController gắn nhiều SmartRefresher.
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                if (!_isSearching && categories.isNotEmpty)
+                  _buildCategoryBar(colorScheme),
+                Expanded(child: widgetView),
+              ],
+            );
           },
         ),
       ),
@@ -547,7 +674,8 @@ class MainBodyState extends State<MainBody> {
     final theme = Theme.of(context);
 
     return BlocBuilder<UserInteractionCubit, BaseState>(
-      buildWhen: (prev, curr) => curr is LoadedState<List<UserInteractionModel>>,
+      buildWhen:
+          (prev, curr) => curr is LoadedState<List<UserInteractionModel>>,
       builder: (context, state) {
         if (state is LoadedState<List<UserInteractionModel>>) {
           final readingBooks = state.data;
@@ -555,12 +683,15 @@ class MainBodyState extends State<MainBody> {
               ? FloatingActionButton.extended(
                 heroTag: 'continue-reading-fab',
                 onPressed: () => _showContinueReadingBottomSheet(context),
-                icon: Icon(Icons.menu_book_rounded, color: theme.colorScheme.onPrimary),
+                icon: Icon(
+                  Icons.menu_book_rounded,
+                  color: theme.colorScheme.onPrimary,
+                ),
                 label: Text(
                   AppLocalizations.current.continue_reading,
                   style: TextStyle(
                     color: theme.colorScheme.onPrimary,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 backgroundColor: theme.primaryColor,
@@ -624,19 +755,6 @@ class MainBodyState extends State<MainBody> {
                       ),
                     ),
                   ),
-                    // InkWell(
-                    //   onTap: () {
-                    //     Navigator.pop(context);
-                    //     _openAllReadingScreen(context);
-                    //   },
-                    //   child: Text(
-                    //     AppLocalizations.current.all,
-                    //     style: TextStyle(
-                    //       fontSize: 13,
-                    //       color: colorScheme.primary,
-                    //     ),
-                    //   ),
-                    // ),
                 ],
               ),
               const SizedBox(height: 8),
@@ -661,7 +779,10 @@ class MainBodyState extends State<MainBody> {
                     child: ListView.builder(
                       itemCount: interactions.length,
                       itemBuilder: (context, index) {
-                        return _buildContinueReadingItem(context, interactions[index]);
+                        return _buildContinueReadingItem(
+                          context,
+                          interactions[index],
+                        );
                       },
                     ),
                   ),
@@ -675,7 +796,10 @@ class MainBodyState extends State<MainBody> {
     );
   }
 
-   Widget _buildContinueReadingItem(BuildContext context, UserInteractionModel interaction) {
+  Widget _buildContinueReadingItem(
+    BuildContext context,
+    UserInteractionModel interaction,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
     final book = interaction.book!;
@@ -685,10 +809,7 @@ class MainBodyState extends State<MainBody> {
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: colorScheme.outlineVariant,
-          width: 0.5,
-        ),
+        border: Border.all(color: colorScheme.outlineVariant, width: 0.5),
       ),
       child: InkWell(
         onTap: () => _openBook(context, interaction.book!),
@@ -742,7 +863,9 @@ class MainBodyState extends State<MainBody> {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: colorScheme.primary.withValues(alpha: 0.5),
+                                color: colorScheme.primary.withValues(
+                                  alpha: 0.5,
+                                ),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
@@ -771,7 +894,9 @@ class MainBodyState extends State<MainBody> {
                             padding: const EdgeInsets.symmetric(horizontal: 6),
                             decoration: BoxDecoration(
                               color:
-                                  Theme.of(context).colorScheme.primaryContainer,
+                                  Theme.of(
+                                    context,
+                                  ).colorScheme.primaryContainer,
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Row(
@@ -795,12 +920,11 @@ class MainBodyState extends State<MainBody> {
                                           context,
                                         ).colorScheme.onPrimaryContainer,
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
                         ),
-                      
                       ],
                     ),
 
@@ -837,7 +961,8 @@ class MainBodyState extends State<MainBody> {
                                     ),
                                   ],
                                 ),
-                                if (readingProgress.currentPage != null && book.totalPages != null) ...[
+                                if (readingProgress.currentPage != null &&
+                                    book.totalPages != null) ...[
                                   const SizedBox(height: 4),
                                   Text(
                                     '${readingProgress.currentPage} / ${book.totalPages} ${AppLocalizations.current.pages}',
@@ -860,7 +985,8 @@ class MainBodyState extends State<MainBody> {
                                 CircularProgressIndicator(
                                   value: readingProgress.progress ?? 0.0,
                                   strokeWidth: 4,
-                                  backgroundColor: theme.primaryColor.withValues(alpha: 0.5),
+                                  backgroundColor: theme.primaryColor
+                                      .withValues(alpha: 0.5),
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     theme.primaryColor,
                                   ),
@@ -889,7 +1015,7 @@ class MainBodyState extends State<MainBody> {
     );
   }
 
-  void _openBook(BuildContext context, BookModel book) {
+  Future<void> _openBook(BuildContext context, BookModel book) async {
     if (book.fileUrl == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.current.file_ebook_not_found)),
@@ -897,11 +1023,14 @@ class MainBodyState extends State<MainBody> {
       return;
     }
 
-    Navigator.pushNamed(
+    final result = await Navigator.pushNamed(
       context,
       Routes.pdfViewerWithSelectionScreen,
       arguments: book,
     );
+    if (result == true) {
+      loadUserInteractions();
+    }
   }
 
   void _openAllReadingScreen(BuildContext context) {

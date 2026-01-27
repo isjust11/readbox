@@ -14,12 +14,14 @@ class BookCard extends StatefulWidget {
   final UserInteractionCubit userInteractionCubit;
   final String? ownerId;
   final Function(BookModel book) onDelete;
+  final Function(BookModel book) onRead;
   const BookCard({
     super.key,
     required this.book,
     required this.userInteractionCubit,
     required this.ownerId,
     required this.onDelete,
+    required this.onRead,
   });
 
   @override
@@ -51,28 +53,6 @@ class _BookCardState extends State<BookCard> {
   bool get _archiveStatus {
     if (_isArchive != null) return _isArchive!;
     return widget.book.isArchived == true;
-  }
-
-  void _openPdfViewer(BuildContext context, BookModel book) {
-    final theme = Theme.of(context);
-    if (book.fileUrl != null) {
-      Navigator.pushNamed(
-        context,
-        Routes.pdfViewerWithSelectionScreen,
-        arguments: book,
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.current.file_ebook_not_found),
-          backgroundColor: theme.colorScheme.error,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      );
-    }
   }
 
   void _editBook(BuildContext context, BookModel book) {
@@ -230,10 +210,7 @@ class _BookCardState extends State<BookCard> {
                   icon: Icons.menu_book_rounded,
                   label: AppLocalizations.current.read_book,
                   color: theme.primaryColor,
-                  onTap: () {
-                    Navigator.pop(context);
-                    _openPdfViewer(context, book);
-                  },
+                  onTap: () => widget.onRead(book),
                 ),
 
                 SizedBox(height: 12),
@@ -446,10 +423,7 @@ class _BookCardState extends State<BookCard> {
           color: Theme.of(context).colorScheme.secondaryContainer,
           borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
           child: InkWell(
-            onTap: () {
-              // Tap thường: Đọc ebook trực tiếp
-              _openPdfViewer(context, widget.book);
-            },
+            onTap: () => widget.onRead(widget.book),
             onLongPress: () {
               // Long press: Hiển thị menu options
               _showBookOptions(context, widget.book);

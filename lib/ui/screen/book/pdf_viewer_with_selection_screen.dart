@@ -236,7 +236,7 @@ class _PdfViewerWithSelectionScreenState extends State<PdfViewerWithSelectionScr
         ),
         child: IconButton(
           icon: Icon(Icons.arrow_back_rounded, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context, true),
           iconSize: 24,
         ),
       ),
