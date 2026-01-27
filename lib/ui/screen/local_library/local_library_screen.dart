@@ -10,6 +10,7 @@ import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/book_metadata_service.dart';
 import 'package:readbox/utils/pdf_thumbnail_service.dart';
 import 'package:readbox/utils/shared_preference.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class LocalLibraryScreen extends StatefulWidget {
   const LocalLibraryScreen({super.key});
@@ -21,12 +22,21 @@ class LocalLibraryScreen extends StatefulWidget {
 class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
   List<BookModel> _books = [];
   bool _isLoading = true;
-  String _searchQuery = '';
-
+  String searchQuery = '';
+  bool hasInternet = false;
   @override
   void initState() {
     super.initState();
+    checkConnectivity();
     _loadBooks();
+  }
+
+  void checkConnectivity() async {
+    final results = await Connectivity().checkConnectivity();
+    hasInternet =
+        results.isNotEmpty &&
+        !(results.length == 1 && results.first == ConnectivityResult.none);
+    setState(() {});
   }
 
   Future<void> _loadBooks() async {
@@ -89,10 +99,10 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
   }
 
   List<BookModel> get _filteredBooks {
-    if (_searchQuery.isEmpty) return _books;
+    if (searchQuery.isEmpty) return _books;
 
     return _books.where((book) {
-      final query = _searchQuery.toLowerCase();
+      final query = searchQuery.toLowerCase();
       return book.displayTitle.toLowerCase().contains(query) ||
           (book.author?.toLowerCase().contains(query) ?? false) ||
           book.fileUrl!.toLowerCase().contains(query);
@@ -169,14 +179,10 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
           position: Tween<Offset>(
             begin: const Offset(1.0, 0.0),
             end: Offset.zero,
-          ).animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOut,
-          )),
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
           child: Align(
             alignment: Alignment.centerRight,
-            child:
-              AppDrawerInfo(book: book),
+            child: AppDrawerInfo(book: book),
           ),
         );
       },
@@ -498,9 +504,11 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     final colorScheme = Theme.of(context).colorScheme;
     return BaseScreen(
       colorBg: colorScheme.surface,
+      hiddenIconBack: true,
       customAppBar: BaseAppBar(
+        showBackButton: hasInternet ? true : false,
         title: AppLocalizations.current.local_library,
-        centerTitle: true,
+        centerTitle: false,
         actions: [
           IconButton(
             icon: Icon(Icons.refresh, color: colorScheme.onPrimary),
@@ -525,7 +533,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
               ),
       floatingButton: FloatingActionButton.small(
         onPressed: _scanAndAddBooks,
-          child: Icon(Icons.add, color: Theme.of(context).primaryColor),
+        child: Icon(Icons.add, color: Theme.of(context).primaryColor),
       ),
     );
   }

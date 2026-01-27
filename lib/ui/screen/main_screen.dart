@@ -331,7 +331,7 @@ class MainBodyState extends State<MainBody> {
               children: [
                 IconButton(
                   icon: Icon(
-                    Icons.notifications,
+                    Icons.notifications_active_sharp,
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   onPressed: () {
