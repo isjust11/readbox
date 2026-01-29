@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/data/models/models.dart';
@@ -11,65 +10,10 @@ import 'package:readbox/utils/shared_preference.dart';
 class AuthCubit extends Cubit<BaseState> {
   final AuthRepository repository;
   final SecureStorageService _secureStorage = SecureStorageService();
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   final FCMService fcmService = FCMService();
   AuthCubit({required this.repository}) : super(InitState()){
      fcmService.initialize();
   }
-
-  /// Lấy FCM token hiện tại
-  // Future<String?> _getFCMToken() async {
-  //   try {
-  //     print('🔍 Attempting to get FCM token...');
-      
-  //     // Retry logic for SERVICE_NOT_AVAILABLE
-  //     for (int attempt = 1; attempt <= 3; attempt++) {
-  //       try {
-  //         print('   Attempt $attempt/3...');
-  //         final token = await _messaging.getToken().timeout(
-  //           const Duration(seconds: 10),
-  //           onTimeout: () {
-  //             print('   ⏰ Timeout on attempt $attempt');
-  //             return null;
-  //           },
-  //         );
-          
-  //         if (token != null) {
-  //           print('✅ FCM token retrieved: ${token.substring(0, 20)}...');
-  //           return token;
-  //         }
-          
-  //         // Wait before retry
-  //         if (attempt < 3) {
-  //           print('   ⚠️ Token null, waiting before retry...');
-  //           await Future.delayed(Duration(seconds: attempt * 2));
-  //         }
-  //       } catch (e) {
-  //         print('   ❌ Attempt $attempt failed: $e');
-          
-  //         // Check if it's SERVICE_NOT_AVAILABLE
-  //         if (e.toString().contains('SERVICE_NOT_AVAILABLE')) {
-  //           print('   ⚠️ Google Play Services not available!');
-  //           print('   → Check if device has Google Play Services');
-  //           print('   → Check internet connection');
-  //           print('   → Try restarting device');
-  //         }
-          
-  //         // Wait before retry
-  //         if (attempt < 3) {
-  //           await Future.delayed(Duration(seconds: attempt * 2));
-  //         }
-  //       }
-  //     }
-      
-  //     print('❌ Failed to get FCM token after 3 attempts');
-  //     return null;
-      
-  //   } catch (e) {
-  //     print('❌ Error getting FCM token: $e');
-  //     return null;
-  //   }
-  // }
 
   Future doLogin({String? username, String? password}) async {
     try {
@@ -82,6 +26,10 @@ class AuthCubit extends Cubit<BaseState> {
         "username": username,
         "password": password,
         if (fcmToken != null) "fcmToken": fcmToken,
+        if (fcmService.deviceId != null) "deviceId": fcmService.deviceId,
+        if (fcmService.appVersion != null) "appVersion": fcmService.appVersion,
+        if (fcmService.platform == 'ios') "platform": 'ios',
+        if (fcmService.platform == 'android') "platform": 'android',
       });
       
       //save secure storage

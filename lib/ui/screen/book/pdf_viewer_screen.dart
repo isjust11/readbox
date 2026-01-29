@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/user_interaction_cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/enums/enums.dart';
-import 'package:readbox/ui/widget/tts_control_widget.dart';
 import 'package:readbox/utils/pdf_text_extractor.dart';
 import 'package:readbox/utils/shared_preference.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
@@ -43,12 +42,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   PdfTextSearchResult? _searchResult;
   VoidCallback? _searchResultListener;
   bool showToolbar = true;
-
+  bool showNavigationBar = true;
   // Text selection & TTS
   String? _selectedText;
   final TextToSpeechService _ttsService = TextToSpeechService();
-  bool _isTTSActive = false;
-  bool _showTTSControls = false;
   bool _isReadingContinuous = false;
   Timer? _ttsProgressTimer;
   bool _hasInternet = false;
@@ -92,13 +89,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     if (_isLocal) {
       _loadLocalBytesForTts();
     }
-  } 
+  }
 
   // load user data settings
-  Future<void> _loadUserDataSettings() async{
+  Future<void> _loadUserDataSettings() async {
     final hideNavigationBar = await SharedPreferenceUtil.getHideNavigationBar();
     setState(() {
-        showToolbar = !hideNavigationBar;
+      showToolbar = !hideNavigationBar;
     });
   }
 
@@ -170,8 +167,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     setState(() => _totalPages = total);
 
     // Local reading position (SharedPreference)
-    SharedPreferenceUtil.getPdfReadingPosition(widget.fileUrl).then((savedPage) {
-      if (savedPage != null && savedPage >= 1 && savedPage <= total && mounted) {
+    SharedPreferenceUtil.getPdfReadingPosition(widget.fileUrl).then((
+      savedPage,
+    ) {
+      if (savedPage != null &&
+          savedPage >= 1 &&
+          savedPage <= total &&
+          mounted) {
         _pdfController.jumpToPage(savedPage);
         setState(() => _currentPage = savedPage);
       }
@@ -187,6 +189,66 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
   void _onDocumentLoadFailed(PdfDocumentLoadFailedDetails details) {
     setState(() => _error = details.description);
+  }
+
+  void _handleMenuAction(String value) {
+    switch (value) {
+      case 'jump':
+        _showJumpToPage();
+        break;
+      case 'zoom_in':
+        _pdfController.zoomLevel += 0.25;
+        break;
+      case 'zoom_out':
+        if (_pdfController.zoomLevel > 1.0) {
+          _pdfController.zoomLevel -= 0.25;
+        }
+        break;
+      case 'fit_page':
+        _pdfController.zoomLevel = 1.0;
+        break;
+      case 'hide_toolbar':
+        setState(() {
+          showToolbar = !showToolbar;
+        });
+        break;
+      case 'hide_navigation_bar':
+        setState(() {
+          showNavigationBar = !showNavigationBar;
+        });
+        break;
+      case 'read_page':
+        _readCurrentPage();
+        break;
+      case 'read_continuous':
+        // _readContinuous();
+        break;
+    }
+  }
+
+  PopupMenuItem<String> _buildMenuItem(
+    String value,
+    IconData icon,
+    String text,
+    Color color,
+  ) {
+    return PopupMenuItem(
+      value: value,
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          SizedBox(width: 12),
+          Text(text),
+        ],
+      ),
+    );
   }
 
   @override
@@ -285,7 +347,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       decoration: InputDecoration(
         hintText: 'Tìm trong PDF...',
         hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-        prefixIcon: Icon(Icons.search_rounded, color: Colors.white.withValues(alpha: 0.9), size: 22),
+        prefixIcon: Icon(
+          Icons.search_rounded,
+          color: Colors.white.withValues(alpha: 0.9),
+          size: 22,
+        ),
         suffixIcon: IconButton(
           icon: Icon(Icons.arrow_forward_rounded, color: Colors.white),
           onPressed: () => _runSearch(_searchQueryController.text),
@@ -304,8 +370,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     final current = _searchResult?.currentInstanceIndex ?? 0;
     final canPrev = _searchResult != null && total > 0 && current > 1;
     final canNext = _searchResult != null && total > 0 && current < total;
-    final searching = _searchResult != null && !_searchResult!.isSearchCompleted && total == 0;
-    final noResults = _searchResult != null && _searchResult!.isSearchCompleted && total == 0 &&
+    final searching =
+        _searchResult != null &&
+        !_searchResult!.isSearchCompleted &&
+        total == 0;
+    final noResults =
+        _searchResult != null &&
+        _searchResult!.isSearchCompleted &&
+        total == 0 &&
         _searchQueryController.text.trim().isNotEmpty;
 
     return [
@@ -324,24 +396,32 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           ),
         ),
         IconButton(
-          icon: Icon(Icons.keyboard_arrow_up_rounded, color: canPrev ? Colors.white : Colors.white54),
+          icon: Icon(
+            Icons.keyboard_arrow_up_rounded,
+            color: canPrev ? Colors.white : Colors.white54,
+          ),
           onPressed: canPrev ? () => _searchResult!.previousInstance() : null,
           iconSize: 24,
         ),
         IconButton(
-          icon: Icon(Icons.keyboard_arrow_down_rounded, color: canNext ? Colors.white : Colors.white54),
+          icon: Icon(
+            Icons.keyboard_arrow_down_rounded,
+            color: canNext ? Colors.white : Colors.white54,
+          ),
           onPressed: canNext ? () => _searchResult!.nextInstance() : null,
           iconSize: 24,
         ),
-      ]
-      else if (searching)
+      ] else if (searching)
         Center(
           child: Padding(
             padding: EdgeInsets.only(right: 8),
             child: SizedBox(
               width: 16,
               height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white70),
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white70,
+              ),
             ),
           ),
         )
@@ -365,7 +445,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final showViewer = !_isLoading && _error == null && (_isLocal || _pdfBytes != null);
+    final showViewer =
+        !_isLoading && _error == null && (_isLocal || _pdfBytes != null);
 
     return Scaffold(
       appBar: AppBar(
@@ -383,198 +464,124 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             iconSize: 24,
           ),
         ),
-        title: _isSearchVisible
-            ? _buildAppBarSearchTitle()
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    widget.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  if (_totalPages > 0)
-                    Container(
-                      margin: EdgeInsets.only(top: 4),
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(8),
+        title:
+            _isSearchVisible
+                ? _buildAppBarSearchTitle()
+                : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      widget.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
-                      child: Text(
-                        'Trang $_currentPage/$_totalPages',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.white.withValues(alpha: 0.9),
-                          fontWeight: FontWeight.w500,
+                    ),
+                    if (_totalPages > 0)
+                      Container(
+                        margin: EdgeInsets.only(top: 4),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'Trang $_currentPage/$_totalPages',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.white.withValues(alpha: 0.9),
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
+                  ],
+                ),
+        actions:
+            _isSearchVisible
+                ? _buildAppBarSearchActions()
+                : [
+                  Container(
+                    margin: EdgeInsets.only(right: 8, top: 8, bottom: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                    child: PopupMenuButton<String>(
+                      icon: Icon(Icons.more_vert_rounded, color: Colors.white),
+                      onSelected: _handleMenuAction,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      itemBuilder:
+                          (BuildContext context) => [
+                            _buildMenuItem(
+                              'search',
+                              Icons.search_rounded,
+                              'Tìm kiếm',
+                              Colors.teal,
+                            ),
+                            _buildMenuItem(
+                              'jump',
+                              Icons.skip_next_rounded,
+                              'Nhảy đến trang',
+                              Theme.of(context).primaryColor,
+                            ),
+                            _buildMenuItem(
+                              'zoom_in',
+                              Icons.zoom_in,
+                              'Phóng to',
+                              Colors.blue,
+                            ),
+                            _buildMenuItem(
+                              'zoom_out',
+                              Icons.zoom_out,
+                              'Thu nhỏ',
+                              Colors.blue,
+                            ),
+                            _buildMenuItem(
+                              'fit_page',
+                              Icons.fit_screen,
+                              'Vừa màn hình',
+                              Colors.green,
+                            ),
+                            // _buildMenuItem(
+                            //   'hide_toolbar',
+                            //   Icons.fullscreen,
+                            //   'Ẩn thanh công cụ',
+                            //   Colors.purple,
+                            // ),
+                            if (_hasInternet)
+                              _buildMenuItem(
+                                'read_page',
+                                Icons.volume_up,
+                                'Đọc trang này',
+                                Colors.orange,
+                              ),
+                            _buildMenuItem(
+                              'share',
+                              Icons.share_rounded,
+                              'Chia sẻ',
+                              Colors.blue,
+                            ),
+                            _buildMenuItem(
+                              'hide_toolbar',
+                              Icons.keyboard_arrow_up,
+                              showToolbar
+                                  ? 'Ẩn thanh điều hướng'
+                                  : 'Hiện thanh điều hướng',
+                              showToolbar ? Colors.grey : Colors.green,
+                            ),
+                          ],
+                    ),
+                  ),
                 ],
-              ),
-        actions: _isSearchVisible
-            ? _buildAppBarSearchActions()
-            : [
-          Container(
-            margin: EdgeInsets.only(right: 8, top: 8, bottom: 8),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: PopupMenuButton<String>(
-              icon: Icon(Icons.more_vert_rounded, color: Colors.white),
-              onSelected: (value) {
-                switch (value) {
-                  case 'search':
-                    setState(() => _isSearchVisible = true);
-                    break;
-                  case 'jump':
-                    _showJumpToPage();
-                    break;
-                  case 'read_page':
-                    _readCurrentPage();
-                    break;
-                  case 'share':
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Tính năng chia sẻ đang phát triển'),
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    );
-                    break;
-                  case 'hide_navigation_bar':
-                    setState(() {
-                      showToolbar = !showToolbar;
-                    });
-                    SharedPreferenceUtil.saveHideNavigationBar(showToolbar);
-                    break;
-                }
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              itemBuilder: (BuildContext context) => [
-                PopupMenuItem(
-                  value: 'search',
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.teal.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          Icons.search_rounded,
-                          color: Colors.teal,
-                          size: 20,
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Text('Tìm kiếm'),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: 'jump',
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          Icons.skip_next_rounded,
-                          color: Theme.of(context).primaryColor,
-                          size: 20,
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Text('Nhảy đến trang'),
-                    ],
-                  ),
-                ),
-                if (_hasInternet)
-                  PopupMenuItem(
-                    value: 'read_page',
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.orange.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Icon(
-                            Icons.volume_up,
-                            color: Colors.orange,
-                            size: 20,
-                          ),
-                        ),
-                        SizedBox(width: 12),
-                        Text('Đọc trang này'),
-                      ],
-                    ),
-                  ),
-                PopupMenuItem(
-                  value: 'share',
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          Icons.share_rounded,
-                          color: Colors.blue,
-                          size: 20,
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Text('Chia sẻ'),
-                    ],
-                  ),
-                ),
-                PopupMenuDivider(),
-                PopupMenuItem(
-                  value: 'hide_navigation_bar',
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          showToolbar ? Icons.keyboard_arrow_down 
-                          : Icons.keyboard_arrow_up,
-                          color: Colors.grey,
-                          size: 20,
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Text(showToolbar ? 'Ẩn thanh điều hướng' : 'Hiện thanh điều hướng'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
       body: Stack(
         children: [
@@ -634,74 +641,82 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             ),
         ],
       ),
-      floatingActionButton: _buildFloatingButtons(showViewer),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomSheet: _buildTTSControls(),
-      bottomNavigationBar: !showToolbar || !showViewer
-          ? null
-          : Container(
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 12,
-                    offset: Offset(0, -4),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildNavButton(
-                    icon: Icons.first_page_rounded,
-                    isEnabled: _currentPage > 1,
-                    onPressed: () => _pdfController.jumpToPage(1),
-                  ),
-                  _buildNavButton(
-                    icon: Icons.chevron_left_rounded,
-                    isEnabled: _currentPage > 1,
-                    onPressed: () => _pdfController.previousPage(),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                          Theme.of(context).primaryColor.withValues(alpha: 0.05),
-                        ],
+      bottomNavigationBar:
+          !showNavigationBar || !showViewer
+              ? null
+              : Container(
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 12,
+                      offset: Offset(0, -4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildNavButton(
+                      icon: Icons.first_page_rounded,
+                      isEnabled: _currentPage > 1,
+                      onPressed: () => _pdfController.jumpToPage(1),
+                    ),
+                    _buildNavButton(
+                      icon: Icons.chevron_left_rounded,
+                      isEnabled: _currentPage > 1,
+                      onPressed: () => _pdfController.previousPage(),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
                       ),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
-                        width: 1,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Theme.of(
+                              context,
+                            ).primaryColor.withValues(alpha: 0.1),
+                            Theme.of(
+                              context,
+                            ).primaryColor.withValues(alpha: 0.05),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Theme.of(
+                            context,
+                          ).primaryColor.withValues(alpha: 0.2),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        '$_currentPage / $_totalPages',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                     ),
-                    child: Text(
-                      '$_currentPage / $_totalPages',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                    _buildNavButton(
+                      icon: Icons.chevron_right_rounded,
+                      isEnabled: _currentPage < _totalPages,
+                      onPressed: () => _pdfController.nextPage(),
                     ),
-                  ),
-                  _buildNavButton(
-                    icon: Icons.chevron_right_rounded,
-                    isEnabled: _currentPage < _totalPages,
-                    onPressed: () => _pdfController.nextPage(),
-                  ),
-                  _buildNavButton(
-                    icon: Icons.last_page_rounded,
-                    isEnabled: _currentPage < _totalPages,
-                    onPressed: () => _pdfController.jumpToPage(_totalPages),
-                  ),
-                ],
+                    _buildNavButton(
+                      icon: Icons.last_page_rounded,
+                      isEnabled: _currentPage < _totalPages,
+                      onPressed: () => _pdfController.jumpToPage(_totalPages),
+                    ),
+                  ],
+                ),
               ),
-            ),
     );
   }
 
@@ -712,9 +727,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: isEnabled
-            ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-            : Colors.grey[100],
+        color:
+            isEnabled
+                ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                : Colors.grey[100],
         borderRadius: BorderRadius.circular(12),
       ),
       child: IconButton(
@@ -734,15 +750,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     await _ttsService.initialize();
     _ttsService.onSpeechStart = (_) {
       if (!mounted) return;
-      setState(() {
-        _isTTSActive = true;
-      });
     };
     _ttsService.onSpeechComplete = (_) {
       if (!mounted) return;
-      setState(() {
-        _isTTSActive = false;
-      });
       if (_isReadingContinuous && _currentPage < _totalPages) {
         _readNextPage();
       } else {
@@ -752,107 +762,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     };
     _ttsService.onSpeechError = (error) {
       if (!mounted) return;
-      setState(() {
-        _isTTSActive = false;
-        _isReadingContinuous = false;
-      });
       _ttsProgressTimer?.cancel();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lỗi đọc: $error'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Lỗi đọc: $error'), backgroundColor: Colors.red),
       );
     };
-  }
-
-  Widget _buildFloatingButtons(bool showViewer) {
-    if (!showViewer || !_hasInternet) return const SizedBox.shrink();
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        FloatingActionButton(
-          heroTag: 'tts',
-          onPressed: _toggleTTS,
-          backgroundColor: _isTTSActive ? Colors.red : Colors.green,
-          tooltip: _isTTSActive ? 'Dừng đọc' : 'Đọc text',
-          child: Icon(
-            _isTTSActive ? Icons.stop : Icons.volume_up,
-            color: Colors.white,
-          ),
-        ),
-        if (_selectedText != null && _selectedText!.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: FloatingActionButton.extended(
-              heroTag: 'copy',
-              onPressed: _copySelectedText,
-              icon: const Icon(Icons.content_copy),
-              label: const Text('Copy'),
-              backgroundColor: Colors.blue,
-            ),
-          ),
-      ],
-    );
-  }
-
-  Future<void> _copySelectedText() async {
-    if (_selectedText == null || _selectedText!.isEmpty) return;
-    // await Clipboard.setData(ClipboardData(text: _selectedText!));
-
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                'Đã copy ${_selectedText!.length} ký tự',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-
-    setState(() {
-      _selectedText = null;
-    });
-  }
-
-  Future<void> _toggleTTS() async {
-    if (!_hasInternet) return;
-    if (_isTTSActive) {
-      await _ttsService.stop();
-      if (!mounted) return;
-      setState(() {
-        _isTTSActive = false;
-        _isReadingContinuous = false;
-        _showTTSControls = false;
-      });
-      _ttsProgressTimer?.cancel();
-    } else {
-      if (_selectedText != null && _selectedText!.isNotEmpty) {
-        await _ttsService.speak(_selectedText!);
-        if (!mounted) return;
-        setState(() {
-          _showTTSControls = true;
-        });
-      } else {
-        await _readCurrentPage();
-      }
-    }
   }
 
   Future<void> _readCurrentPage() async {
@@ -866,9 +780,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       if (textToRead != null && textToRead.isNotEmpty) {
         await _ttsService.speak(textToRead);
         if (!mounted) return;
-        setState(() {
-          _showTTSControls = true;
-        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -876,7 +787,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 const Icon(Icons.check_circle, color: Colors.white),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text('Đang đọc ${textToRead.length} ký tự từ trang $_currentPage'),
+                  child: Text(
+                    'Đang đọc ${textToRead.length} ký tự từ trang $_currentPage',
+                  ),
                 ),
               ],
             ),
@@ -978,31 +891,31 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
   }
 
-  Widget? _buildTTSControls() {
-    if (!_showTTSControls || !_hasInternet) return null;
+  // Widget? _buildTTSControls() {
+  //   if (!_showTTSControls || !_hasInternet) return null;
 
-    String textToRead = '';
-    if (_selectedText != null && _selectedText!.isNotEmpty) {
-      textToRead = _selectedText!;
-    }
+  //   String textToRead = '';
+  //   if (_selectedText != null && _selectedText!.isNotEmpty) {
+  //     textToRead = _selectedText!;
+  //   }
 
-    return TTSControlWidget(
-      textToRead: textToRead,
-      onStart: () {
-        setState(() {
-          _isTTSActive = true;
-        });
-      },
-      onStop: () {
-        setState(() {
-          _isTTSActive = false;
-          _isReadingContinuous = false;
-          _showTTSControls = false;
-        });
-        _ttsProgressTimer?.cancel();
-      },
-    );
-  }
+  //   return TTSControlWidget(
+  //     textToRead: textToRead,
+  //     onStart: () {
+  //       setState(() {
+  //         _isTTSActive = true;
+  //       });
+  //     },
+  //     onStop: () {
+  //       setState(() {
+  //         _isTTSActive = false;
+  //         _isReadingContinuous = false;
+  //         _showTTSControls = false;
+  //       });
+  //       _ttsProgressTimer?.cancel();
+  //     },
+  //   );
+  // }
 
   // ====== Reading progress (server) ======
 
@@ -1018,7 +931,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       if (interaction.isReading) {
         _currentProgress = interaction.readingProgress;
         _accumulatedReadingTime = _currentProgress?.totalReadingTime ?? 0;
-        if (_currentProgress?.currentPage != null && _currentProgress!.currentPage! > 0) {
+        if (_currentProgress?.currentPage != null &&
+            _currentProgress!.currentPage! > 0) {
           _lastSavedPage = _currentProgress!.currentPage!;
         }
       }
@@ -1047,7 +961,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     if (_readingStartTime == null) {
       return _accumulatedReadingTime;
     }
-    final currentSessionTime = DateTime.now().difference(_readingStartTime!).inSeconds;
+    final currentSessionTime =
+        DateTime.now().difference(_readingStartTime!).inSeconds;
     return _accumulatedReadingTime + currentSessionTime;
   }
 
@@ -1096,7 +1011,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     if (_currentPage <= 0) return;
 
     final totalReadingTime = _calculateTotalReadingTime();
-    if (_currentPage != _lastSavedPage || totalReadingTime > _accumulatedReadingTime) {
+    if (_currentPage != _lastSavedPage ||
+        totalReadingTime > _accumulatedReadingTime) {
       await _saveReadingProgress(_currentPage);
     }
   }
@@ -1127,10 +1043,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               SizedBox(width: 12),
               Text(
                 'Nhảy đến trang',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -1177,10 +1090,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               ),
               child: Text(
                 'Hủy',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
               ),
             ),
             ElevatedButton(
@@ -1213,10 +1123,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 children: [
                   Text(
                     'Đến',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(width: 6),
                   Icon(Icons.arrow_forward_rounded, size: 18),
@@ -1243,10 +1150,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               SizedBox(height: 8),
               Text(
                 widget.fileUrl,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
               ),
             ],
           ),

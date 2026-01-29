@@ -1,5 +1,6 @@
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service để quản lý Text-to-Speech cho ebook reading
 class TextToSpeechService {
@@ -38,7 +39,7 @@ class TextToSpeechService {
 
     try {
       _flutterTts = FlutterTts();
-
+      await loadSettings();
       // Setup callbacks
       _flutterTts!.setStartHandler(() {
         _isSpeaking = true;
@@ -88,11 +89,6 @@ class TextToSpeechService {
         debugPrint('Vietnamese not available, fallback to English');
       }
 
-      // Set default settings
-      await _flutterTts!.setSpeechRate(_speechRate);
-      await _flutterTts!.setVolume(_volume);
-      await _flutterTts!.setPitch(_pitch);
-
       _isInitialized = true;
       debugPrint('TTS Service initialized successfully');
     } catch (e) {
@@ -100,6 +96,16 @@ class TextToSpeechService {
       _isInitialized = false;
       rethrow;
     }
+  }
+
+  Future<void> loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    _speechRate = prefs.getDouble('tts_speech_rate') ?? 0.5;
+    _volume = prefs.getDouble('tts_volume') ?? 1.0;
+    _pitch = prefs.getDouble('tts_pitch') ?? 1.0;
+    await _flutterTts!.setSpeechRate(_speechRate);
+    await _flutterTts!.setVolume(_volume);
+    await _flutterTts!.setPitch(_pitch);
   }
 
   /// Đọc text

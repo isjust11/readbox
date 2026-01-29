@@ -21,7 +21,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  bool _themeMode = true;
+  bool themeMode = true;
   bool _notificationsEnabled = true;
   bool _biometricEnabled = false;
   bool _biometricAvailable = false;
@@ -55,7 +55,7 @@ class _SettingScreenState extends State<SettingScreen> {
   Future<void> _loadThemeStatus() async {
     final themeCubit = context.read<ThemeCubit>();
     setState(() {
-      _themeMode = themeCubit.state == 'light';
+      themeMode = themeCubit.state == 'light';
     });
   }
 
