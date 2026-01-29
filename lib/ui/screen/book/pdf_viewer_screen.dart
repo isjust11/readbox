@@ -1,18 +1,29 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readbox/blocs/user_interaction_cubit.dart';
+import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/domain/enums/enums.dart';
+import 'package:readbox/ui/widget/tts_control_widget.dart';
+import 'package:readbox/utils/pdf_text_extractor.dart';
 import 'package:readbox/utils/shared_preference.dart';
+import 'package:readbox/utils/text_to_speech_service.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PdfViewerScreen extends StatefulWidget {
   final String fileUrl;
   final String title;
+  final String? bookId;
 
   const PdfViewerScreen({
     super.key,
     required this.fileUrl,
     required this.title,
+    this.bookId,
   });
 
   @override
@@ -32,9 +43,31 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   PdfTextSearchResult? _searchResult;
   VoidCallback? _searchResultListener;
   bool showToolbar = true;
+
+  // Text selection & TTS
+  String? _selectedText;
+  final TextToSpeechService _ttsService = TextToSpeechService();
+  bool _isTTSActive = false;
+  bool _showTTSControls = false;
+  bool _isReadingContinuous = false;
+  Timer? _ttsProgressTimer;
+  bool _hasInternet = false;
+
+  // Reading progress tracking (server side)
+  UserInteractionCubit? _userInteractionCubit;
+  Timer? _saveProgressTimer;
+  int _lastSavedPage = 0;
+  ReadingProgressModel? _currentProgress;
+
+  // Reading time tracking
+  DateTime? _readingStartTime;
+  int _accumulatedReadingTime = 0;
+  Timer? _readingTimeTimer;
+
   @override
   void initState() {
     super.initState();
+    _checkInternetConnection();
     final file = File(widget.fileUrl);
     _isLocal = file.existsSync();
     if (_isLocal) {
@@ -42,7 +75,23 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     } else {
       _loadFromNetwork();
     }
-      _loadUserDataSettings();
+    _loadUserDataSettings();
+    _initializeTTS();
+
+    // Optional reading progress (only when bookId + cubit available)
+    try {
+      _userInteractionCubit = context.read<UserInteractionCubit>();
+      if (widget.bookId != null) {
+        _loadReadingProgress();
+      }
+    } catch (_) {
+      // Không có UserInteractionCubit trong context => bỏ qua tracking server
+    }
+
+    // Chuẩn bị bytes cho TTS khi đọc file local
+    if (_isLocal) {
+      _loadLocalBytesForTts();
+    }
   } 
 
   // load user data settings
@@ -51,6 +100,21 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     setState(() {
         showToolbar = !hideNavigationBar;
     });
+  }
+
+  Future<void> _checkInternetConnection() async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (!mounted) return;
+      setState(() {
+        _hasInternet = result.isNotEmpty && result.first.rawAddress.isNotEmpty;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _hasInternet = false;
+      });
+    }
   }
 
   Future<void> _loadFromNetwork() async {
@@ -85,9 +149,27 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     return Uint8List.fromList(response.data!);
   }
 
+  Future<void> _loadLocalBytesForTts() async {
+    try {
+      final file = File(widget.fileUrl);
+      if (await file.exists()) {
+        final bytes = await file.readAsBytes();
+        if (mounted) {
+          setState(() {
+            _pdfBytes = bytes;
+          });
+        }
+      }
+    } catch (_) {
+      // Không cần hiển thị lỗi, chỉ ảnh hưởng tới TTS
+    }
+  }
+
   void _onDocumentLoaded(PdfDocumentLoadedDetails details) {
     final total = details.document.pages.count;
     setState(() => _totalPages = total);
+
+    // Local reading position (SharedPreference)
     SharedPreferenceUtil.getPdfReadingPosition(widget.fileUrl).then((savedPage) {
       if (savedPage != null && savedPage >= 1 && savedPage <= total && mounted) {
         _pdfController.jumpToPage(savedPage);
@@ -100,6 +182,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     final page = details.newPageNumber;
     setState(() => _currentPage = page);
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, page);
+    _onServerPageChanged(page);
   }
 
   void _onDocumentLoadFailed(PdfDocumentLoadFailedDetails details) {
@@ -109,6 +192,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   @override
   void dispose() {
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, _currentPage);
+    _ttsService.stop();
+    _ttsProgressTimer?.cancel();
+    _saveProgressTimer?.cancel();
+    _readingTimeTimer?.cancel();
+    _saveReadingProgressNow();
     if (_searchResult != null && _searchResultListener != null) {
       _searchResult!.removeListener(_searchResultListener!);
     }
@@ -154,6 +242,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       onDocumentLoaded: _onDocumentLoaded,
       onPageChanged: _onPageChanged,
       onDocumentLoadFailed: _onDocumentLoadFailed,
+      enableTextSelection: true,
+      onTextSelectionChanged: (details) {
+        if (details.selectedText != null && details.selectedText!.isNotEmpty) {
+          setState(() {
+            _selectedText = details.selectedText;
+          });
+        }
+      },
       canShowScrollHead: false,
       canShowScrollStatus: false,
       scrollDirection: PdfScrollDirection.vertical,
@@ -167,6 +263,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       onDocumentLoaded: _onDocumentLoaded,
       onPageChanged: _onPageChanged,
       onDocumentLoadFailed: _onDocumentLoadFailed,
+      enableTextSelection: true,
+      onTextSelectionChanged: (details) {
+        if (details.selectedText != null && details.selectedText!.isNotEmpty) {
+          setState(() {
+            _selectedText = details.selectedText;
+          });
+        }
+      },
       canShowScrollHead: false,
       canShowScrollStatus: false,
       scrollDirection: PdfScrollDirection.vertical,
@@ -333,6 +437,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   case 'jump':
                     _showJumpToPage();
                     break;
+                  case 'read_page':
+                    _readCurrentPage();
+                    break;
                   case 'share':
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -398,6 +505,28 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                     ],
                   ),
                 ),
+                if (_hasInternet)
+                  PopupMenuItem(
+                    value: 'read_page',
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.orange.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.volume_up,
+                            color: Colors.orange,
+                            size: 20,
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Text('Đọc trang này'),
+                      ],
+                    ),
+                  ),
                 PopupMenuItem(
                   value: 'share',
                   child: Row(
@@ -505,6 +634,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             ),
         ],
       ),
+      floatingActionButton: _buildFloatingButtons(showViewer),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      bottomSheet: _buildTTSControls(),
       bottomNavigationBar: !showToolbar || !showViewer
           ? null
           : Container(
@@ -594,6 +726,379 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         iconSize: 18,
       ),
     );
+  }
+
+  // ====== Text selection & TTS (moved from selection screen) ======
+
+  Future<void> _initializeTTS() async {
+    await _ttsService.initialize();
+    _ttsService.onSpeechStart = (_) {
+      if (!mounted) return;
+      setState(() {
+        _isTTSActive = true;
+      });
+    };
+    _ttsService.onSpeechComplete = (_) {
+      if (!mounted) return;
+      setState(() {
+        _isTTSActive = false;
+      });
+      if (_isReadingContinuous && _currentPage < _totalPages) {
+        _readNextPage();
+      } else {
+        _isReadingContinuous = false;
+        _ttsProgressTimer?.cancel();
+      }
+    };
+    _ttsService.onSpeechError = (error) {
+      if (!mounted) return;
+      setState(() {
+        _isTTSActive = false;
+        _isReadingContinuous = false;
+      });
+      _ttsProgressTimer?.cancel();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Lỗi đọc: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    };
+  }
+
+  Widget _buildFloatingButtons(bool showViewer) {
+    if (!showViewer || !_hasInternet) return const SizedBox.shrink();
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        FloatingActionButton(
+          heroTag: 'tts',
+          onPressed: _toggleTTS,
+          backgroundColor: _isTTSActive ? Colors.red : Colors.green,
+          tooltip: _isTTSActive ? 'Dừng đọc' : 'Đọc text',
+          child: Icon(
+            _isTTSActive ? Icons.stop : Icons.volume_up,
+            color: Colors.white,
+          ),
+        ),
+        if (_selectedText != null && _selectedText!.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: FloatingActionButton.extended(
+              heroTag: 'copy',
+              onPressed: _copySelectedText,
+              icon: const Icon(Icons.content_copy),
+              label: const Text('Copy'),
+              backgroundColor: Colors.blue,
+            ),
+          ),
+      ],
+    );
+  }
+
+  Future<void> _copySelectedText() async {
+    if (_selectedText == null || _selectedText!.isEmpty) return;
+    // await Clipboard.setData(ClipboardData(text: _selectedText!));
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Đã copy ${_selectedText!.length} ký tự',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+
+    setState(() {
+      _selectedText = null;
+    });
+  }
+
+  Future<void> _toggleTTS() async {
+    if (!_hasInternet) return;
+    if (_isTTSActive) {
+      await _ttsService.stop();
+      if (!mounted) return;
+      setState(() {
+        _isTTSActive = false;
+        _isReadingContinuous = false;
+        _showTTSControls = false;
+      });
+      _ttsProgressTimer?.cancel();
+    } else {
+      if (_selectedText != null && _selectedText!.isNotEmpty) {
+        await _ttsService.speak(_selectedText!);
+        if (!mounted) return;
+        setState(() {
+          _showTTSControls = true;
+        });
+      } else {
+        await _readCurrentPage();
+      }
+    }
+  }
+
+  Future<void> _readCurrentPage() async {
+    if (!_hasInternet) return;
+    try {
+      String? textToRead = _selectedText;
+      if (textToRead == null || textToRead.isEmpty) {
+        textToRead = await _extractPageText(_currentPage);
+      }
+
+      if (textToRead != null && textToRead.isNotEmpty) {
+        await _ttsService.speak(textToRead);
+        if (!mounted) return;
+        setState(() {
+          _showTTSControls = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.white),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text('Đang đọc ${textToRead.length} ký tự từ trang $_currentPage'),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text('Không thể trích xuất text từ trang này'),
+                SizedBox(height: 4),
+                Text(
+                  'Vui lòng chọn text bằng tay để đọc',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.orange,
+            duration: const Duration(seconds: 3),
+            action: SnackBarAction(
+              label: 'OK',
+              textColor: Colors.white,
+              onPressed: () {},
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Lỗi khi đọc trang: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _readNextPage() async {
+    if (_currentPage >= _totalPages) {
+      if (!mounted) return;
+      setState(() {
+        _isReadingContinuous = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Đã đọc hết tài liệu'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      return;
+    }
+
+    _pdfController.nextPage();
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    try {
+      final pageText = await _extractPageText(_currentPage + 1);
+      if (pageText != null && pageText.isNotEmpty) {
+        await _ttsService.speak(pageText);
+      } else {
+        if (_currentPage < _totalPages) {
+          _readNextPage();
+        }
+      }
+    } catch (_) {
+      if (_currentPage < _totalPages) {
+        _readNextPage();
+      }
+    }
+  }
+
+  Future<String?> _extractPageText(int pageNumber) async {
+    if (_selectedText != null && _selectedText!.isNotEmpty) {
+      return _selectedText;
+    }
+
+    if (_pdfBytes == null) {
+      return null;
+    }
+
+    try {
+      final text = await PdfTextExtractorService.extractTextFromPage(
+        _pdfBytes!,
+        pageNumber - 1,
+      );
+      if (text != null && text.isNotEmpty) {
+        return text;
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Widget? _buildTTSControls() {
+    if (!_showTTSControls || !_hasInternet) return null;
+
+    String textToRead = '';
+    if (_selectedText != null && _selectedText!.isNotEmpty) {
+      textToRead = _selectedText!;
+    }
+
+    return TTSControlWidget(
+      textToRead: textToRead,
+      onStart: () {
+        setState(() {
+          _isTTSActive = true;
+        });
+      },
+      onStop: () {
+        setState(() {
+          _isTTSActive = false;
+          _isReadingContinuous = false;
+          _showTTSControls = false;
+        });
+        _ttsProgressTimer?.cancel();
+      },
+    );
+  }
+
+  // ====== Reading progress (server) ======
+
+  Future<void> _loadReadingProgress() async {
+    if (_userInteractionCubit == null || widget.bookId == null) return;
+    try {
+      final interaction = await _userInteractionCubit!.getInteractionAction(
+        targetType: InteractionTarget.book,
+        actionType: InteractionType.reading,
+        targetId: widget.bookId!,
+      );
+      if (!mounted) return;
+      if (interaction.isReading) {
+        _currentProgress = interaction.readingProgress;
+        _accumulatedReadingTime = _currentProgress?.totalReadingTime ?? 0;
+        if (_currentProgress?.currentPage != null && _currentProgress!.currentPage! > 0) {
+          _lastSavedPage = _currentProgress!.currentPage!;
+        }
+      }
+      _startReadingTimeTracker();
+    } catch (_) {
+      _startReadingTimeTracker();
+    }
+  }
+
+  void _startReadingTimeTracker() {
+    _readingStartTime = DateTime.now();
+    _readingTimeTimer?.cancel();
+    _readingTimeTimer = Timer.periodic(const Duration(seconds: 10), (_) {});
+  }
+
+  void _onServerPageChanged(int newPage) {
+    if (_userInteractionCubit == null || widget.bookId == null) return;
+    if (newPage == _lastSavedPage) return;
+    _saveProgressTimer?.cancel();
+    _saveProgressTimer = Timer(const Duration(seconds: 2), () {
+      _saveReadingProgress(newPage);
+    });
+  }
+
+  int _calculateTotalReadingTime() {
+    if (_readingStartTime == null) {
+      return _accumulatedReadingTime;
+    }
+    final currentSessionTime = DateTime.now().difference(_readingStartTime!).inSeconds;
+    return _accumulatedReadingTime + currentSessionTime;
+  }
+
+  Future<void> _saveReadingProgress(int page) async {
+    if (_userInteractionCubit == null || widget.bookId == null) return;
+    if (page == _lastSavedPage) return;
+
+    try {
+      double progressValue = 0.0;
+      if (_totalPages > 0) {
+        progressValue = page / _totalPages;
+      }
+      final totalReadingTime = _calculateTotalReadingTime();
+      final progressModel = ReadingProgressModel.fromJson({
+        'bookId': widget.bookId,
+        'currentPage': page,
+        'progress': progressValue,
+        'lastUpdated': DateTime.now().toIso8601String(),
+        'totalReadingTime': totalReadingTime,
+      });
+
+      final savedProgress = await _userInteractionCubit!.saveReadingProgress(
+        targetType: InteractionTarget.book,
+        actionType: InteractionType.reading,
+        targetId: widget.bookId!,
+        readingProgress: progressModel,
+      );
+
+      if (mounted) {
+        final savedTime = savedProgress?.totalReadingTime ?? totalReadingTime;
+        _accumulatedReadingTime = savedTime;
+        _readingStartTime = DateTime.now();
+        setState(() {
+          _currentProgress = savedProgress;
+          _lastSavedPage = page;
+        });
+      }
+    } catch (_) {
+      // Bỏ qua lỗi, không ảnh hưởng trải nghiệm đọc
+    }
+  }
+
+  Future<void> _saveReadingProgressNow() async {
+    _saveProgressTimer?.cancel();
+    if (_userInteractionCubit == null || widget.bookId == null) return;
+    if (_currentPage <= 0) return;
+
+    final totalReadingTime = _calculateTotalReadingTime();
+    if (_currentPage != _lastSavedPage || totalReadingTime > _accumulatedReadingTime) {
+      await _saveReadingProgress(_currentPage);
+    }
   }
 
   void _showJumpToPage() {
