@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/datasources/remote/admin_remote_data_source.dart';
 import 'package:readbox/firebase_options.dart';
@@ -13,6 +14,7 @@ import 'utils/shared_preference.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
   await di.init();
    // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
