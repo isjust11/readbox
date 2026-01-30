@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/user_interaction_cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/enums/enums.dart';
+import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/utils/pdf_text_extractor.dart';
 import 'package:readbox/utils/shared_preference.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
@@ -49,6 +50,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   bool _isReadingContinuous = false;
   Timer? _ttsProgressTimer;
   bool _hasInternet = false;
+  // Đánh dấu từ đang đọc (TTS word progress)
+  String? _ttsReadingText;
+  int _ttsWordStart = 0;
+  int _ttsWordEnd = 0;
+  bool _showTtsReadingPanel = false;
+  // Đánh dấu trực tiếp lên trang PDF (word bounds + annotation)
+  PageTextWithBounds? _currentPageWordBounds;
+  HighlightAnnotation? _ttsCurrentWordAnnotation;
 
   // Reading progress tracking (server side)
   UserInteractionCubit? _userInteractionCubit;
@@ -95,7 +104,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   Future<void> _loadUserDataSettings() async {
     final hideNavigationBar = await SharedPreferenceUtil.getHideNavigationBar();
     setState(() {
-      showToolbar = !hideNavigationBar;
+      showNavigationBar = !hideNavigationBar;
     });
   }
 
@@ -140,7 +149,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   Future<Uint8List> _downloadPdf() async {
     final dio = Dio();
     final response = await dio.get<List<int>>(
-      widget.fileUrl,
+      '${ApiConstant.apiHostStorage}${widget.fileUrl}',
       options: Options(responseType: ResponseType.bytes),
     );
     return Uint8List.fromList(response.data!);
@@ -196,6 +205,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       case 'jump':
         _showJumpToPage();
         break;
+      case 'search':
+        setState(() {
+          _isSearchVisible = !_isSearchVisible;
+        });
+        break;
       case 'zoom_in':
         _pdfController.zoomLevel += 0.25;
         break;
@@ -217,12 +231,80 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           showNavigationBar = !showNavigationBar;
         });
         break;
-      case 'read_page':
-        _readCurrentPage();
+      case 'read_continuous_ebook':
+        _readContinuousEbook();
         break;
-      case 'read_continuous':
-        // _readContinuous();
-        break;
+    }
+  }
+
+  Future<void> _readContinuousEbook() async {
+    setState(() {
+      _isReadingContinuous = true;
+    });
+    // Bắt đầu đọc từ trang hiện tại (nếu không gọi thì onSpeechComplete không bao giờ chạy)
+    await _readCurrentPage();
+  }
+
+  /// Đọc trang hiện tại (dùng cho khởi động đọc liên tục)
+  Future<void> _readCurrentPage() async {
+    if (!_isReadingContinuous || !mounted) return;
+    // File local: đợi _pdfBytes nếu chưa có (load cho TTS)
+    if (_isLocal && _pdfBytes == null) {
+      await _loadLocalBytesForTts();
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (!mounted || !_isReadingContinuous) return;
+    }
+    if (_pdfBytes == null && !_isLocal) {
+      if (!mounted) return;
+      setState(() => _isReadingContinuous = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Chưa tải xong PDF, thử lại sau'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+    try {
+      final pageText = await _extractPageText(_currentPage);
+      if (pageText != null && pageText.isNotEmpty) {
+        if (_pdfBytes != null) {
+          final bounds = await PdfTextExtractorService.extractPageTextWithWordBounds(
+            _pdfBytes!,
+            _currentPage - 1,
+          );
+          if (mounted) setState(() => _currentPageWordBounds = bounds);
+        }
+        if (mounted) {
+          setState(() {
+            _ttsReadingText = pageText;
+            _ttsWordStart = 0;
+            _ttsWordEnd = 0;
+            _showTtsReadingPanel = true;
+          });
+        }
+        await _ttsService.speak(pageText);
+      } else {
+        // Trang trống → chuyển sang trang tiếp
+        if (_currentPage < _totalPages) {
+          _readNextPage();
+        } else {
+          if (!mounted) return;
+          setState(() => _isReadingContinuous = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Đã đọc hết tài liệu'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      }
+    } catch (_) {
+      if (_currentPage < _totalPages) {
+        _readNextPage();
+      } else {
+        if (mounted) setState(() => _isReadingContinuous = false);
+      }
     }
   }
 
@@ -255,6 +337,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   void dispose() {
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, _currentPage);
     _ttsService.stop();
+    _removePdfWordHighlight();
     _ttsProgressTimer?.cancel();
     _saveProgressTimer?.cancel();
     _readingTimeTimer?.cancel();
@@ -449,140 +532,154 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         !_isLoading && _error == null && (_isLocal || _pdfBytes != null);
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).primaryColor,
-        leading: Container(
-          margin: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: IconButton(
-            icon: Icon(Icons.arrow_back_rounded, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-            iconSize: 24,
-          ),
-        ),
-        title:
-            _isSearchVisible
-                ? _buildAppBarSearchTitle()
-                : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      widget.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    if (_totalPages > 0)
-                      Container(
-                        margin: EdgeInsets.only(top: 4),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          'Trang $_currentPage/$_totalPages',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.white.withValues(alpha: 0.9),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-        actions:
-            _isSearchVisible
-                ? _buildAppBarSearchActions()
-                : [
-                  Container(
-                    margin: EdgeInsets.only(right: 8, top: 8, bottom: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: PopupMenuButton<String>(
-                      icon: Icon(Icons.more_vert_rounded, color: Colors.white),
-                      onSelected: _handleMenuAction,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      itemBuilder:
-                          (BuildContext context) => [
-                            _buildMenuItem(
-                              'search',
-                              Icons.search_rounded,
-                              'Tìm kiếm',
-                              Colors.teal,
-                            ),
-                            _buildMenuItem(
-                              'jump',
-                              Icons.skip_next_rounded,
-                              'Nhảy đến trang',
-                              Theme.of(context).primaryColor,
-                            ),
-                            _buildMenuItem(
-                              'zoom_in',
-                              Icons.zoom_in,
-                              'Phóng to',
-                              Colors.blue,
-                            ),
-                            _buildMenuItem(
-                              'zoom_out',
-                              Icons.zoom_out,
-                              'Thu nhỏ',
-                              Colors.blue,
-                            ),
-                            _buildMenuItem(
-                              'fit_page',
-                              Icons.fit_screen,
-                              'Vừa màn hình',
-                              Colors.green,
-                            ),
-                            // _buildMenuItem(
-                            //   'hide_toolbar',
-                            //   Icons.fullscreen,
-                            //   'Ẩn thanh công cụ',
-                            //   Colors.purple,
-                            // ),
-                            if (_hasInternet)
-                              _buildMenuItem(
-                                'read_page',
-                                Icons.volume_up,
-                                'Đọc trang này',
-                                Colors.orange,
-                              ),
-                            _buildMenuItem(
-                              'share',
-                              Icons.share_rounded,
-                              'Chia sẻ',
-                              Colors.blue,
-                            ),
-                            _buildMenuItem(
-                              'hide_toolbar',
-                              Icons.keyboard_arrow_up,
-                              showToolbar
-                                  ? 'Ẩn thanh điều hướng'
-                                  : 'Hiện thanh điều hướng',
-                              showToolbar ? Colors.grey : Colors.green,
-                            ),
-                          ],
-                    ),
+      appBar:
+          showToolbar
+              ? AppBar(
+                elevation: 0,
+                backgroundColor: Theme.of(context).primaryColor,
+                leading: Container(
+                  margin: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ],
-      ),
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back_rounded, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
+                    iconSize: 24,
+                  ),
+                ),
+                title:
+                    _isSearchVisible
+                        ? _buildAppBarSearchTitle()
+                        : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              widget.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            if (_totalPages > 0)
+                              Container(
+                                margin: EdgeInsets.only(top: 4),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  'Trang $_currentPage/$_totalPages',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.white.withValues(alpha: 0.9),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                actions:
+                    _isSearchVisible
+                        ? _buildAppBarSearchActions()
+                        : [
+                          Container(
+                            margin: EdgeInsets.only(
+                              right: 8,
+                              top: 8,
+                              bottom: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: PopupMenuButton<String>(
+                              icon: Icon(
+                                Icons.more_vert_rounded,
+                                color: Colors.white,
+                              ),
+                              onSelected: _handleMenuAction,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              itemBuilder:
+                                  (BuildContext context) => [
+                                    _buildMenuItem(
+                                      'search',
+                                      Icons.search_rounded,
+                                      'Tìm kiếm',
+                                      Colors.teal,
+                                    ),
+                                    _buildMenuItem(
+                                      'jump',
+                                      Icons.skip_next_rounded,
+                                      'Nhảy đến trang',
+                                      Theme.of(context).primaryColor,
+                                    ),
+                                    _buildMenuItem(
+                                      'zoom_in',
+                                      Icons.zoom_in,
+                                      'Phóng to',
+                                      Colors.blue,
+                                    ),
+                                    _buildMenuItem(
+                                      'zoom_out',
+                                      Icons.zoom_out,
+                                      'Thu nhỏ',
+                                      Colors.blue,
+                                    ),
+                                    _buildMenuItem(
+                                      'fit_page',
+                                      Icons.fit_screen,
+                                      'Vừa màn hình',
+                                      Colors.green,
+                                    ),
+                                    _buildMenuItem(
+                                      'hide_toolbar',
+                                      Icons.fullscreen,
+                                      'Ẩn thanh công cụ',
+                                      Colors.purple,
+                                    ),
+                                    if (_hasInternet)
+                                      _buildMenuItem(
+                                        'read_continuous_ebook',
+                                        Icons.play_circle_outline,
+                                        'Đọc ebook liên tục',
+                                        Colors.teal,
+                                      ),
+                                    _buildMenuItem(
+                                      'hide_navigation_bar',
+                                      showNavigationBar
+                                          ? Icons.keyboard_arrow_down_rounded
+                                          : Icons.keyboard_arrow_up_rounded,
+                                      showNavigationBar
+                                          ? 'Ẩn thanh điều hướng'
+                                          : 'Hiện thanh điều hướng',
+                                      showNavigationBar
+                                          ? Colors.grey
+                                          : Colors.green,
+                                    ),
+                                    _buildMenuItem(
+                                      'share',
+                                      Icons.share_rounded,
+                                      'Chia sẻ',
+                                      Colors.blue,
+                                    ),
+                                  ],
+                            ),
+                          ),
+                        ],
+              )
+              : null,
       body: Stack(
         children: [
           if (_error != null)
@@ -639,11 +736,54 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 ),
               ),
             ),
+          // Toggle toolbar button
+          if (!showToolbar)
+            Positioned(
+              top: 16,
+              right: 16,
+              child: FloatingActionButton.small(
+                onPressed: () {
+                  setState(() {
+                    showToolbar = !showToolbar;
+                  });
+                },
+                child: Icon(Icons.menu),
+              ),
+            ),
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: FloatingActionButton.small(
+              onPressed: () async {
+               if (_isReadingContinuous) {
+                await _ttsService.stop();
+                _removePdfWordHighlight();
+                setState(() {
+                  _isReadingContinuous = false;
+                  _showTtsReadingPanel = false;
+                  _currentPageWordBounds = null;
+                });
+               } else {
+                await _readContinuousEbook();
+               }
+              
+              },
+              child: Icon(
+                _isReadingContinuous
+                    ? Icons.pause_circle_outline
+                    : Icons.play_circle_outline,
+                color: _isReadingContinuous ? Colors.red : Colors.green,
+              ),
+            ),
+          ),
+          // Panel đánh dấu từ đang đọc (TTS)
+          if (_showTtsReadingPanel && _ttsReadingText != null)
+            _buildTtsReadingPanel(),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar:
-          !showNavigationBar || !showViewer
+          !showNavigationBar || !showToolbar || !showViewer
               ? null
               : Container(
                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
@@ -748,20 +888,43 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
   Future<void> _initializeTTS() async {
     await _ttsService.initialize();
-    _ttsService.onSpeechStart = (_) {
+    _setupTTSCallbacks();
+  }
+
+  void _setupTTSCallbacks() {
+    _ttsService.onSpeechStart = (_) {};
+
+    _ttsService.onSpeechWordProgress = (String text, int start, int end, String word) {
       if (!mounted) return;
+      setState(() {
+        _ttsWordStart = start.clamp(0, text.length);
+        _ttsWordEnd = end.clamp(0, text.length);
+      });
+      _updatePdfWordHighlight(start, end);
     };
+
     _ttsService.onSpeechComplete = (_) {
-      if (!mounted) return;
+      _removePdfWordHighlight();
+      // Nếu đang đọc liên tục, chuyển sang trang tiếp theo
       if (_isReadingContinuous && _currentPage < _totalPages) {
         _readNextPage();
       } else {
         _isReadingContinuous = false;
         _ttsProgressTimer?.cancel();
+        if (mounted) setState(() {
+          _showTtsReadingPanel = false;
+          _currentPageWordBounds = null;
+        });
       }
     };
+
     _ttsService.onSpeechError = (error) {
-      if (!mounted) return;
+      _removePdfWordHighlight();
+      setState(() {
+        _isReadingContinuous = false;
+        _showTtsReadingPanel = false;
+        _currentPageWordBounds = null;
+      });
       _ttsProgressTimer?.cancel();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Lỗi đọc: $error'), backgroundColor: Colors.red),
@@ -769,69 +932,30 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     };
   }
 
-  Future<void> _readCurrentPage() async {
-    if (!_hasInternet) return;
-    try {
-      String? textToRead = _selectedText;
-      if (textToRead == null || textToRead.isEmpty) {
-        textToRead = await _extractPageText(_currentPage);
-      }
-
-      if (textToRead != null && textToRead.isNotEmpty) {
-        await _ttsService.speak(textToRead);
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Đang đọc ${textToRead.length} ký tự từ trang $_currentPage',
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      } else {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Không thể trích xuất text từ trang này'),
-                SizedBox(height: 4),
-                Text(
-                  'Vui lòng chọn text bằng tay để đọc',
-                  style: TextStyle(fontSize: 12),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.orange,
-            duration: const Duration(seconds: 3),
-            action: SnackBarAction(
-              label: 'OK',
-              textColor: Colors.white,
-              onPressed: () {},
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lỗi khi đọc trang: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+  void _removePdfWordHighlight() {
+    if (_ttsCurrentWordAnnotation != null) {
+      _pdfController.removeAnnotation(_ttsCurrentWordAnnotation!);
+      _ttsCurrentWordAnnotation = null;
     }
+  }
+
+  void _updatePdfWordHighlight(int start, int end) {
+    final bounds = _currentPageWordBounds;
+    if (bounds == null || bounds.wordBounds.isEmpty) return;
+    final overlapping = bounds.wordBounds.where((e) =>
+        e.startIndex < end && e.endIndex > start).toList();
+    if (overlapping.isEmpty) return;
+
+    _removePdfWordHighlight();
+    final collection = overlapping.map((e) => PdfTextLine(
+      e.bounds,
+      bounds.fullText.substring(e.startIndex, e.endIndex),
+      bounds.pageNumber,
+    )).toList();
+    final annotation = HighlightAnnotation(textBoundsCollection: collection);
+    annotation.color = Theme.of(context).primaryColor.withValues(alpha: 0.35);
+    _pdfController.addAnnotation(annotation);
+    _ttsCurrentWordAnnotation = annotation;
   }
 
   Future<void> _readNextPage() async {
@@ -849,27 +973,67 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       return;
     }
 
+    // Lưu số trang cần đọc trước khi nextPage() (vì _onPageChanged sẽ cập nhật _currentPage ngay)
+    final nextPageNumber = _currentPage + 1;
     _pdfController.nextPage();
     await Future.delayed(const Duration(milliseconds: 500));
 
+    if (!mounted || !_isReadingContinuous) return;
+
+    _removePdfWordHighlight();
+    if (mounted) setState(() => _currentPageWordBounds = null);
+
     try {
-      final pageText = await _extractPageText(_currentPage + 1);
+      // Đọc trang tiếp theo luôn lấy full trang, không dùng selection của trang cũ
+      final pageText = await _extractPageText(
+        nextPageNumber,
+        useSelection: false,
+      );
       if (pageText != null && pageText.isNotEmpty) {
+        if (_pdfBytes != null) {
+          final bounds = await PdfTextExtractorService.extractPageTextWithWordBounds(
+            _pdfBytes!,
+            nextPageNumber - 1,
+          );
+          if (mounted) setState(() => _currentPageWordBounds = bounds);
+        }
+        if (mounted) {
+          setState(() {
+            _ttsReadingText = pageText;
+            _ttsWordStart = 0;
+            _ttsWordEnd = 0;
+            _showTtsReadingPanel = true;
+          });
+        }
         await _ttsService.speak(pageText);
       } else {
-        if (_currentPage < _totalPages) {
+        if (nextPageNumber < _totalPages) {
           _readNextPage();
+        } else {
+          if (!mounted) return;
+          setState(() => _isReadingContinuous = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Đã đọc hết tài liệu'),
+              backgroundColor: Colors.green,
+            ),
+          );
         }
       }
     } catch (_) {
-      if (_currentPage < _totalPages) {
+      if (nextPageNumber < _totalPages) {
         _readNextPage();
+      } else {
+        if (mounted) setState(() => _isReadingContinuous = false);
       }
     }
   }
 
-  Future<String?> _extractPageText(int pageNumber) async {
-    if (_selectedText != null && _selectedText!.isNotEmpty) {
+  Future<String?> _extractPageText(
+    int pageNumber, {
+    bool useSelection = true,
+  }) async {
+    if (useSelection && _selectedText != null && _selectedText!.isNotEmpty) {
       return _selectedText;
     }
 
@@ -891,31 +1055,99 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
   }
 
-  // Widget? _buildTTSControls() {
-  //   if (!_showTTSControls || !_hasInternet) return null;
+  /// Panel hiển thị text đang đọc với từ đang đọc được đánh dấu
+  Widget _buildTtsReadingPanel() {
+    final text = _ttsReadingText ?? '';
+    final len = text.length;
+    final start = _ttsWordStart.clamp(0, len);
+    final end = _ttsWordEnd.clamp(0, len);
+    final hasHighlight = start < end;
 
-  //   String textToRead = '';
-  //   if (_selectedText != null && _selectedText!.isNotEmpty) {
-  //     textToRead = _selectedText!;
-  //   }
-
-  //   return TTSControlWidget(
-  //     textToRead: textToRead,
-  //     onStart: () {
-  //       setState(() {
-  //         _isTTSActive = true;
-  //       });
-  //     },
-  //     onStop: () {
-  //       setState(() {
-  //         _isTTSActive = false;
-  //         _isReadingContinuous = false;
-  //         _showTTSControls = false;
-  //       });
-  //       _ttsProgressTimer?.cancel();
-  //     },
-  //   );
-  // }
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: 0,
+      child: Material(
+        elevation: 8,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        child: Container(
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.4),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Thanh tiêu đề + nút đóng
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.record_voice_over, color: Theme.of(context).primaryColor, size: 22),
+                    SizedBox(width: 8),
+                    Text(
+                      'Đang đọc',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    Spacer(),
+                    IconButton(
+                      icon: Icon(Icons.close, size: 22),
+                      onPressed: () {
+                        setState(() => _showTtsReadingPanel = false);
+                      },
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(minWidth: 36, minHeight: 36),
+                    ),
+                  ],
+                ),
+              ),
+              // Nội dung với từ đang đọc được đánh dấu
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(16),
+                  child: RichText(
+                    textAlign: TextAlign.left,
+                    textDirection: TextDirection.ltr,
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 16,
+                        height: 1.5,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      children: [
+                        if (start > 0)
+                          TextSpan(text: text.substring(0, start)),
+                        if (hasHighlight)
+                          TextSpan(
+                            text: text.substring(start, end),
+                            style: TextStyle(
+                              backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.35),
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        if (end < len)
+                          TextSpan(text: text.substring(end)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   // ====== Reading progress (server) ======
 

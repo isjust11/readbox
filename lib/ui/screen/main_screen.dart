@@ -1025,7 +1025,7 @@ class MainBodyState extends State<MainBody> {
 
     final result = await Navigator.pushNamed(
       context,
-      Routes.pdfViewerWithSelectionScreen,
+      Routes.pdfViewerScreen,
       arguments: book,
     );
     if (result == true) {

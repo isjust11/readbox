@@ -1,7 +1,34 @@
 import 'dart:typed_data';
+import 'dart:ui' show Rect;
 import 'package:flutter/foundation.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:dio/dio.dart';
+
+/// Kết quả trích xuất text trang kèm vị trí (bounds) từng từ để đánh dấu trên PDF
+class PageTextWithBounds {
+  final String fullText;
+  final int pageNumber;
+  final List<WordBoundEntry> wordBounds;
+
+  PageTextWithBounds({
+    required this.fullText,
+    required this.pageNumber,
+    required this.wordBounds,
+  });
+}
+
+/// Một từ và vùng bounds tương ứng (chỉ số ký tự trong fullText)
+class WordBoundEntry {
+  final int startIndex;
+  final int endIndex;
+  final Rect bounds;
+
+  WordBoundEntry({
+    required this.startIndex,
+    required this.endIndex,
+    required this.bounds,
+  });
+}
 
 /// Service để trích xuất text từ PDF file
 class PdfTextExtractorService {
@@ -43,6 +70,68 @@ class PdfTextExtractorService {
       return cleanText.isEmpty ? null : cleanText;
     } catch (e) {
       debugPrint('Error extracting text from page: $e');
+      return null;
+    }
+  }
+
+  /// Trích xuất text trang kèm bounds từng từ (để đánh dấu từ đang đọc lên PDF).
+  /// [pdfBytes] - Bytes của file PDF
+  /// [pageIndex] - Chỉ số trang (0-based)
+  /// Returns: fullText (đã cleanup, trùng với text gửi TTS) và danh sách (start, end, bounds) theo thứ tự từ.
+  static Future<PageTextWithBounds?> extractPageTextWithWordBounds(
+    Uint8List pdfBytes,
+    int pageIndex,
+  ) async {
+    try {
+      final PdfDocument document = PdfDocument(inputBytes: pdfBytes);
+      if (pageIndex < 0 || pageIndex >= document.pages.count) {
+        document.dispose();
+        return null;
+      }
+
+      final PdfTextExtractor extractor = PdfTextExtractor(document);
+      final String rawText = extractor.extractText(
+        startPageIndex: pageIndex,
+        endPageIndex: pageIndex,
+      );
+      final String fullText = _cleanupText(rawText);
+      if (fullText.isEmpty) {
+        document.dispose();
+        return null;
+      }
+
+      final List<TextLine> lines = extractor.extractTextLines(
+        startPageIndex: pageIndex,
+        endPageIndex: pageIndex,
+      );
+      final List<WordBoundEntry> wordBounds = [];
+      int searchStart = 0;
+      final int pageNumber = pageIndex + 1;
+
+      for (final TextLine line in lines) {
+        for (final TextWord word in line.wordCollection) {
+          final String w = word.text;
+          if (w.isEmpty) continue;
+          final int idx = fullText.indexOf(w, searchStart);
+          if (idx >= 0) {
+            wordBounds.add(WordBoundEntry(
+              startIndex: idx,
+              endIndex: idx + w.length,
+              bounds: word.bounds,
+            ));
+            searchStart = idx + w.length;
+          }
+        }
+      }
+
+      document.dispose();
+      return PageTextWithBounds(
+        fullText: fullText,
+        pageNumber: pageNumber,
+        wordBounds: wordBounds,
+      );
+    } catch (e) {
+      debugPrint('Error extracting page text with bounds: $e');
       return null;
     }
   }

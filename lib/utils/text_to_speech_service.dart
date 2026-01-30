@@ -18,6 +18,8 @@ class TextToSpeechService {
   Function(String)? onSpeechComplete;
   Function(String)? onSpeechError;
   Function(double)? onSpeechProgress;
+  /// Gọi khi TTS đọc đến từ/cụm: text (toàn bộ), start/end (vị trí ký tự), word (từ đang đọc)
+  void Function(String text, int start, int end, String word)? onSpeechWordProgress;
 
   // Settings
   String _language = 'vi-VN';
@@ -58,6 +60,11 @@ class TextToSpeechService {
         _isPaused = false;
         debugPrint('TTS Error: $msg');
         onSpeechError?.call(msg);
+      });
+
+      // Đánh dấu từ đang đọc (word boundary)
+      _flutterTts!.setProgressHandler((String text, int start, int end, String word) {
+        onSpeechWordProgress?.call(text, start, end, word);
       });
 
       // iOS specific: Enable shared instance
