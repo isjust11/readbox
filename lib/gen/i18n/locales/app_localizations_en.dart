@@ -1300,4 +1300,84 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reading_time => 'Reading time:';
+
+  @override
+  String get pdf_search_in_pdf => 'Search in PDF...';
+
+  @override
+  String get pdf_zoom_in_out => 'Zoom in/out';
+
+  @override
+  String get pdf_toolbar => 'Toolbar';
+
+  @override
+  String get pdf_read_ebook => 'Read ebook';
+
+  @override
+  String get pdf_share => 'Share';
+
+  @override
+  String pdf_share_text(String title) =>
+      'Reading "$title" on Readbox. Download the app to read for free! 📚';
+
+  @override
+  String get pdf_share_file_not_found => 'File not found to share';
+
+  @override
+  String get pdf_share_wait_download =>
+      'PDF is loading, please wait and try again';
+
+  @override
+  String get pdf_share_success => 'Shared successfully';
+
+  @override
+  String pdf_share_error(String error) => 'Cannot share: $error';
+
+  @override
+  String get pdf_load_failed_retry => 'PDF not loaded yet, try again later';
+
+  @override
+  String get pdf_document_read_complete => 'Document finished reading';
+
+  @override
+  String pdf_page_of(int current, int total) => 'Page $current/$total';
+
+  @override
+  String get pdf_cannot_load => 'Cannot load PDF';
+
+  @override
+  String get pdf_view_file_info => 'View file info';
+
+  @override
+  String get pdf_loading => 'Loading PDF...';
+
+  @override
+  String get pdf_please_wait => 'Please wait';
+
+  @override
+  String get pdf_reading => 'Reading';
+
+  @override
+  String get pdf_search_tooltip => 'Search';
+
+  @override
+  String get pdf_jump_to_page => 'Jump to page';
+
+  @override
+  String get pdf_page_number => 'Page number';
+
+  @override
+  String get pdf_go => 'Go';
+
+  @override
+  String get pdf_invalid_page => 'Invalid page number';
+
+  @override
+  String get pdf_file_info => 'PDF file info';
+
+  @override
+  String get pdf_path_label => 'Path:';
+
+  @override
+  String pdf_tts_read_error(String error) => 'Read error: $error';
 }

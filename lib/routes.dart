@@ -18,8 +18,6 @@ class Routes {
   static const String adminUploadScreen = "/adminUploadScreen";
   static const String bookDetailScreen = "/bookDetailScreen";
   static const String pdfViewerScreen = "/pdfViewerScreen";
-  static const String pdfViewerWithSelectionScreen =
-      "/pdfViewerWithSelectionScreen";
   static const String pdfViewerAdvancedScreen = "/pdfViewerAdvancedScreen";
   static const String adminPdfScannerScreen = "/adminPdfScannerScreen";
   static const String settingsScreen = "/settingsScreen";
@@ -115,16 +113,7 @@ class Routes {
           child: PdfViewerScreen(
             fileUrl: args.fileUrl!,
             title: args.displayTitle,
-          ),
-          type: PageTransitionType.rightToLeft,
-        );
-      case pdfViewerWithSelectionScreen:
-        final book = settings.arguments as BookModel;
-        return PageTransition(
-          child: PdfViewerWithSelectionScreen(
-            fileUrl: book.fileUrl!,
-            title: book.displayTitle,
-            bookId: book.id!,
+            bookLanguage: args.language,
           ),
           type: PageTransitionType.rightToLeft,
         );

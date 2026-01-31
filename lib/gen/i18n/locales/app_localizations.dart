@@ -2617,6 +2617,33 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reading time:'**
   String get reading_time;
+
+  String get pdf_search_in_pdf;
+  String get pdf_zoom_in_out;
+  String get pdf_toolbar;
+  String get pdf_read_ebook;
+  String get pdf_share;
+  String pdf_share_text(String title);
+  String get pdf_share_file_not_found;
+  String get pdf_share_wait_download;
+  String get pdf_share_success;
+  String pdf_share_error(String error);
+  String get pdf_load_failed_retry;
+  String get pdf_document_read_complete;
+  String pdf_page_of(int current, int total);
+  String get pdf_cannot_load;
+  String get pdf_view_file_info;
+  String get pdf_loading;
+  String get pdf_please_wait;
+  String get pdf_reading;
+  String get pdf_search_tooltip;
+  String get pdf_jump_to_page;
+  String get pdf_page_number;
+  String get pdf_go;
+  String get pdf_invalid_page;
+  String get pdf_file_info;
+  String get pdf_path_label;
+  String pdf_tts_read_error(String error);
 }
 
 class _AppLocalizationsDelegate

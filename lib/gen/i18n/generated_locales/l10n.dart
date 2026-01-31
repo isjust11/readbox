@@ -4459,6 +4459,61 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  String get pdf_search_in_pdf =>
+      Intl.message('Tìm trong PDF...', name: 'pdf_search_in_pdf', args: []);
+  String get pdf_zoom_in_out =>
+      Intl.message('Phóng to/Thu nhỏ', name: 'pdf_zoom_in_out', args: []);
+  String get pdf_toolbar =>
+      Intl.message('Thanh công cụ', name: 'pdf_toolbar', args: []);
+  String get pdf_read_ebook =>
+      Intl.message('Đọc ebook', name: 'pdf_read_ebook', args: []);
+  String get pdf_share => Intl.message('Chia sẻ', name: 'pdf_share', args: []);
+  String pdf_share_text(String title) => Intl.message(
+      'Đang đọc "$title" trên Readbox. Tải app để đọc sách miễn phí! 📚',
+      name: 'pdf_share_text',
+      args: [title]);
+  String get pdf_share_file_not_found => Intl.message(
+      'Không tìm thấy file để chia sẻ', name: 'pdf_share_file_not_found', args: []);
+  String get pdf_share_wait_download => Intl.message(
+      'Đang tải PDF, vui lòng đợi và thử lại',
+      name: 'pdf_share_wait_download',
+      args: []);
+  String get pdf_share_success =>
+      Intl.message('Đã chia sẻ thành công', name: 'pdf_share_success', args: []);
+  String pdf_share_error(String error) => Intl.message(
+      'Không thể chia sẻ: $error', name: 'pdf_share_error', args: [error]);
+  String get pdf_load_failed_retry => Intl.message(
+      'Chưa tải xong PDF, thử lại sau', name: 'pdf_load_failed_retry', args: []);
+  String get pdf_document_read_complete => Intl.message(
+      'Đã đọc hết tài liệu', name: 'pdf_document_read_complete', args: []);
+  String pdf_page_of(int current, int total) => Intl.message(
+      'Trang $current/$total', name: 'pdf_page_of', args: [current, total]);
+  String get pdf_cannot_load =>
+      Intl.message('Không thể tải PDF', name: 'pdf_cannot_load', args: []);
+  String get pdf_view_file_info =>
+      Intl.message('Xem thông tin file', name: 'pdf_view_file_info', args: []);
+  String get pdf_loading =>
+      Intl.message('Đang tải PDF...', name: 'pdf_loading', args: []);
+  String get pdf_please_wait =>
+      Intl.message('Vui lòng đợi', name: 'pdf_please_wait', args: []);
+  String get pdf_reading =>
+      Intl.message('Đang đọc', name: 'pdf_reading', args: []);
+  String get pdf_search_tooltip =>
+      Intl.message('Tìm', name: 'pdf_search_tooltip', args: []);
+  String get pdf_jump_to_page =>
+      Intl.message('Nhảy đến trang', name: 'pdf_jump_to_page', args: []);
+  String get pdf_page_number =>
+      Intl.message('Số trang', name: 'pdf_page_number', args: []);
+  String get pdf_go => Intl.message('Đến', name: 'pdf_go', args: []);
+  String get pdf_invalid_page =>
+      Intl.message('Số trang không hợp lệ', name: 'pdf_invalid_page', args: []);
+  String get pdf_file_info =>
+      Intl.message('Thông tin file PDF', name: 'pdf_file_info', args: []);
+  String get pdf_path_label =>
+      Intl.message('Đường dẫn:', name: 'pdf_path_label', args: []);
+  String pdf_tts_read_error(String error) =>
+      Intl.message('Lỗi đọc: $error', name: 'pdf_tts_read_error', args: [error]);
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

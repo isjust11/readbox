@@ -80,6 +80,7 @@ class _TTSControlWidgetState extends State<TTSControlWidget> {
       await _ttsService.stop();
     } else {
       if (widget.textToRead != null && widget.textToRead!.isNotEmpty) {
+        await _ttsService.setLanguageFromText(widget.textToRead!);
         await _ttsService.speak(widget.textToRead!);
       }
     }
@@ -286,6 +287,7 @@ class _FloatingTTSButtonState extends State<FloatingTTSButton> {
       await _ttsService.stop();
     } else {
       if (widget.textToRead != null && widget.textToRead!.isNotEmpty) {
+        await _ttsService.setLanguageFromText(widget.textToRead!);
         await _ttsService.speak(widget.textToRead!);
       }
     }

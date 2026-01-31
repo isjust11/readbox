@@ -1,5 +1,6 @@
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter/foundation.dart';
+import 'package:readbox/utils/language_detector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service để quản lý Text-to-Speech cho ebook reading
@@ -168,6 +169,14 @@ class TextToSpeechService {
       _isPaused = false;
     } catch (e) {
       debugPrint('Error resuming TTS: $e');
+    }
+  }
+
+  /// Nhận diện ngôn ngữ từ text và chuyển TTS sang ngôn ngữ đó (cho ebook)
+  Future<void> setLanguageFromText(String text) async {
+    final locale = await detectTtsLocale(text);
+    if (locale != null && locale != _language) {
+      await setLanguage(locale);
     }
   }
 

@@ -3,12 +3,17 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/user_interaction_cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
+import 'package:readbox/routes.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/utils/pdf_text_extractor.dart';
 import 'package:readbox/utils/shared_preference.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
@@ -18,12 +23,14 @@ class PdfViewerScreen extends StatefulWidget {
   final String fileUrl;
   final String title;
   final String? bookId;
+  final String? bookLanguage;
 
   const PdfViewerScreen({
     super.key,
     required this.fileUrl,
     required this.title,
     this.bookId,
+    this.bookLanguage,
   });
 
   @override
@@ -39,11 +46,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   int _totalPages = 0;
   bool _isLocal = false;
   Uint8List? _pdfBytes;
-  bool _isSearchVisible = false;
+  bool _isVisibleToolAction = false;
   PdfTextSearchResult? _searchResult;
   VoidCallback? _searchResultListener;
   bool showToolbar = true;
   bool showNavigationBar = true;
+  String? actionToolbar = '';
   // Text selection & TTS
   String? _selectedText;
   final TextToSpeechService _ttsService = TextToSpeechService();
@@ -83,7 +91,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
     _loadUserDataSettings();
     _initializeTTS();
-
     // Optional reading progress (only when bookId + cubit available)
     try {
       _userInteractionCubit = context.read<UserInteractionCubit>();
@@ -202,38 +209,102 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
   void _handleMenuAction(String value) {
     switch (value) {
-      case 'jump':
-        _showJumpToPage();
-        break;
       case 'search':
+        actionToolbar = 'search';
         setState(() {
-          _isSearchVisible = !_isSearchVisible;
+          _isVisibleToolAction = !_isVisibleToolAction;
         });
         break;
-      case 'zoom_in':
-        _pdfController.zoomLevel += 0.25;
-        break;
-      case 'zoom_out':
-        if (_pdfController.zoomLevel > 1.0) {
-          _pdfController.zoomLevel -= 0.25;
-        }
-        break;
-      case 'fit_page':
-        _pdfController.zoomLevel = 1.0;
-        break;
-      case 'hide_toolbar':
+      case 'zoom_in_out':
+        // _pdfController.zoomLevel += 0.25;
+        actionToolbar = 'zoom_in_out';
         setState(() {
-          showToolbar = !showToolbar;
+          _isVisibleToolAction = !_isVisibleToolAction;
         });
         break;
-      case 'hide_navigation_bar':
+      case 'toolbar':
+        actionToolbar = 'toolbar';
         setState(() {
-          showNavigationBar = !showNavigationBar;
+          _isVisibleToolAction = !_isVisibleToolAction;
         });
         break;
       case 'read_continuous_ebook':
+        setState(() {
+          _isVisibleToolAction = !_isVisibleToolAction;
+        });
+        actionToolbar = 'read_continuous_ebook';
         _readContinuousEbook();
         break;
+      case 'share':
+        _shareEbook();
+        break;
+    }
+  }
+
+  /// Chia sẻ ebook qua mạng xã hội, messaging, email...
+  Future<void> _shareEbook() async {
+    try {
+      String? filePath;
+      final shareText = AppLocalizations.current.pdf_share_text(widget.title);
+
+      if (_isLocal) {
+        final file = File(widget.fileUrl);
+        if (await file.exists()) {
+          filePath = widget.fileUrl;
+        }
+      } else if (_pdfBytes != null && _pdfBytes!.isNotEmpty) {
+        // File từ mạng: lưu tạm để chia sẻ
+        final dir = await getTemporaryDirectory();
+        final baseName = path.basename(widget.fileUrl);
+        final fileName = (baseName.isNotEmpty && baseName.toLowerCase().endsWith('.pdf'))
+            ? baseName
+            : '${widget.title.replaceAll(RegExp(r'[^\w\s-]'), '_')}.pdf';
+        final tempFile = File(path.join(dir.path, fileName));
+        await tempFile.writeAsBytes(_pdfBytes!);
+        filePath = tempFile.path;
+      }
+
+      if (filePath == null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _isLocal
+                  ? AppLocalizations.current.pdf_share_file_not_found
+                  : AppLocalizations.current.pdf_share_wait_download,
+            ),
+            backgroundColor: Colors.orange,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        return;
+      }
+
+      final result = await Share.shareXFiles(
+        [XFile(filePath)],
+        text: shareText,
+        subject: widget.title,
+      );
+
+      if (!mounted) return;
+      if (result.status == ShareResultStatus.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.current.pdf_share_success),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.current.pdf_share_error(e.toString())),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
   }
 
@@ -258,8 +329,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       if (!mounted) return;
       setState(() => _isReadingContinuous = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Chưa tải xong PDF, thử lại sau'),
+        SnackBar(
+          content: Text(AppLocalizations.current.pdf_load_failed_retry),
           backgroundColor: Colors.orange,
         ),
       );
@@ -268,11 +339,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     try {
       final pageText = await _extractPageText(_currentPage);
       if (pageText != null && pageText.isNotEmpty) {
+        await _ttsService.setLanguageFromText(pageText);
         if (_pdfBytes != null) {
-          final bounds = await PdfTextExtractorService.extractPageTextWithWordBounds(
-            _pdfBytes!,
-            _currentPage - 1,
-          );
+          final bounds =
+              await PdfTextExtractorService.extractPageTextWithWordBounds(
+                _pdfBytes!,
+                _currentPage - 1,
+              );
           if (mounted) setState(() => _currentPageWordBounds = bounds);
         }
         if (mounted) {
@@ -280,7 +353,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             _ttsReadingText = pageText;
             _ttsWordStart = 0;
             _ttsWordEnd = 0;
-            _showTtsReadingPanel = true;
+            // _showTtsReadingPanel = true;
           });
         }
         await _ttsService.speak(pageText);
@@ -292,8 +365,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           if (!mounted) return;
           setState(() => _isReadingContinuous = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Đã đọc hết tài liệu'),
+            SnackBar(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              content: Text(AppLocalizations.current.pdf_document_read_complete),
               backgroundColor: Colors.green,
             ),
           );
@@ -377,7 +453,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     _searchResult = null;
     _searchResultListener = null;
     _searchQueryController.clear();
-    setState(() => _isSearchVisible = false);
+    setState(() => _isVisibleToolAction = false);
   }
 
   Widget _buildPdfViewer() {
@@ -422,33 +498,168 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     );
   }
 
-  Widget _buildAppBarSearchTitle() {
-    return TextField(
-      controller: _searchQueryController,
-      autofocus: true,
-      style: TextStyle(color: Colors.white, fontSize: 16),
-      decoration: InputDecoration(
-        hintText: 'Tìm trong PDF...',
-        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-        prefixIcon: Icon(
-          Icons.search_rounded,
-          color: Colors.white.withValues(alpha: 0.9),
-          size: 22,
-        ),
-        suffixIcon: IconButton(
-          icon: Icon(Icons.arrow_forward_rounded, color: Colors.white),
-          onPressed: () => _runSearch(_searchQueryController.text),
-          tooltip: 'Tìm',
-        ),
-        border: InputBorder.none,
-        contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-        isDense: true,
-      ),
-      onSubmitted: _runSearch,
-    );
+  Widget _buildAppBarToolTitle() {
+    switch (actionToolbar) {
+      case 'search':
+        return TextField(
+          controller: _searchQueryController,
+          autofocus: true,
+          style: TextStyle(color: Colors.white, fontSize: 16),
+          decoration: InputDecoration(
+            hintText: AppLocalizations.current.pdf_search_in_pdf,
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+            prefixIcon: Icon(
+              Icons.search_rounded,
+              color: Colors.white.withValues(alpha: 0.9),
+              size: 22,
+            ),
+            suffixIcon: IconButton(
+              icon: Icon(Icons.arrow_forward_rounded, color: Colors.white),
+              onPressed: () => _runSearch(_searchQueryController.text),
+              tooltip: AppLocalizations.current.pdf_search_tooltip,
+            ),
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+            isDense: true,
+          ),
+          onSubmitted: _runSearch,
+        );
+      default:
+        return Text(AppLocalizations.current.pdf_search_in_pdf);
+    }
   }
 
-  List<Widget> _buildAppBarSearchActions() {
+  List<Widget> _buildAppBarToolActions() {
+    List<Widget> actions = [];
+    switch (actionToolbar) {
+      case 'search':
+        actions = [..._buildSearchActions()];
+      case 'zoom_in_out':
+        actions = [
+          IconButton(
+            icon: Icon(Icons.zoom_in, color: Colors.white),
+            onPressed: () => _pdfController.zoomLevel += 0.25,
+          ),
+          IconButton(
+            icon: Icon(Icons.zoom_out, color: Colors.white),
+            onPressed: () => _pdfController.zoomLevel -= 0.25,
+          ),
+          IconButton(
+            icon: Icon(Icons.fullscreen, color: Colors.white),
+            onPressed: () => _pdfController.zoomLevel = 1.0,
+          ),
+        ];
+      case 'read_continuous_ebook':
+        actions = [
+          IconButton(
+            icon: Icon(
+              _isReadingContinuous
+                  ? Icons.pause_circle_outline
+                  : Icons.play_circle_outline,
+              color: _isReadingContinuous ? Colors.red : Colors.white,
+            ),
+            onPressed: () async {
+              if (_isReadingContinuous) {
+                await _ttsService.stop();
+                _removePdfWordHighlight();
+                setState(() {
+                  _isReadingContinuous = false;
+                  _currentPageWordBounds = null;
+                });
+              } else {
+                await _readContinuousEbook();
+              }
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              _showTtsReadingPanel
+                  ? Icons.voice_over_off
+                  : Icons.record_voice_over_outlined,
+              color: Colors.white,
+            ),
+            onPressed:
+                () => {
+                  setState(() {
+                    _showTtsReadingPanel = !_showTtsReadingPanel;
+                  }),
+                },
+          ),
+
+          IconButton(
+            icon: Icon(Icons.settings, color: Colors.white),
+            onPressed: () async {
+              if (_isReadingContinuous) {
+                await _ttsService.stop();
+                _removePdfWordHighlight();
+                setState(() {
+                  _isReadingContinuous = false;
+                  _showTtsReadingPanel = false;
+                  _currentPageWordBounds = null;
+                });
+              }
+              if (mounted) {
+                Navigator.of(
+                  context,
+                ).pushNamed(Routes.textToSpeechSettingScreen);
+              }
+            },
+          ),
+        ];
+      case 'toolbar':
+        actions = [
+          IconButton(
+            icon: Icon(Icons.fullscreen, color: Colors.white),
+            onPressed: () => setState(() {
+              showToolbar = !showToolbar;
+            }),
+          ),
+          IconButton(
+            icon: Icon(showNavigationBar ? 
+            Icons.keyboard_arrow_down_rounded :
+             Icons.keyboard_arrow_up_rounded, color: Colors.white),
+            onPressed: () => setState(() {
+              showNavigationBar = !showNavigationBar;
+            }),
+          ),
+          IconButton(
+            icon: Icon(Icons.skip_next_rounded, color: Colors.white),
+            onPressed: () => _showJumpToPage(),
+          ),
+        ];
+      default:
+        return [];
+    }
+    if (actions.isNotEmpty) {
+      actions = [
+        Container(
+          margin: EdgeInsets.only(right: 8, top: 8, bottom: 8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(children: actions),
+        ),
+      ];
+    }
+    actions.add(
+      Container(
+        margin: EdgeInsets.only(right: 8, top: 8, bottom: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: IconButton(
+          icon: Icon(Icons.close_rounded, color: Colors.white),
+          onPressed: _clearSearch,
+          iconSize: 24,
+        ),
+      ),
+    );
+    return actions;
+  }
+
+  List<Widget> _buildSearchActions() {
     final total = _searchResult?.totalInstanceCount ?? 0;
     final current = _searchResult?.currentInstanceIndex ?? 0;
     final canPrev = _searchResult != null && total > 0 && current > 1;
@@ -518,14 +729,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             ),
           ),
         ),
-      IconButton(
-        icon: Icon(Icons.close_rounded, color: Colors.white),
-        onPressed: _clearSearch,
-        iconSize: 24,
-      ),
     ];
   }
 
+  // visible toolbar actions
+  bool get _visibleAppbarToolAction => _isVisibleToolAction;
   @override
   Widget build(BuildContext context) {
     final showViewer =
@@ -550,8 +758,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   ),
                 ),
                 title:
-                    _isSearchVisible
-                        ? _buildAppBarSearchTitle()
+                    _visibleAppbarToolAction && actionToolbar == 'search'
+                        ? _buildAppBarToolTitle()
                         : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
@@ -578,7 +786,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
-                                  'Trang $_currentPage/$_totalPages',
+                                  AppLocalizations.current.pdf_page_of(
+                                    _currentPage,
+                                    _totalPages,
+                                  ),
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: Colors.white.withValues(alpha: 0.9),
@@ -589,8 +800,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                           ],
                         ),
                 actions:
-                    _isSearchVisible
-                        ? _buildAppBarSearchActions()
+                    _visibleAppbarToolAction
+                        ? _buildAppBarToolActions()
                         : [
                           Container(
                             margin: EdgeInsets.only(
@@ -616,62 +827,32 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                     _buildMenuItem(
                                       'search',
                                       Icons.search_rounded,
-                                      'Tìm kiếm',
+                                      AppLocalizations.current.search,
                                       Colors.teal,
                                     ),
                                     _buildMenuItem(
-                                      'jump',
-                                      Icons.skip_next_rounded,
-                                      'Nhảy đến trang',
-                                      Theme.of(context).primaryColor,
-                                    ),
-                                    _buildMenuItem(
-                                      'zoom_in',
+                                      'zoom_in_out',
                                       Icons.zoom_in,
-                                      'Phóng to',
+                                      AppLocalizations.current.pdf_zoom_in_out,
                                       Colors.blue,
                                     ),
                                     _buildMenuItem(
-                                      'zoom_out',
-                                      Icons.zoom_out,
-                                      'Thu nhỏ',
-                                      Colors.blue,
-                                    ),
-                                    _buildMenuItem(
-                                      'fit_page',
-                                      Icons.fit_screen,
-                                      'Vừa màn hình',
-                                      Colors.green,
-                                    ),
-                                    _buildMenuItem(
-                                      'hide_toolbar',
-                                      Icons.fullscreen,
-                                      'Ẩn thanh công cụ',
-                                      Colors.purple,
+                                      'toolbar',
+                                      Icons.settings_overscan_rounded,
+                                      AppLocalizations.current.pdf_toolbar,
+                                      Colors.grey,
                                     ),
                                     if (_hasInternet)
                                       _buildMenuItem(
                                         'read_continuous_ebook',
                                         Icons.play_circle_outline,
-                                        'Đọc ebook liên tục',
+                                        AppLocalizations.current.pdf_read_ebook,
                                         Colors.teal,
                                       ),
                                     _buildMenuItem(
-                                      'hide_navigation_bar',
-                                      showNavigationBar
-                                          ? Icons.keyboard_arrow_down_rounded
-                                          : Icons.keyboard_arrow_up_rounded,
-                                      showNavigationBar
-                                          ? 'Ẩn thanh điều hướng'
-                                          : 'Hiện thanh điều hướng',
-                                      showNavigationBar
-                                          ? Colors.grey
-                                          : Colors.green,
-                                    ),
-                                    _buildMenuItem(
                                       'share',
                                       Icons.share_rounded,
-                                      'Chia sẻ',
+                                      AppLocalizations.current.pdf_share,
                                       Colors.blue,
                                     ),
                                   ],
@@ -690,7 +871,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   Icon(Icons.error_outline, size: 64, color: Colors.red),
                   SizedBox(height: 16),
                   Text(
-                    'Không thể tải PDF',
+                    AppLocalizations.current.pdf_cannot_load,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
@@ -705,12 +886,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: _isLocal ? null : () => _loadFromNetwork(),
-                    child: Text('Thử lại'),
+                    child: Text(AppLocalizations.current.retry),
                   ),
                   SizedBox(height: 16),
                   TextButton(
                     onPressed: () => _showPdfInfo(),
-                    child: Text('Xem thông tin file'),
+                    child: Text(AppLocalizations.current.pdf_view_file_info),
                   ),
                 ],
               ),
@@ -726,10 +907,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   children: [
                     CircularProgressIndicator(),
                     SizedBox(height: 16),
-                    Text('Đang tải PDF...'),
+                    Text(AppLocalizations.current.pdf_loading),
                     SizedBox(height: 8),
                     Text(
-                      'Vui lòng đợi',
+                      AppLocalizations.current.pdf_please_wait,
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                   ],
@@ -750,32 +931,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 child: Icon(Icons.menu),
               ),
             ),
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingActionButton.small(
-              onPressed: () async {
-               if (_isReadingContinuous) {
-                await _ttsService.stop();
-                _removePdfWordHighlight();
-                setState(() {
-                  _isReadingContinuous = false;
-                  _showTtsReadingPanel = false;
-                  _currentPageWordBounds = null;
-                });
-               } else {
-                await _readContinuousEbook();
-               }
-              
-              },
-              child: Icon(
-                _isReadingContinuous
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline,
-                color: _isReadingContinuous ? Colors.red : Colors.green,
-              ),
-            ),
-          ),
           // Panel đánh dấu từ đang đọc (TTS)
           if (_showTtsReadingPanel && _ttsReadingText != null)
             _buildTtsReadingPanel(),
@@ -836,7 +991,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                         ),
                       ),
                       child: Text(
-                        '$_currentPage / $_totalPages',
+                        AppLocalizations.current.pdf_page_of(
+                          _currentPage,
+                          _totalPages,
+                        ),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
@@ -894,7 +1052,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   void _setupTTSCallbacks() {
     _ttsService.onSpeechStart = (_) {};
 
-    _ttsService.onSpeechWordProgress = (String text, int start, int end, String word) {
+    _ttsService.onSpeechWordProgress = (
+      String text,
+      int start,
+      int end,
+      String word,
+    ) {
       if (!mounted) return;
       setState(() {
         _ttsWordStart = start.clamp(0, text.length);
@@ -911,10 +1074,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       } else {
         _isReadingContinuous = false;
         _ttsProgressTimer?.cancel();
-        if (mounted) setState(() {
-          _showTtsReadingPanel = false;
-          _currentPageWordBounds = null;
-        });
+        if (mounted) {
+          setState(() {
+            _showTtsReadingPanel = false;
+            _currentPageWordBounds = null;
+          });
+        }
       }
     };
 
@@ -927,7 +1092,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       });
       _ttsProgressTimer?.cancel();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi đọc: $error'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text(AppLocalizations.current.pdf_tts_read_error(error)),
+          backgroundColor: Colors.red,
+        ),
       );
     };
   }
@@ -942,16 +1110,23 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   void _updatePdfWordHighlight(int start, int end) {
     final bounds = _currentPageWordBounds;
     if (bounds == null || bounds.wordBounds.isEmpty) return;
-    final overlapping = bounds.wordBounds.where((e) =>
-        e.startIndex < end && e.endIndex > start).toList();
+    final overlapping =
+        bounds.wordBounds
+            .where((e) => e.startIndex < end && e.endIndex > start)
+            .toList();
     if (overlapping.isEmpty) return;
 
     _removePdfWordHighlight();
-    final collection = overlapping.map((e) => PdfTextLine(
-      e.bounds,
-      bounds.fullText.substring(e.startIndex, e.endIndex),
-      bounds.pageNumber,
-    )).toList();
+    final collection =
+        overlapping
+            .map(
+              (e) => PdfTextLine(
+                e.bounds,
+                bounds.fullText.substring(e.startIndex, e.endIndex),
+                bounds.pageNumber,
+              ),
+            )
+            .toList();
     final annotation = HighlightAnnotation(textBoundsCollection: collection);
     annotation.color = Theme.of(context).primaryColor.withValues(alpha: 0.35);
     _pdfController.addAnnotation(annotation);
@@ -990,11 +1165,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         useSelection: false,
       );
       if (pageText != null && pageText.isNotEmpty) {
+        await _ttsService.setLanguageFromText(pageText);
         if (_pdfBytes != null) {
-          final bounds = await PdfTextExtractorService.extractPageTextWithWordBounds(
-            _pdfBytes!,
-            nextPageNumber - 1,
-          );
+          final bounds =
+              await PdfTextExtractorService.extractPageTextWithWordBounds(
+                _pdfBytes!,
+                nextPageNumber - 1,
+              );
           if (mounted) setState(() => _currentPageWordBounds = bounds);
         }
         if (mounted) {
@@ -1002,7 +1179,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             _ttsReadingText = pageText;
             _ttsWordStart = 0;
             _ttsWordEnd = 0;
-            _showTtsReadingPanel = true;
+            // _showTtsReadingPanel = true;
           });
         }
         await _ttsService.speak(pageText);
@@ -1071,7 +1248,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         elevation: 8,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         child: Container(
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.4),
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.4,
+          ),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -1088,10 +1267,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.record_voice_over, color: Theme.of(context).primaryColor, size: 22),
+                    Icon(
+                      Icons.record_voice_over,
+                      color: Theme.of(context).primaryColor,
+                      size: 22,
+                    ),
                     SizedBox(width: 8),
                     Text(
-                      'Đang đọc',
+                      AppLocalizations.current.pdf_reading,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
@@ -1124,19 +1307,19 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                       children: [
-                        if (start > 0)
-                          TextSpan(text: text.substring(0, start)),
+                        if (start > 0) TextSpan(text: text.substring(0, start)),
                         if (hasHighlight)
                           TextSpan(
                             text: text.substring(start, end),
                             style: TextStyle(
-                              backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.35),
+                              backgroundColor: Theme.of(
+                                context,
+                              ).primaryColor.withValues(alpha: 0.35),
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context).primaryColor,
                             ),
                           ),
-                        if (end < len)
-                          TextSpan(text: text.substring(end)),
+                        if (end < len) TextSpan(text: text.substring(end)),
                       ],
                     ),
                   ),
@@ -1274,7 +1457,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               ),
               SizedBox(width: 12),
               Text(
-                'Nhảy đến trang',
+                AppLocalizations.current.pdf_jump_to_page,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ],
@@ -1287,7 +1470,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 keyboardType: TextInputType.number,
                 autofocus: true,
                 decoration: InputDecoration(
-                  labelText: 'Số trang',
+                  labelText: AppLocalizations.current.pdf_page_number,
                   hintText: '1-$_totalPages',
                   prefixIcon: Icon(Icons.numbers),
                   border: OutlineInputBorder(
@@ -1321,7 +1504,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 ),
               ),
               child: Text(
-                'Hủy',
+                AppLocalizations.current.cancel,
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
               ),
             ),
@@ -1334,7 +1517,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Số trang không hợp lệ'),
+                      content: Text(
+                        AppLocalizations.current.pdf_invalid_page,
+                      ),
                       backgroundColor: Colors.red,
                       behavior: SnackBarBehavior.floating,
                       shape: RoundedRectangleBorder(
@@ -1354,7 +1539,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Đến',
+                    AppLocalizations.current.pdf_go,
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(width: 6),
@@ -1373,12 +1558,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Thông tin file PDF'),
+          title: Text(AppLocalizations.current.pdf_file_info),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Đường dẫn:'),
+              Text(AppLocalizations.current.pdf_path_label),
               SizedBox(height: 8),
               Text(
                 widget.fileUrl,
@@ -1389,7 +1574,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Đóng'),
+              child: Text(AppLocalizations.current.close),
             ),
           ],
         );

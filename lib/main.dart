@@ -10,11 +10,13 @@ import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/services/fcm_service.dart';
 import 'injection_container.dart' as di;
 import 'ui/app.dart';
+import 'utils/language_detector.dart';
 import 'utils/shared_preference.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
+  await initLanguageDetector();
   await di.init();
    // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

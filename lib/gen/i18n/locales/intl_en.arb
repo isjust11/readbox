@@ -418,5 +418,52 @@
   "you_have_no_book_reading": "You have no book reading.",
   "continue_reading_books": "Continue reading books",
   "continue_reading_books_description": "Continue reading books",
-  "reading_time": "Reading time:"
+  "reading_time": "Reading time:",
+  "pdf_search_in_pdf": "Search in PDF...",
+  "pdf_zoom_in_out": "Zoom in/out",
+  "pdf_toolbar": "Toolbar",
+  "pdf_read_ebook": "Read ebook",
+  "pdf_share": "Share",
+  "pdf_share_text": "Reading \"{title}\" on Readbox. Download the app to read for free! 📚",
+  "@pdf_share_text": {
+    "placeholders": {
+      "title": {"type": "String"}
+    }
+  },
+  "pdf_share_file_not_found": "File not found to share",
+  "pdf_share_wait_download": "PDF is loading, please wait and try again",
+  "pdf_share_success": "Shared successfully",
+  "pdf_share_error": "Cannot share: {error}",
+  "@pdf_share_error": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  "pdf_load_failed_retry": "PDF not loaded yet, try again later",
+  "pdf_document_read_complete": "Document finished reading",
+  "pdf_page_of": "Page {current}/{total}",
+  "@pdf_page_of": {
+    "placeholders": {
+      "current": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "pdf_cannot_load": "Cannot load PDF",
+  "pdf_view_file_info": "View file info",
+  "pdf_loading": "Loading PDF...",
+  "pdf_please_wait": "Please wait",
+  "pdf_reading": "Reading",
+  "pdf_search_tooltip": "Search",
+  "pdf_jump_to_page": "Jump to page",
+  "pdf_page_number": "Page number",
+  "pdf_go": "Go",
+  "pdf_invalid_page": "Invalid page number",
+  "pdf_file_info": "PDF file info",
+  "pdf_path_label": "Path:",
+  "pdf_tts_read_error": "Read error: {error}",
+  "@pdf_tts_read_error": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  }
 }

@@ -746,6 +746,45 @@ class MessageLookup extends MessageLookupByLibrary {
         "youWillReceiveNotificationsHere": MessageLookupByLibrary.simpleMessage(
             "Bạn sẽ nhận được thông báo ở đây"),
         "you_have_no_book_reading": MessageLookupByLibrary.simpleMessage(
-            "Bạn chưa có sách nào đang đọc.")
+            "Bạn chưa có sách nào đang đọc."),
+        "pdf_search_in_pdf":
+            MessageLookupByLibrary.simpleMessage("Tìm trong PDF..."),
+        "pdf_zoom_in_out":
+            MessageLookupByLibrary.simpleMessage("Phóng to/Thu nhỏ"),
+        "pdf_toolbar": MessageLookupByLibrary.simpleMessage("Thanh công cụ"),
+        "pdf_read_ebook": MessageLookupByLibrary.simpleMessage("Đọc ebook"),
+        "pdf_share": MessageLookupByLibrary.simpleMessage("Chia sẻ"),
+        "pdf_share_text": (String title) =>
+            "Đang đọc \"$title\" trên Readbox. Tải app để đọc sách miễn phí! 📚",
+        "pdf_share_file_not_found":
+            MessageLookupByLibrary.simpleMessage("Không tìm thấy file để chia sẻ"),
+        "pdf_share_wait_download": MessageLookupByLibrary.simpleMessage(
+            "Đang tải PDF, vui lòng đợi và thử lại"),
+        "pdf_share_success":
+            MessageLookupByLibrary.simpleMessage("Đã chia sẻ thành công"),
+        "pdf_share_error": (String error) => "Không thể chia sẻ: $error",
+        "pdf_load_failed_retry":
+            MessageLookupByLibrary.simpleMessage("Chưa tải xong PDF, thử lại sau"),
+        "pdf_document_read_complete":
+            MessageLookupByLibrary.simpleMessage("Đã đọc hết tài liệu"),
+        "pdf_page_of": (int current, int total) => "Trang $current/$total",
+        "pdf_cannot_load":
+            MessageLookupByLibrary.simpleMessage("Không thể tải PDF"),
+        "pdf_view_file_info":
+            MessageLookupByLibrary.simpleMessage("Xem thông tin file"),
+        "pdf_loading": MessageLookupByLibrary.simpleMessage("Đang tải PDF..."),
+        "pdf_please_wait": MessageLookupByLibrary.simpleMessage("Vui lòng đợi"),
+        "pdf_reading": MessageLookupByLibrary.simpleMessage("Đang đọc"),
+        "pdf_search_tooltip": MessageLookupByLibrary.simpleMessage("Tìm"),
+        "pdf_jump_to_page":
+            MessageLookupByLibrary.simpleMessage("Nhảy đến trang"),
+        "pdf_page_number": MessageLookupByLibrary.simpleMessage("Số trang"),
+        "pdf_go": MessageLookupByLibrary.simpleMessage("Đến"),
+        "pdf_invalid_page":
+            MessageLookupByLibrary.simpleMessage("Số trang không hợp lệ"),
+        "pdf_file_info":
+            MessageLookupByLibrary.simpleMessage("Thông tin file PDF"),
+        "pdf_path_label": MessageLookupByLibrary.simpleMessage("Đường dẫn:"),
+        "pdf_tts_read_error": (String error) => "Lỗi đọc: $error"
       };
 }

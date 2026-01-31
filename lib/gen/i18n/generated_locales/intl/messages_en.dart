@@ -710,6 +710,45 @@ class MessageLookup extends MessageLookupByLibrary {
         "youWillReceiveNotificationsHere": MessageLookupByLibrary.simpleMessage(
             "You will receive notifications here"),
         "you_have_no_book_reading":
-            MessageLookupByLibrary.simpleMessage("You have no book reading.")
+            MessageLookupByLibrary.simpleMessage("You have no book reading."),
+        "pdf_search_in_pdf":
+            MessageLookupByLibrary.simpleMessage("Search in PDF..."),
+        "pdf_zoom_in_out":
+            MessageLookupByLibrary.simpleMessage("Zoom in/out"),
+        "pdf_toolbar": MessageLookupByLibrary.simpleMessage("Toolbar"),
+        "pdf_read_ebook": MessageLookupByLibrary.simpleMessage("Read ebook"),
+        "pdf_share": MessageLookupByLibrary.simpleMessage("Share"),
+        "pdf_share_text": (String title) =>
+            "Reading \"$title\" on Readbox. Download the app to read for free! 📚",
+        "pdf_share_file_not_found": MessageLookupByLibrary.simpleMessage(
+            "File not found to share"),
+        "pdf_share_wait_download": MessageLookupByLibrary.simpleMessage(
+            "PDF is loading, please wait and try again"),
+        "pdf_share_success":
+            MessageLookupByLibrary.simpleMessage("Shared successfully"),
+        "pdf_share_error": (String error) => "Cannot share: $error",
+        "pdf_load_failed_retry": MessageLookupByLibrary.simpleMessage(
+            "PDF not loaded yet, try again later"),
+        "pdf_document_read_complete": MessageLookupByLibrary.simpleMessage(
+            "Document finished reading"),
+        "pdf_page_of": (int current, int total) => "Page $current/$total",
+        "pdf_cannot_load":
+            MessageLookupByLibrary.simpleMessage("Cannot load PDF"),
+        "pdf_view_file_info":
+            MessageLookupByLibrary.simpleMessage("View file info"),
+        "pdf_loading": MessageLookupByLibrary.simpleMessage("Loading PDF..."),
+        "pdf_please_wait": MessageLookupByLibrary.simpleMessage("Please wait"),
+        "pdf_reading": MessageLookupByLibrary.simpleMessage("Reading"),
+        "pdf_search_tooltip": MessageLookupByLibrary.simpleMessage("Search"),
+        "pdf_jump_to_page":
+            MessageLookupByLibrary.simpleMessage("Jump to page"),
+        "pdf_page_number": MessageLookupByLibrary.simpleMessage("Page number"),
+        "pdf_go": MessageLookupByLibrary.simpleMessage("Go"),
+        "pdf_invalid_page": MessageLookupByLibrary.simpleMessage(
+            "Invalid page number"),
+        "pdf_file_info":
+            MessageLookupByLibrary.simpleMessage("PDF file info"),
+        "pdf_path_label": MessageLookupByLibrary.simpleMessage("Path:"),
+        "pdf_tts_read_error": (String error) => "Read error: $error"
       };
 }

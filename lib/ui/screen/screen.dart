@@ -7,7 +7,6 @@ export 'local_library/local_library_screen.dart';
 export 'admin/admin_upload_screen.dart';
 export 'book/book_detail_screen.dart';
 export 'book/pdf_viewer_screen.dart';
-export 'book/pdf_viewer_with_selection_screen.dart';
 export 'book/pdf_viewer_advanced_screen.dart';
 export 'settings/setting_screen.dart';
 export 'settings/page/feedback_screen.dart';

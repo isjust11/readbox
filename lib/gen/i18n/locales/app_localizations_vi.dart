@@ -1302,4 +1302,84 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get reading_time => 'Thời gian đọc:';
+
+  @override
+  String get pdf_search_in_pdf => 'Tìm trong PDF...';
+
+  @override
+  String get pdf_zoom_in_out => 'Phóng to/Thu nhỏ';
+
+  @override
+  String get pdf_toolbar => 'Thanh công cụ';
+
+  @override
+  String get pdf_read_ebook => 'Đọc ebook';
+
+  @override
+  String get pdf_share => 'Chia sẻ';
+
+  @override
+  String pdf_share_text(String title) =>
+      'Đang đọc "$title" trên Readbox. Tải app để đọc sách miễn phí! 📚';
+
+  @override
+  String get pdf_share_file_not_found => 'Không tìm thấy file để chia sẻ';
+
+  @override
+  String get pdf_share_wait_download =>
+      'Đang tải PDF, vui lòng đợi và thử lại';
+
+  @override
+  String get pdf_share_success => 'Đã chia sẻ thành công';
+
+  @override
+  String pdf_share_error(String error) => 'Không thể chia sẻ: $error';
+
+  @override
+  String get pdf_load_failed_retry => 'Chưa tải xong PDF, thử lại sau';
+
+  @override
+  String get pdf_document_read_complete => 'Đã đọc hết tài liệu';
+
+  @override
+  String pdf_page_of(int current, int total) => 'Trang $current/$total';
+
+  @override
+  String get pdf_cannot_load => 'Không thể tải PDF';
+
+  @override
+  String get pdf_view_file_info => 'Xem thông tin file';
+
+  @override
+  String get pdf_loading => 'Đang tải PDF...';
+
+  @override
+  String get pdf_please_wait => 'Vui lòng đợi';
+
+  @override
+  String get pdf_reading => 'Đang đọc';
+
+  @override
+  String get pdf_search_tooltip => 'Tìm';
+
+  @override
+  String get pdf_jump_to_page => 'Nhảy đến trang';
+
+  @override
+  String get pdf_page_number => 'Số trang';
+
+  @override
+  String get pdf_go => 'Đến';
+
+  @override
+  String get pdf_invalid_page => 'Số trang không hợp lệ';
+
+  @override
+  String get pdf_file_info => 'Thông tin file PDF';
+
+  @override
+  String get pdf_path_label => 'Đường dẫn:';
+
+  @override
+  String pdf_tts_read_error(String error) => 'Lỗi đọc: $error';
 }

@@ -88,7 +88,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
     if (book.fileUrl != null) {
       Navigator.pushNamed(
         context,
-        Routes.pdfViewerWithSelectionScreen,
+        Routes.pdfViewerScreen,
         arguments: book,
       );
     }
