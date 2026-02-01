@@ -2618,31 +2618,160 @@ abstract class AppLocalizations {
   /// **'Reading time:'**
   String get reading_time;
 
+  /// No description provided for @pdf_search_in_pdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Search in PDF...'**
   String get pdf_search_in_pdf;
+
+  /// No description provided for @pdf_zoom_in_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoom in/out'**
   String get pdf_zoom_in_out;
+
+  /// No description provided for @pdf_toolbar.
+  ///
+  /// In en, this message translates to:
+  /// **'Toolbar'**
   String get pdf_toolbar;
+
+  /// No description provided for @pdf_read_ebook.
+  ///
+  /// In en, this message translates to:
+  /// **'Read ebook'**
   String get pdf_read_ebook;
+
+  /// No description provided for @pdf_share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
   String get pdf_share;
+
+  /// No description provided for @pdf_share_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading \"{title}\" on Readbox. Download the app to read for free! 📚'**
   String pdf_share_text(String title);
+
+  /// No description provided for @pdf_share_file_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'File not found to share'**
   String get pdf_share_file_not_found;
+
+  /// No description provided for @pdf_share_wait_download.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF is loading, please wait and try again'**
   String get pdf_share_wait_download;
+
+  /// No description provided for @pdf_share_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Shared successfully'**
   String get pdf_share_success;
+
+  /// No description provided for @pdf_share_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot share: {error}'**
   String pdf_share_error(String error);
+
+  /// No description provided for @pdf_load_failed_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF not loaded yet, try again later'**
   String get pdf_load_failed_retry;
+
+  /// No description provided for @pdf_document_read_complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Document finished reading'**
   String get pdf_document_read_complete;
+
+  /// No description provided for @pdf_page_of.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {current}/{total}'**
   String pdf_page_of(int current, int total);
+
+  /// No description provided for @pdf_cannot_load.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot load PDF'**
   String get pdf_cannot_load;
+
+  /// No description provided for @pdf_view_file_info.
+  ///
+  /// In en, this message translates to:
+  /// **'View file info'**
   String get pdf_view_file_info;
+
+  /// No description provided for @pdf_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading PDF...'**
   String get pdf_loading;
+
+  /// No description provided for @pdf_please_wait.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait'**
   String get pdf_please_wait;
+
+  /// No description provided for @pdf_reading.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
   String get pdf_reading;
+
+  /// No description provided for @pdf_search_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
   String get pdf_search_tooltip;
+
+  /// No description provided for @pdf_jump_to_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump to page'**
   String get pdf_jump_to_page;
+
+  /// No description provided for @pdf_page_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Page number'**
   String get pdf_page_number;
+
+  /// No description provided for @pdf_go.
+  ///
+  /// In en, this message translates to:
+  /// **'Go'**
   String get pdf_go;
+
+  /// No description provided for @pdf_invalid_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid page number'**
   String get pdf_invalid_page;
+
+  /// No description provided for @pdf_file_info.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF file info'**
   String get pdf_file_info;
+
+  /// No description provided for @pdf_path_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Path:'**
   String get pdf_path_label;
+
+  /// No description provided for @pdf_tts_read_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Read error: {error}'**
   String pdf_tts_read_error(String error);
 }
 

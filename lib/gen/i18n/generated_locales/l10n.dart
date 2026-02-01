@@ -4514,6 +4514,17 @@ class AppLocalizations {
       Intl.message('Đường dẫn:', name: 'pdf_path_label', args: []);
   String pdf_tts_read_error(String error) =>
       Intl.message('Lỗi đọc: $error', name: 'pdf_tts_read_error', args: [error]);
+  String get pdf_draw => 'Vẽ';
+  String get pdf_notes => 'Ghi chú';
+  String get pdf_draw_mode => 'Chế độ vẽ';
+  String get pdf_done_drawing => 'Xong';
+  String get pdf_undo => 'Hoàn tác';
+  String get pdf_add_note => 'Thêm ghi chú';
+  String get pdf_note_hint => 'Nhập nội dung ghi chú...';
+  String get pdf_note_added => 'Đã thêm ghi chú';
+  String get pdf_no_notes => 'Chưa có ghi chú nào';
+  String get pdf_notes_list => 'Danh sách ghi chú';
+  String get pdf_drawings_saved => 'Đã lưu nét vẽ vào PDF';
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

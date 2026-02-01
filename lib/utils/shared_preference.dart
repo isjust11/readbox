@@ -21,6 +21,8 @@ class SPrefCache {
   static const String PREF_KEY_USER_INFO = "pref_key_user_info";
     static const String PREF_KEY_HIDE_NAVIGATION_BAR = "pref_key_hide_navigation_bar";
   static const String PREF_KEY_PDF_READING_POSITIONS = "pref_key_pdf_reading_positions";
+  static const String PREF_KEY_PDF_DRAWINGS = "pref_key_pdf_drawings";
+  static const String PREF_KEY_PDF_NOTES = "pref_key_pdf_notes";
 }
 
 class SharedPreferenceUtil {
@@ -114,6 +116,63 @@ class SharedPreferenceUtil {
         : {};
     map[key] = page;
     return prefs.setString(SPrefCache.PREF_KEY_PDF_READING_POSITIONS, jsonEncode(map));
+  }
+
+  /// Lưu nét vẽ trên PDF (key: fileUrl, value: Map<page, List<List<{x,y}>>>)
+  static Future<bool> savePdfDrawings(
+    String key,
+    Map<String, dynamic> drawings,
+  ) async {
+    if (key.isEmpty) return false;
+    final prefs = await SharedPreferences.getInstance();
+    final json = prefs.getString(SPrefCache.PREF_KEY_PDF_DRAWINGS);
+    final map = json != null
+        ? Map<String, dynamic>.from(jsonDecode(json) as Map)
+        : <String, dynamic>{};
+    map[key] = drawings;
+    return prefs.setString(
+      SPrefCache.PREF_KEY_PDF_DRAWINGS,
+      jsonEncode(map),
+    );
+  }
+
+  /// Lấy nét vẽ đã lưu
+  static Future<Map<String, dynamic>?> getPdfDrawings(String key) async {
+    if (key.isEmpty) return null;
+    final prefs = await SharedPreferences.getInstance();
+    final json = prefs.getString(SPrefCache.PREF_KEY_PDF_DRAWINGS);
+    if (json == null) return null;
+    final map = jsonDecode(json) as Map<String, dynamic>?;
+    return map?[key] as Map<String, dynamic>?;
+  }
+
+  /// Lưu ghi chú PDF (key: fileUrl, value: List<{page, text, timestamp}>)
+  static Future<bool> savePdfNotes(String key, List<Map<String, dynamic>> notes) async {
+    if (key.isEmpty) return false;
+    final prefs = await SharedPreferences.getInstance();
+    final json = prefs.getString(SPrefCache.PREF_KEY_PDF_NOTES);
+    final map = json != null
+        ? Map<String, dynamic>.from(jsonDecode(json) as Map)
+        : <String, dynamic>{};
+    map[key] = notes;
+    return prefs.setString(
+      SPrefCache.PREF_KEY_PDF_NOTES,
+      jsonEncode(map),
+    );
+  }
+
+  /// Lấy ghi chú đã lưu
+  static Future<List<Map<String, dynamic>>> getPdfNotes(String key) async {
+    if (key.isEmpty) return [];
+    final prefs = await SharedPreferences.getInstance();
+    final json = prefs.getString(SPrefCache.PREF_KEY_PDF_NOTES);
+    if (json == null) return [];
+    final map = jsonDecode(json) as Map<String, dynamic>?;
+    final list = map?[key];
+    if (list is List) {
+      return list.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+    }
+    return [];
   }
 
   /// Lấy trang đã lưu của PDF, trả về null nếu chưa có

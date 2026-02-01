@@ -749,6 +749,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "pdf_file_info":
             MessageLookupByLibrary.simpleMessage("PDF file info"),
         "pdf_path_label": MessageLookupByLibrary.simpleMessage("Path:"),
-        "pdf_tts_read_error": (String error) => "Read error: $error"
+        "pdf_tts_read_error": (String error) => "Read error: $error",
+        "pdf_draw": MessageLookupByLibrary.simpleMessage("Draw"),
+        "pdf_notes": MessageLookupByLibrary.simpleMessage("Notes"),
+        "pdf_draw_mode": MessageLookupByLibrary.simpleMessage("Draw mode"),
+        "pdf_done_drawing": MessageLookupByLibrary.simpleMessage("Done"),
+        "pdf_undo": MessageLookupByLibrary.simpleMessage("Undo"),
+        "pdf_add_note": MessageLookupByLibrary.simpleMessage("Add note"),
+        "pdf_note_hint": MessageLookupByLibrary.simpleMessage("Enter note content..."),
+        "pdf_note_added": MessageLookupByLibrary.simpleMessage("Note added"),
+        "pdf_no_notes": MessageLookupByLibrary.simpleMessage("No notes yet"),
+        "pdf_notes_list": MessageLookupByLibrary.simpleMessage("Notes list"),
+        "pdf_drawings_saved": MessageLookupByLibrary.simpleMessage("Drawings saved to PDF")
       };
 }

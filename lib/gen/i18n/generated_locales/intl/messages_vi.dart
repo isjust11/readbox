@@ -785,6 +785,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "pdf_file_info":
             MessageLookupByLibrary.simpleMessage("Thông tin file PDF"),
         "pdf_path_label": MessageLookupByLibrary.simpleMessage("Đường dẫn:"),
-        "pdf_tts_read_error": (String error) => "Lỗi đọc: $error"
+        "pdf_tts_read_error": (String error) => "Lỗi đọc: $error",
+        "pdf_draw": MessageLookupByLibrary.simpleMessage("Vẽ"),
+        "pdf_notes": MessageLookupByLibrary.simpleMessage("Ghi chú"),
+        "pdf_draw_mode": MessageLookupByLibrary.simpleMessage("Chế độ vẽ"),
+        "pdf_done_drawing": MessageLookupByLibrary.simpleMessage("Xong"),
+        "pdf_undo": MessageLookupByLibrary.simpleMessage("Hoàn tác"),
+        "pdf_add_note": MessageLookupByLibrary.simpleMessage("Thêm ghi chú"),
+        "pdf_note_hint": MessageLookupByLibrary.simpleMessage("Nhập nội dung ghi chú..."),
+        "pdf_note_added": MessageLookupByLibrary.simpleMessage("Đã thêm ghi chú"),
+        "pdf_no_notes": MessageLookupByLibrary.simpleMessage("Chưa có ghi chú nào"),
+        "pdf_notes_list": MessageLookupByLibrary.simpleMessage("Danh sách ghi chú"),
+        "pdf_drawings_saved": MessageLookupByLibrary.simpleMessage("Đã lưu nét vẽ vào PDF")
       };
 }

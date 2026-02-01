@@ -1317,8 +1317,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdf_share => 'Share';
 
   @override
-  String pdf_share_text(String title) =>
-      'Reading "$title" on Readbox. Download the app to read for free! 📚';
+  String pdf_share_text(String title) {
+    return 'Reading \"$title\" on Readbox. Download the app to read for free! 📚';
+  }
 
   @override
   String get pdf_share_file_not_found => 'File not found to share';
@@ -1331,7 +1332,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdf_share_success => 'Shared successfully';
 
   @override
-  String pdf_share_error(String error) => 'Cannot share: $error';
+  String pdf_share_error(String error) {
+    return 'Cannot share: $error';
+  }
 
   @override
   String get pdf_load_failed_retry => 'PDF not loaded yet, try again later';
@@ -1340,7 +1343,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdf_document_read_complete => 'Document finished reading';
 
   @override
-  String pdf_page_of(int current, int total) => 'Page $current/$total';
+  String pdf_page_of(int current, int total) {
+    return 'Page $current/$total';
+  }
 
   @override
   String get pdf_cannot_load => 'Cannot load PDF';
@@ -1379,5 +1384,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdf_path_label => 'Path:';
 
   @override
-  String pdf_tts_read_error(String error) => 'Read error: $error';
+  String pdf_tts_read_error(String error) {
+    return 'Read error: $error';
+  }
 }

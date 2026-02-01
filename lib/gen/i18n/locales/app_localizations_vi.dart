@@ -1319,21 +1319,23 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdf_share => 'Chia sẻ';
 
   @override
-  String pdf_share_text(String title) =>
-      'Đang đọc "$title" trên Readbox. Tải app để đọc sách miễn phí! 📚';
+  String pdf_share_text(String title) {
+    return 'Đang đọc \"$title\" trên Readbox. Tải app để đọc sách miễn phí! 📚';
+  }
 
   @override
   String get pdf_share_file_not_found => 'Không tìm thấy file để chia sẻ';
 
   @override
-  String get pdf_share_wait_download =>
-      'Đang tải PDF, vui lòng đợi và thử lại';
+  String get pdf_share_wait_download => 'Đang tải PDF, vui lòng đợi và thử lại';
 
   @override
   String get pdf_share_success => 'Đã chia sẻ thành công';
 
   @override
-  String pdf_share_error(String error) => 'Không thể chia sẻ: $error';
+  String pdf_share_error(String error) {
+    return 'Không thể chia sẻ: $error';
+  }
 
   @override
   String get pdf_load_failed_retry => 'Chưa tải xong PDF, thử lại sau';
@@ -1342,7 +1344,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdf_document_read_complete => 'Đã đọc hết tài liệu';
 
   @override
-  String pdf_page_of(int current, int total) => 'Trang $current/$total';
+  String pdf_page_of(int current, int total) {
+    return 'Trang $current/$total';
+  }
 
   @override
   String get pdf_cannot_load => 'Không thể tải PDF';
@@ -1381,5 +1385,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdf_path_label => 'Đường dẫn:';
 
   @override
-  String pdf_tts_read_error(String error) => 'Lỗi đọc: $error';
+  String pdf_tts_read_error(String error) {
+    return 'Lỗi đọc: $error';
+  }
 }
