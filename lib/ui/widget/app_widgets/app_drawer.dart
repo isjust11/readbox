@@ -111,6 +111,16 @@ class _AppDrawerState extends State<AppDrawer> {
                     iconColor: Theme.of(context).colorScheme.secondary,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
+                   _buildDrawerItem(
+                    icon: Icons.extension_outlined,
+                    title: AppLocalizations.current.tools,
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, Routes.toolsScreen);
+                    },
+                    iconColor: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
                   _buildDrawerItem(
                     icon: Icons.feedback,
                     title: AppLocalizations.current.feedback,

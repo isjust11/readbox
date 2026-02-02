@@ -3,6 +3,7 @@ import 'package:readbox/ui/screen/auth/forgot_password_screen.dart';
 import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:readbox/ui/screen/tools/tools_screen.dart';
 
 
 class Routes {
@@ -33,6 +34,7 @@ class Routes {
       "/notificationSettingsScreen";
   static const String notificationScreen = "/notificationScreen";
   static const String notificationDetailScreen = "/notificationDetailScreen";
+  static const String toolsScreen = "/toolsScreen";
 
   static const String search = "/search";
   //init screen name
@@ -170,6 +172,11 @@ class Routes {
       case notificationScreen:
         return PageTransition(
           child: NotificationScreen(),
+          type: PageTransitionType.rightToLeft,
+        );
+      case toolsScreen:
+        return PageTransition(
+          child: ToolsScreen(),
           type: PageTransitionType.rightToLeft,
         );
       default:

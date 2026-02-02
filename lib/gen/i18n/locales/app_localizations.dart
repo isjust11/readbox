@@ -2618,6 +2618,12 @@ abstract class AppLocalizations {
   /// **'Reading time:'**
   String get reading_time;
 
+  /// No description provided for @tools.
+  ///
+  /// In en, this message translates to:
+  /// **'Tools'**
+  String get tools;
+
   /// No description provided for @pdf_search_in_pdf.
   ///
   /// In en, this message translates to:
@@ -2773,6 +2779,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read error: {error}'**
   String pdf_tts_read_error(String error);
+
+  /// No description provided for @pdf_notes_list.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes list'**
+  String get pdf_notes_list;
+
+  /// No description provided for @pdf_add_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Add note'**
+  String get pdf_add_note;
+
+  /// No description provided for @pdf_add_note_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Add note description'**
+  String get pdf_add_note_description;
+
+  /// No description provided for @pdf_add_note_description_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Add note description successfully'**
+  String get pdf_add_note_description_successfully;
+
+  /// No description provided for @pdf_add_note_description_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Add note description failed'**
+  String get pdf_add_note_description_failed;
+
+  /// No description provided for @pdf_drawings_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Drawings saved'**
+  String get pdf_drawings_saved;
+
+  /// No description provided for @pdf_undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get pdf_undo;
+
+  /// No description provided for @pdf_done_drawing.
+  ///
+  /// In en, this message translates to:
+  /// **'Done drawing'**
+  String get pdf_done_drawing;
+
+  /// No description provided for @pdf_note_added.
+  ///
+  /// In en, this message translates to:
+  /// **'Note added'**
+  String get pdf_note_added;
+
+  /// No description provided for @pdf_note_added_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Note added successfully'**
+  String get pdf_note_added_successfully;
+
+  /// No description provided for @pdf_note_added_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Note added failed'**
+  String get pdf_note_added_failed;
+
+  /// No description provided for @pdf_note_added_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Note added description'**
+  String get pdf_note_added_description;
+
+  /// No description provided for @pdf_note_added_description_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Note added description successfully'**
+  String get pdf_note_added_description_successfully;
+
+  /// No description provided for @pdf_note_added_description_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Note added description failed'**
+  String get pdf_note_added_description_failed;
+
+  /// No description provided for @pdf_no_notes.
+  ///
+  /// In en, this message translates to:
+  /// **'No notes'**
+  String get pdf_no_notes;
+
+  /// No description provided for @pdf_note_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter note'**
+  String get pdf_note_hint;
+
+  /// No description provided for @tools_word_to_pdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Word to PDF'**
+  String get tools_word_to_pdf;
+
+  /// No description provided for @tools_word_to_pdf_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Convert Word documents to PDF'**
+  String get tools_word_to_pdf_description;
+
+  /// No description provided for @tools_document_scanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Scanner'**
+  String get tools_document_scanner;
+
+  /// No description provided for @tools_document_scanner_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan documents using camera'**
+  String get tools_document_scanner_description;
+
+  /// No description provided for @tools_select_word_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Word file'**
+  String get tools_select_word_file;
+
+  /// No description provided for @tools_converting.
+  ///
+  /// In en, this message translates to:
+  /// **'Converting...'**
+  String get tools_converting;
+
+  /// No description provided for @tools_conversion_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversion successful'**
+  String get tools_conversion_success;
+
+  /// No description provided for @tools_conversion_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Conversion failed'**
+  String get tools_conversion_failed;
+
+  /// No description provided for @tools_no_file_selected.
+  ///
+  /// In en, this message translates to:
+  /// **'No file selected'**
+  String get tools_no_file_selected;
+
+  /// No description provided for @tools_scan_document.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan document'**
+  String get tools_scan_document;
+
+  /// No description provided for @tools_take_photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Take photo'**
+  String get tools_take_photo;
+
+  /// No description provided for @tools_choose_from_gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get tools_choose_from_gallery;
+
+  /// No description provided for @tools_save_as_pdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as PDF'**
+  String get tools_save_as_pdf;
+
+  /// No description provided for @tools_add_more_pages.
+  ///
+  /// In en, this message translates to:
+  /// **'Add more pages'**
+  String get tools_add_more_pages;
+
+  /// No description provided for @tools_remove_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove page'**
+  String get tools_remove_page;
+
+  /// No description provided for @tools_preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get tools_preview;
+
+  /// No description provided for @tools_processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get tools_processing;
+
+  /// No description provided for @tools_saved_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved successfully'**
+  String get tools_saved_successfully;
+
+  /// No description provided for @tools_save_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Save failed'**
+  String get tools_save_failed;
+
+  /// No description provided for @tools_file_saved_to.
+  ///
+  /// In en, this message translates to:
+  /// **'File saved to: {path}'**
+  String tools_file_saved_to(String path);
+
+  /// No description provided for @tools_pages_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} pages'**
+  String tools_pages_count(int count);
+
+  /// No description provided for @tools_convert_to_pdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Convert to PDF'**
+  String get tools_convert_to_pdf;
+
+  /// No description provided for @tools_select_file_first.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a file first'**
+  String get tools_select_file_first;
 }
 
 class _AppLocalizationsDelegate

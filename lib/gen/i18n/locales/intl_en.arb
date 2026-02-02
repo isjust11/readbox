@@ -419,6 +419,7 @@
   "continue_reading_books": "Continue reading books",
   "continue_reading_books_description": "Continue reading books",
   "reading_time": "Reading time:",
+  "tools": "Tools",
   "pdf_search_in_pdf": "Search in PDF...",
   "pdf_zoom_in_out": "Zoom in/out",
   "pdf_toolbar": "Toolbar",
@@ -465,5 +466,54 @@
     "placeholders": {
       "error": {"type": "String"}
     }
-  }
+  },
+  "pdf_notes_list": "Notes list",
+  "pdf_add_note": "Add note",
+  "pdf_add_note_description": "Add note description",
+  "pdf_add_note_description_successfully": "Add note description successfully",
+  "pdf_add_note_description_failed": "Add note description failed",
+  "pdf_drawings_saved": "Drawings saved",
+  "pdf_undo": "Undo",
+  "pdf_done_drawing": "Done drawing",
+  "pdf_note_added": "Note added",
+  "pdf_note_added_successfully": "Note added successfully",
+  "pdf_note_added_failed": "Note added failed",
+  "pdf_note_added_description": "Note added description",
+  "pdf_note_added_description_successfully": "Note added description successfully",
+  "pdf_note_added_description_failed": "Note added description failed",
+  "pdf_no_notes": "No notes",
+  "pdf_note_hint": "Enter note",
+  "tools_word_to_pdf": "Word to PDF",
+  "tools_word_to_pdf_description": "Convert Word documents to PDF",
+  "tools_document_scanner": "Document Scanner",
+  "tools_document_scanner_description": "Scan documents using camera",
+  "tools_select_word_file": "Select Word file",
+  "tools_converting": "Converting...",
+  "tools_conversion_success": "Conversion successful",
+  "tools_conversion_failed": "Conversion failed",
+  "tools_no_file_selected": "No file selected",
+  "tools_scan_document": "Scan document",
+  "tools_take_photo": "Take photo",
+  "tools_choose_from_gallery": "Choose from gallery",
+  "tools_save_as_pdf": "Save as PDF",
+  "tools_add_more_pages": "Add more pages",
+  "tools_remove_page": "Remove page",
+  "tools_preview": "Preview",
+  "tools_processing": "Processing...",
+  "tools_saved_successfully": "Saved successfully",
+  "tools_save_failed": "Save failed",
+  "tools_file_saved_to": "File saved to: {path}",
+  "@tools_file_saved_to": {
+    "placeholders": {
+      "path": {"type": "String"}
+    }
+  },
+  "tools_pages_count": "{count} pages",
+  "@tools_pages_count": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "tools_convert_to_pdf": "Convert to PDF",
+  "tools_select_file_first": "Please select a file first"
 }

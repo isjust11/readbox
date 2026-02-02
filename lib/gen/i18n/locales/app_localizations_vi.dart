@@ -1304,6 +1304,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get reading_time => 'Thời gian đọc:';
 
   @override
+  String get tools => 'Công cụ';
+
+  @override
   String get pdf_search_in_pdf => 'Tìm trong PDF...';
 
   @override
@@ -1388,4 +1391,130 @@ class AppLocalizationsVi extends AppLocalizations {
   String pdf_tts_read_error(String error) {
     return 'Lỗi đọc: $error';
   }
+
+  @override
+  String get pdf_notes_list => 'Danh sách ghi chú';
+
+  @override
+  String get pdf_add_note => 'Thêm ghi chú';
+
+  @override
+  String get pdf_add_note_description => 'Thêm ghi chú description';
+
+  @override
+  String get pdf_add_note_description_successfully =>
+      'Thêm ghi chú description thành công';
+
+  @override
+  String get pdf_add_note_description_failed =>
+      'Thêm ghi chú description thất bại';
+
+  @override
+  String get pdf_drawings_saved => 'Đã lưu nét vẽ';
+
+  @override
+  String get pdf_undo => 'Hoàn tác';
+
+  @override
+  String get pdf_done_drawing => 'Hoàn thành vẽ';
+
+  @override
+  String get pdf_note_added => 'Đã thêm ghi chú';
+
+  @override
+  String get pdf_note_added_successfully => 'Đã thêm ghi chú thành công';
+
+  @override
+  String get pdf_note_added_failed => 'Đã thêm ghi chú thất bại';
+
+  @override
+  String get pdf_note_added_description => 'Đã thêm ghi chú description';
+
+  @override
+  String get pdf_note_added_description_successfully =>
+      'Đã thêm ghi chú description thành công';
+
+  @override
+  String get pdf_note_added_description_failed =>
+      'Đã thêm ghi chú description thất bại';
+
+  @override
+  String get pdf_no_notes => 'Không có ghi chú';
+
+  @override
+  String get pdf_note_hint => 'Nhập ghi chú';
+
+  @override
+  String get tools_word_to_pdf => 'Word sang PDF';
+
+  @override
+  String get tools_word_to_pdf_description =>
+      'Chuyển đổi tài liệu Word sang PDF';
+
+  @override
+  String get tools_document_scanner => 'Quét tài liệu';
+
+  @override
+  String get tools_document_scanner_description => 'Quét tài liệu bằng camera';
+
+  @override
+  String get tools_select_word_file => 'Chọn file Word';
+
+  @override
+  String get tools_converting => 'Đang chuyển đổi...';
+
+  @override
+  String get tools_conversion_success => 'Chuyển đổi thành công';
+
+  @override
+  String get tools_conversion_failed => 'Chuyển đổi thất bại';
+
+  @override
+  String get tools_no_file_selected => 'Chưa chọn file';
+
+  @override
+  String get tools_scan_document => 'Quét tài liệu';
+
+  @override
+  String get tools_take_photo => 'Chụp ảnh';
+
+  @override
+  String get tools_choose_from_gallery => 'Chọn từ thư viện';
+
+  @override
+  String get tools_save_as_pdf => 'Lưu dưới dạng PDF';
+
+  @override
+  String get tools_add_more_pages => 'Thêm trang';
+
+  @override
+  String get tools_remove_page => 'Xóa trang';
+
+  @override
+  String get tools_preview => 'Xem trước';
+
+  @override
+  String get tools_processing => 'Đang xử lý...';
+
+  @override
+  String get tools_saved_successfully => 'Lưu thành công';
+
+  @override
+  String get tools_save_failed => 'Lưu thất bại';
+
+  @override
+  String tools_file_saved_to(String path) {
+    return 'File đã lưu tại: $path';
+  }
+
+  @override
+  String tools_pages_count(int count) {
+    return '$count trang';
+  }
+
+  @override
+  String get tools_convert_to_pdf => 'Chuyển sang PDF';
+
+  @override
+  String get tools_select_file_first => 'Vui lòng chọn file trước';
 }

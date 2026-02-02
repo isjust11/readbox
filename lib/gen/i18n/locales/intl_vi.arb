@@ -440,6 +440,7 @@
    "continue_reading_books": "Đọc tiếp",
    "continue_reading_books_description": "Đọc tiếp sách",
    "reading_time": "Thời gian đọc:",
+   "tools": "Công cụ",
   "pdf_search_in_pdf": "Tìm trong PDF...",
   "pdf_zoom_in_out": "Phóng to/Thu nhỏ",
   "pdf_toolbar": "Thanh công cụ",
@@ -486,5 +487,54 @@
     "placeholders": {
       "error": {"type": "String"}
     }
-  }
+  },
+  "pdf_drawings_saved": "Đã lưu nét vẽ",
+  "pdf_undo": "Hoàn tác",
+  "pdf_done_drawing": "Hoàn thành vẽ",
+  "pdf_note_added": "Đã thêm ghi chú",
+  "pdf_note_added_successfully": "Đã thêm ghi chú thành công",
+  "pdf_note_added_failed": "Đã thêm ghi chú thất bại",
+  "pdf_note_added_description": "Đã thêm ghi chú description",
+  "pdf_note_added_description_successfully": "Đã thêm ghi chú description thành công",
+  "pdf_note_added_description_failed": "Đã thêm ghi chú description thất bại",
+  "pdf_notes_list": "Danh sách ghi chú",
+  "pdf_add_note": "Thêm ghi chú",
+  "pdf_add_note_description": "Thêm ghi chú description",
+  "pdf_add_note_description_successfully": "Thêm ghi chú description thành công",
+  "pdf_add_note_description_failed": "Thêm ghi chú description thất bại",
+  "pdf_no_notes": "Không có ghi chú",
+  "pdf_note_hint": "Nhập ghi chú",
+  "tools_word_to_pdf": "Word sang PDF",
+  "tools_word_to_pdf_description": "Chuyển đổi tài liệu Word sang PDF",
+  "tools_document_scanner": "Quét tài liệu",
+  "tools_document_scanner_description": "Quét tài liệu bằng camera",
+  "tools_select_word_file": "Chọn file Word",
+  "tools_converting": "Đang chuyển đổi...",
+  "tools_conversion_success": "Chuyển đổi thành công",
+  "tools_conversion_failed": "Chuyển đổi thất bại",
+  "tools_no_file_selected": "Chưa chọn file",
+  "tools_scan_document": "Quét tài liệu",
+  "tools_take_photo": "Chụp ảnh",
+  "tools_choose_from_gallery": "Chọn từ thư viện",
+  "tools_save_as_pdf": "Lưu dưới dạng PDF",
+  "tools_add_more_pages": "Thêm trang",
+  "tools_remove_page": "Xóa trang",
+  "tools_preview": "Xem trước",
+  "tools_processing": "Đang xử lý...",
+  "tools_saved_successfully": "Lưu thành công",
+  "tools_save_failed": "Lưu thất bại",
+  "tools_file_saved_to": "File đã lưu tại: {path}",
+  "@tools_file_saved_to": {
+    "placeholders": {
+      "path": {"type": "String"}
+    }
+  },
+  "tools_pages_count": "{count} trang",
+  "@tools_pages_count": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "tools_convert_to_pdf": "Chuyển sang PDF",
+  "tools_select_file_first": "Vui lòng chọn file trước"
 }

@@ -1302,6 +1302,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reading_time => 'Reading time:';
 
   @override
+  String get tools => 'Tools';
+
+  @override
   String get pdf_search_in_pdf => 'Search in PDF...';
 
   @override
@@ -1387,4 +1390,129 @@ class AppLocalizationsEn extends AppLocalizations {
   String pdf_tts_read_error(String error) {
     return 'Read error: $error';
   }
+
+  @override
+  String get pdf_notes_list => 'Notes list';
+
+  @override
+  String get pdf_add_note => 'Add note';
+
+  @override
+  String get pdf_add_note_description => 'Add note description';
+
+  @override
+  String get pdf_add_note_description_successfully =>
+      'Add note description successfully';
+
+  @override
+  String get pdf_add_note_description_failed => 'Add note description failed';
+
+  @override
+  String get pdf_drawings_saved => 'Drawings saved';
+
+  @override
+  String get pdf_undo => 'Undo';
+
+  @override
+  String get pdf_done_drawing => 'Done drawing';
+
+  @override
+  String get pdf_note_added => 'Note added';
+
+  @override
+  String get pdf_note_added_successfully => 'Note added successfully';
+
+  @override
+  String get pdf_note_added_failed => 'Note added failed';
+
+  @override
+  String get pdf_note_added_description => 'Note added description';
+
+  @override
+  String get pdf_note_added_description_successfully =>
+      'Note added description successfully';
+
+  @override
+  String get pdf_note_added_description_failed =>
+      'Note added description failed';
+
+  @override
+  String get pdf_no_notes => 'No notes';
+
+  @override
+  String get pdf_note_hint => 'Enter note';
+
+  @override
+  String get tools_word_to_pdf => 'Word to PDF';
+
+  @override
+  String get tools_word_to_pdf_description => 'Convert Word documents to PDF';
+
+  @override
+  String get tools_document_scanner => 'Document Scanner';
+
+  @override
+  String get tools_document_scanner_description =>
+      'Scan documents using camera';
+
+  @override
+  String get tools_select_word_file => 'Select Word file';
+
+  @override
+  String get tools_converting => 'Converting...';
+
+  @override
+  String get tools_conversion_success => 'Conversion successful';
+
+  @override
+  String get tools_conversion_failed => 'Conversion failed';
+
+  @override
+  String get tools_no_file_selected => 'No file selected';
+
+  @override
+  String get tools_scan_document => 'Scan document';
+
+  @override
+  String get tools_take_photo => 'Take photo';
+
+  @override
+  String get tools_choose_from_gallery => 'Choose from gallery';
+
+  @override
+  String get tools_save_as_pdf => 'Save as PDF';
+
+  @override
+  String get tools_add_more_pages => 'Add more pages';
+
+  @override
+  String get tools_remove_page => 'Remove page';
+
+  @override
+  String get tools_preview => 'Preview';
+
+  @override
+  String get tools_processing => 'Processing...';
+
+  @override
+  String get tools_saved_successfully => 'Saved successfully';
+
+  @override
+  String get tools_save_failed => 'Save failed';
+
+  @override
+  String tools_file_saved_to(String path) {
+    return 'File saved to: $path';
+  }
+
+  @override
+  String tools_pages_count(int count) {
+    return '$count pages';
+  }
+
+  @override
+  String get tools_convert_to_pdf => 'Convert to PDF';
+
+  @override
+  String get tools_select_file_first => 'Please select a file first';
 }
