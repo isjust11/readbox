@@ -222,7 +222,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       if (_isDrawMode) {
         _currentPageStrokes =
             _allDrawStrokes[page]?.map((s) => List<Offset>.from(s)).toList() ??
-                [];
+            [];
       }
     });
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, page);
@@ -264,6 +264,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       case 'share':
         _shareEbook();
         break;
+      case 'bookmark':
+        // show bookmark list
+        // _showBookmarkList();
+        break;
       case 'draw':
         setState(() {
           _isDrawMode = !_isDrawMode;
@@ -272,7 +276,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 _allDrawStrokes[_currentPage]
                     ?.map((s) => List<Offset>.from(s))
                     .toList() ??
-                    [];
+                [];
           } else {
             _saveCurrentPageDrawings();
             _persistDrawings();
@@ -297,14 +301,16 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             if (s is List) {
               strokes.add(
                 s
-                    .map((p) => Offset(
-                          (p is Map && p['x'] != null)
-                              ? (p['x'] as num).toDouble()
-                              : 0,
-                          (p is Map && p['y'] != null)
-                              ? (p['y'] as num).toDouble()
-                              : 0,
-                        ))
+                    .map(
+                      (p) => Offset(
+                        (p is Map && p['x'] != null)
+                            ? (p['x'] as num).toDouble()
+                            : 0,
+                        (p is Map && p['y'] != null)
+                            ? (p['y'] as num).toDouble()
+                            : 0,
+                      ),
+                    )
                     .toList(),
               );
             }
@@ -326,12 +332,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   Future<void> _persistDrawings() async {
     final map = <String, dynamic>{};
     for (final e in _allDrawStrokes.entries) {
-      map['${e.key}'] = e.value
-          .map(
-            (stroke) =>
-                stroke.map((p) => {'x': p.dx, 'y': p.dy}).toList(),
-          )
-          .toList();
+      map['${e.key}'] =
+          e.value
+              .map(
+                (stroke) => stroke.map((p) => {'x': p.dx, 'y': p.dy}).toList(),
+              )
+              .toList();
     }
     await SharedPreferenceUtil.savePdfDrawings(widget.fileUrl, map);
   }
@@ -360,9 +366,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         // File từ mạng: lưu tạm để chia sẻ
         final dir = await getTemporaryDirectory();
         final baseName = path.basename(widget.fileUrl);
-        final fileName = (baseName.isNotEmpty && baseName.toLowerCase().endsWith('.pdf'))
-            ? baseName
-            : '${widget.title.replaceAll(RegExp(r'[^\w\s-]'), '_')}.pdf';
+        final fileName =
+            (baseName.isNotEmpty && baseName.toLowerCase().endsWith('.pdf'))
+                ? baseName
+                : '${widget.title.replaceAll(RegExp(r'[^\w\s-]'), '_')}.pdf';
         final tempFile = File(path.join(dir.path, fileName));
         await tempFile.writeAsBytes(_pdfBytes!);
         filePath = tempFile.path;
@@ -402,9 +409,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.current.pdf_share_error(e.toString())),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.current.pdf_share_error(e.toString())),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -473,7 +480,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
-              content: Text(AppLocalizations.current.pdf_document_read_complete),
+              content: Text(
+                AppLocalizations.current.pdf_document_read_complete,
+              ),
               backgroundColor: Colors.green,
             ),
           );
@@ -718,17 +727,22 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         actions = [
           IconButton(
             icon: Icon(Icons.fullscreen, color: Colors.white),
-            onPressed: () => setState(() {
-              showToolbar = !showToolbar;
-            }),
+            onPressed:
+                () => setState(() {
+                  showToolbar = !showToolbar;
+                }),
           ),
           IconButton(
-            icon: Icon(showNavigationBar ? 
-            Icons.keyboard_arrow_down_rounded :
-             Icons.keyboard_arrow_up_rounded, color: Colors.white),
-            onPressed: () => setState(() {
-              showNavigationBar = !showNavigationBar;
-            }),
+            icon: Icon(
+              showNavigationBar
+                  ? Icons.keyboard_arrow_down_rounded
+                  : Icons.keyboard_arrow_up_rounded,
+              color: Colors.white,
+            ),
+            onPressed:
+                () => setState(() {
+                  showNavigationBar = !showNavigationBar;
+                }),
           ),
           IconButton(
             icon: Icon(Icons.skip_next_rounded, color: Colors.white),
@@ -957,24 +971,30 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                         AppLocalizations.current.pdf_read_ebook,
                                         Colors.teal,
                                       ),
+                                    // _buildMenuItem(
+                                    //   'bookmark',
+                                    //   Icons.bookmark_rounded,
+                                    //   "bookmark",
+                                    //   Colors.teal,
+                                    // ),
                                     _buildMenuItem(
                                       'share',
                                       Icons.share_rounded,
                                       AppLocalizations.current.pdf_share,
                                       Colors.blue,
                                     ),
-                                    _buildMenuItem(
-                                      'draw',
-                                      Icons.brush_rounded,
-                                      AppLocalizations.current.pdf_draw,
-                                      Colors.deepPurple,
-                                    ),
-                                    _buildMenuItem(
-                                      'notes',
-                                      Icons.note_add_rounded,
-                                      AppLocalizations.current.pdf_notes,
-                                      Colors.orange,
-                                    ),
+                                    // _buildMenuItem(
+                                    //   'draw',
+                                    //   Icons.brush_rounded,
+                                    //   AppLocalizations.current.pdf_draw,
+                                    //   Colors.deepPurple,
+                                    // ),
+                                    // _buildMenuItem(
+                                    //   'notes',
+                                    //   Icons.note_add_rounded,
+                                    //   AppLocalizations.current.pdf_notes,
+                                    //   Colors.orange,
+                                    // ),
                                   ],
                             ),
                           ),
@@ -1021,9 +1041,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               children: [
                 IgnorePointer(
                   ignoring: _isDrawMode,
-                  child: _pdfBytes != null
-                      ? _buildPdfViewerFromMemory()
-                      : _buildPdfViewer(),
+                  child:
+                      _pdfBytes != null
+                          ? _buildPdfViewerFromMemory()
+                          : _buildPdfViewer(),
                 ),
                 if (_hasDrawingsForCurrentPage || _isDrawMode)
                   _buildDrawingOverlay(),
@@ -1611,9 +1632,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   }
 
   Widget _buildDrawingOverlay() {
-    final strokesToShow = _isDrawMode
-        ? [..._currentPageStrokes, if (_currentStroke.isNotEmpty) _currentStroke]
-        : _allDrawStrokes[_currentPage] ?? [];
+    final strokesToShow =
+        _isDrawMode
+            ? [
+              ..._currentPageStrokes,
+              if (_currentStroke.isNotEmpty) _currentStroke,
+            ]
+            : _allDrawStrokes[_currentPage] ?? [];
     final colorToShow = _isDrawMode ? _drawColor : Colors.red;
 
     return LayoutBuilder(
@@ -1625,123 +1650,130 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         return Stack(
           children: [
             Positioned.fill(
-          child: _isDrawMode
-              ? GestureDetector(
-            onPanStart: (d) {
-              setState(() {
-                _currentStroke = [d.localPosition];
-              });
-            },
-            onPanUpdate: (d) {
-              setState(() {
-                _currentStroke.add(d.localPosition);
-              });
-            },
-            onPanEnd: (_) {
-              if (_currentStroke.length > 1) {
-                setState(() {
-                  _currentPageStrokes.add(List<Offset>.from(_currentStroke));
-                  _currentStroke = [];
-                });
-              } else {
-                setState(() => _currentStroke = []);
-              }
-            },
-            child: CustomPaint(
-              painter: _DrawingPainter(
-                strokes: strokesToShow,
-                color: colorToShow,
-                strokeWidth: _strokeWidth,
-              ),
-              size: Size.infinite,
-            ),
-          )
-              : IgnorePointer(
-                  child: CustomPaint(
-                    painter: _DrawingPainter(
-                      strokes: strokesToShow,
-                      color: colorToShow,
-                      strokeWidth: _strokeWidth,
-                    ),
-                    size: Size.infinite,
-                  ),
-                ),
-        ),
-        if (_isDrawMode)
-          Positioned(
-          left: 16,
-          right: 16,
-          bottom: showNavigationBar ? 100 : 24,
-          child: Material(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            elevation: 8,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Wrap(
-                    spacing: 4,
-                    children: [
-                      Colors.red,
-                      Colors.blue,
-                      Colors.green,
-                      Colors.black,
-                    ].map((c) {
-                      return GestureDetector(
-                        onTap: () =>
+              child:
+                  _isDrawMode
+                      ? GestureDetector(
+                        onPanStart: (d) {
+                          setState(() {
+                            _currentStroke = [d.localPosition];
+                          });
+                        },
+                        onPanUpdate: (d) {
+                          setState(() {
+                            _currentStroke.add(d.localPosition);
+                          });
+                        },
+                        onPanEnd: (_) {
+                          if (_currentStroke.length > 1) {
                             setState(() {
-                              _drawColor = c;
-                            }),
-                        child: Container(
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            color: c,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: _drawColor == c
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey[300]!,
-                              width: 2,
-                            ),
+                              _currentPageStrokes.add(
+                                List<Offset>.from(_currentStroke),
+                              );
+                              _currentStroke = [];
+                            });
+                          } else {
+                            setState(() => _currentStroke = []);
+                          }
+                        },
+                        child: CustomPaint(
+                          painter: _DrawingPainter(
+                            strokes: strokesToShow,
+                            color: colorToShow,
+                            strokeWidth: _strokeWidth,
+                          ),
+                          size: Size.infinite,
+                        ),
+                      )
+                      : IgnorePointer(
+                        child: CustomPaint(
+                          painter: _DrawingPainter(
+                            strokes: strokesToShow,
+                            color: colorToShow,
+                            strokeWidth: _strokeWidth,
+                          ),
+                          size: Size.infinite,
+                        ),
+                      ),
+            ),
+            if (_isDrawMode)
+              Positioned(
+                left: 16,
+                right: 16,
+                bottom: showNavigationBar ? 100 : 24,
+                child: Material(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  elevation: 8,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Wrap(
+                          spacing: 4,
+                          children:
+                              [
+                                Colors.red,
+                                Colors.blue,
+                                Colors.green,
+                                Colors.black,
+                              ].map((c) {
+                                return GestureDetector(
+                                  onTap:
+                                      () => setState(() {
+                                        _drawColor = c;
+                                      }),
+                                  child: Container(
+                                    width: 28,
+                                    height: 28,
+                                    decoration: BoxDecoration(
+                                      color: c,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color:
+                                            _drawColor == c
+                                                ? Theme.of(context).primaryColor
+                                                : Colors.grey[300]!,
+                                        width: 2,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.undo_rounded),
+                          onPressed: () {
+                            if (_currentPageStrokes.isNotEmpty) {
+                              setState(() => _currentPageStrokes.removeLast());
+                            }
+                          },
+                          tooltip: AppLocalizations.current.pdf_undo,
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () async {
+                            _saveCurrentPageDrawings();
+                            if (_allDrawStrokes.isNotEmpty) {
+                              await _embedDrawingsIntoPdfAndSave();
+                            } else {
+                              await _persistDrawings();
+                            }
+                            if (mounted) setState(() => _isDrawMode = false);
+                          },
+                          icon: Icon(Icons.check_rounded, size: 20),
+                          label: Text(
+                            AppLocalizations.current.pdf_done_drawing,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
                           ),
                         ),
-                      );
-                    }).toList(),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.undo_rounded),
-                    onPressed: () {
-                      if (_currentPageStrokes.isNotEmpty) {
-                        setState(() => _currentPageStrokes.removeLast());
-                      }
-                    },
-                    tooltip: AppLocalizations.current.pdf_undo,
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      _saveCurrentPageDrawings();
-                      if (_allDrawStrokes.isNotEmpty) {
-                        await _embedDrawingsIntoPdfAndSave();
-                      } else {
-                        await _persistDrawings();
-                      }
-                      if (mounted) setState(() => _isDrawMode = false);
-                    },
-                    icon: Icon(Icons.check_rounded, size: 20),
-                    label: Text(AppLocalizations.current.pdf_done_drawing),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      foregroundColor: Colors.white,
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
           ],
         );
       },
@@ -1767,9 +1799,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 Container(
                   padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20)),
+                    color: Theme.of(
+                      context,
+                    ).primaryColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1801,74 +1836,74 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   ),
                 ),
                 Expanded(
-                  child: _notes.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.note_add_outlined,
-                                size: 64,
-                                color: Colors.grey[400],
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                AppLocalizations.current.pdf_no_notes,
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 16,
+                  child:
+                      _notes.isEmpty
+                          ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.note_add_outlined,
+                                  size: 64,
+                                  color: Colors.grey[400],
                                 ),
-                              ),
-                              SizedBox(height: 8),
-                              TextButton.icon(
-                                onPressed: () {
-                                  Navigator.pop(ctx);
-                                  _showAddNoteDialog();
-                                },
-                                icon: Icon(Icons.add),
-                                label: Text(
-                                  AppLocalizations.current.pdf_add_note,
+                                SizedBox(height: 16),
+                                Text(
+                                  AppLocalizations.current.pdf_no_notes,
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        )
-                      : ListView.builder(
-                          controller: controller,
-                          padding: EdgeInsets.all(16),
-                          itemCount: _notes.length,
-                          itemBuilder: (_, i) {
-                            final n = _notes[i];
-                            final page = n['page'] as int? ?? 0;
-                            final text =
-                                n['text'] as String? ?? '';
-                            return Card(
-                              margin: EdgeInsets.only(bottom: 8),
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  child: Text('$page'),
-                                  backgroundColor:
-                                      Theme.of(context).primaryColor,
-                                  foregroundColor: Colors.white,
-                                ),
-                                title: Text(
-                                  text,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                trailing: IconButton(
-                                  icon: Icon(Icons.delete_outline),
-                                  onPressed: () async {
-                                    setState(() => _notes.removeAt(i));
-                                    await _saveNotes();
-                                    if (ctx.mounted) Navigator.pop(ctx);
-                                    _showNotesList();
+                                SizedBox(height: 8),
+                                TextButton.icon(
+                                  onPressed: () {
+                                    Navigator.pop(ctx);
+                                    _showAddNoteDialog();
                                   },
+                                  icon: Icon(Icons.add),
+                                  label: Text(
+                                    AppLocalizations.current.pdf_add_note,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
+                              ],
+                            ),
+                          )
+                          : ListView.builder(
+                            controller: controller,
+                            padding: EdgeInsets.all(16),
+                            itemCount: _notes.length,
+                            itemBuilder: (_, i) {
+                              final n = _notes[i];
+                              final page = n['page'] as int? ?? 0;
+                              final text = n['text'] as String? ?? '';
+                              return Card(
+                                margin: EdgeInsets.only(bottom: 8),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    child: Text('$page'),
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  title: Text(
+                                    text,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.delete_outline),
+                                    onPressed: () async {
+                                      setState(() => _notes.removeAt(i));
+                                      await _saveNotes();
+                                      if (ctx.mounted) Navigator.pop(ctx);
+                                      _showNotesList();
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                 ),
               ],
             );
@@ -1925,9 +1960,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   Navigator.pop(ctx);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(
-                        AppLocalizations.current.pdf_note_added,
-                      ),
+                      content: Text(AppLocalizations.current.pdf_note_added),
                       backgroundColor: Colors.green,
                       behavior: SnackBarBehavior.floating,
                     ),
@@ -2027,9 +2060,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(
-                        AppLocalizations.current.pdf_invalid_page,
-                      ),
+                      content: Text(AppLocalizations.current.pdf_invalid_page),
                       backgroundColor: Colors.red,
                       behavior: SnackBarBehavior.floating,
                       shape: RoundedRectangleBorder(
@@ -2106,13 +2137,14 @@ class _DrawingPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round
-      ..style = PaintingStyle.stroke
-      ..isAntiAlias = true;
+    final paint =
+        Paint()
+          ..color = color
+          ..strokeWidth = strokeWidth
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round
+          ..style = PaintingStyle.stroke
+          ..isAntiAlias = true;
 
     for (final stroke in strokes) {
       if (stroke.length > 1) {
