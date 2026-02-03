@@ -77,6 +77,11 @@ class ApiConstant {
   static final uploadEbook = "upload/ebook";
   static final uploadCover = "upload/image";
   static final getCategories = "categories";
+  
+  // Converter endpoints
+  static final converterWordToPdf = "converter/word-to-pdf";
+  static final converterWordToPdfPublic = "converter/word-to-pdf-public";
+  
   //upload medial
   static final uploadMedia = "media/upload";
   static final createFeedback = "feedback";

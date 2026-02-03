@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "libreoffice-convert": "^1.8.1"
+  }
+}

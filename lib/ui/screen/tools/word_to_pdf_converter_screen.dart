@@ -1,35 +1,57 @@
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-import 'package:readbox/ui/widget/widget.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 
-class WordToPdfConverterScreen extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path/path.dart' as path;
+import 'package:flutter_svg/svg.dart';
+import 'package:readbox/blocs/base_bloc/base_state.dart';
+import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/gen/assets.gen.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/injection_container.dart';
+import 'package:readbox/res/enum.dart';
+import 'package:readbox/ui/screen/screen.dart';
+import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/shared_preference.dart';
+
+class WordToPdfConverterScreen extends StatelessWidget {
   const WordToPdfConverterScreen({super.key});
 
   @override
-  State<WordToPdfConverterScreen> createState() => _WordToPdfConverterScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => getIt<ConverterCubit>(),
+      child: const WordToPdfConverterBody(),
+    );
+  }
 }
 
-class _WordToPdfConverterScreenState extends State<WordToPdfConverterScreen> {
-  File? _selectedFile;
-  bool _isConverting = false;
-  String? _outputPath;
+class WordToPdfConverterBody extends StatefulWidget {
+  const WordToPdfConverterBody({super.key});
+
+  @override
+  State<WordToPdfConverterBody> createState() => _WordToPdfConverterBodyState();
+}
+
+class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
 
   Future<void> _pickFile() async {
     try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['doc', 'docx'],
+      // get file path from pdf scanner screen
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (context) => const PdfScannerScreen(
+                isSelectedMode: true,
+                scanFormat: ScanFormatEnum.word,
+              ),
+        ),
       );
 
-      if (result != null && result.files.isNotEmpty) {
-        setState(() {
-          _selectedFile = File(result.files.first.path!);
-          _outputPath = null;
-        });
+      // set selected file via cubit
+      if (result != null && mounted) {
+        context.read<ConverterCubit>().selectFile(File(result as String));
       }
     } catch (e) {
       if (mounted) {
@@ -44,86 +66,18 @@ class _WordToPdfConverterScreenState extends State<WordToPdfConverterScreen> {
   }
 
   Future<void> _convertToPdf() async {
-    if (_selectedFile == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.current.tools_select_file_first),
-        ),
-      );
-      return;
-    }
+    await context.read<ConverterCubit>().convertWordToPdf();
+    if (mounted) {
+      // lưu vào thư viện local khi convert thành công
+      final filePath = context.read<ConverterCubit>().outputPath ?? '';
+       final isAdded = await SharedPreferenceUtil.isBookAdded(filePath);
 
-    setState(() {
-      _isConverting = true;
-    });
-
-    try {
-      // Create a simple PDF with text content
-      final PdfDocument document = PdfDocument();
-      final PdfPage page = document.pages.add();
-
-      // Get file name
-      final fileName = _selectedFile!.path.split('/').last;
-      
-      // Read file content (basic text extraction)
-      String content = 'Word to PDF Conversion\n\n';
-      content += 'Source File: $fileName\n\n';
-      content += 'Note: For full Word document conversion with formatting,\n';
-      content += 'advanced processing would be required.\n\n';
-      content += 'This is a basic conversion placeholder.\n';
-      content += 'File size: ${_selectedFile!.lengthSync()} bytes';
-
-      // Draw text on PDF
-      page.graphics.drawString(
-        content,
-        PdfStandardFont(PdfFontFamily.helvetica, 12),
-        bounds: Rect.fromLTWH(
-          0,
-          0,
-          page.getClientSize().width,
-          page.getClientSize().height,
-        ),
-      );
-
-      // Save the document
-      final directory = await getApplicationDocumentsDirectory();
-      final outputFileName = fileName.replaceAll(RegExp(r'\.(doc|docx)$'), '.pdf');
-      final outputPath = '${directory.path}/$outputFileName';
-      
-      final File outputFile = File(outputPath);
-      await outputFile.writeAsBytes(await document.save());
-      document.dispose();
-
-      setState(() {
-        _outputPath = outputPath;
-        _isConverting = false;
-      });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.current.tools_conversion_success,
-            ),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
-    } catch (e) {
-      setState(() {
-        _isConverting = false;
-      });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.current.tools_conversion_failed}: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-      }
+        if (!isAdded) {
+          await SharedPreferenceUtil.addLocalBook(filePath);
+        }
     }
   }
+
 
   String _formatFileSize(int bytes) {
     if (bytes < 1024) return '$bytes B';
@@ -138,36 +92,105 @@ class _WordToPdfConverterScreenState extends State<WordToPdfConverterScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return BaseScreen(
-      colorBg: colorScheme.surface,
-      customAppBar: BaseAppBar(
-        title: AppLocalizations.current.tools_word_to_pdf,
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+    return BlocConsumer<ConverterCubit, BaseState>(
+      listener: (context, state) {
+        if (state is LoadedState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.msgError),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else if (state is ErrorState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${AppLocalizations.current.tools_conversion_failed}: ${state.data}'),
+              backgroundColor: colorScheme.error,
+              duration: const Duration(seconds: 5),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        final cubit = context.read<ConverterCubit>();
+        final selectedFile = cubit.selectedFile;
+        final outputPath = cubit.outputPath;
+        final isConverting = state is LoadingState;
+        final uploadProgress = cubit.uploadProgress;
+
+        return BaseScreen(
+          colorBg: colorScheme.surface,
+          customAppBar: BaseAppBar(
+            title: AppLocalizations.current.tools_word_to_pdf,
+            centerTitle: true,
+          ),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
             // Icon and description
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: colorScheme.primaryContainer,
+                color: colorScheme.primary.withValues(alpha: 0.1),
+                border: Border.all(
+                  color: colorScheme.primary.withValues(alpha: 0.2),
+                  width: 1,
+                ),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
                 children: [
-                  Icon(
-                    Icons.picture_as_pdf,
-                    size: 64,
-                    color: colorScheme.primary,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: colorScheme.primary.withValues(alpha: 0.2),
+                            width: 1,
+                          ),
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset(
+                            Assets.icons.icDoc,
+                            width: 28,
+                            height: 28,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 2),
+                      Icon(Icons.arrow_forward_ios, size: 16),
+                      const SizedBox(width: 2),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: colorScheme.error.withValues(alpha: 0.2),
+                            width: 1,
+                          ),
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset(
+                            Assets.icons.icPdf,
+                            width: 28,
+                            height: 28,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
                   Text(
                     AppLocalizations.current.tools_word_to_pdf_description,
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 12,
                       color: colorScheme.onPrimaryContainer,
                     ),
                     textAlign: TextAlign.center,
@@ -175,21 +198,36 @@ class _WordToPdfConverterScreenState extends State<WordToPdfConverterScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
 
             // Select file button
-            ElevatedButton.icon(
-              onPressed: _isConverting ? null : _pickFile,
-              icon: const Icon(Icons.file_open),
-              label: Text(AppLocalizations.current.tools_select_word_file),
+            ElevatedButton(
+              onPressed: isConverting ? null : _pickFile,
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.file_open, color: colorScheme.onPrimary),
+                  const SizedBox(width: 8),
+                  Text(
+                    AppLocalizations.current.tools_select_word_file,
+                    style: TextStyle(
+                      color: colorScheme.onPrimary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 16),
 
             // Selected file info
-            if (_selectedFile != null) ...[
+            if (selectedFile != null) ...[
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
@@ -198,14 +236,11 @@ class _WordToPdfConverterScreenState extends State<WordToPdfConverterScreen> {
                     children: [
                       Row(
                         children: [
-                          Icon(
-                            Icons.description,
-                            color: colorScheme.primary,
-                          ),
+                          Icon(Icons.description, color: colorScheme.primary),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              _selectedFile!.path.split('/').last,
+                              selectedFile.path.split('/').last,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -217,10 +252,8 @@ class _WordToPdfConverterScreenState extends State<WordToPdfConverterScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${AppLocalizations.current.size}: ${_formatFileSize(_selectedFile!.lengthSync())}',
-                        style: TextStyle(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+                        '${AppLocalizations.current.size}: ${_formatFileSize(selectedFile.lengthSync())}',
+                        style: TextStyle(color: colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -230,69 +263,123 @@ class _WordToPdfConverterScreenState extends State<WordToPdfConverterScreen> {
 
               // Convert button
               ElevatedButton.icon(
-                onPressed: _isConverting ? null : _convertToPdf,
-                icon: _isConverting
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                    : const Icon(Icons.sync),
+                onPressed: isConverting ? null : _convertToPdf,
+                icon:
+                    isConverting
+                        ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                        : const Icon(Icons.sync),
                 label: Text(
-                  _isConverting
+                  isConverting
                       ? AppLocalizations.current.tools_converting
                       : AppLocalizations.current.tools_convert_to_pdf,
                 ),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   backgroundColor: colorScheme.primary,
                   foregroundColor: colorScheme.onPrimary,
                 ),
               ),
+              
+              // Upload progress indicator
+              if (isConverting) ...[
+                const SizedBox(height: 16),
+                Column(
+                  children: [
+                    LinearProgressIndicator(
+                      value: uploadProgress,
+                      backgroundColor: colorScheme.surfaceContainerHighest,
+                      valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      uploadProgress < 1.0
+                          ? 'Đang tải lên: ${(uploadProgress * 100).toStringAsFixed(0)}%'
+                          : 'Đang xử lý trên server...',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
 
-            // Output file info
-            if (_outputPath != null) ...[
+            // Output file info - tap to view PDF
+            if (outputPath != null) ...[
               const SizedBox(height: 24),
               Card(
                 color: Colors.green.shade50,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
-                        size: 48,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        AppLocalizations.current.tools_saved_successfully,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => PdfViewerScreen(
+                          fileUrl: outputPath,
+                          title: path.basename(outputPath),
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _outputPath!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: colorScheme.onSurfaceVariant,
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Icon(Icons.check_circle, color: Colors.green, size: 48),
+                        const SizedBox(height: 8),
+                        Text(
+                          AppLocalizations.current.tools_saved_successfully,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                        const SizedBox(height: 4),
+                        Text(
+                          path.basename(outputPath),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: colorScheme.onSurface,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.picture_as_pdf, size: 18, color: colorScheme.primary),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Chạm để xem',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ],
 
             // Instructions
-            const SizedBox(height: 24),
+            const SizedBox(height: 12)  ,
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -304,10 +391,7 @@ class _WordToPdfConverterScreenState extends State<WordToPdfConverterScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(
-                        Icons.info_outline,
-                        color: colorScheme.primary,
-                      ),
+                      Icon(Icons.info_outline, color: colorScheme.primary),
                       const SizedBox(width: 8),
                       Text(
                         AppLocalizations.current.info,
@@ -323,16 +407,16 @@ class _WordToPdfConverterScreenState extends State<WordToPdfConverterScreen> {
                     '• ${AppLocalizations.current.select_file}\n'
                     '• Click "${AppLocalizations.current.tools_convert_to_pdf}"\n'
                     '• PDF will be saved to app documents',
-                    style: TextStyle(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                    style: TextStyle(color: colorScheme.onSurfaceVariant),
                   ),
                 ],
               ),
             ),
           ],
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/ui/screen/tools/word_to_pdf_converter_screen.dart';
 import 'package:readbox/ui/screen/tools/document_scanner_screen.dart';
@@ -15,17 +17,60 @@ class ToolsScreen extends StatelessWidget {
     return BaseScreen(
       title: AppLocalizations.current.tools,
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: GridView.count(
           crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
           children: [
             _ToolCard(
-              icon: Icons.picture_as_pdf,
+              widgetIcon: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: colorScheme.primary.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        Assets.icons.icDoc,
+                        width: 28,
+                        height: 28,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 2),
+                  Icon(Icons.arrow_forward_ios, size: 16),
+                  const SizedBox(width: 2),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: colorScheme.error.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: colorScheme.error.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        Assets.icons.icPdf,
+                        width: 28,
+                        height: 28,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               title: AppLocalizations.current.tools_word_to_pdf,
-              description: AppLocalizations.current.tools_word_to_pdf_description,
-              color: Colors.red,
+              description:
+                  AppLocalizations.current.tools_word_to_pdf_description,
               onTap: () {
                 Navigator.push(
                   context,
@@ -36,10 +81,24 @@ class ToolsScreen extends StatelessWidget {
               },
             ),
             _ToolCard(
-              icon: Icons.document_scanner,
+              widgetIcon: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: colorScheme.primary.withValues(alpha: 0.2),
+                    width: 1,
+                  ),
+                ),
+                child: Icon(Icons.document_scanner,
+                size: 28,
+                color: colorScheme.primary,
+                ),
+              ),
               title: AppLocalizations.current.tools_document_scanner,
-              description: AppLocalizations.current.tools_document_scanner_description,
-              color: Colors.blue,
+              description:
+                  AppLocalizations.current.tools_document_scanner_description,
               onTap: () {
                 Navigator.push(
                   context,
@@ -57,17 +116,15 @@ class ToolsScreen extends StatelessWidget {
 }
 
 class _ToolCard extends StatelessWidget {
-  final IconData icon;
+  final Widget widgetIcon;
   final String title;
   final String description;
-  final Color color;
   final VoidCallback onTap;
 
   const _ToolCard({
-    required this.icon,
+    required this.widgetIcon,
     required this.title,
     required this.description,
-    required this.color,
     required this.onTap,
   });
 
@@ -78,41 +135,22 @@ class _ToolCard extends StatelessWidget {
 
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  icon,
-                  size: 40,
-                  color: color,
-                ),
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: widgetIcon,
               ),
               const SizedBox(height: 12),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onSurface,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+              Text(title, style: theme.textTheme.titleMedium),
               const SizedBox(height: 4),
               Text(
                 description,

@@ -11,3 +11,8 @@ enum CategoryTypeEnum {
   BOOK_TYPE,
   BOOK_CATEGORY,
 }
+
+enum ScanFormatEnum {
+  pdf,
+  word,
+}

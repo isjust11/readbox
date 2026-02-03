@@ -1,22 +1,30 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
 class PdfScannerScreen extends StatefulWidget {
+  final ScanFormatEnum scanFormat;
   final bool isSelectedMode;
-  const PdfScannerScreen({super.key, this.isSelectedMode = false});
+  const PdfScannerScreen({
+    super.key,
+    this.isSelectedMode = false,
+    this.scanFormat = ScanFormatEnum.pdf,
+  });
 
   @override
   State<PdfScannerScreen> createState() => _PdfScannerScreenState();
 }
 
 class _PdfScannerScreenState extends State<PdfScannerScreen> {
-  List<FileSystemEntity> _pdfFiles = [];
+  List<FileSystemEntity> _files = [];
   List<FileSystemEntity> _selectedFiles = [];
   bool _isScanning = false;
   bool _hasPermission = false;
@@ -33,20 +41,20 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
       final status = await Permission.manageExternalStorage.request();
       if (status.isGranted) {
         setState(() => _hasPermission = true);
-        _scanForPdfFiles();
+        _scanForFiles();
       } else {
         // Fallback to regular storage permission
         final storageStatus = await Permission.storage.request();
         setState(() => _hasPermission = storageStatus.isGranted);
         if (storageStatus.isGranted) {
-          _scanForPdfFiles();
+          _scanForFiles();
         }
       }
     } else if (Platform.isIOS) {
       final status = await Permission.photos.request();
       setState(() => _hasPermission = status.isGranted);
       if (status.isGranted) {
-        _scanForPdfFiles();
+        _scanForFiles();
       }
     }
   }
@@ -56,21 +64,23 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['pdf', 'epub', 'mobi'],
+        allowedExtensions: widget.scanFormat == ScanFormatEnum.pdf ? ['pdf', 'epub', 'mobi'] : ['doc', 'docx'],
         allowMultiple: true,
       );
       if (result == null || result.files.isEmpty) return;
-      final existing = _pdfFiles.map((e) => e.path).toSet();
+      final existing = _files.map((e) => e.path).toSet();
       final toAdd = <FileSystemEntity>[];
       for (final f in result.files) {
-        if (f.path != null && f.path!.isNotEmpty && !existing.contains(f.path)) {
+        if (f.path != null &&
+            f.path!.isNotEmpty &&
+            !existing.contains(f.path)) {
           toAdd.add(File(f.path!));
           existing.add(f.path!);
         }
       }
       if (toAdd.isEmpty) return;
       setState(() {
-        _pdfFiles = [..._pdfFiles, ...toAdd];
+        _files = [..._files, ...toAdd];
         _selectedFiles = [..._selectedFiles, ...toAdd];
       });
       if (mounted) {
@@ -81,20 +91,23 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Lỗi chọn file: $e'), backgroundColor: Theme.of(context).colorScheme.error),
+          SnackBar(
+            content: Text('Lỗi chọn file: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
         );
       }
     }
   }
 
-  Future<void> _scanForPdfFiles() async {
+  Future<void> _scanForFiles() async {
     setState(() {
       _isScanning = true;
-      _pdfFiles = [];
+      _files = [];
     });
 
     try {
-      List<FileSystemEntity> allPdfFiles = [];
+      List<FileSystemEntity> allFiles = [];
 
       if (Platform.isAndroid) {
         // Common directories to scan on Android (Scoped Storage có thể chặn thư mục con như Download/Telegram)
@@ -110,17 +123,17 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
 
         for (var dir in directories) {
           if (dir != null && await dir.exists()) {
-            await _scanDirectory(dir, allPdfFiles);
+            await _scanDirectory(dir, allFiles);
           }
         }
       } else if (Platform.isIOS) {
         // iOS directories
         final appDir = await getApplicationDocumentsDirectory();
-        await _scanDirectory(appDir, allPdfFiles);
+        await _scanDirectory(appDir, allFiles);
       }
 
       setState(() {
-        _pdfFiles = allPdfFiles;
+        _files = allFiles;
         _isScanning = false;
       });
     } catch (e) {
@@ -135,17 +148,24 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
 
   Future<void> _scanDirectory(
     Directory directory,
-    List<FileSystemEntity> pdfFiles,
+    List<FileSystemEntity> files,
   ) async {
     try {
       final entities = directory.listSync(recursive: true, followLinks: false);
       for (var entity in entities) {
         if (entity is File) {
           final path = entity.path.toLowerCase();
-          if (path.endsWith('.pdf') ||
-              path.endsWith('.epub') ||
-              path.endsWith('.mobi')) {
-            pdfFiles.add(entity);
+          if(widget.scanFormat == ScanFormatEnum.pdf) {
+            if (path.endsWith('.pdf') ||
+                path.endsWith('.epub') ||
+                path.endsWith('.mobi')) {
+              files.add(entity);
+            }
+          } else if (widget.scanFormat == ScanFormatEnum.word) {
+            if (path.endsWith('.doc') ||
+                path.endsWith('.docx')) {
+              files.add(entity);
+            }
           }
         }
       }
@@ -167,7 +187,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
 
   void _selectAll() {
     setState(() {
-      _selectedFiles = List.from(_pdfFiles);
+      _selectedFiles = List.from(_files);
     });
   }
 
@@ -221,7 +241,10 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Lỗi: $e'), backgroundColor: Theme.of(context).colorScheme.error),
+          SnackBar(
+            content: Text('Lỗi: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
         );
       }
     }
@@ -247,17 +270,21 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     return file.path.split('/').last;
   }
 
-  IconData _getFileIcon(String fileName) {
+  SvgPicture _getFileIcon(String fileName) {
     final extension = fileName.toLowerCase().split('.').last;
     switch (extension) {
       case 'pdf':
-        return Icons.picture_as_pdf;
+        return SvgPicture.asset(Assets.icons.icPdf);
       case 'epub':
-        return Icons.book;
+        return SvgPicture.asset(Assets.icons.icEpub);
       case 'mobi':
-        return Icons.menu_book;
+        return SvgPicture.asset(Assets.icons.icMobi);
+      case 'doc':
+        return SvgPicture.asset(Assets.icons.icDoc);
+      case 'docx':
+        return SvgPicture.asset(Assets.icons.icDoc);
       default:
-        return Icons.insert_drive_file;
+        return SvgPicture.asset(Assets.icons.icFile);
     }
   }
 
@@ -270,7 +297,11 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
       case 'epub':
         return Colors.green;
       case 'mobi':
-        return Colors.blue;
+        return Colors.purple;
+      case 'doc':
+        return const Color.fromARGB(255, 41, 18, 255);
+      case 'docx':
+        return const Color.fromARGB(255, 59, 37, 255);
       default:
         return fallback;
     }
@@ -289,22 +320,25 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
           TextButton.icon(
             onPressed: _isScanning ? null : _pickFiles,
             icon: Icon(Icons.folder_open, color: colorScheme.onPrimary),
-            label: Text(AppLocalizations.current.select_file, style: TextStyle(color: colorScheme.onPrimary)),
+            label: Text(
+              AppLocalizations.current.select_file,
+              style: TextStyle(color: colorScheme.onPrimary),
+            ),
           ),
-          if (_pdfFiles.isNotEmpty && !widget.isSelectedMode)
+          if (_files.isNotEmpty && !widget.isSelectedMode)
             TextButton.icon(
               onPressed:
-                  _selectedFiles.length == _pdfFiles.length
+                  _selectedFiles.length == _files.length
                       ? _deselectAll
                       : _selectAll,
               icon: Icon(
-                _selectedFiles.length == _pdfFiles.length
+                _selectedFiles.length == _files.length
                     ? Icons.deselect
                     : Icons.select_all,
                 color: colorScheme.onPrimary,
               ),
               label: Text(
-                _selectedFiles.length == _pdfFiles.length
+                _selectedFiles.length == _files.length
                     ? AppLocalizations.current.unselect_all
                     : AppLocalizations.current.select_all,
                 style: TextStyle(color: colorScheme.onPrimary),
@@ -312,12 +346,12 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
             ),
           IconButton(
             icon: Icon(Icons.refresh, color: colorScheme.onPrimary),
-            onPressed: _isScanning ? null : _scanForPdfFiles,
+            onPressed: _isScanning ? null : _scanForFiles,
           ),
         ],
       ),
       body:
-          !_hasPermission && _pdfFiles.isEmpty
+          !_hasPermission && _files.isEmpty
               ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -333,11 +367,17 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text('Vui lòng cấp quyền để tìm kiếm file', style: TextStyle(color: colorScheme.onSurface)),
+                    Text(
+                      'Vui lòng cấp quyền để tìm kiếm file',
+                      style: TextStyle(color: colorScheme.onSurface),
+                    ),
                     const SizedBox(height: 8),
                     Text(
                       'Hoặc dùng "Chọn file" để duyệt thư mục (không cần quyền)',
-                      style: TextStyle(fontSize: 13, color: colorScheme.onSurfaceVariant),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
@@ -366,16 +406,23 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                   children: [
                     const CircularProgressIndicator(),
                     const SizedBox(height: 16),
-                    Text('Đang quét bộ nhớ...', style: TextStyle(color: colorScheme.onSurface)),
+                    Text(
+                      'Đang quét bộ nhớ...',
+                      style: TextStyle(color: colorScheme.onSurface),
+                    ),
                   ],
                 ),
               )
-              : _pdfFiles.isEmpty
+              : _files.isEmpty
               ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.search_off, size: 64, color: colorScheme.outline),
+                    Icon(
+                      Icons.search_off,
+                      size: 64,
+                      color: colorScheme.outline,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       AppLocalizations.current.no_book_found,
@@ -386,11 +433,19 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(AppLocalizations.current.no_pdf_epub_mobi_found, style: TextStyle(color: colorScheme.onSurface)),
+                    Text(
+                      AppLocalizations.current.no_pdf_epub_mobi_found,
+                      style: TextStyle(color: colorScheme.onSurface),
+                    ),
                     const SizedBox(height: 8),
                     Text(
-                      AppLocalizations.current.use_select_file_to_browse_directory,
-                      style: TextStyle(fontSize: 13, color: colorScheme.onSurfaceVariant),
+                      AppLocalizations
+                          .current
+                          .use_select_file_to_browse_directory,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
@@ -398,9 +453,12 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                       spacing: 12,
                       children: [
                         ElevatedButton.icon(
-                          onPressed: _scanForPdfFiles,
+                          onPressed: _scanForFiles,
                           icon: const Icon(Icons.refresh),
-                          label: Text(AppLocalizations.current.scan_again, style: TextStyle(color: colorScheme.onPrimary)),
+                          label: Text(
+                            AppLocalizations.current.scan_again,
+                            style: TextStyle(color: colorScheme.onPrimary),
+                          ),
                         ),
                         OutlinedButton.icon(
                           onPressed: _pickFiles,
@@ -416,20 +474,34 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                 children: [
                   // Header with file count
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 16,
+                    ),
                     color: colorScheme.primaryContainer,
                     child: Row(
                       children: [
                         Icon(Icons.info_outline, color: colorScheme.primary),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 10),
                         Expanded(
-                          child: widget.isSelectedMode ? Text(
-                            'Nhấn vào file để chọn hoặc long press để xem đường dẫn',
-                            style: TextStyle(fontWeight: FontWeight.w500, color: colorScheme.onPrimaryContainer),
-                          ): Text(
-                            'Tìm thấy ${_pdfFiles.length} file • Đã chọn ${_selectedFiles.length}',
-                            style: TextStyle(fontWeight: FontWeight.w500, color: colorScheme.onPrimaryContainer),
-                          ),
+                          child:
+                              widget.isSelectedMode
+                                  ? Text(
+                                    'Nhấn vào file để chọn hoặc long press để xem đường dẫn',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: colorScheme.onPrimaryContainer,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  )
+                                  : Text(
+                                      'Tìm thấy ${_files.length} file • Đã chọn ${_selectedFiles.length}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: colorScheme.onPrimaryContainer,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
                         ),
                       ],
                     ),
@@ -437,9 +509,9 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                   // File list
                   Expanded(
                     child: ListView.builder(
-                      itemCount: _pdfFiles.length,
+                      itemCount: _files.length,
                       itemBuilder: (context, index) {
-                        final file = _pdfFiles[index];
+                        final file = _files[index];
                         final fileName = _getFileName(file);
                         final isSelected = _selectedFiles.contains(file);
 
@@ -449,13 +521,25 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                             vertical: 4,
                           ),
                           elevation: isSelected ? 4 : 1,
-                          color: isSelected ? colorScheme.primaryContainer : colorScheme.surface,
+                          color:
+                              isSelected
+                                  ? colorScheme.primaryContainer
+                                  : colorScheme.surface,
                           child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: _getFileColor(context, fileName),
-                              child: Icon(
-                                _getFileIcon(fileName),
-                                color: Colors.white,
+                            leading: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: _getFileColor(context, fileName).withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: _getFileColor(context, fileName).withValues(alpha: 0.2),
+                                  width: 1,
+                                ),
+                              ),
+                              child: SizedBox(
+                                width: 32,
+                                height: 32,
+                                child: _getFileIcon(fileName),
                               ),
                             ),
                             title: Text(
@@ -476,7 +560,10 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                                 const SizedBox(height: 4),
                                 Text(
                                   _getFileSize(file),
-                                  style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: colorScheme.onSurfaceVariant,
+                                  ),
                                 ),
                                 Text(
                                   file.path,
@@ -489,10 +576,14 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                                 ),
                               ],
                             ),
-                            trailing: widget.isSelectedMode ? null : Checkbox(
-                              value: isSelected,
-                              onChanged: (_) => _toggleFileSelection(file),
-                            ),
+                            trailing:
+                                widget.isSelectedMode
+                                    ? null
+                                    : Checkbox(
+                                      value: isSelected,
+                                      onChanged:
+                                          (_) => _toggleFileSelection(file),
+                                    ),
                             onTap: () => _toggleFileSelection(file),
                             onLongPress: () {
                               // Long press để chọn file và trả về

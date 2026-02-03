@@ -41,17 +41,29 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_complant.svg
   String get icComplant => 'assets/icons/ic_complant.svg';
 
+  /// File path: assets/icons/ic_doc.svg
+  String get icDoc => 'assets/icons/ic_doc.svg';
+
+  /// File path: assets/icons/ic_docx.svg
+  String get icDocx => 'assets/icons/ic_docx.svg';
+
   /// File path: assets/icons/ic_dot_horizontal.svg
   String get icDotHorizontal => 'assets/icons/ic_dot_horizontal.svg';
 
   /// File path: assets/icons/ic_email.svg
   String get icEmail => 'assets/icons/ic_email.svg';
 
+  /// File path: assets/icons/ic_epub.svg
+  String get icEpub => 'assets/icons/ic_epub.svg';
+
   /// File path: assets/icons/ic_face_id.svg
   String get icFaceId => 'assets/icons/ic_face_id.svg';
 
   /// File path: assets/icons/ic_facebook.svg
   String get icFacebook => 'assets/icons/ic_facebook.svg';
+
+  /// File path: assets/icons/ic_file.svg
+  String get icFile => 'assets/icons/ic_file.svg';
 
   /// File path: assets/icons/ic_folder_empty.svg
   String get icFolderEmpty => 'assets/icons/ic_folder_empty.svg';
@@ -71,8 +83,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_lock_password.svg
   String get icLockPassword => 'assets/icons/ic_lock_password.svg';
 
+  /// File path: assets/icons/ic_mobi.svg
+  String get icMobi => 'assets/icons/ic_mobi.svg';
+
   /// File path: assets/icons/ic_news.svg
   String get icNews => 'assets/icons/ic_news.svg';
+
+  /// File path: assets/icons/ic_pdf.svg
+  String get icPdf => 'assets/icons/ic_pdf.svg';
 
   /// File path: assets/icons/ic_qrcode.svg
   String get icQrcode => 'assets/icons/ic_qrcode.svg';
@@ -100,17 +118,23 @@ class $AssetsIconsGen {
     icCheck,
     icCloseCircle,
     icComplant,
+    icDoc,
+    icDocx,
     icDotHorizontal,
     icEmail,
+    icEpub,
     icFaceId,
     icFacebook,
+    icFile,
     icFolderEmpty,
     icGoogle,
     icHistory,
     icHome,
     icLibrary,
     icLockPassword,
+    icMobi,
     icNews,
+    icPdf,
     icQrcode,
     icRing,
     icSetting,

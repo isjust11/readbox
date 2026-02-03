@@ -18,3 +18,5 @@ export 'settings/page/translate_screen.dart';
 export 'settings/page/text_to_speech_setting_screen.dart';
 export 'settings/page/notification_screen.dart';
 export 'settings/page/notification_detail_screen.dart';
+export 'tools/word_to_pdf_converter_screen.dart';
+export 'admin/pdf_scanner_screen.dart';

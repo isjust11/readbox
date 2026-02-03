@@ -78,6 +78,9 @@ void registerCubit(GetIt getIt) {
   getIt.registerFactory(
     () => CategoryCubit(repository: getIt.get<CategoryRepository>()),
   );
+  getIt.registerFactory(
+    () => ConverterCubit(getIt.get<ConverterRemoteDataSource>()),
+  );
 }
 
 void registerRepositories(GetIt getIt) {
@@ -126,6 +129,7 @@ void registerDataSource(GetIt getIt) {
   getIt.registerLazySingleton(() => NotificationRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => UserInteractionRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => CategoryRemoteDataSource(network: getIt.get()));
+  getIt.registerLazySingleton(() => ConverterRemoteDataSource(network: getIt.get()));
 }
 
 void registerNetwork(GetIt getIt) {

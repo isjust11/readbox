@@ -94,11 +94,10 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     if (_hasInitializedFromBook) return;
     _hasInitializedFromBook = true;
     _prefillForm();
-    
   }
 
   void _prefillForm() {
-   final b = widget.book;
+    final b = widget.book;
     // Prefill form (thêm mới / chỉnh sửa / upload từ local)
     if (b.title != null) _titleController.text = b.title!;
     if (b.author != null) _authorController.text = b.author!;
@@ -163,15 +162,17 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
   Future<void> _extractAndPrefillMetadata(File file) async {
     try {
       bookMetadata = await BookMetadataService.extractFromFile(file.path);
-      
+
       if (!mounted) return;
-      
+
       // Chỉ prefill khi field còn trống để không ghi đè dữ liệu user đã nhập
       setState(() {
-        if (bookMetadata.title != null && _titleController.text.trim().isEmpty) {
+        if (bookMetadata.title != null &&
+            _titleController.text.trim().isEmpty) {
           _titleController.text = bookMetadata.title!;
         }
-        if (bookMetadata.author != null && _authorController.text.trim().isEmpty) {
+        if (bookMetadata.author != null &&
+            _authorController.text.trim().isEmpty) {
           _authorController.text = bookMetadata.author!;
         }
         if (bookMetadata.totalPages != null) {
@@ -180,7 +181,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         if (bookMetadata.isbn != null && _isbnController.text.trim().isEmpty) {
           _isbnController.text = bookMetadata.isbn!;
         }
-        if (bookMetadata.publisher != null && _publisherController.text.trim().isEmpty) {
+        if (bookMetadata.publisher != null &&
+            _publisherController.text.trim().isEmpty) {
           _publisherController.text = bookMetadata.publisher!;
         }
         if (bookMetadata.language != null && _language == 'vi') {
@@ -188,11 +190,12 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           _language = bookMetadata.language!;
         }
         // Có thể dùng subject làm description nếu có
-        if (bookMetadata.subject != null && _descriptionController.text.trim().isEmpty) {
+        if (bookMetadata.subject != null &&
+            _descriptionController.text.trim().isEmpty) {
           _descriptionController.text = bookMetadata.subject!;
         }
       });
-      
+
       // Hiển thị thông báo nếu extract được metadata
       // if (bookMetadata.title != null || bookMetadata.author != null || bookMetadata.totalPages != null) {
       //   if (mounted) {
@@ -227,10 +230,10 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         setState(() {
           _ebookFile = file;
         });
-        
+
         // Extract metadata và prefill form
         await _extractAndPrefillMetadata(file);
-        
+
         // Load thumbnail từ PDF
         await _loadThumbnailFromPdf(_ebookFile);
       }
@@ -243,7 +246,13 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     try {
       final result = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const PdfScannerScreen(isSelectedMode: true)),
+        MaterialPageRoute(
+          builder:
+              (context) => const PdfScannerScreen(
+                isSelectedMode: true,
+                scanFormat: ScanFormatEnum.pdf,
+              ),
+        ),
       );
 
       // Nếu result là String (file path), đó là file đã chọn để upload
@@ -253,13 +262,13 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           setState(() {
             _ebookFile = file;
           });
-          
+
           // Extract metadata và prefill form
           await _extractAndPrefillMetadata(file);
-          
+
           // Load thumbnail từ PDF
           await _loadThumbnailFromPdf(_ebookFile);
-          
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Đã chọn file: ${file.path.split('/').last}'),
@@ -334,7 +343,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         existingFileUrl:
             _existingRemoteFileUrl, // File URL từ server nếu không upload mới
         existingCoverImageUrl:
-           context.read<LibraryCubit>().coverImageUrl ?? widget
+            context.read<LibraryCubit>().coverImageUrl ??
+            widget
                 .book
                 .coverImageUrl, // Cover URL từ server nếu không upload mới
       );
@@ -455,7 +465,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                     fontSize: 12,
                     color: Colors.white.withValues(alpha: 0.9),
                   ),
-                ), 
+                ),
               ],
             ),
           ],
@@ -467,7 +477,9 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           if (state is ErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.data ?? AppLocalizations.current.error_occurred),
+                content: Text(
+                  state.data ?? AppLocalizations.current.error_occurred,
+                ),
                 backgroundColor: Colors.red,
               ),
             );
@@ -656,7 +668,9 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                             ),
                                             SizedBox(height: 4),
                                             Text(
-                                              AppLocalizations.current.current_ebook_file_cannot_be_changed_from_this_screen,
+                                              AppLocalizations
+                                                  .current
+                                                  .current_ebook_file_cannot_be_changed_from_this_screen,
                                               style: TextStyle(
                                                 fontSize: 11,
                                                 color: theme
@@ -843,7 +857,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                               Text(
-                                                  widget.book.fileSizeFormatted,
+                                                widget.book.fileSizeFormatted,
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   color: theme
@@ -891,8 +905,12 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                       child: Container(
                                         padding: EdgeInsets.all(8),
                                         decoration: BoxDecoration(
-                                          color: theme.primaryColor.withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(12),
+                                          color: theme.primaryColor.withValues(
+                                            alpha: 0.1,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                         ),
                                         child: Row(
                                           mainAxisAlignment:
@@ -912,9 +930,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                               Icon(
                                                 Icons.cloud_upload_rounded,
                                                 size: 20,
-                                                color:
-                                                    theme
-                                                        .primaryColor
+                                                color: theme.primaryColor,
                                               ),
                                             SizedBox(width: 8),
                                             Text(
@@ -928,9 +944,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.bold,
-                                                color:
-                                                    theme
-                                                        .primaryColor,
+                                                color: theme.primaryColor,
                                               ),
                                             ),
                                           ],
@@ -1245,8 +1259,10 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                           child: Container(
                                             padding: EdgeInsets.all(8),
                                             decoration: BoxDecoration(
-                                              color: theme.primaryColor.withValues(alpha: 0.1),
-                                              borderRadius: BorderRadius.circular(12),
+                                              color: theme.primaryColor
+                                                  .withValues(alpha: 0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                             child: Row(
                                               mainAxisAlignment:
@@ -1261,16 +1277,14 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                                           strokeWidth: 2,
                                                           color:
                                                               theme
-                                                                  .primaryColor
+                                                                  .primaryColor,
                                                         ),
                                                   )
                                                 else
                                                   Icon(
                                                     Icons.cloud_upload_rounded,
                                                     size: 20,
-                                                    color:
-                                                        theme
-                                                            .primaryColor
+                                                    color: theme.primaryColor,
                                                   ),
                                                 SizedBox(width: 8),
                                                 Text(
@@ -1284,9 +1298,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                                   style: TextStyle(
                                                     fontSize: 15,
                                                     fontWeight: FontWeight.bold,
-                                                    color:
-                                                        theme
-                                                            .primaryColor
+                                                    color: theme.primaryColor,
                                                   ),
                                                 ),
                                               ],
@@ -1502,10 +1514,9 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                     formatCurrency: true,
                                     prefixIcon: Icon(Icons.numbers_rounded),
                                     keyboardType: TextInputType.number,
-                                    enabled: bookMetadata.totalPages == null && 
-                                    bookMetadata.totalPages == 0   
-                                    
-                                    ,
+                                    enabled:
+                                        bookMetadata.totalPages == null &&
+                                        bookMetadata.totalPages == 0,
                                   ),
                                 ),
                                 SizedBox(width: 12),
@@ -1551,12 +1562,18 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                               (category) => category.name ?? '',
                                             )
                                             .toList(),
-                                    selectedIndex: _selectedCategoryId != null ? _categories.indexWhere(
-                                      (category) => category.id == _selectedCategoryId,
-                                    ) : null,
+                                    selectedIndex:
+                                        _selectedCategoryId != null
+                                            ? _categories.indexWhere(
+                                              (category) =>
+                                                  category.id ==
+                                                  _selectedCategoryId,
+                                            )
+                                            : null,
                                     didSelected: (index) {
                                       setState(() {
-                                        _selectedCategoryId = _categories[index].id;
+                                        _selectedCategoryId =
+                                            _categories[index].id;
                                       });
                                     },
                                   ),
@@ -1679,7 +1696,9 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                     SizedBox(width: 16),
                                     Text(
                                       widget.book.id != null
-                                          ? AppLocalizations.current.updating_book
+                                          ? AppLocalizations
+                                              .current
+                                              .updating_book
                                           : AppLocalizations
                                               .current
                                               .creating_book,

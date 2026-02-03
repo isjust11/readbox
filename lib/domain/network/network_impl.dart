@@ -149,12 +149,14 @@ class Network {
       {required String url,
       FormData? formData,
       Map<String, dynamic> params = const {},
-      String contentType = Headers.jsonContentType}) async {
+      String contentType = Headers.jsonContentType,
+      Options? options,
+      }) async {
     try {
       Response response = await _dio.post(
         url,
         data: formData,
-        options: Options(responseType: ResponseType.json, contentType: contentType),
+        options: options ?? Options(responseType: ResponseType.bytes, contentType: contentType),
       );
       return getApiResponse(response);
     } catch (e) {

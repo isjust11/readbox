@@ -9,3 +9,4 @@ export 'package:readbox/domain/data/datasources/remote/feedback_remote_data_sour
 export 'package:readbox/domain/data/datasources/remote/notification_remote_data_source.dart';
 export 'package:readbox/domain/data/datasources/remote/user_interaction_data_source.dart';
 export 'package:readbox/domain/data/datasources/remote/category_remote_data_source.dart';
+export 'package:readbox/domain/data/datasources/remote/converter_remote_data_source.dart';
