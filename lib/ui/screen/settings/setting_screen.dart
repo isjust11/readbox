@@ -4,9 +4,11 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/app_widgets/app_profile.dart';
 import 'package:readbox/ui/widget/base_screen.dart';
+import 'package:readbox/ui/widget/custom_snack_bar.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/blocs/cubit.dart';
@@ -520,22 +522,18 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   void _showSuccessMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: CustomTextLabel(message, color: AppColors.white),
-        backgroundColor: AppColors.successGreen,
-        duration: Duration(seconds: 2),
-      ),
+    AppSnackBar.show(
+      context,
+      message: message,
+      snackBarType: SnackBarType.success,
     );
   }
 
   void _showErrorMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: CustomTextLabel(message, color: AppColors.white),
-        backgroundColor: AppColors.errorRed,
-        duration: Duration(seconds: 3),
-      ),
+    AppSnackBar.show(
+      context,
+      message: message,
+      snackBarType: SnackBarType.error,
     );
   }
 }

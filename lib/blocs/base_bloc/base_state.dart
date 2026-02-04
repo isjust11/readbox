@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 abstract class BaseState extends Equatable {
-  const BaseState();
+  final String? message;
+  const BaseState({this.message});
 
   @override
   List<Object> get props => [];
@@ -13,17 +14,17 @@ class LoadingState extends BaseState {}
 
 class LoadedState<T> extends BaseState {
   final T data;
-  final String msgError;
+  final String message;
   final bool isLocalizeMessage;
 
-  LoadedState(this.data, {this.msgError = "", this.isLocalizeMessage = true});
+  LoadedState(this.data, {this.message = "", this.isLocalizeMessage = true});
   
   LoadedState copyWith({
     T? data,
-    String? msgError,
+    String? message,
     bool? isLocalizeMessage,
   }) {
-    return LoadedState(data ?? this.data, msgError: msgError ?? this.msgError, isLocalizeMessage: isLocalizeMessage ?? this.isLocalizeMessage);
+    return LoadedState(data ?? this.data, message: message ?? this.message, isLocalizeMessage: isLocalizeMessage ?? this.isLocalizeMessage);
   }
   
   @override

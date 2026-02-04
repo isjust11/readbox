@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:readbox/res/enum.dart';
+import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 
 /// Widget điều khiển Text-to-Speech cho ebook reading
@@ -62,11 +64,10 @@ class _TTSControlWidgetState extends State<TTSControlWidget> {
       setState(() {
         _isSpeaking = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Lỗi đọc: $error'),
-          backgroundColor: Colors.red,
-        ),
+      AppSnackBar.show(
+        context,
+        message: 'Lỗi đọc: $error',
+        snackBarType: SnackBarType.error,
       );
     };
   }

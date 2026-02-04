@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/res/enum.dart';
+import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
@@ -23,10 +25,10 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
     final status = await Permission.camera.request();
     if (!status.isGranted) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.current.cannot_access_camera),
-          ),
+        AppSnackBar.show(
+          context,
+          message: AppLocalizations.current.cannot_access_camera,
+          snackBarType: SnackBarType.error,
         );
       }
     }
@@ -48,11 +50,10 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.current.error}: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        AppSnackBar.show(
+          context,
+          message: '${AppLocalizations.current.error}: $e',
+          snackBarType: SnackBarType.error,
         );
       }
     }
@@ -71,11 +72,10 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.current.error}: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        AppSnackBar.show(
+          context,
+          message: '${AppLocalizations.current.error}: $e',
+          snackBarType: SnackBarType.error,
         );
       }
     }
@@ -89,10 +89,10 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
 
   Future<void> _saveAsPdf() async {
     if (_scannedPages.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.current.tools_no_file_selected),
-        ),
+      AppSnackBar.show(
+        context,
+        message: AppLocalizations.current.tools_no_file_selected,
+        snackBarType: SnackBarType.error,
       );
       return;
     }
@@ -151,14 +151,10 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.current.tools_saved_successfully}\n$outputPath',
-            ),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 4),
-          ),
+        AppSnackBar.show(
+          context,
+          message: '${AppLocalizations.current.tools_saved_successfully}\n$outputPath',
+          snackBarType: SnackBarType.success,
         );
 
         // Clear pages after successful save
@@ -172,11 +168,10 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.current.tools_save_failed}: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        AppSnackBar.show(
+          context,
+          message: '${AppLocalizations.current.tools_save_failed}: $e',
+          snackBarType: SnackBarType.warning,
         );
       }
     }
@@ -200,9 +195,25 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
               ListTile(
                 leading: const Icon(Icons.photo_library),
                 title: Text(AppLocalizations.current.tools_choose_from_gallery),
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
-                  _chooseFromGallery();
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PdfScannerScreen(scanFormat: ScanFormatEnum.image,
+                      multiSelect: false,
+                      ),
+                    ),
+                  );
+                  if (result != null && mounted) {
+                    List<File> files = [];
+                    for (var file in result) {
+                      files.add(File(file));
+                    }
+                    setState(() {
+                      _scannedPages.addAll(files);
+                    });
+                  }
                 },
               ),
             ],
@@ -398,10 +409,10 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.5),
+                  Colors.black.withValues(alpha: 0.5),
                   Colors.transparent,
                   Colors.transparent,
-                  Colors.black.withOpacity(0.5),
+                  Colors.black.withValues(alpha: 0.5),
                 ],
               ),
             ),

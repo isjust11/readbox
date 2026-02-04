@@ -43,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "add_favorite": MessageLookupByLibrary.simpleMessage("Add favorite"),
         "add_new_book_to_library":
             MessageLookupByLibrary.simpleMessage("Add new book to library"),
+        "added": MessageLookupByLibrary.simpleMessage("Added"),
         "agree": MessageLookupByLibrary.simpleMessage("Agree"),
         "all": MessageLookupByLibrary.simpleMessage("All"),
         "all_data_loaded":
@@ -69,6 +70,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "biometricSetupSuccess":
             MessageLookupByLibrary.simpleMessage("Biometric setup successful"),
         "bookUpdates": MessageLookupByLibrary.simpleMessage("Book Updates"),
+        "book_added_to_local_library":
+            MessageLookupByLibrary.simpleMessage("Book added to local library"),
         "book_deleted_successfully":
             MessageLookupByLibrary.simpleMessage("Book deleted successfully"),
         "book_discover": MessageLookupByLibrary.simpleMessage("Discover"),
@@ -85,6 +88,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "book_will_be_displayed_for_everyone":
             MessageLookupByLibrary.simpleMessage(
                 "Book will be displayed for everyone"),
+        "books": MessageLookupByLibrary.simpleMessage("books"),
+        "books_already_exist":
+            MessageLookupByLibrary.simpleMessage("books already exist"),
         "camera": MessageLookupByLibrary.simpleMessage("Camera"),
         "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "cannot_access_camera":
@@ -201,6 +207,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Error loading books"),
         "error_occurred":
             MessageLookupByLibrary.simpleMessage("Error occurred"),
+        "error_scanning_files":
+            MessageLookupByLibrary.simpleMessage("Error scanning files"),
+        "error_selecting_file":
+            MessageLookupByLibrary.simpleMessage("Error selecting file"),
         "facebook_access_token_is_null": MessageLookupByLibrary.simpleMessage(
             "Facebook access token is null"),
         "facebook_invalid_client":
@@ -248,13 +258,20 @@ class MessageLookup extends MessageLookupByLibrary {
         "file_ebook_not_found":
             MessageLookupByLibrary.simpleMessage("File ebook not found"),
         "file_path": MessageLookupByLibrary.simpleMessage("File path"),
+        "file_selected": MessageLookupByLibrary.simpleMessage("File selected"),
         "file_size": MessageLookupByLibrary.simpleMessage("File size"),
         "file_type": MessageLookupByLibrary.simpleMessage("File type"),
+        "files": MessageLookupByLibrary.simpleMessage("files"),
         "filter": MessageLookupByLibrary.simpleMessage("Filter"),
         "find_book": MessageLookupByLibrary.simpleMessage("Find book"),
+        "find_image": MessageLookupByLibrary.simpleMessage("Find image file"),
+        "find_word": MessageLookupByLibrary.simpleMessage("Find word file"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Forgot password"),
         "format": MessageLookupByLibrary.simpleMessage("Format"),
+        "found": MessageLookupByLibrary.simpleMessage("Found"),
+        "from_directory":
+            MessageLookupByLibrary.simpleMessage("from directory"),
         "from_file_picker":
             MessageLookupByLibrary.simpleMessage("From file picker"),
         "full_name": MessageLookupByLibrary.simpleMessage("Full name"),
@@ -275,6 +292,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Google signin failed"),
         "google_timeout":
             MessageLookupByLibrary.simpleMessage("Google timeout"),
+        "grant_permission":
+            MessageLookupByLibrary.simpleMessage("Grant permission"),
         "have_account": MessageLookupByLibrary.simpleMessage("Have account? "),
         "helpCenter": MessageLookupByLibrary.simpleMessage("Help center"),
         "high": MessageLookupByLibrary.simpleMessage("High"),
@@ -386,6 +405,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "medium": MessageLookupByLibrary.simpleMessage("Medium"),
         "my_books": MessageLookupByLibrary.simpleMessage("My books"),
         "my_library": MessageLookupByLibrary.simpleMessage("My library"),
+        "need_permission_to_access_memory":
+            MessageLookupByLibrary.simpleMessage(
+                "Need permission to access memory"),
         "new_book": MessageLookupByLibrary.simpleMessage("New"),
         "news": MessageLookupByLibrary.simpleMessage("News"),
         "noLanguagesAvailable":
@@ -404,9 +426,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No books found"),
         "no_content_to_display":
             MessageLookupByLibrary.simpleMessage("No content to display"),
+        "no_file_found": MessageLookupByLibrary.simpleMessage("No file found"),
+        "no_image_file_found": MessageLookupByLibrary.simpleMessage(
+            "No file .jpg, .jpeg, .png found"),
         "no_name": MessageLookupByLibrary.simpleMessage("No name"),
         "no_pdf_epub_mobi_found":
             MessageLookupByLibrary.simpleMessage("No PDF, EPUB, or MOBI found"),
+        "no_word_file_found":
+            MessageLookupByLibrary.simpleMessage("No file .docx found"),
         "normal": MessageLookupByLibrary.simpleMessage("Normal"),
         "notificationBadge": MessageLookupByLibrary.simpleMessage("Badge"),
         "notificationCategories":
@@ -436,6 +463,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("All notifications cleared"),
         "openSettings": MessageLookupByLibrary.simpleMessage("Open Settings"),
         "optional": MessageLookupByLibrary.simpleMessage("Optional"),
+        "or_use_select_file_to_browse_directory_without_permission":
+            MessageLookupByLibrary.simpleMessage(
+                "Or use \'Select file\' to browse directory (without permission)"),
         "pages": MessageLookupByLibrary.simpleMessage("Pages"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "password_must_be_at_least_6_characters":
@@ -589,6 +619,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "please_grant_permission_to_access_camera_or_gallery_in_settings":
             MessageLookupByLibrary.simpleMessage(
                 "Please grant permission to access camera or gallery in settings"),
+        "please_grant_permission_to_search_file":
+            MessageLookupByLibrary.simpleMessage(
+                "Please grant permission to search file"),
         "please_upload_ebook_file_first": MessageLookupByLibrary.simpleMessage(
             "Please upload ebook file first"),
         "pls_input_username":
@@ -649,6 +682,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "retry_loading_books":
             MessageLookupByLibrary.simpleMessage("Retry loading books"),
         "scan_again": MessageLookupByLibrary.simpleMessage("Scan again"),
+        "scanning_in_memory":
+            MessageLookupByLibrary.simpleMessage("Scanning in memory..."),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "search_book": MessageLookupByLibrary.simpleMessage("Search book"),
         "search_books": MessageLookupByLibrary.simpleMessage("Search books..."),
@@ -667,6 +702,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "select_file": MessageLookupByLibrary.simpleMessage("Select file"),
         "select_language":
             MessageLookupByLibrary.simpleMessage("Please enter language"),
+        "selected": MessageLookupByLibrary.simpleMessage("Selected"),
         "sendFeedback": MessageLookupByLibrary.simpleMessage("Send feedback"),
         "sendTestNotification":
             MessageLookupByLibrary.simpleMessage("Send test notification"),
@@ -687,6 +723,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "success": MessageLookupByLibrary.simpleMessage("Success"),
         "systemNotifications":
             MessageLookupByLibrary.simpleMessage("System Notifications"),
+        "tap_or_long_press_to_select_file":
+            MessageLookupByLibrary.simpleMessage(
+                "Tap on file to select or long press to select file"),
         "testNotification":
             MessageLookupByLibrary.simpleMessage("Test Notification"),
         "testNotificationSent":
@@ -695,6 +734,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "textToSpeech": MessageLookupByLibrary.simpleMessage("Text to speech"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "title": MessageLookupByLibrary.simpleMessage("Title"),
+        "to_library": MessageLookupByLibrary.simpleMessage("to library"),
         "tokenCopied": MessageLookupByLibrary.simpleMessage("Token copied"),
         "tokenRefreshed":
             MessageLookupByLibrary.simpleMessage("Token refreshed"),
@@ -795,8 +835,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "uploading": MessageLookupByLibrary.simpleMessage("Uploading..."),
         "useFingerprintOrFaceID":
             MessageLookupByLibrary.simpleMessage("Use fingerprint or Face ID"),
-        "use_select_file_to_browse_directory": MessageLookupByLibrary.simpleMessage(
-            "Use \'Select file\' to browse directory (e.g. Download/Telegram)"),
+        "use_select_file_to_browse_directory":
+            MessageLookupByLibrary.simpleMessage(
+                "Use \'Select file\' to browse directory"),
         "user_cancelled_apple_sign_in": MessageLookupByLibrary.simpleMessage(
             "User cancelled Apple sign in"),
         "user_cancelled_bitbucket_sign_in":

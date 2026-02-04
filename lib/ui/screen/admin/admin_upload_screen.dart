@@ -195,25 +195,14 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           _descriptionController.text = bookMetadata.subject!;
         }
       });
-
-      // Hiển thị thông báo nếu extract được metadata
-      // if (bookMetadata.title != null || bookMetadata.author != null || bookMetadata.totalPages != null) {
-      //   if (mounted) {
-      //     ScaffoldMessenger.of(context).showSnackBar(
-      //       SnackBar(
-      //         content: Text(
-      //           'Đã tự động điền thông tin từ file${bookMetadata.totalPages != null ? ' (${bookMetadata.totalPages} trang)' : ''}',
-      //         ),
-      //         backgroundColor: Colors.blue,
-      //         duration: const Duration(seconds: 2),
-      //       ),
-      //     );
-      //   }
-      // }
     } catch (e) {
-      // Metadata extraction failed, continue silently
-      // Không hiển thị lỗi vì không phải lỗi nghiêm trọng
-      debugPrint('Failed to extract metadata: $e');
+      if (mounted) {
+        AppSnackBar.show(
+          context,
+          message: '${AppLocalizations.current.error}: $e',
+          snackBarType: SnackBarType.error,
+        );
+      }
     }
   }
 
@@ -249,7 +238,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         MaterialPageRoute(
           builder:
               (context) => const PdfScannerScreen(
-                isSelectedMode: true,
+                multiSelect: true,
                 scanFormat: ScanFormatEnum.pdf,
               ),
         ),
@@ -269,25 +258,25 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           // Load thumbnail từ PDF
           await _loadThumbnailFromPdf(_ebookFile);
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Đã chọn file: ${file.path.split('/').last}'),
-              backgroundColor: Colors.green,
-            ),
+          AppSnackBar.show(
+            context,
+            message: '${AppLocalizations.current.file_selected}: ${file.path.split('/').last}',
+            snackBarType: SnackBarType.success,
           );
         }
       } else if (result == true) {
         // Files were added to SharedPreferences (legacy behavior)
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Sách đã được thêm vào thư viện local'),
-            backgroundColor: Colors.green,
-          ),
+        AppSnackBar.show(
+          context,
+          message: '${AppLocalizations.current.book_added_to_local_library}',
+          snackBarType: SnackBarType.success,
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi: $e'), backgroundColor: Colors.red),
+      AppSnackBar.show(
+        context,
+        message: '${AppLocalizations.current.error}: $e',
+        snackBarType: SnackBarType.error,
       );
     }
   }
@@ -475,27 +464,21 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
       body: BlocListener<LibraryCubit, BaseState>(
         listener: (context, state) {
           if (state is ErrorState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  state.data ?? AppLocalizations.current.error_occurred,
-                ),
-                backgroundColor: Colors.red,
-              ),
+            AppSnackBar.show(
+              context,
+              message: state.data ?? AppLocalizations.current.error_occurred,
+              snackBarType: SnackBarType.error,
             );
           } else if (state is LoadedState) {
             final cubit = context.read<LibraryCubit>();
             if (cubit.uploadEbookSuccess) {
               final isEditMode = widget.book.id != null;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    isEditMode
-                        ? AppLocalizations.current.update_book_success
-                        : AppLocalizations.current.create_book_success,
-                  ),
-                  backgroundColor: Colors.green,
-                ),
+              AppSnackBar.show(
+                context,
+                message: isEditMode
+                    ? AppLocalizations.current.update_book_success
+                    : AppLocalizations.current.create_book_success,
+                snackBarType: SnackBarType.success,
               );
 
               // Thêm mới: reset form và quay lại

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
+import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 
 class TranslateScreen extends StatefulWidget {
@@ -97,22 +99,18 @@ class _TranslateScreenState extends State<TranslateScreen> {
   }
 
   void _showSuccess(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: CustomTextLabel(message, color: AppColors.white),
-        backgroundColor: AppColors.successGreen,
-        duration: const Duration(seconds: 2),
-      ),
+    AppSnackBar.show(
+      context,
+      message: message,
+      snackBarType: SnackBarType.success,
     );
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: CustomTextLabel(message, color: AppColors.white),
-        backgroundColor: Theme.of(context).primaryColor,
-        duration: const Duration(seconds: 3),
-      ),
+    AppSnackBar.show(
+      context,
+      message: message,
+      snackBarType: SnackBarType.error,
     );
   }
 

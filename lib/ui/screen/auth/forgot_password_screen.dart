@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/auth/auth_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
+import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/res/resources.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
@@ -67,19 +69,6 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, BaseState>(
       listener: (context, state) {
-        if (state is LoadedState) {
-          // On successful send, go to confirm pin
-          final email = _emailController.text.trim();
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ConfirmPinScreen(email: email, phone: null),
-            ),
-          );
-        }else if (state is ErrorState) {
-          ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(state.data)));
-          }
       },
       child: BaseScreen(
         stateWidget: CustomLoading<AuthCubit>(

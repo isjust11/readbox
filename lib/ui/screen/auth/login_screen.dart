@@ -13,7 +13,9 @@ import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
+import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
+import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -107,20 +109,21 @@ class LoginScreenState extends State<LoginBody>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
+    return BaseScreen(
+      hideAppBar: true,
+      messageNotify: CustomSnackBar<AuthCubit>(),
       body: BlocListener<AuthCubit, BaseState>(
         listener: (context, state) {
-          if (state is LoadedState) {
-            getIt.get<UserInfoCubit>().getUserInfo();
-            Navigator.pushReplacementNamed(context, Routes.mainScreen);
-          } else if (state is ErrorState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(BlocUtils.getMessageError(state.data)),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
+          // if (state is LoadedState) {
+          //   getIt.get<UserInfoCubit>().getUserInfo();
+          //   Navigator.pushReplacementNamed(context, Routes.mainScreen);
+          // } else if (state is ErrorState) {
+          //   AppSnackBar.show(
+          //     context,
+          //     message: BlocUtils.getMessageError(state.data),
+          //     snackBarType: SnackBarType.error,
+          //   );
+          // }
         },
         child: Stack(
           children: [

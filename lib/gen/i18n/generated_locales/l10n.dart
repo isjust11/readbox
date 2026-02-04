@@ -4160,10 +4160,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Dùng 'Chọn file' để duyệt thư mục (ví dụ Download/Telegram)`
+  /// `Dùng 'Chọn file' để duyệt thư mục`
   String get use_select_file_to_browse_directory {
     return Intl.message(
-      'Dùng \'Chọn file\' để duyệt thư mục (ví dụ Download/Telegram)',
+      'Dùng \'Chọn file\' để duyệt thư mục',
       name: 'use_select_file_to_browse_directory',
       desc: '',
       args: [],
@@ -4225,6 +4225,16 @@ class AppLocalizations {
     return Intl.message(
       'Quét lại',
       name: 'scan_again',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhấn vào file để chọn hoặc long press để chọn file`
+  String get tap_or_long_press_to_select_file {
+    return Intl.message(
+      'Nhấn vào file để chọn hoặc long press để chọn file',
+      name: 'tap_or_long_press_to_select_file',
       desc: '',
       args: [],
     );
@@ -5115,6 +5125,226 @@ class AppLocalizations {
     return Intl.message(
       'Vui lòng chọn file trước',
       name: 'tools_select_file_first',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cần quyền truy cập bộ nhớ`
+  String get need_permission_to_access_memory {
+    return Intl.message(
+      'Cần quyền truy cập bộ nhớ',
+      name: 'need_permission_to_access_memory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng cấp quyền để tìm kiếu file`
+  String get please_grant_permission_to_search_file {
+    return Intl.message(
+      'Vui lòng cấp quyền để tìm kiếu file',
+      name: 'please_grant_permission_to_search_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hoặc dùng 'Chọn file' để duyệt thư mục (không cần quyền)`
+  String get or_use_select_file_to_browse_directory_without_permission {
+    return Intl.message(
+      'Hoặc dùng \'Chọn file\' để duyệt thư mục (không cần quyền)',
+      name: 'or_use_select_file_to_browse_directory_without_permission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cấp quyền`
+  String get grant_permission {
+    return Intl.message(
+      'Cấp quyền',
+      name: 'grant_permission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã thêm`
+  String get added {
+    return Intl.message(
+      'Đã thêm',
+      name: 'added',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `sách`
+  String get books {
+    return Intl.message(
+      'sách',
+      name: 'books',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `vào thư viện`
+  String get to_library {
+    return Intl.message(
+      'vào thư viện',
+      name: 'to_library',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `sách đã tồn tại`
+  String get books_already_exist {
+    return Intl.message(
+      'sách đã tồn tại',
+      name: 'books_already_exist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi chọn file`
+  String get error_selecting_file {
+    return Intl.message(
+      'Lỗi chọn file',
+      name: 'error_selecting_file',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi quét file`
+  String get error_scanning_files {
+    return Intl.message(
+      'Lỗi quét file',
+      name: 'error_scanning_files',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đang quét bộ nhớ...`
+  String get scanning_in_memory {
+    return Intl.message(
+      'Đang quét bộ nhớ...',
+      name: 'scanning_in_memory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tìm thấy`
+  String get found {
+    return Intl.message(
+      'Tìm thấy',
+      name: 'found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `file`
+  String get files {
+    return Intl.message(
+      'file',
+      name: 'files',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã chọn`
+  String get selected {
+    return Intl.message(
+      'Đã chọn',
+      name: 'selected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `từ thư mục`
+  String get from_directory {
+    return Intl.message(
+      'từ thư mục',
+      name: 'from_directory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `File đã chọn`
+  String get file_selected {
+    return Intl.message(
+      'File đã chọn',
+      name: 'file_selected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sách đã được thêm vào thư viện local`
+  String get book_added_to_local_library {
+    return Intl.message(
+      'Sách đã được thêm vào thư viện local',
+      name: 'book_added_to_local_library',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tìm file word`
+  String get find_word {
+    return Intl.message(
+      'Tìm file word',
+      name: 'find_word',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tìm file ảnh`
+  String get find_image {
+    return Intl.message(
+      'Tìm file ảnh',
+      name: 'find_image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không tìm thấy file .docx`
+  String get no_word_file_found {
+    return Intl.message(
+      'Không tìm thấy file .docx',
+      name: 'no_word_file_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không tìm thấy file .jpg, .jpeg, .png`
+  String get no_image_file_found {
+    return Intl.message(
+      'Không tìm thấy file .jpg, .jpeg, .png',
+      name: 'no_image_file_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không tìm thấy file`
+  String get no_file_found {
+    return Intl.message(
+      'Không tìm thấy file',
+      name: 'no_file_found',
       desc: '',
       args: [],
     );

@@ -7,11 +7,11 @@ import 'package:readbox/domain/data/entities/entities.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/dimens.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/notification_handler.dart';
-import 'package:readbox/ui/widget/base_appbar.dart';
 import 'package:readbox/ui/widget/base_html.dart';
-import 'package:readbox/ui/widget/base_screen.dart';
+import 'package:readbox/ui/widget/widget.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -362,12 +362,10 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
       },
       onDismissed: (direction) {
         context.read<NotificationCubit>().deleteNotification(notification.id!);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.current.notificationDeletedSuccessfully,
-            ),
-          ),
+        AppSnackBar.show(
+          context,
+          message: AppLocalizations.current.notificationDeletedSuccessfully,
+          snackBarType: SnackBarType.success,
         );
       },
       child: InkWell(

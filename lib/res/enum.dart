@@ -15,4 +15,12 @@ enum CategoryTypeEnum {
 enum ScanFormatEnum {
   pdf,
   word,
+  image,
+}
+enum SnackBarType {
+  success,
+  error,
+  warning,
+  info,
+  custom,
 }

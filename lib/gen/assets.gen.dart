@@ -77,6 +77,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_home.svg
   String get icHome => 'assets/icons/ic_home.svg';
 
+  /// File path: assets/icons/ic_image.svg
+  String get icImage => 'assets/icons/ic_image.svg';
+
   /// File path: assets/icons/ic_library.svg
   String get icLibrary => 'assets/icons/ic_library.svg';
 
@@ -107,6 +110,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_trash.svg
   String get icTrash => 'assets/icons/ic_trash.svg';
 
+  /// File path: assets/icons/ic_word.svg
+  String get icWord => 'assets/icons/ic_word.svg';
+
   /// List of all assets
   List<String> get values => [
     boxEmpty,
@@ -130,6 +136,7 @@ class $AssetsIconsGen {
     icGoogle,
     icHistory,
     icHome,
+    icImage,
     icLibrary,
     icLockPassword,
     icMobi,
@@ -140,6 +147,7 @@ class $AssetsIconsGen {
     icSetting,
     icTime,
     icTrash,
+    icWord,
   ];
 }
 

@@ -5,6 +5,8 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:readbox/res/enum.dart';
+import 'package:readbox/ui/widget/widget.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -377,16 +379,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
       if (filePath == null) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _isLocal
-                  ? AppLocalizations.current.pdf_share_file_not_found
-                  : AppLocalizations.current.pdf_share_wait_download,
-            ),
-            backgroundColor: Colors.orange,
-            behavior: SnackBarBehavior.floating,
-          ),
+        AppSnackBar.show(
+          context,
+          message: _isLocal
+              ? AppLocalizations.current.pdf_share_file_not_found
+              : AppLocalizations.current.pdf_share_wait_download,
+          snackBarType: SnackBarType.warning,
         );
         return;
       }
@@ -399,22 +397,18 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
       if (!mounted) return;
       if (result.status == ShareResultStatus.success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.current.pdf_share_success),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-          ),
+        AppSnackBar.show(
+          context,
+          message: AppLocalizations.current.pdf_share_success,
+          snackBarType: SnackBarType.success,
         );
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.current.pdf_share_error(e.toString())),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
+      AppSnackBar.show(
+        context,
+        message: AppLocalizations.current.pdf_share_error(e.toString()),
+        snackBarType: SnackBarType.error,
       );
     }
   }
@@ -439,11 +433,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     if (_pdfBytes == null && !_isLocal) {
       if (!mounted) return;
       setState(() => _isReadingContinuous = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.current.pdf_load_failed_retry),
-          backgroundColor: Colors.orange,
-        ),
+      AppSnackBar.show(
+        context,
+        message: AppLocalizations.current.pdf_load_failed_retry,
+        snackBarType: SnackBarType.warning,
       );
       return;
     }
@@ -475,16 +468,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         } else {
           if (!mounted) return;
           setState(() => _isReadingContinuous = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              content: Text(
-                AppLocalizations.current.pdf_document_read_complete,
-              ),
-              backgroundColor: Colors.green,
-            ),
+          AppSnackBar.show(
+            context,
+            message: AppLocalizations.current.pdf_document_read_complete,
+            snackBarType: SnackBarType.success,
           );
         }
       }
@@ -1243,11 +1230,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         _currentPageWordBounds = null;
       });
       _ttsProgressTimer?.cancel();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.current.pdf_tts_read_error(error)),
-          backgroundColor: Colors.red,
-        ),
+      AppSnackBar.show(
+        context,
+        message: AppLocalizations.current.pdf_tts_read_error(error),
+        snackBarType: SnackBarType.error,
       );
     };
   }
@@ -1291,11 +1277,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       setState(() {
         _isReadingContinuous = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Đã đọc hết tài liệu'),
-          backgroundColor: Colors.green,
-        ),
+      AppSnackBar.show(
+        context,
+        message: 'Đã đọc hết tài liệu',
+        snackBarType: SnackBarType.success,
       );
       return;
     }
@@ -1341,11 +1326,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         } else {
           if (!mounted) return;
           setState(() => _isReadingContinuous = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Đã đọc hết tài liệu'),
-              backgroundColor: Colors.green,
-            ),
+          AppSnackBar.show(
+            context,
+            message: AppLocalizations.current.pdf_document_read_complete,
+            snackBarType: SnackBarType.success,
           );
         }
       }
@@ -1621,12 +1605,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.current.pdf_drawings_saved),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-        ),
+      AppSnackBar.show(
+        context,
+        message: AppLocalizations.current.pdf_drawings_saved,
+        snackBarType: SnackBarType.success,
       );
     }
   }
@@ -1958,12 +1940,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   });
                   _saveNotes();
                   Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.current.pdf_note_added),
-                      backgroundColor: Colors.green,
-                      behavior: SnackBarBehavior.floating,
-                    ),
+                  AppSnackBar.show(
+                    context,
+                    message: AppLocalizations.current.pdf_note_added,
+                    snackBarType: SnackBarType.success,
                   );
                 }
               },
@@ -2058,15 +2038,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   _pdfController.jumpToPage(page);
                   Navigator.pop(context);
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.current.pdf_invalid_page),
-                      backgroundColor: Colors.red,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                  AppSnackBar.show(
+                    context,
+                    message: AppLocalizations.current.pdf_invalid_page,
+                    snackBarType: SnackBarType.error,
                   );
                 }
               },

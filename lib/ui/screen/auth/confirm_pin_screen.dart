@@ -7,7 +7,9 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
+import 'package:readbox/ui/widget/widget.dart';
 
 class ConfirmPinScreen extends StatelessWidget {
   final String email;
@@ -147,18 +149,16 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
               if (state is LoadedState) {
                 getIt.get<UserInfoCubit>().getUserInfo();
                 Navigator.pushReplacementNamed(context, Routes.loginScreen);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Xác thực thành công!'),
-                    backgroundColor: Colors.green,
-                  ),
+                AppSnackBar.show(
+                  context,
+                  message: 'Xác thực thành công!',
+                  snackBarType: SnackBarType.success,
                 );
               } else if (state is ErrorState) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(BlocUtils.getMessageError(state.data)),
-                    backgroundColor: Colors.red,
-                  ),
+                AppSnackBar.show(
+                  context,
+                  message: BlocUtils.getMessageError(state.data),
+                  snackBarType: SnackBarType.error,
                 );
                 _clearPin();
               }
@@ -167,18 +167,16 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
           BlocListener<AuthCubit, BaseState>(
             listener: (context, state) {
               if (state is LoadedState) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Mã PIN đã được gửi lại thành công!'),
-                    backgroundColor: Colors.green,
-                  ),
+                AppSnackBar.show(
+                  context,
+                  message: 'Mã PIN đã được gửi lại thành công!',
+                  snackBarType: SnackBarType.success,
                 );
               } else if (state is ErrorState) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(BlocUtils.getMessageError(state.data)),
-                    backgroundColor: Colors.red,
-                  ),
+                AppSnackBar.show(
+                  context,
+                  message: BlocUtils.getMessageError(state.data),
+                  snackBarType: SnackBarType.error,
                 );
                 // Reset timer even on error so user can try again
                 setState(() {

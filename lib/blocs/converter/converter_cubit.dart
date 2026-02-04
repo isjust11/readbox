@@ -23,7 +23,7 @@ class ConverterCubit extends Cubit<BaseState> {
     _selectedFile = file;
     _outputPath = null;
     _uploadProgress = 0.0;
-    emit(LoadedState(file, msgError: 'File đã được chọn'));
+    emit(LoadedState(file, message: 'File đã được chọn'));
   }
 
   /// Reset selected file and output
@@ -73,7 +73,7 @@ class ConverterCubit extends Cubit<BaseState> {
 
       emit(LoadedState(
         outputPath,
-        msgError: 'Chuyển đổi thành công',
+        message: 'Chuyển đổi thành công',
       ));
     } catch (e) {
       _uploadProgress = 0.0;

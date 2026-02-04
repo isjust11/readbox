@@ -623,26 +623,16 @@ class MainBodyState extends State<MainBody> {
                                   .deleteBook(book.id!);
                               if (result) {
                                 getBooks(isLoadMore: true);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      AppLocalizations
-                                          .current
-                                          .book_deleted_successfully,
-                                    ),
-                                    backgroundColor: Colors.green,
-                                  ),
+                                AppSnackBar.show(
+                                  context,
+                                  message: AppLocalizations.current.book_deleted_successfully,
+                                  snackBarType: SnackBarType.success,
                                 );
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      AppLocalizations
-                                          .current
-                                          .error_deleting_book,
-                                    ),
-                                    backgroundColor: Colors.red,
-                                  ),
+                                AppSnackBar.show(
+                                  context,
+                                  message: AppLocalizations.current.error_deleting_book,
+                                  snackBarType: SnackBarType.error,
                                 );
                               }
                             },
@@ -1017,8 +1007,10 @@ class MainBodyState extends State<MainBody> {
 
   Future<void> _openBook(BuildContext context, BookModel book) async {
     if (book.fileUrl == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.current.file_ebook_not_found)),
+      AppSnackBar.show(
+        context,
+        message: AppLocalizations.current.file_ebook_not_found,
+        snackBarType: SnackBarType.warning,
       );
       return;
     }
@@ -1031,9 +1023,5 @@ class MainBodyState extends State<MainBody> {
     if (result == true) {
       loadUserInteractions();
     }
-  }
-
-  void _openAllReadingScreen(BuildContext context) {
-    Navigator.pushNamed(context, Routes.localLibraryScreen);
   }
 }

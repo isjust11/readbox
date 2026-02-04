@@ -13,6 +13,7 @@ import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/injection_container.dart';
 
@@ -538,12 +539,10 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
       }
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
+        AppSnackBar.show(
+          context,
+          message: errorMessage,
+          snackBarType: SnackBarType.error,
         );
       }
     }

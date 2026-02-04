@@ -130,31 +130,7 @@ class _FeedbackBodyState extends State<FeedbackBody> {
     return BlocListener<FeedbackCubit, BaseState>(
       bloc: context.read<FeedbackCubit>(),
       listener: (context, state) {
-        if (state is ErrorState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: CustomTextLabel(
-                state.data?.toString() ?? AppLocalizations.current.error_common,
-                fontSize: AppDimens.SIZE_16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.white,
-              ),
-              backgroundColor: AppColors.colorError,
-            ),
-          );
-        }
         if (state is LoadedState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: CustomTextLabel(
-                AppLocalizations.current.feedbackSuccess,
-                fontSize: AppDimens.SIZE_16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.white,
-              ),
-              backgroundColor: AppColors.baseColor,
-            ),
-          );
           _clearForm();
         }
       },
@@ -166,6 +142,7 @@ class _FeedbackBodyState extends State<FeedbackBody> {
             title: AppLocalizations.current.sendFeedback,
             colorTitle: theme.colorScheme.surfaceContainerHighest,
             body: _buildBody(theme, state),
+            messageNotify: CustomSnackBar<FeedbackCubit>(),
             colorBg: theme.colorScheme.surface,
           );
         },

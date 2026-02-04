@@ -244,7 +244,7 @@ class LibraryCubit extends Cubit<BaseState> {
       _uploadEbookSuccess = true;
       emit(LoadedState(
         response,
-        msgError: 'Book created successfully',
+        message: 'Book created successfully',
       ));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e),));
@@ -294,7 +294,7 @@ class LibraryCubit extends Cubit<BaseState> {
       _uploadEbookSuccess = true;
       emit(LoadedState(
         response,
-        msgError: 'Book updated successfully',
+        message: 'Book updated successfully',
       ));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e),));

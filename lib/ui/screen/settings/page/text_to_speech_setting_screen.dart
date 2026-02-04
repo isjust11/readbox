@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
-import 'package:readbox/ui/widget/base_screen.dart';
-import 'package:readbox/ui/widget/custom_text_label.dart';
+import 'package:readbox/res/enum.dart';
+import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -151,22 +151,18 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
   }
 
   void _showSuccess(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: CustomTextLabel(message, color: AppColors.white),
-        backgroundColor: AppColors.successGreen,
-        duration: const Duration(seconds: 2),
-      ),
+    AppSnackBar.show(
+      context,
+      message: message,
+      snackBarType: SnackBarType.success,
     );
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: CustomTextLabel(message, color: AppColors.white),
-        backgroundColor: Theme.of(context).primaryColor,
-        duration: const Duration(seconds: 3),
-      ),
+    AppSnackBar.show(
+      context,
+      message: message,
+      snackBarType: SnackBarType.error,
     );
   }
 
@@ -230,7 +226,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
         gradient: LinearGradient(
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.7),
+            Theme.of(context).primaryColor.withValues(alpha: 0.7),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -238,7 +234,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
         borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).primaryColor.withOpacity(0.3),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -263,7 +259,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
           CustomTextLabel(
             AppLocalizations.current.ttsTestText,
             fontSize: AppDimens.SIZE_14,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             textAlign: TextAlign.center,
             maxLines: 3,
           ),
@@ -343,7 +339,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               max: 1.0,
               divisions: 20,
               activeColor: Theme.of(context).primaryColor,
-              inactiveColor: Theme.of(context).primaryColor.withOpacity(0.2),
+              inactiveColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
               onChanged: _updateSpeechRate,
             ),
           ),
@@ -384,7 +380,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               max: 1.0,
               divisions: 10,
               activeColor: Theme.of(context).primaryColor,
-              inactiveColor: Theme.of(context).primaryColor.withOpacity(0.2),
+              inactiveColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
               onChanged: _updateVolume,
             ),
           ),
@@ -437,7 +433,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               max: 2.0,
               divisions: 15,
               activeColor: Theme.of(context).primaryColor,
-              inactiveColor: Theme.of(context).primaryColor.withOpacity(0.2),
+              inactiveColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
               onChanged: _updatePitch,
             ),
           ),
@@ -467,7 +463,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
             height: 200,
             decoration: BoxDecoration(
               border: Border.all(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
               ),
               borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
             ),
@@ -479,7 +475,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
                     height: 1,
                     color: Theme.of(
                       context,
-                    ).colorScheme.onSurface.withOpacity(0.1),
+                    ).colorScheme.onSurface.withValues(alpha: 0.1),
                   ),
               itemBuilder: (context, index) {
                 final voice = _availableVoices[index];
@@ -527,7 +523,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
         borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -541,7 +537,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               Container(
                 padding: const EdgeInsets.all(AppDimens.SIZE_10),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(AppDimens.SIZE_10),
                 ),
                 child: Icon(

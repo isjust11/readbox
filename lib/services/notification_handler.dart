@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
+import 'package:readbox/ui/widget/widget.dart';
 
 /// Handles notification navigation and actions
 class NotificationHandler {
@@ -137,7 +139,11 @@ class NotificationHandler {
       backgroundColor: Theme.of(context).primaryColor,
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    AppSnackBar.show(
+      context,
+      message: body,
+      snackBarType: SnackBarType.info,
+    );
   }
 
   /// Parse notification type and return appropriate icon

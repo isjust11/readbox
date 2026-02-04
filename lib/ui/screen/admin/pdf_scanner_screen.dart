@@ -6,16 +6,17 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
 class PdfScannerScreen extends StatefulWidget {
   final ScanFormatEnum scanFormat;
-  final bool isSelectedMode;
+  final bool multiSelect;
   const PdfScannerScreen({
     super.key,
-    this.isSelectedMode = false,
+    this.multiSelect = false,
     this.scanFormat = ScanFormatEnum.pdf,
   });
 
@@ -64,7 +65,12 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: widget.scanFormat == ScanFormatEnum.pdf ? ['pdf', 'epub', 'mobi'] : ['doc', 'docx'],
+        allowedExtensions:
+            widget.scanFormat == ScanFormatEnum.pdf
+                ? ['pdf', 'epub', 'mobi']
+                : widget.scanFormat == ScanFormatEnum.word
+                    ? ['doc', 'docx']
+                    : ['jpg', 'jpeg', 'png'],
         allowMultiple: true,
       );
       if (result == null || result.files.isEmpty) return;
@@ -84,17 +90,19 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
         _selectedFiles = [..._selectedFiles, ...toAdd];
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đã thêm ${toAdd.length} file từ thư mục')),
+        AppSnackBar.show(
+          context,
+          message:
+              '${AppLocalizations.current.added} ${toAdd.length} ${AppLocalizations.current.files} ${AppLocalizations.current.from_directory}',
+          snackBarType: SnackBarType.success,
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Lỗi chọn file: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        AppSnackBar.show(
+          context,
+          message: '${AppLocalizations.current.error_selecting_file}: $e',
+          snackBarType: SnackBarType.error,
         );
       }
     }
@@ -139,9 +147,11 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     } catch (e) {
       setState(() => _isScanning = false);
       if (mounted) {
-        ScaffoldMessenger.of(
+        AppSnackBar.show(
           context,
-        ).showSnackBar(SnackBar(content: Text('Error scanning files: $e')));
+          message: '${AppLocalizations.current.error_scanning_files}: $e',
+          snackBarType: SnackBarType.error,
+        );
       }
     }
   }
@@ -155,15 +165,21 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
       for (var entity in entities) {
         if (entity is File) {
           final path = entity.path.toLowerCase();
-          if(widget.scanFormat == ScanFormatEnum.pdf) {
+          if (widget.scanFormat == ScanFormatEnum.pdf) {
             if (path.endsWith('.pdf') ||
                 path.endsWith('.epub') ||
                 path.endsWith('.mobi')) {
               files.add(entity);
             }
           } else if (widget.scanFormat == ScanFormatEnum.word) {
-            if (path.endsWith('.doc') ||
-                path.endsWith('.docx')) {
+            // chỉ hỗ trợ file .docx file .doc không hỗ trợ
+            if (path.endsWith('.docx')) {
+              files.add(entity);
+            }
+          } else if (widget.scanFormat == ScanFormatEnum.image) {
+            if (path.endsWith('.jpg') ||
+                path.endsWith('.jpeg') ||
+                path.endsWith('.png')) {
               files.add(entity);
             }
           }
@@ -177,10 +193,15 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
 
   void _toggleFileSelection(FileSystemEntity file) {
     setState(() {
-      if (_selectedFiles.contains(file)) {
-        _selectedFiles.remove(file);
-      } else {
+      if (widget.multiSelect) {
+        _selectedFiles.clear();
         _selectedFiles.add(file);
+      } else {
+        if (_selectedFiles.contains(file)) {
+          _selectedFiles.remove(file);
+        } else {
+          _selectedFiles.add(file);
+        }
       }
     });
   }
@@ -197,55 +218,52 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     });
   }
 
-  Future<void> _importSelected() async {
-    if (_selectedFiles.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng chọn ít nhất một file')),
-      );
+  Future<void> _selectOrImportSelected() async {
+    if (widget.multiSelect) {
+      Navigator.pop(context, _selectedFiles[0].path);
       return;
-    }
+    } else {
+      try {
+        int addedCount = 0;
+        int skippedCount = 0;
 
-    try {
-      int addedCount = 0;
-      int skippedCount = 0;
+        for (var file in _selectedFiles) {
+          final filePath = file.path;
+          final isAdded = await SharedPreferenceUtil.isBookAdded(filePath);
 
-      for (var file in _selectedFiles) {
-        final filePath = file.path;
-        final isAdded = await SharedPreferenceUtil.isBookAdded(filePath);
-
-        if (!isAdded) {
-          await SharedPreferenceUtil.addLocalBook(filePath);
-          addedCount++;
-        } else {
-          skippedCount++;
-        }
-      }
-
-      if (mounted) {
-        String message = 'Đã thêm $addedCount sách vào thư viện';
-        if (skippedCount > 0) {
-          message += '\n$skippedCount sách đã tồn tại';
+          if (!isAdded) {
+            await SharedPreferenceUtil.addLocalBook(filePath);
+            addedCount++;
+          } else {
+            skippedCount++;
+          }
         }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(message),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        if (mounted) {
+          String message =
+              '${AppLocalizations.current.added} $addedCount ${AppLocalizations.current.books} ${AppLocalizations.current.to_library}';
+          if (skippedCount > 0) {
+            message +=
+                '\n${AppLocalizations.current.books_already_exist} $skippedCount ${AppLocalizations.current.books}';
+          }
 
-        // Return success
-        Navigator.pop(context, true);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Lỗi: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+          AppSnackBar.show(
+            context,
+            message: message,
+            snackBarType: SnackBarType.success,
+          );
+
+          // Return success
+          Navigator.pop(context, _selectedFiles.map((e) => e.path).toList());
+        }
+      } catch (e) {
+        if (mounted) {
+          AppSnackBar.show(
+            context,
+            message: '${AppLocalizations.current.error}: $e',
+            snackBarType: SnackBarType.error,
+          );
+        }
       }
     }
   }
@@ -266,6 +284,17 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     return 'Unknown';
   }
 
+  String get _getTitle {
+    if (widget.scanFormat == ScanFormatEnum.pdf) {
+      return AppLocalizations.current.find_book;
+    } else if (widget.scanFormat == ScanFormatEnum.word) {
+      return AppLocalizations.current.find_word;
+    } else if (widget.scanFormat == ScanFormatEnum.image) {
+      return AppLocalizations.current.find_image;
+    }
+    return AppLocalizations.current.find_book;
+  }
+
   String _getFileName(FileSystemEntity file) {
     return file.path.split('/').last;
   }
@@ -282,7 +311,11 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
       case 'doc':
         return SvgPicture.asset(Assets.icons.icDoc);
       case 'docx':
-        return SvgPicture.asset(Assets.icons.icDoc);
+        return SvgPicture.asset(Assets.icons.icDocx);
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+        return SvgPicture.asset(Assets.icons.icImage);
       default:
         return SvgPicture.asset(Assets.icons.icFile);
     }
@@ -307,6 +340,82 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     }
   }
 
+  Widget _buildEmptyState() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    String headerNotFound = ''; 
+    String title = '';
+    String subtitle = AppLocalizations.current.use_select_file_to_browse_directory;
+    switch (widget.scanFormat) {
+      case ScanFormatEnum.pdf:
+        headerNotFound = AppLocalizations.current.no_book_found;
+        title = AppLocalizations.current.no_pdf_epub_mobi_found;
+        break;
+      case ScanFormatEnum.word:
+        headerNotFound = AppLocalizations.current.no_file_found;
+        title = AppLocalizations.current.no_word_file_found;
+        break;
+      case ScanFormatEnum.image:
+        headerNotFound = AppLocalizations.current.no_file_found;
+        title = AppLocalizations.current.no_image_file_found;        
+        break;
+    }
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.search_off, size: 64, color: colorScheme.outline),
+          const SizedBox(height: 16),
+          Text(
+            headerNotFound,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: TextStyle(color: colorScheme.onSurface),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            subtitle,
+            style: TextStyle(fontSize: 13, color: colorScheme.onSurfaceVariant),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          Wrap(
+            spacing: 12,
+            children: [
+              ElevatedButton.icon(
+                onPressed: _scanForFiles,
+                icon: const Icon(Icons.refresh),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: colorScheme.outline,
+                ),
+                label: Text(
+                  AppLocalizations.current.scan_again,
+                  style: TextStyle(color: colorScheme.onSurface),
+                ),
+              ),
+              OutlinedButton.icon(
+                onPressed: _pickFiles,
+                icon: const Icon(Icons.folder_open),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: colorScheme.primary,
+                ),
+                label: Text(AppLocalizations.current.select_file,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -314,7 +423,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     return BaseScreen(
       colorBg: colorScheme.surface,
       customAppBar: BaseAppBar(
-        title: AppLocalizations.current.find_book,
+        title: _getTitle,
         centerTitle: true,
         actions: [
           TextButton.icon(
@@ -325,7 +434,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
               style: TextStyle(color: colorScheme.onPrimary),
             ),
           ),
-          if (_files.isNotEmpty && !widget.isSelectedMode)
+          if (_files.isNotEmpty && !widget.multiSelect)
             TextButton.icon(
               onPressed:
                   _selectedFiles.length == _files.length
@@ -351,7 +460,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
         ],
       ),
       body:
-          !_hasPermission && _files.isEmpty
+          !_hasPermission
               ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -359,7 +468,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                     Icon(Icons.lock, size: 64, color: colorScheme.outline),
                     const SizedBox(height: 16),
                     Text(
-                      'Cần quyền truy cập bộ nhớ',
+                      AppLocalizations.current.need_permission_to_access_memory,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -368,12 +477,16 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Vui lòng cấp quyền để tìm kiếm file',
+                      AppLocalizations
+                          .current
+                          .please_grant_permission_to_search_file,
                       style: TextStyle(color: colorScheme.onSurface),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Hoặc dùng "Chọn file" để duyệt thư mục (không cần quyền)',
+                      AppLocalizations
+                          .current
+                          .or_use_select_file_to_browse_directory_without_permission,
                       style: TextStyle(
                         fontSize: 13,
                         color: colorScheme.onSurfaceVariant,
@@ -387,12 +500,14 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                         ElevatedButton.icon(
                           onPressed: _requestPermissions,
                           icon: const Icon(Icons.settings),
-                          label: const Text('Cấp quyền'),
+                          label: Text(
+                            AppLocalizations.current.grant_permission,
+                          ),
                         ),
                         OutlinedButton.icon(
                           onPressed: _pickFiles,
                           icon: const Icon(Icons.folder_open),
-                          label: const Text('Chọn file'),
+                          label: Text(AppLocalizations.current.select_file),
                         ),
                       ],
                     ),
@@ -407,69 +522,14 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                     const CircularProgressIndicator(),
                     const SizedBox(height: 16),
                     Text(
-                      'Đang quét bộ nhớ...',
+                      AppLocalizations.current.scanning_in_memory,
                       style: TextStyle(color: colorScheme.onSurface),
                     ),
                   ],
                 ),
               )
               : _files.isEmpty
-              ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.search_off,
-                      size: 64,
-                      color: colorScheme.outline,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      AppLocalizations.current.no_book_found,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      AppLocalizations.current.no_pdf_epub_mobi_found,
-                      style: TextStyle(color: colorScheme.onSurface),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      AppLocalizations
-                          .current
-                          .use_select_file_to_browse_directory,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 24),
-                    Wrap(
-                      spacing: 12,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: _scanForFiles,
-                          icon: const Icon(Icons.refresh),
-                          label: Text(
-                            AppLocalizations.current.scan_again,
-                            style: TextStyle(color: colorScheme.onPrimary),
-                          ),
-                        ),
-                        OutlinedButton.icon(
-                          onPressed: _pickFiles,
-                          icon: const Icon(Icons.folder_open),
-                          label: Text(AppLocalizations.current.select_file),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
+              ? _buildEmptyState()
               : Column(
                 children: [
                   // Header with file count
@@ -481,25 +541,29 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                     color: colorScheme.primaryContainer,
                     child: Row(
                       children: [
-                        Icon(Icons.info_outline, color: colorScheme.primary),
+                        Icon(Icons.info_outline, color: colorScheme.primary, size: AppSize.iconSizeSmall,),
                         const SizedBox(width: 10),
                         Expanded(
                           child:
-                              widget.isSelectedMode
+                              widget.multiSelect
                                   ? Text(
-                                    'Nhấn vào file để chọn hoặc long press để xem đường dẫn',
+                                    AppLocalizations
+                                        .current
+                                        .tap_or_long_press_to_select_file,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: colorScheme.onPrimaryContainer,
                                       fontStyle: FontStyle.italic,
+                                      fontSize: AppSize.fontSizeSmall,
                                     ),
                                   )
                                   : Text(
-                                      'Tìm thấy ${_files.length} file • Đã chọn ${_selectedFiles.length}',
+                                    '${AppLocalizations.current.found} ${_files.length} ${AppLocalizations.current.files} • ${AppLocalizations.current.selected} ${_selectedFiles.length} ${AppLocalizations.current.files}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       color: colorScheme.onPrimaryContainer,
                                       fontStyle: FontStyle.italic,
+                                      fontSize: 10,
                                     ),
                                   ),
                         ),
@@ -520,19 +584,32 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                             horizontal: 8,
                             vertical: 4,
                           ),
-                          elevation: isSelected ? 4 : 1,
+                          elevation: isSelected ? 1 : 0,
                           color:
                               isSelected
                                   ? colorScheme.primaryContainer
                                   : colorScheme.surface,
                           child: ListTile(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(
+                                color: isSelected ? colorScheme.primary.withValues(alpha: 0.5) : colorScheme.outline.withValues(alpha: 0.2)  ,
+                                width: 1,
+                              ),
+                            ),
                             leading: Container(
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
                               decoration: BoxDecoration(
-                                color: _getFileColor(context, fileName).withValues(alpha: 0.1),
+                                color: _getFileColor(
+                                  context,
+                                  fileName,
+                                ).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: _getFileColor(context, fileName).withValues(alpha: 0.2),
+                                  color: _getFileColor(
+                                    context,
+                                    fileName,
+                                  ).withValues(alpha: 0.2),
                                   width: 1,
                                 ),
                               ),
@@ -552,6 +629,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                                         ? FontWeight.bold
                                         : FontWeight.normal,
                                 color: colorScheme.onSurface,
+                                fontSize: AppSize.fontSizeMedium,
                               ),
                             ),
                             subtitle: Column(
@@ -561,7 +639,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                                 Text(
                                   _getFileSize(file),
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: AppSize.fontSizeMedium,
                                     color: colorScheme.onSurfaceVariant,
                                   ),
                                 ),
@@ -570,20 +648,12 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontSize: 11,
+                                    fontSize: AppSize.fontSizeSmall,
                                     color: colorScheme.onSurfaceVariant,
                                   ),
                                 ),
                               ],
                             ),
-                            trailing:
-                                widget.isSelectedMode
-                                    ? null
-                                    : Checkbox(
-                                      value: isSelected,
-                                      onChanged:
-                                          (_) => _toggleFileSelection(file),
-                                    ),
                             onTap: () => _toggleFileSelection(file),
                             onLongPress: () {
                               // Long press để chọn file và trả về
@@ -597,11 +667,23 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                 ],
               ),
       floatingButton:
-          _selectedFiles.isNotEmpty && !widget.isSelectedMode
+          _selectedFiles.isNotEmpty
               ? FloatingActionButton.extended(
-                onPressed: _importSelected,
-                icon: const Icon(Icons.check),
-                label: Text('Import (${_selectedFiles.length})'),
+                backgroundColor: colorScheme.primary,
+                onPressed: _selectOrImportSelected,
+                icon: Icon(
+                  widget.multiSelect ? Icons.check : Icons.add,
+                  color: colorScheme.onPrimary,
+                ),
+                label: Text(
+                  '${widget.multiSelect ? AppLocalizations.current.select_file : AppLocalizations.current.add_book} (${_selectedFiles.length})',
+                  style: TextStyle(
+                    color: colorScheme.onPrimary,
+                    fontSize: AppSize.fontSizeMedium,
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
               )
               : null,
     );

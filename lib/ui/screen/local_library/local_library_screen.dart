@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -88,11 +89,10 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Lỗi: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+        AppSnackBar.show(
+          context,
+          message: '${AppLocalizations.current.error}: ${e.toString()}',
+          snackBarType: SnackBarType.error,
         );
       }
     }
@@ -112,10 +112,10 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
   Future<void> _scanAndAddBooks() async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const PdfScannerScreen()),
+      MaterialPageRoute(builder: (context) => const PdfScannerScreen(multiSelect: true,)),
     );
 
-    if (result == true) {
+    if (result != null && mounted) {
       _loadBooks();
     }
   }
@@ -149,11 +149,10 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
       _loadBooks();
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.current.book_removed_from_library),
-            backgroundColor: Colors.green,
-          ),
+        AppSnackBar.show(
+          context,
+          message: AppLocalizations.current.book_removed_from_library,
+          snackBarType: SnackBarType.warning,
         );
       }
     }

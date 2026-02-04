@@ -3,11 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/auth/auth_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
-import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
-import 'package:readbox/routes.dart';
+import 'package:readbox/ui/widget/widget.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -77,24 +76,26 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BaseScreen(
+      hideAppBar: true,
+      messageNotify: CustomSnackBar<AuthCubit>(),
       body: BlocListener<AuthCubit, BaseState>(
         listener: (context, state) {
-          if (state is LoadedState) {
-            // Navigate to confirm PIN screen with email
-            Navigator.pushReplacementNamed(
-              context, 
-              Routes.confirmPinScreen,
-              arguments: _emailController.text.trim(),
-            );
-          } else if (state is ErrorState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(BlocUtils.getMessageError(state.data)),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
+          // if (state is LoadedState) {
+          //   // Navigate to confirm PIN screen with email
+          //   Navigator.pushReplacementNamed(
+          //     context, 
+          //     Routes.confirmPinScreen,
+          //     arguments: _emailController.text.trim(),
+          //   );
+          // } else if (state is ErrorState) {
+          //   ScaffoldMessenger.of(context).showSnackBar(
+          //     SnackBar(
+          //       content: Text(BlocUtils.getMessageError(state.data)),
+          //       backgroundColor: Colors.red,
+          //     ),
+          //   );
+          // }
         },
         child: Stack(
           children: [
