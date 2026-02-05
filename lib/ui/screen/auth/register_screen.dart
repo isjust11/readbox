@@ -6,6 +6,7 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -81,21 +82,14 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
       messageNotify: CustomSnackBar<AuthCubit>(),
       body: BlocListener<AuthCubit, BaseState>(
         listener: (context, state) {
-          // if (state is LoadedState) {
-          //   // Navigate to confirm PIN screen with email
-          //   Navigator.pushReplacementNamed(
-          //     context, 
-          //     Routes.confirmPinScreen,
-          //     arguments: _emailController.text.trim(),
-          //   );
-          // } else if (state is ErrorState) {
-          //   ScaffoldMessenger.of(context).showSnackBar(
-          //     SnackBar(
-          //       content: Text(BlocUtils.getMessageError(state.data)),
-          //       backgroundColor: Colors.red,
-          //     ),
-          //   );
-          // }
+          if (state is LoadedState) {
+            // Navigate to confirm PIN screen with email
+            Navigator.pushReplacementNamed(
+              context, 
+              Routes.confirmPinScreen,
+              arguments: _emailController.text.trim(),
+            );
+          } 
         },
         child: Stack(
           children: [
@@ -370,10 +364,10 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
-          return 'Vui lòng nhập tên đăng nhập';
+          return AppLocalizations.current.please_enter_username;
         }
         if (value.length < 3) {
-          return 'Tên đăng nhập phải có ít nhất 3 ký tự';
+          return AppLocalizations.current.username_must_be_at_least_3_characters;
         }
         return null;
       },

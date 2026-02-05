@@ -144,7 +144,6 @@ class BookMetadataService {
     final file = File(filePath);
     final fileSize = await file.length();
 
-    // TODO: Implement EPUB metadata extraction khi có package
     return BookMetadata(
       fileSize: fileSize,
     );
@@ -156,7 +155,6 @@ class BookMetadataService {
     final file = File(filePath);
     final fileSize = await file.length();
 
-    // TODO: Implement MOBI metadata extraction khi có package
     return BookMetadata(
       fileSize: fileSize,
     );
@@ -218,18 +216,6 @@ class BookMetadataService {
     }
 
     return null;
-  }
-
-  /// Format file size thành string dễ đọc (KB, MB, GB).
-  static String formatFileSize(int bytes) {
-    if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) {
-      return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    }
-    if (bytes < 1024 * 1024 * 1024) {
-      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-    }
-    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 
   /// Validate ISBN format.

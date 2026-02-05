@@ -6,6 +6,7 @@ import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
@@ -35,10 +36,10 @@ class ConfirmPinBody extends StatefulWidget {
   const ConfirmPinBody({super.key, required this.email, this.phone});
 
   @override
-  _ConfirmPinBodyState createState() => _ConfirmPinBodyState();
+  ConfirmPinBodyState createState() => ConfirmPinBodyState();
 }
 
-class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProviderStateMixin {
+class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProviderStateMixin {
   final List<TextEditingController> _pinControllers = List.generate(4, (_) => TextEditingController());
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
   late AnimationController _animationController;
@@ -151,7 +152,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
                 Navigator.pushReplacementNamed(context, Routes.loginScreen);
                 AppSnackBar.show(
                   context,
-                  message: 'Xác thực thành công!',
+                  message: AppLocalizations.current.authentication_success,
                   snackBarType: SnackBarType.success,
                 );
               } else if (state is ErrorState) {
@@ -169,7 +170,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
               if (state is LoadedState) {
                 AppSnackBar.show(
                   context,
-                  message: 'Mã PIN đã được gửi lại thành công!',
+                  message: AppLocalizations.current.pin_resend_success,
                   snackBarType: SnackBarType.success,
                 );
               } else if (state is ErrorState) {
@@ -270,7 +271,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
                               ),
                               SizedBox(height: 16),
                               Text(
-                                'Đang xác thực...',
+                                AppLocalizations.current.verifying_pin,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -319,7 +320,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
         
         // Title
         Text(
-          'Xác thực mã PIN',
+          AppLocalizations.current.verify_pin,
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
@@ -329,10 +330,10 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
         ),
         SizedBox(height: 12),
         Text(
-          'Nhập mã PIN 4 chữ số đã được gửi đến email của bạn',
+          AppLocalizations.current.enter_pin_4_digits_sent_to_email,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             fontWeight: FontWeight.w300,
           ),
           textAlign: TextAlign.center,
@@ -342,7 +343,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
           widget.email,
           style: TextStyle(
             fontSize: 14,
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -449,13 +450,13 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        shadowColor: Color(0xFF667eea).withOpacity(0.5),
+        shadowColor: Color(0xFF667eea).withValues(alpha: 0.5),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Xác thực',
+            AppLocalizations.current.verify,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -473,7 +474,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
     return TextButton(
       onPressed: _clearPin,
       child: Text(
-        'Xóa và nhập lại',
+        AppLocalizations.current.clear_and_reenter,
         style: TextStyle(
           color: Colors.grey.shade600,
           fontSize: 14,
@@ -490,7 +491,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
         children: [
           if (!_canResend)
             Text(
-              'Gửi lại sau $_resendCountdown giây',
+              '${AppLocalizations.current.resend_pin_in} $_resendCountdown ${AppLocalizations.current.seconds}',
               style: TextStyle(
                 color: Colors.grey.shade500,
                 fontSize: 14,
@@ -503,7 +504,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Color(0xFF667eea).withOpacity(0.1),
+                  color: Color(0xFF667eea).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -515,7 +516,7 @@ class _ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvid
                     ),
                     SizedBox(width: 4),
                     Text(
-                      'Gửi lại',
+                      AppLocalizations.current.resend_pin,
                       style: TextStyle(
                         color: Color(0xFF667eea),
                         fontSize: 14,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -113,7 +114,7 @@ class NotificationHandler {
     String body, {
     VoidCallback? onTap,
   }) {
-    final snackBar = SnackBar(
+    SnackBar(
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,7 +132,7 @@ class NotificationHandler {
       action:
           onTap != null
               ? SnackBarAction(
-                label: 'Xem',
+                label: AppLocalizations.current.view,
                 textColor: Colors.white,
                 onPressed: onTap,
               )

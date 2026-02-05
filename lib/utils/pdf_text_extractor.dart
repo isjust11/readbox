@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'dart:ui' show Rect;
 import 'package:flutter/foundation.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
@@ -243,6 +242,12 @@ class PdfTextExtractorService {
     
     // Thay thế nhiều khoảng trắng liên tiếp bằng 1 khoảng trắng
     clean = clean.replaceAll(RegExp(r'\s+'), ' ');
+
+    // Thay thế nhiều dấu gạch ngang liên tiếp bằng 1 dấu gạch ngang
+    clean = clean.replaceAll(RegExp(r'-{2,}'), '-');
+
+    // Thay thế nhiều dấu gạch dưới liên tiếp bằng 1 dấu gạch dưới
+    clean = clean.replaceAll(RegExp(r'_{2,}'), '_');
     
     // Thay thế nhiều xuống dòng liên tiếp bằng 1 xuống dòng
     clean = clean.replaceAll(RegExp(r'\n\s*\n+'), '\n\n');

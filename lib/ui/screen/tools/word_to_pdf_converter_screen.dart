@@ -10,10 +10,10 @@ import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/app_size.dart';
-import 'package:readbox/res/dimens.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/common.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
 class WordToPdfConverterScreen extends StatelessWidget {
@@ -68,14 +68,6 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
     }
   }
 
-  String _formatFileSize(int bytes) {
-    if (bytes < 1024) return '$bytes B';
-    if (bytes < 1024 * 1024) {
-      return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    }
-    return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -88,7 +80,6 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
         final selectedFile = cubit.selectedFile;
         final outputPath = cubit.outputPath;
         final isConverting = state is LoadingState;
-        final uploadProgress = cubit.uploadProgress;
 
         return BaseScreen(
           colorBg: colorScheme.surface,
@@ -176,8 +167,45 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 16),
+                // Instructions
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.info_outline, color: colorScheme.primary, size: AppSize.iconSizeMedium,),
+                          const SizedBox(width: 8),
+                          Text(
+                            AppLocalizations.current.info,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: AppSize.fontSizeMedium,
+                              color: colorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '• ${AppLocalizations.current.select_file}\n'
+                        '• Click "${AppLocalizations.current.tools_convert_to_pdf}"\n'
+                        '• PDF will be saved to app documents',
+                        style: TextStyle(color: colorScheme.onSurfaceVariant,
+                        fontSize: AppSize.fontSizeMedium,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 12),
-
                 // Select file button
                 ElevatedButton(
                   onPressed: isConverting ? null : _pickFile,
@@ -206,7 +234,15 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
 
                 // Selected file info
                 if (selectedFile != null) ...[
-                  Card(
+                  Container(
+                    decoration: BoxDecoration(
+                      color: colorScheme.surfaceContainerLow,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: colorScheme.outline.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
@@ -222,7 +258,8 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
                               Expanded(
                                 child: Text(
                                   selectedFile.path.split('/').last,
-                                  style: const TextStyle(
+                                  style: TextStyle(
+                                    fontSize: AppSize.fontSizeLarge,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   maxLines: 2,
@@ -233,7 +270,7 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '${AppLocalizations.current.size}: ${_formatFileSize(selectedFile.lengthSync())}',
+                            '${AppLocalizations.current.size}: ${Common.formatFileSize(selectedFile.lengthSync())}',
                             style: TextStyle(
                               color: colorScheme.onSurfaceVariant,
                             ),
@@ -272,7 +309,7 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
                 ],
                 // Output file info - tap to view PDF
                 if (outputPath != null) ...[
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   Card(
                     color: Colors.green.shade50,
                     child: InkWell(
@@ -329,7 +366,7 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  'Chạm để xem',
+                                  AppLocalizations.current.tap_to_view,
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: colorScheme.primary,
@@ -344,41 +381,6 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
                     ),
                   ),
                 ],
-
-                // Instructions
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.info_outline, color: colorScheme.primary),
-                          const SizedBox(width: 8),
-                          Text(
-                            AppLocalizations.current.info,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '• ${AppLocalizations.current.select_file}\n'
-                        '• Click "${AppLocalizations.current.tools_convert_to_pdf}"\n'
-                        '• PDF will be saved to app documents',
-                        style: TextStyle(color: colorScheme.onSurfaceVariant),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),

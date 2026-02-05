@@ -20,18 +20,21 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
-  static String m0(current, total) => "Page ${current}/${total}";
+  static String m0(title) =>
+      "Are you sure you want to delete book \"${title}\" from library?";
 
-  static String m1(error) => "Cannot share: ${error}";
+  static String m1(current, total) => "Page ${current}/${total}";
 
-  static String m2(title) =>
+  static String m2(error) => "Cannot share: ${error}";
+
+  static String m3(title) =>
       "Reading \"${title}\" on Readbox. Download the app to read for free! 📚";
 
-  static String m3(error) => "Read error: ${error}";
+  static String m4(error) => "Read error: ${error}";
 
-  static String m4(path) => "File saved to: ${path}";
+  static String m5(path) => "File saved to: ${path}";
 
-  static String m5(count) => "${count} pages";
+  static String m6(count) => "${count} pages";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -48,6 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "all": MessageLookupByLibrary.simpleMessage("All"),
         "all_data_loaded":
             MessageLookupByLibrary.simpleMessage("All data loaded"),
+        "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
         "apply_filters": MessageLookupByLibrary.simpleMessage("Apply filters"),
         "archived_books":
             MessageLookupByLibrary.simpleMessage("Archived books"),
@@ -57,6 +61,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "areYouSureYouWantToDeleteNotification":
             MessageLookupByLibrary.simpleMessage(
                 "Are you sure you want to delete this notification?"),
+        "authentication_error":
+            MessageLookupByLibrary.simpleMessage("Authentication error"),
+        "authentication_failed":
+            MessageLookupByLibrary.simpleMessage("Authentication failed"),
+        "authentication_success":
+            MessageLookupByLibrary.simpleMessage("Authentication success"),
         "author": MessageLookupByLibrary.simpleMessage("Author"),
         "availableLanguages":
             MessageLookupByLibrary.simpleMessage("Available languages"),
@@ -69,6 +79,23 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Biometric not available"),
         "biometricSetupSuccess":
             MessageLookupByLibrary.simpleMessage("Biometric setup successful"),
+        "biometric_available":
+            MessageLookupByLibrary.simpleMessage("Biometric available"),
+        "biometric_not_available":
+            MessageLookupByLibrary.simpleMessage("Biometric not available"),
+        "biometric_not_available_on_this_device":
+            MessageLookupByLibrary.simpleMessage(
+                "Biometric not available on this device"),
+        "biometric_not_enabled":
+            MessageLookupByLibrary.simpleMessage("Biometric not enabled"),
+        "biometric_not_enrolled": MessageLookupByLibrary.simpleMessage(
+            "Biometric not enrolled. Please set up in Settings"),
+        "biometric_not_supported_on_this_device":
+            MessageLookupByLibrary.simpleMessage(
+                "Biometric not supported on this device"),
+        "biometric_permanently_locked_out":
+            MessageLookupByLibrary.simpleMessage(
+                "Biometric permanently locked out. Please use password"),
         "bookUpdates": MessageLookupByLibrary.simpleMessage("Book Updates"),
         "book_added_to_local_library":
             MessageLookupByLibrary.simpleMessage("Book added to local library"),
@@ -104,6 +131,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Choose app appearance"),
         "clearAllNotifications":
             MessageLookupByLibrary.simpleMessage("Clear all notifications"),
+        "clear_and_reenter":
+            MessageLookupByLibrary.simpleMessage("Clear and reenter"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
         "completed": MessageLookupByLibrary.simpleMessage("Completed"),
         "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
@@ -152,6 +181,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteNotificationSuccess": MessageLookupByLibrary.simpleMessage(
             "Delete notification successfully"),
         "delete_book": MessageLookupByLibrary.simpleMessage("Delete book"),
+        "delete_book_confirmation": m0,
         "delete_book_confirmation_message":
             MessageLookupByLibrary.simpleMessage(
                 "Are you sure you want to delete this book?"),
@@ -189,6 +219,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Enter password"),
         "enter_phone":
             MessageLookupByLibrary.simpleMessage("Enter phone number"),
+        "enter_pin_4_digits_sent_to_email":
+            MessageLookupByLibrary.simpleMessage(
+                "Enter PIN 4 digits sent to email"),
         "enter_username":
             MessageLookupByLibrary.simpleMessage("Enter username"),
         "epub": MessageLookupByLibrary.simpleMessage("EPUB"),
@@ -211,6 +244,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Error scanning files"),
         "error_selecting_file":
             MessageLookupByLibrary.simpleMessage("Error selecting file"),
+        "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "facebook_access_token_is_null": MessageLookupByLibrary.simpleMessage(
             "Facebook access token is null"),
         "facebook_invalid_client":
@@ -279,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "getHelpAndSupport":
             MessageLookupByLibrary.simpleMessage("Get help and support"),
         "go_back": MessageLookupByLibrary.simpleMessage("Go back"),
+        "google": MessageLookupByLibrary.simpleMessage("Google"),
         "google_developer_error":
             MessageLookupByLibrary.simpleMessage("Google developer error"),
         "google_invalid_client":
@@ -329,6 +364,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "local_library": MessageLookupByLibrary.simpleMessage("On device"),
         "logging_in": MessageLookupByLibrary.simpleMessage("Logging in..."),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
+        "login_error": MessageLookupByLibrary.simpleMessage("Login error"),
         "login_now": MessageLookupByLibrary.simpleMessage("Login now"),
         "login_to_continue":
             MessageLookupByLibrary.simpleMessage("Login to continue"),
@@ -429,6 +465,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_file_found": MessageLookupByLibrary.simpleMessage("No file found"),
         "no_image_file_found": MessageLookupByLibrary.simpleMessage(
             "No file .jpg, .jpeg, .png found"),
+        "no_login_info_saved":
+            MessageLookupByLibrary.simpleMessage("No login info saved"),
         "no_name": MessageLookupByLibrary.simpleMessage("No name"),
         "no_pdf_epub_mobi_found":
             MessageLookupByLibrary.simpleMessage("No PDF, EPUB, or MOBI found"),
@@ -517,7 +555,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pdf_note_hint": MessageLookupByLibrary.simpleMessage("Enter note"),
         "pdf_notes_list": MessageLookupByLibrary.simpleMessage("Notes list"),
         "pdf_page_number": MessageLookupByLibrary.simpleMessage("Page number"),
-        "pdf_page_of": m0,
+        "pdf_page_of": m1,
         "pdf_path_label": MessageLookupByLibrary.simpleMessage("Path:"),
         "pdf_please_wait": MessageLookupByLibrary.simpleMessage("Please wait"),
         "pdf_read_ebook": MessageLookupByLibrary.simpleMessage("Read ebook"),
@@ -526,16 +564,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Search in PDF..."),
         "pdf_search_tooltip": MessageLookupByLibrary.simpleMessage("Search"),
         "pdf_share": MessageLookupByLibrary.simpleMessage("Share"),
-        "pdf_share_error": m1,
+        "pdf_share_error": m2,
         "pdf_share_file_not_found":
             MessageLookupByLibrary.simpleMessage("File not found to share"),
         "pdf_share_success":
             MessageLookupByLibrary.simpleMessage("Shared successfully"),
-        "pdf_share_text": m2,
+        "pdf_share_text": m3,
         "pdf_share_wait_download": MessageLookupByLibrary.simpleMessage(
             "PDF is loading, please wait and try again"),
         "pdf_toolbar": MessageLookupByLibrary.simpleMessage("Toolbar"),
-        "pdf_tts_read_error": m3,
+        "pdf_tts_read_error": m4,
         "pdf_undo": MessageLookupByLibrary.simpleMessage("Undo"),
         "pdf_view_file_info":
             MessageLookupByLibrary.simpleMessage("View file info"),
@@ -547,7 +585,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "permissionStatus":
             MessageLookupByLibrary.simpleMessage("Permission Status"),
         "phone": MessageLookupByLibrary.simpleMessage("Phone number"),
+        "pin_resend_success":
+            MessageLookupByLibrary.simpleMessage("PIN resend successfully"),
         "playTest": MessageLookupByLibrary.simpleMessage("Play test"),
+        "please_authenticate_to_login": MessageLookupByLibrary.simpleMessage(
+            "Please authenticate to login"),
         "please_enter_author":
             MessageLookupByLibrary.simpleMessage("Please enter author"),
         "please_enter_bitbucket_link":
@@ -675,6 +717,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Remove favorite"),
         "required_field": MessageLookupByLibrary.simpleMessage("Required"),
         "resend_code": MessageLookupByLibrary.simpleMessage("Resend code"),
+        "resend_pin": MessageLookupByLibrary.simpleMessage("Resend pin"),
+        "resend_pin_in": MessageLookupByLibrary.simpleMessage("Resend pin in"),
         "reset": MessageLookupByLibrary.simpleMessage("Reset"),
         "reset_password":
             MessageLookupByLibrary.simpleMessage("Reset password"),
@@ -688,6 +732,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "search_book": MessageLookupByLibrary.simpleMessage("Search book"),
         "search_books": MessageLookupByLibrary.simpleMessage("Search books..."),
         "search_filter": MessageLookupByLibrary.simpleMessage("Search filter"),
+        "seconds": MessageLookupByLibrary.simpleMessage("seconds"),
         "security": MessageLookupByLibrary.simpleMessage("Security"),
         "selectReminderTime":
             MessageLookupByLibrary.simpleMessage("Select reminder time"),
@@ -726,6 +771,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tap_or_long_press_to_select_file":
             MessageLookupByLibrary.simpleMessage(
                 "Tap on file to select or long press to select file"),
+        "tap_to_view": MessageLookupByLibrary.simpleMessage("Tap to view"),
         "testNotification":
             MessageLookupByLibrary.simpleMessage("Test Notification"),
         "testNotificationSent":
@@ -738,6 +784,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "tokenCopied": MessageLookupByLibrary.simpleMessage("Token copied"),
         "tokenRefreshed":
             MessageLookupByLibrary.simpleMessage("Token refreshed"),
+        "too_many_attempts": MessageLookupByLibrary.simpleMessage(
+            "Too many attempts. Please try again later"),
         "tools": MessageLookupByLibrary.simpleMessage("Tools"),
         "tools_add_more_pages":
             MessageLookupByLibrary.simpleMessage("Add more pages"),
@@ -755,10 +803,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Document Scanner"),
         "tools_document_scanner_description":
             MessageLookupByLibrary.simpleMessage("Scan documents using camera"),
-        "tools_file_saved_to": m4,
+        "tools_file_saved_to": m5,
         "tools_no_file_selected":
             MessageLookupByLibrary.simpleMessage("No file selected"),
-        "tools_pages_count": m5,
+        "tools_pages_count": m6,
         "tools_preview": MessageLookupByLibrary.simpleMessage("Preview"),
         "tools_processing":
             MessageLookupByLibrary.simpleMessage("Processing..."),
@@ -858,10 +906,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "user_cancelled_twitter_sign_in": MessageLookupByLibrary.simpleMessage(
             "User cancelled Twitter sign in"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),
+        "username_must_be_at_least_3_characters":
+            MessageLookupByLibrary.simpleMessage(
+                "Username must be at least 3 characters"),
+        "verify": MessageLookupByLibrary.simpleMessage("Verify"),
         "verify_code": MessageLookupByLibrary.simpleMessage("Verify code"),
         "verify_email": MessageLookupByLibrary.simpleMessage("Verify email"),
+        "verify_pin": MessageLookupByLibrary.simpleMessage("Verify PIN"),
+        "verifying_pin":
+            MessageLookupByLibrary.simpleMessage("Verifying pin..."),
         "version": MessageLookupByLibrary.simpleMessage("Version"),
         "veryFast": MessageLookupByLibrary.simpleMessage("Very fast"),
+        "view": MessageLookupByLibrary.simpleMessage("View"),
         "viewNotificationHistory":
             MessageLookupByLibrary.simpleMessage("View notification history"),
         "view_details": MessageLookupByLibrary.simpleMessage("View details"),

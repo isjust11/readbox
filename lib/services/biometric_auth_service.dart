@@ -1,5 +1,6 @@
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/services.dart';
@@ -74,7 +75,7 @@ class BiometricAuthService {
 
   /// Xác thực sinh trắc học
   static Future<BiometricAuthResult> authenticateWithBiometrics({
-    String localizedReason = 'Vui lòng xác thực để đăng nhập',
+    required String localizedReason,
   }) async {
     try {
       final bool didAuthenticate = await _localAuth.authenticate(
@@ -88,27 +89,27 @@ class BiometricAuthService {
       if (didAuthenticate) {
         return BiometricAuthResult.success();
       } else {
-        return BiometricAuthResult.failure('Xác thực thất bại');
+        return BiometricAuthResult.failure(AppLocalizations.current.authentication_failed);
       }
     } on PlatformException catch (e) {
       String message;
       switch (e.code) {
         case auth_error.notAvailable:
-          message = 'Sinh trắc học không khả dụng trên thiết bị này';
+          message = AppLocalizations.current.biometric_not_available_on_this_device;
           break;
         case auth_error.notEnrolled:
           message =
-              'Chưa thiết lập sinh trắc học. Vui lòng thiết lập trong Cài đặt';
+              AppLocalizations.current.biometric_not_enrolled;
           break;
         case auth_error.lockedOut:
-          message = 'Quá nhiều lần thử. Vui lòng thử lại sau';
+          message = AppLocalizations.current.too_many_attempts;
           break;
         case auth_error.permanentlyLockedOut:
           message =
-              'Sinh trắc học bị khóa vĩnh viễn. Vui lòng sử dụng mật khẩu';
+              AppLocalizations.current.biometric_permanently_locked_out;
           break;
         default:
-          message = 'Lỗi xác thực: ${e.message}';
+          message = '${AppLocalizations.current.authentication_error}: ${e.message}';
       }
       return BiometricAuthResult.failure(message);
     }
@@ -366,7 +367,7 @@ class BiometricAuthService {
       final bool isEnabled = await isBiometricEnabledInApp();
       if (!isEnabled) {
         return BiometricAuthResult.failure(
-          'Đăng nhập bằng sinh trắc học chưa được bật',
+          AppLocalizations.current.biometric_not_enabled,
         );
       }
 
@@ -378,7 +379,7 @@ class BiometricAuthService {
 
       // Thực hiện xác thực sinh trắc học
       final authResult = await authenticateWithBiometrics(
-        localizedReason: 'Xác thực để đăng nhập vào ứng dụng',
+        localizedReason: AppLocalizations.current.please_authenticate_to_login,
       );
 
       if (!authResult.isSuccess) {
@@ -404,23 +405,23 @@ class BiometricAuthService {
       }
 
       return BiometricAuthResult.failure(
-        'Chưa có thông tin đăng nhập được lưu',
+        AppLocalizations.current.no_login_info_saved,
       );
     } catch (e) {
-      return BiometricAuthResult.failure('Lỗi đăng nhập: $e');
+      return BiometricAuthResult.failure(AppLocalizations.current.login_error + ': $e');
     }
   }
 
   static String _getCapabilityMessage(BiometricCapability capability) {
     switch (capability) {
       case BiometricCapability.notSupported:
-        return 'Thiết bị không hỗ trợ sinh trắc học';
+        return AppLocalizations.current.biometric_not_supported_on_this_device;
       case BiometricCapability.notEnrolled:
-        return 'Chưa thiết lập sinh trắc học. Vui lòng thiết lập trong Cài đặt';
+        return AppLocalizations.current.biometric_not_enrolled;
       case BiometricCapability.notAvailable:
-        return 'Sinh trắc học không khả dụng';
+        return AppLocalizations.current.biometric_not_available;
       case BiometricCapability.available:
-        return 'Sinh trắc học khả dụng';
+        return AppLocalizations.current.biometric_available;
     }
   }
 }

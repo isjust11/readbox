@@ -141,7 +141,6 @@ class Network {
       );
       return getApiResponse(response);
     } catch (e) {
-      print("===post =====${e}");
       return getError(e as DioError);
     }
   }

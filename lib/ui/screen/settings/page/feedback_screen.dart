@@ -311,19 +311,6 @@ class _FeedbackBodyState extends State<FeedbackBody> {
     );
   }
 
-  Color _getPriorityColor(FeedbackPriority priority) {
-    switch (priority) {
-      case FeedbackPriority.low:
-        return Colors.green;
-      case FeedbackPriority.medium:
-        return Colors.orange;
-      case FeedbackPriority.high:
-        return Colors.red;
-      case FeedbackPriority.urgent:
-        return Colors.purple;
-    }
-  }
-
   Widget _buildSubmitButton(BaseState state) {
     final theme = Theme.of(context);
     final isLoading = state is LoadingState;

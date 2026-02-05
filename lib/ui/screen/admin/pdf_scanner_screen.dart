@@ -193,7 +193,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
 
   void _toggleFileSelection(FileSystemEntity file) {
     setState(() {
-      if (widget.multiSelect) {
+      if (!widget.multiSelect) {
         _selectedFiles.clear();
         _selectedFiles.add(file);
       } else {
@@ -219,7 +219,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
   }
 
   Future<void> _selectOrImportSelected() async {
-    if (widget.multiSelect) {
+    if (!widget.multiSelect) {
       Navigator.pop(context, _selectedFiles[0].path);
       return;
     } else {
@@ -545,7 +545,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                         const SizedBox(width: 10),
                         Expanded(
                           child:
-                              widget.multiSelect
+                              !widget.multiSelect
                                   ? Text(
                                     AppLocalizations
                                         .current
@@ -672,11 +672,11 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                 backgroundColor: colorScheme.primary,
                 onPressed: _selectOrImportSelected,
                 icon: Icon(
-                  widget.multiSelect ? Icons.check : Icons.add,
+                  !widget.multiSelect ? Icons.check : Icons.add,
                   color: colorScheme.onPrimary,
                 ),
                 label: Text(
-                  '${widget.multiSelect ? AppLocalizations.current.select_file : AppLocalizations.current.add_book} (${_selectedFiles.length})',
+                  '${!widget.multiSelect ? AppLocalizations.current.select_file : AppLocalizations.current.add_book} (${_selectedFiles.length})',
                   style: TextStyle(
                     color: colorScheme.onPrimary,
                     fontSize: AppSize.fontSizeMedium,

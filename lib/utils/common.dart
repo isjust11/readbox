@@ -24,7 +24,7 @@ class Common {
     }
   }
 
-static String formatDate(dynamic dateValue, {String? format}) {
+  static String formatDate(dynamic dateValue, {String? format}) {
     try {
       DateTime dateTime;
 
@@ -132,5 +132,16 @@ static String formatDate(dynamic dateValue, {String? format}) {
   // base64 decode
   static String base64Decode(String base64String) {
     return utf8.decode(base64.decode(base64String));
+  }
+
+  static String formatFileSize(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) {
+      return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    }
+    if (bytes < 1024 * 1024 * 1024) {
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    }
+    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 }

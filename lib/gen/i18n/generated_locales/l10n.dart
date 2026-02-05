@@ -50,6 +50,36 @@ class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
+  /// `ReadBox`
+  String get app_name {
+    return Intl.message(
+      'ReadBox',
+      name: 'app_name',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Google`
+  String get google {
+    return Intl.message(
+      'Google',
+      name: 'google',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Facebook`
+  String get facebook {
+    return Intl.message(
+      'Facebook',
+      name: 'facebook',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Đang tải...`
   String get loading {
     return Intl.message(
@@ -1515,6 +1545,16 @@ class AppLocalizations {
     return Intl.message(
       'Mật khẩu phải có ít nhất 6 ký tự',
       name: 'password_must_be_at_least_6_characters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tên đăng nhập phải có ít nhất 3 ký tự`
+  String get username_must_be_at_least_3_characters {
+    return Intl.message(
+      'Tên đăng nhập phải có ít nhất 3 ký tự',
+      name: 'username_must_be_at_least_3_characters',
       desc: '',
       args: [],
     );
@@ -5345,6 +5385,266 @@ class AppLocalizations {
     return Intl.message(
       'Không tìm thấy file',
       name: 'no_file_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chạm để xem`
+  String get tap_to_view {
+    return Intl.message(
+      'Chạm để xem',
+      name: 'tap_to_view',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng xác thực để đăng nhập`
+  String get please_authenticate_to_login {
+    return Intl.message(
+      'Vui lòng xác thực để đăng nhập',
+      name: 'please_authenticate_to_login',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xác thực thất bại`
+  String get authentication_failed {
+    return Intl.message(
+      'Xác thực thất bại',
+      name: 'authentication_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sinh trắc học không khả dụng trên thiết bị này`
+  String get biometric_not_available_on_this_device {
+    return Intl.message(
+      'Sinh trắc học không khả dụng trên thiết bị này',
+      name: 'biometric_not_available_on_this_device',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chưa thiết lập sinh trắc học. Vui lòng thiết lập trong Cài đặt`
+  String get biometric_not_enrolled {
+    return Intl.message(
+      'Chưa thiết lập sinh trắc học. Vui lòng thiết lập trong Cài đặt',
+      name: 'biometric_not_enrolled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quá nhiều lần thử. Vui lòng thử lại sau`
+  String get too_many_attempts {
+    return Intl.message(
+      'Quá nhiều lần thử. Vui lòng thử lại sau',
+      name: 'too_many_attempts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sinh trắc học bị khóa vĩnh viễn. Vui lòng sử dụng mật khẩu`
+  String get biometric_permanently_locked_out {
+    return Intl.message(
+      'Sinh trắc học bị khóa vĩnh viễn. Vui lòng sử dụng mật khẩu',
+      name: 'biometric_permanently_locked_out',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi xác thực`
+  String get authentication_error {
+    return Intl.message(
+      'Lỗi xác thực',
+      name: 'authentication_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng nhập bằng sinh trắc học chưa được bật`
+  String get biometric_not_enabled {
+    return Intl.message(
+      'Đăng nhập bằng sinh trắc học chưa được bật',
+      name: 'biometric_not_enabled',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chưa có thông tin đăng nhập được lưu`
+  String get no_login_info_saved {
+    return Intl.message(
+      'Chưa có thông tin đăng nhập được lưu',
+      name: 'no_login_info_saved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi đăng nhập`
+  String get login_error {
+    return Intl.message(
+      'Lỗi đăng nhập',
+      name: 'login_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thiết bị không hỗ trợ sinh trắc học`
+  String get biometric_not_supported_on_this_device {
+    return Intl.message(
+      'Thiết bị không hỗ trợ sinh trắc học',
+      name: 'biometric_not_supported_on_this_device',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sinh trắc học khả dụng`
+  String get biometric_available {
+    return Intl.message(
+      'Sinh trắc học khả dụng',
+      name: 'biometric_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sinh trắc học không khả dụng`
+  String get biometric_not_available {
+    return Intl.message(
+      'Sinh trắc học không khả dụng',
+      name: 'biometric_not_available',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xác thực mã PIN`
+  String get verify_pin {
+    return Intl.message(
+      'Xác thực mã PIN',
+      name: 'verify_pin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhập mã PIN 4 chữ số đã được gửi đến email của bạn`
+  String get enter_pin_4_digits_sent_to_email {
+    return Intl.message(
+      'Nhập mã PIN 4 chữ số đã được gửi đến email của bạn',
+      name: 'enter_pin_4_digits_sent_to_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xác thực`
+  String get verify {
+    return Intl.message(
+      'Xác thực',
+      name: 'verify',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa và nhập lại`
+  String get clear_and_reenter {
+    return Intl.message(
+      'Xóa và nhập lại',
+      name: 'clear_and_reenter',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gửi lại sau`
+  String get resend_pin_in {
+    return Intl.message(
+      'Gửi lại sau',
+      name: 'resend_pin_in',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `giây`
+  String get seconds {
+    return Intl.message(
+      'giây',
+      name: 'seconds',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gửi lại`
+  String get resend_pin {
+    return Intl.message(
+      'Gửi lại',
+      name: 'resend_pin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mã PIN đã được gửi lại thành công`
+  String get pin_resend_success {
+    return Intl.message(
+      'Mã PIN đã được gửi lại thành công',
+      name: 'pin_resend_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đang xác thực...`
+  String get verifying_pin {
+    return Intl.message(
+      'Đang xác thực...',
+      name: 'verifying_pin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xác thực thành công`
+  String get authentication_success {
+    return Intl.message(
+      'Xác thực thành công',
+      name: 'authentication_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn có chắc chắn muốn xóa sách "{title}" khỏi thư viện?`
+  String delete_book_confirmation(String title) {
+    return Intl.message(
+      'Bạn có chắc chắn muốn xóa sách "$title" khỏi thư viện?',
+      name: 'delete_book_confirmation',
+      desc: '',
+      args: [title],
+    );
+  }
+
+  /// `Xem`
+  String get view {
+    return Intl.message(
+      'Xem',
+      name: 'view',
       desc: '',
       args: [],
     );

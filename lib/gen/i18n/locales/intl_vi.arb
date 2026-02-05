@@ -1,4 +1,7 @@
 {
+  "app_name": "ReadBox",
+  "google": "Google",
+  "facebook": "Facebook",
   "loading": "Đang tải...",
   "error": "Lỗi",
   "success": "Thành công",
@@ -146,6 +149,7 @@
   "please_enter_username": "Vui lòng nhập tên đăng nhập",
   "please_enter_password": "Vui lòng nhập mật khẩu",
   "password_must_be_at_least_6_characters": "Mật khẩu phải có ít nhất 6 ký tự",
+  "username_must_be_at_least_3_characters": "Tên đăng nhập phải có ít nhất 3 ký tự",
   "no_account": "Chưa có tài khoản? ",
   "have_account": "Đã có tài khoản? ",
   "password": "Mật khẩu",
@@ -559,5 +563,36 @@
   "find_image": "Tìm file ảnh",
   "no_word_file_found": "Không tìm thấy file .docx",
   "no_image_file_found": "Không tìm thấy file .jpg, .jpeg, .png",
-  "no_file_found": "Không tìm thấy file"
+  "no_file_found": "Không tìm thấy file",
+  "tap_to_view": "Chạm để xem",
+  "please_authenticate_to_login": "Vui lòng xác thực để đăng nhập",
+  "authentication_failed": "Xác thực thất bại",
+  "biometric_not_available_on_this_device": "Sinh trắc học không khả dụng trên thiết bị này",
+  "biometric_not_enrolled": "Chưa thiết lập sinh trắc học. Vui lòng thiết lập trong Cài đặt",
+  "too_many_attempts": "Quá nhiều lần thử. Vui lòng thử lại sau",
+  "biometric_permanently_locked_out": "Sinh trắc học bị khóa vĩnh viễn. Vui lòng sử dụng mật khẩu",
+  "authentication_error": "Lỗi xác thực",
+  "biometric_not_enabled": "Đăng nhập bằng sinh trắc học chưa được bật",
+  "no_login_info_saved": "Chưa có thông tin đăng nhập được lưu",
+  "login_error": "Lỗi đăng nhập",
+  "biometric_not_supported_on_this_device": "Thiết bị không hỗ trợ sinh trắc học",
+  "biometric_available": "Sinh trắc học khả dụng",
+  "biometric_not_available": "Sinh trắc học không khả dụng",
+  "verify_pin": "Xác thực mã PIN",
+  "enter_pin_4_digits_sent_to_email": "Nhập mã PIN 4 chữ số đã được gửi đến email của bạn",
+  "verify": "Xác thực",
+  "clear_and_reenter": "Xóa và nhập lại",
+  "resend_pin_in": "Gửi lại sau",
+  "seconds": "giây",
+  "resend_pin": "Gửi lại",
+  "pin_resend_success": "Mã PIN đã được gửi lại thành công",
+  "verifying_pin": "Đang xác thực...",
+  "authentication_success": "Xác thực thành công",
+  "delete_book_confirmation": "Bạn có chắc chắn muốn xóa sách \"{title}\" khỏi thư viện?",
+  "@delete_book_confirmation": {
+    "placeholders": {
+      "title": {"type": "String"}
+    }
+  },
+  "view": "Xem"
 }

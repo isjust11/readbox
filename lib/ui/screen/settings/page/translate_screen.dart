@@ -3,8 +3,6 @@ import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/res/enum.dart';
-import 'package:readbox/ui/widget/base_screen.dart';
-import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 
@@ -253,7 +251,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
         borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -265,7 +263,7 @@ class _TranslateScreenState extends State<TranslateScreen> {
         itemCount: _availableLanguages.length,
         separatorBuilder: (context, index) => Divider(
           height: 1,
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
           indent: AppDimens.SIZE_16,
           endIndent: AppDimens.SIZE_16,
         ),
@@ -293,8 +291,8 @@ class _TranslateScreenState extends State<TranslateScreen> {
                     padding: const EdgeInsets.all(AppDimens.SIZE_8),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? Theme.of(context).primaryColor.withOpacity(0.1)
-                          : Colors.grey.withOpacity(0.1),
+                          ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                          : Colors.grey.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
                     ),
                     child: Icon(

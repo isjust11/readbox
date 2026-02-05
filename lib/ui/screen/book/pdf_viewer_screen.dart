@@ -87,7 +87,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   Map<int, List<List<Offset>>> _allDrawStrokes = {};
   List<Offset> _currentStroke = [];
   Color _drawColor = Colors.red;
-  double _strokeWidth = 3.0;
+  final double _strokeWidth = 3.0;
   List<Map<String, dynamic>> _notes = [];
   Size _drawOverlaySize = Size.zero;
 
@@ -1279,7 +1279,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       });
       AppSnackBar.show(
         context,
-        message: 'Đã đọc hết tài liệu',
+        message: AppLocalizations.current.pdf_document_read_complete,
         snackBarType: SnackBarType.success,
       );
       return;
@@ -1863,10 +1863,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                 margin: EdgeInsets.only(bottom: 8),
                                 child: ListTile(
                                   leading: CircleAvatar(
-                                    child: Text('$page'),
                                     backgroundColor:
                                         Theme.of(context).primaryColor,
                                     foregroundColor: Colors.white,
+                                    child: Text(page.toString()),
                                   ),
                                   title: Text(
                                     text,

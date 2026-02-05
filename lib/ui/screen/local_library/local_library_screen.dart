@@ -112,7 +112,9 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
   Future<void> _scanAndAddBooks() async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const PdfScannerScreen(multiSelect: true,)),
+      MaterialPageRoute(
+        builder: (context) => const PdfScannerScreen(multiSelect: true),
+      ),
     );
 
     if (result != null && mounted) {
@@ -126,7 +128,7 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
       builder:
           (ctx) => AlertDialog(
             title: Text(AppLocalizations.current.delete_book),
-            content: Text('Xóa "${book.displayTitle}" khỏi thư viện?'),
+            content: Text('${AppLocalizations.current.delete_book_confirmation} "${book.displayTitle}"?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
@@ -323,11 +325,16 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
   Widget _buildBookCard(BuildContext context, BookModel book) {
     final colorScheme = Theme.of(context).colorScheme;
     final color = _getFileColor(context, book.fileType?.name ?? '');
-    return Card(
+    return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: colorScheme.surface,
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
       child: InkWell(
         onTap: () => _openBook(book),
         borderRadius: BorderRadius.circular(12),

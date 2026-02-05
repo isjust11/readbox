@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
-import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
@@ -13,8 +12,6 @@ import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
-import 'package:readbox/ui/widget/base_screen.dart';
-import 'package:readbox/ui/widget/custom_text_label.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
@@ -114,16 +111,10 @@ class LoginScreenState extends State<LoginBody>
       messageNotify: CustomSnackBar<AuthCubit>(),
       body: BlocListener<AuthCubit, BaseState>(
         listener: (context, state) {
-          // if (state is LoadedState) {
-          //   getIt.get<UserInfoCubit>().getUserInfo();
-          //   Navigator.pushReplacementNamed(context, Routes.mainScreen);
-          // } else if (state is ErrorState) {
-          //   AppSnackBar.show(
-          //     context,
-          //     message: BlocUtils.getMessageError(state.data),
-          //     snackBarType: SnackBarType.error,
-          //   );
-          // }
+          if (state is LoadedState) {
+            getIt.get<UserInfoCubit>().getUserInfo();
+            Navigator.pushReplacementNamed(context, Routes.mainScreen);
+          }
         },
         child: Stack(
           children: [
@@ -235,7 +226,7 @@ class LoginScreenState extends State<LoginBody>
 
         // App Title
         Text(
-          'ReadBox',
+          AppLocalizations.current.app_name,
           style: TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.bold,
@@ -529,7 +520,7 @@ class LoginScreenState extends State<LoginBody>
       children: [
         // Nút đăng nhập Google
         _buildSocialLoginButton(
-          text: "Google",
+          text: AppLocalizations.current.google,
           backgroundColor: AppColors.white,
           textColor: AppColors.textDark,
           borderColor: AppColors.inputBorderLight,
@@ -541,7 +532,7 @@ class LoginScreenState extends State<LoginBody>
         SizedBox(width: AppDimens.SIZE_12),
         // Nút đăng nhập Facebook
         _buildSocialLoginButton(
-          text: "Facebook",
+          text: AppLocalizations.current.facebook,
           backgroundColor: Color.fromARGB(255, 38, 93, 164), // Facebook blue
           textColor: AppColors.white,
           borderColor: Color.fromARGB(255, 6, 38, 77),

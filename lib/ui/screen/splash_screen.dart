@@ -21,7 +21,6 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
   late AnimationController _rotateController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
-  late Animation<double> _rotateAnimation;
   String _appVersion = '1.0.0';
   @override
   void initState() {
@@ -49,9 +48,6 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
     _rotateController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 1000),
-    );
-    _rotateAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _rotateController, curve: Curves.easeInOut),
     );
 
     // Start animations
@@ -135,7 +131,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                       child: Column(
                         children: [
                           Text(
-                            'ReadBox',
+                            AppLocalizations.current.app_name,
                             style: TextStyle(
                               fontSize: 48,
                               fontWeight: FontWeight.bold,
@@ -186,7 +182,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                     'Version $_appVersion',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                       fontSize: 12,
                       fontWeight: FontWeight.w300,
                     ),

@@ -268,7 +268,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         // Files were added to SharedPreferences (legacy behavior)
         AppSnackBar.show(
           context,
-          message: '${AppLocalizations.current.book_added_to_local_library}',
+          message: AppLocalizations.current.book_added_to_local_library,
           snackBarType: SnackBarType.success,
         );
       }

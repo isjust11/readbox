@@ -20,18 +20,21 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'vi';
 
-  static String m0(current, total) => "Trang ${current}/${total}";
+  static String m0(title) =>
+      "Bạn có chắc chắn muốn xóa sách \"${title}\" khỏi thư viện?";
 
-  static String m1(error) => "Không thể chia sẻ: ${error}";
+  static String m1(current, total) => "Trang ${current}/${total}";
 
-  static String m2(title) =>
+  static String m2(error) => "Không thể chia sẻ: ${error}";
+
+  static String m3(title) =>
       "Đang đọc \"${title}\" trên Readbox. Tải app để đọc sách miễn phí! 📚";
 
-  static String m3(error) => "Lỗi đọc: ${error}";
+  static String m4(error) => "Lỗi đọc: ${error}";
 
-  static String m4(path) => "File đã lưu tại: ${path}";
+  static String m5(path) => "File đã lưu tại: ${path}";
 
-  static String m5(count) => "${count} trang";
+  static String m6(count) => "${count} trang";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -50,6 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "all": MessageLookupByLibrary.simpleMessage("Tất cả"),
         "all_data_loaded":
             MessageLookupByLibrary.simpleMessage("Đã tải hết dữ liệu"),
+        "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
         "apply_filters": MessageLookupByLibrary.simpleMessage("Áp dụng bộ lọc"),
         "archived_books": MessageLookupByLibrary.simpleMessage("Sách đã lưu"),
         "areYouSureYouWantToDeleteAllNotifications":
@@ -58,6 +62,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "areYouSureYouWantToDeleteNotification":
             MessageLookupByLibrary.simpleMessage(
                 "Bạn có chắc chắn muốn xóa thông báo này?"),
+        "authentication_error":
+            MessageLookupByLibrary.simpleMessage("Lỗi xác thực"),
+        "authentication_failed":
+            MessageLookupByLibrary.simpleMessage("Xác thực thất bại"),
+        "authentication_success":
+            MessageLookupByLibrary.simpleMessage("Xác thực thành công"),
         "author": MessageLookupByLibrary.simpleMessage("Tác giả"),
         "availableLanguages":
             MessageLookupByLibrary.simpleMessage("Ngôn ngữ khả dụng"),
@@ -71,6 +81,23 @@ class MessageLookup extends MessageLookupByLibrary {
             "Sinh trắc học không khả dụng"),
         "biometricSetupSuccess": MessageLookupByLibrary.simpleMessage(
             "Thiết lập sinh trắc học thành công"),
+        "biometric_available":
+            MessageLookupByLibrary.simpleMessage("Sinh trắc học khả dụng"),
+        "biometric_not_available": MessageLookupByLibrary.simpleMessage(
+            "Sinh trắc học không khả dụng"),
+        "biometric_not_available_on_this_device":
+            MessageLookupByLibrary.simpleMessage(
+                "Sinh trắc học không khả dụng trên thiết bị này"),
+        "biometric_not_enabled": MessageLookupByLibrary.simpleMessage(
+            "Đăng nhập bằng sinh trắc học chưa được bật"),
+        "biometric_not_enrolled": MessageLookupByLibrary.simpleMessage(
+            "Chưa thiết lập sinh trắc học. Vui lòng thiết lập trong Cài đặt"),
+        "biometric_not_supported_on_this_device":
+            MessageLookupByLibrary.simpleMessage(
+                "Thiết bị không hỗ trợ sinh trắc học"),
+        "biometric_permanently_locked_out":
+            MessageLookupByLibrary.simpleMessage(
+                "Sinh trắc học bị khóa vĩnh viễn. Vui lòng sử dụng mật khẩu"),
         "birth_date": MessageLookupByLibrary.simpleMessage("Ngày sinh"),
         "bookUpdates": MessageLookupByLibrary.simpleMessage("Cập nhật sách"),
         "book_added_to_local_library": MessageLookupByLibrary.simpleMessage(
@@ -106,6 +133,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Chọn giao diện ứng dụng"),
         "clearAllNotifications":
             MessageLookupByLibrary.simpleMessage("Xóa tất cả thông báo"),
+        "clear_and_reenter":
+            MessageLookupByLibrary.simpleMessage("Xóa và nhập lại"),
         "close": MessageLookupByLibrary.simpleMessage("Đóng"),
         "completed": MessageLookupByLibrary.simpleMessage("Hoàn thành"),
         "confirm": MessageLookupByLibrary.simpleMessage("Xác nhận"),
@@ -153,6 +182,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "deleteNotificationSuccess":
             MessageLookupByLibrary.simpleMessage("Xóa thông báo thành công"),
         "delete_book": MessageLookupByLibrary.simpleMessage("Xóa sách"),
+        "delete_book_confirmation": m0,
         "delete_book_confirmation_message":
             MessageLookupByLibrary.simpleMessage(
                 "Bạn có chắc chắn muốn xóa sách này?"),
@@ -190,6 +220,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "enter_password": MessageLookupByLibrary.simpleMessage("Nhập mật khẩu"),
         "enter_phone":
             MessageLookupByLibrary.simpleMessage("Nhập số điện thoại"),
+        "enter_pin_4_digits_sent_to_email":
+            MessageLookupByLibrary.simpleMessage(
+                "Nhập mã PIN 4 chữ số đã được gửi đến email của bạn"),
         "enter_username":
             MessageLookupByLibrary.simpleMessage("Nhập tên đăng nhập"),
         "epub": MessageLookupByLibrary.simpleMessage("EPUB"),
@@ -211,6 +244,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Lỗi quét file"),
         "error_selecting_file":
             MessageLookupByLibrary.simpleMessage("Lỗi chọn file"),
+        "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "facebook_access_token_is_null":
             MessageLookupByLibrary.simpleMessage("Token Facebook là null"),
         "facebook_invalid_client": MessageLookupByLibrary.simpleMessage(
@@ -281,6 +315,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "getHelpAndSupport":
             MessageLookupByLibrary.simpleMessage("Nhận trợ giúp và hỗ trợ"),
         "go_back": MessageLookupByLibrary.simpleMessage("Quay lại"),
+        "google": MessageLookupByLibrary.simpleMessage("Google"),
         "google_developer_error":
             MessageLookupByLibrary.simpleMessage("Lỗi phát triển Google"),
         "google_invalid_client":
@@ -339,6 +374,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "local_library": MessageLookupByLibrary.simpleMessage("Trên thiết bị"),
         "logging_in": MessageLookupByLibrary.simpleMessage("Đang đăng nhập..."),
         "login": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
+        "login_error": MessageLookupByLibrary.simpleMessage("Lỗi đăng nhập"),
         "login_now": MessageLookupByLibrary.simpleMessage("Đăng nhập ngay"),
         "login_to_continue":
             MessageLookupByLibrary.simpleMessage("Đăng nhập để tiếp tục"),
@@ -443,6 +479,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_image_file_found": MessageLookupByLibrary.simpleMessage(
             "Không tìm thấy file .jpg, .jpeg, .png"),
         "no_info": MessageLookupByLibrary.simpleMessage("Không có thông tin"),
+        "no_login_info_saved": MessageLookupByLibrary.simpleMessage(
+            "Chưa có thông tin đăng nhập được lưu"),
         "no_name": MessageLookupByLibrary.simpleMessage("Không tên"),
         "no_pdf_epub_mobi_found": MessageLookupByLibrary.simpleMessage(
             "Không tìm thấy file PDF, EPUB, hoặc MOBI"),
@@ -539,7 +577,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pdf_notes_list":
             MessageLookupByLibrary.simpleMessage("Danh sách ghi chú"),
         "pdf_page_number": MessageLookupByLibrary.simpleMessage("Số trang"),
-        "pdf_page_of": m0,
+        "pdf_page_of": m1,
         "pdf_path_label": MessageLookupByLibrary.simpleMessage("Đường dẫn:"),
         "pdf_please_wait": MessageLookupByLibrary.simpleMessage("Vui lòng đợi"),
         "pdf_read_ebook": MessageLookupByLibrary.simpleMessage("Đọc ebook"),
@@ -548,16 +586,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Tìm trong PDF..."),
         "pdf_search_tooltip": MessageLookupByLibrary.simpleMessage("Tìm"),
         "pdf_share": MessageLookupByLibrary.simpleMessage("Chia sẻ"),
-        "pdf_share_error": m1,
+        "pdf_share_error": m2,
         "pdf_share_file_not_found": MessageLookupByLibrary.simpleMessage(
             "Không tìm thấy file để chia sẻ"),
         "pdf_share_success":
             MessageLookupByLibrary.simpleMessage("Đã chia sẻ thành công"),
-        "pdf_share_text": m2,
+        "pdf_share_text": m3,
         "pdf_share_wait_download": MessageLookupByLibrary.simpleMessage(
             "Đang tải PDF, vui lòng đợi và thử lại"),
         "pdf_toolbar": MessageLookupByLibrary.simpleMessage("Thanh công cụ"),
-        "pdf_tts_read_error": m3,
+        "pdf_tts_read_error": m4,
         "pdf_undo": MessageLookupByLibrary.simpleMessage("Hoàn tác"),
         "pdf_view_file_info":
             MessageLookupByLibrary.simpleMessage("Xem thông tin file"),
@@ -572,7 +610,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "permissions": MessageLookupByLibrary.simpleMessage("Quyền"),
         "phone": MessageLookupByLibrary.simpleMessage("Số điện thoại"),
         "phone_number": MessageLookupByLibrary.simpleMessage("Số điện thoại"),
+        "pin_resend_success": MessageLookupByLibrary.simpleMessage(
+            "Mã PIN đã được gửi lại thành công"),
         "playTest": MessageLookupByLibrary.simpleMessage("Phát thử"),
+        "please_authenticate_to_login": MessageLookupByLibrary.simpleMessage(
+            "Vui lòng xác thực để đăng nhập"),
         "please_enter_author":
             MessageLookupByLibrary.simpleMessage("Vui lòng nhập tác giả"),
         "please_enter_bitbucket_link": MessageLookupByLibrary.simpleMessage(
@@ -705,6 +747,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "remove_favorite": MessageLookupByLibrary.simpleMessage("Bỏ yêu thích"),
         "required_field": MessageLookupByLibrary.simpleMessage("Bắt buộc"),
         "resend_code": MessageLookupByLibrary.simpleMessage("Gửi lại mã"),
+        "resend_pin": MessageLookupByLibrary.simpleMessage("Gửi lại"),
+        "resend_pin_in": MessageLookupByLibrary.simpleMessage("Gửi lại sau"),
         "reset": MessageLookupByLibrary.simpleMessage("Đặt lại"),
         "reset_password":
             MessageLookupByLibrary.simpleMessage("Đặt lại mật khẩu"),
@@ -723,6 +767,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Tìm kiếm sách..."),
         "search_filter":
             MessageLookupByLibrary.simpleMessage("Bộ lọc tìm kiếm"),
+        "seconds": MessageLookupByLibrary.simpleMessage("giây"),
         "security": MessageLookupByLibrary.simpleMessage("Bảo mật"),
         "selectReminderTime":
             MessageLookupByLibrary.simpleMessage("Chọn thời gian nhắc nhở"),
@@ -761,6 +806,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tap_or_long_press_to_select_file":
             MessageLookupByLibrary.simpleMessage(
                 "Nhấn vào file để chọn hoặc long press để chọn file"),
+        "tap_to_view": MessageLookupByLibrary.simpleMessage("Chạm để xem"),
         "testNotification":
             MessageLookupByLibrary.simpleMessage("Kiểm tra thông báo"),
         "testNotificationSent":
@@ -774,6 +820,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Đã sao chép token"),
         "tokenRefreshed":
             MessageLookupByLibrary.simpleMessage("Token đã được làm mới"),
+        "too_many_attempts": MessageLookupByLibrary.simpleMessage(
+            "Quá nhiều lần thử. Vui lòng thử lại sau"),
         "tools": MessageLookupByLibrary.simpleMessage("Công cụ"),
         "tools_add_more_pages":
             MessageLookupByLibrary.simpleMessage("Thêm trang"),
@@ -791,10 +839,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Quét tài liệu"),
         "tools_document_scanner_description":
             MessageLookupByLibrary.simpleMessage("Quét tài liệu bằng camera"),
-        "tools_file_saved_to": m4,
+        "tools_file_saved_to": m5,
         "tools_no_file_selected":
             MessageLookupByLibrary.simpleMessage("Chưa chọn file"),
-        "tools_pages_count": m5,
+        "tools_pages_count": m6,
         "tools_preview": MessageLookupByLibrary.simpleMessage("Xem trước"),
         "tools_processing":
             MessageLookupByLibrary.simpleMessage("Đang xử lý..."),
@@ -894,10 +942,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "user_cancelled_twitter_sign_in": MessageLookupByLibrary.simpleMessage(
             "Người dùng đã hủy đăng nhập Twitter"),
         "username": MessageLookupByLibrary.simpleMessage("Tên đăng nhập"),
+        "username_must_be_at_least_3_characters":
+            MessageLookupByLibrary.simpleMessage(
+                "Tên đăng nhập phải có ít nhất 3 ký tự"),
+        "verify": MessageLookupByLibrary.simpleMessage("Xác thực"),
         "verify_code": MessageLookupByLibrary.simpleMessage("Xác thực mã"),
         "verify_email": MessageLookupByLibrary.simpleMessage("Xác thực email"),
+        "verify_pin": MessageLookupByLibrary.simpleMessage("Xác thực mã PIN"),
+        "verifying_pin":
+            MessageLookupByLibrary.simpleMessage("Đang xác thực..."),
         "version": MessageLookupByLibrary.simpleMessage("Phiên bản"),
         "veryFast": MessageLookupByLibrary.simpleMessage("Rất nhanh"),
+        "view": MessageLookupByLibrary.simpleMessage("Xem"),
         "viewNotificationHistory":
             MessageLookupByLibrary.simpleMessage("Xem lịch sử thông báo"),
         "view_details": MessageLookupByLibrary.simpleMessage("Xem chi tiết"),

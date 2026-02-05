@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:developer';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' as s_store ;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:readbox/domain/data/models/models.dart';
 
@@ -20,19 +21,19 @@ class SecureStorageService {
   static const String _keySocialLoginInfo = 'secure_social_login_info';
 
   // Cấu hình Flutter Secure Storage với bảo mật cao
-  static const FlutterSecureStorage _secureStorage = FlutterSecureStorage(
-    aOptions: AndroidOptions(
+  static const s_store.FlutterSecureStorage _secureStorage = s_store.FlutterSecureStorage(
+    aOptions: s_store.AndroidOptions(
       encryptedSharedPreferences: true,
       resetOnError: true, // Reset nếu có lỗi decrypt
     ),
-    iOptions: IOSOptions(
-      accessibility: KeychainAccessibility.first_unlock_this_device,
+    iOptions: s_store.IOSOptions(
+      accessibility: s_store.KeychainAccessibility.first_unlock_this_device,
       synchronizable: false,
     ),
-    lOptions: LinuxOptions(),
-    wOptions: WindowsOptions(),
-    mOptions: MacOsOptions(
-      accessibility: KeychainAccessibility.first_unlock_this_device,
+    lOptions: s_store.LinuxOptions(),
+    wOptions: s_store.WindowsOptions(),
+    mOptions: s_store.MacOsOptions(
+      accessibility: s_store.KeychainAccessibility.first_unlock_this_device,
       synchronizable: false,
     ),
   );
@@ -44,7 +45,7 @@ class SecureStorageService {
     try {
       await _secureStorage.write(key: _keyToken, value: token);
     } catch (e) {
-      print('❌ Error saving token: $e');
+      log('❌ Error saving token: $e');
       rethrow;
     }
   }
@@ -54,7 +55,7 @@ class SecureStorageService {
     try {
       return await _secureStorage.read(key: _keyToken);
     } catch (e) {
-      print('❌ Error reading token: $e');
+      log('❌ Error reading token: $e');
       return null;
     }
   }
@@ -64,7 +65,7 @@ class SecureStorageService {
     try {
       await _secureStorage.delete(key: _keyToken);
     } catch (e) {
-      print('❌ Error deleting token: $e');
+      log('❌ Error deleting token: $e');
     }
   }
 
@@ -73,7 +74,7 @@ class SecureStorageService {
     try {
       await _secureStorage.write(key: _keyRefreshToken, value: refreshToken);
     } catch (e) {
-      print('❌ Error saving refresh token: $e');
+      log('❌ Error saving refresh token: $e');
       rethrow;
     }
   }
@@ -83,7 +84,7 @@ class SecureStorageService {
     try {
       return await _secureStorage.read(key: _keyRefreshToken);
     } catch (e) {
-      print('❌ Error reading refresh token: $e');
+      log('❌ Error reading refresh token: $e');
       return null;
     }
   }
@@ -96,7 +97,7 @@ class SecureStorageService {
       final userJson = json.encode(user.toJson());
       await _secureStorage.write(key: _keyUserInfo, value: userJson);
     } catch (e) {
-      print('❌ Error saving user info: $e');
+      log('❌ Error saving user info: $e');
       rethrow;
     }
   }
@@ -108,7 +109,7 @@ class SecureStorageService {
       if (userJson == null) return null;
       return UserModel.fromJson(json.decode(userJson));
     } catch (e) {
-      print('❌ Error reading user info: $e');
+      log('❌ Error reading user info: $e');
       return null;
     }
   }
@@ -118,7 +119,7 @@ class SecureStorageService {
     try {
       await _secureStorage.delete(key: _keyUserInfo);
     } catch (e) {
-      print('❌ Error deleting user info: $e');
+      log('❌ Error deleting user info: $e');
     }
   }
 
@@ -130,7 +131,7 @@ class SecureStorageService {
       await _secureStorage.write(key: _keyUsername, value: username);
       await _secureStorage.write(key: _keyPassword, value: password);
     } catch (e) {
-      print('❌ Error saving credentials: $e');
+      log('❌ Error saving credentials: $e');
       rethrow;
     }
   }
@@ -149,7 +150,7 @@ class SecureStorageService {
       }
       return null;
     } catch (e) {
-      print('❌ Error reading credentials: $e');
+      log('❌ Error reading credentials: $e');
       return null;
     }
   }
@@ -160,7 +161,7 @@ class SecureStorageService {
       await _secureStorage.delete(key: _keyUsername);
       await _secureStorage.delete(key: _keyPassword);
     } catch (e) {
-      print('❌ Error deleting credentials: $e');
+      log('❌ Error deleting credentials: $e');
     }
   }
 
@@ -172,7 +173,7 @@ class SecureStorageService {
       final socialJson = json.encode(socialInfo);
       await _secureStorage.write(key: _keySocialLoginInfo, value: socialJson);
     } catch (e) {
-      print('❌ Error saving social login info: $e');
+      log('❌ Error saving social login info: $e');
       rethrow;
     }
   }
@@ -184,7 +185,7 @@ class SecureStorageService {
       if (socialJson == null) return null;
       return json.decode(socialJson);
     } catch (e) {
-      print('❌ Error reading social login info: $e');
+      log('❌ Error reading social login info: $e');
       return null;
     }
   }
@@ -194,7 +195,7 @@ class SecureStorageService {
     try {
       await _secureStorage.delete(key: _keySocialLoginInfo);
     } catch (e) {
-      print('❌ Error deleting social login info: $e');
+      log('❌ Error deleting social login info: $e');
     }
   }
 
@@ -210,9 +211,9 @@ class SecureStorageService {
         deleteCredentials(),
         deleteSocialLoginInfo(),
       ]);
-      print('✅ All secure data cleared');
+      log('✅ All secure data cleared');
     } catch (e) {
-      print('❌ Error clearing secure data: $e');
+      log('❌ Error clearing secure data: $e');
       // Fallback: xóa toàn bộ secure storage
       await _secureStorage.deleteAll();
     }
@@ -242,9 +243,9 @@ class SecureStorageService {
   Future<void> debugPrintAllKeys() async {
     try {
       final allData = await _secureStorage.readAll();
-      print('🔐 Secure Storage Keys: ${allData.keys.toList()}');
+      log('🔐 Secure Storage Keys: ${allData.keys.toList()}');
     } catch (e) {
-      print('❌ Error reading all keys: $e');
+      log('❌ Error reading all keys: $e');
     }
   }
 
@@ -259,7 +260,7 @@ class SecureStorageService {
       // Kiểm tra xem đã migration chưa
       final hasAlreadyMigrated = prefs.getBool('_has_migrated_to_secure_storage') ?? false;
       if (hasAlreadyMigrated) {
-        print('ℹ️ Already migrated, skipping...');
+        log('ℹ️ Already migrated, skipping...');
         return false;
       }
 
@@ -271,7 +272,7 @@ class SecureStorageService {
         await saveToken(oldToken);
         await prefs.remove('auth_token');
         hasMigrated = true;
-        print('✅ Migrated token from SharedPreferences');
+        log('✅ Migrated token from SharedPreferences');
       }
 
       // 2. Migrate user info
@@ -283,9 +284,9 @@ class SecureStorageService {
           await saveUserInfo(user);
           await prefs.remove('pref_key_user_info');
           hasMigrated = true;
-          print('✅ Migrated user info from SharedPreferences');
+          log('✅ Migrated user info from SharedPreferences');
         } catch (e) {
-          print('⚠️ Failed to migrate user info: $e');
+          log('⚠️ Failed to migrate user info: $e');
         }
       }
 
@@ -293,14 +294,14 @@ class SecureStorageService {
       await prefs.setBool('_has_migrated_to_secure_storage', true);
       
       if (hasMigrated) {
-        print('✅ Migration completed successfully');
+        log('✅ Migration completed successfully');
       } else {
-        print('ℹ️ No old data to migrate');
+        log('ℹ️ No old data to migrate');
       }
 
       return hasMigrated;
     } catch (e) {
-      print('❌ Migration error: $e');
+      log('❌ Migration error: $e');
       return false;
     }
   }

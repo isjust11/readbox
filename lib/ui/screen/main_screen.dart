@@ -493,7 +493,7 @@ class MainBodyState extends State<MainBody> {
             }
 
             // Hiển thị empty state
-            if (books.isEmpty) {
+            if (state is LoadedState && books.isEmpty) {
               widgetView = Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -529,7 +529,7 @@ class MainBodyState extends State<MainBody> {
             if (_isSearching && _filterModel?.format != null) {
               filteredBooks =
                   books.where((book) {
-                    return book.fileType == _filterModel?.format;
+                    return book.fileType?.name == _filterModel?.format;
                   }).toList();
             }
 

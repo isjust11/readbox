@@ -27,10 +27,11 @@ class CustomSnackBar<T extends Cubit<BaseState>> extends StatelessWidget {
         } else if (state is LoadingState) {
           return;
         }
-
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(_buildSnackBar(context, state, mess ?? ''));
+        if (mess != null && mess.isNotEmpty) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(_buildSnackBar(context, state, mess));
+        }
       },
     );
   }
@@ -181,11 +182,12 @@ class _AnimatedSnackBarContentState extends State<_AnimatedSnackBarContent>
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
+                    accentColor.withValues(alpha: 0.95),
                     accentColor.withValues(alpha: 0.85),
-                    accentColor.withValues(alpha: 0.65),
-                    accentColor.withValues(alpha: 0.25),
+                    accentColor.withValues(alpha: 0.75),
+                    accentColor.withValues(alpha: 0.55),
                   ],
-                  stops: const [0.0, 0.12, 1.0],
+                  stops: const [0.0, 0.12, 0.25, 1.0],
                 ),
                 borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
                 border: Border.all(
@@ -213,8 +215,14 @@ class _AnimatedSnackBarContentState extends State<_AnimatedSnackBarContent>
                     child: Container(
                       padding: const EdgeInsets.all(AppDimens.SIZE_4),
                       decoration: ShapeDecoration(
-                        shape: CircleBorder(),
+                        shape: CircleBorder(
+                          side: BorderSide(
+                            color: accentColor.withValues(alpha: 0.25),
+                            width: 1,
+                          ),
+                        ),
                         color: Colors.white.withValues(alpha: 0.85),
+                      
                       ),
                       child: Icon(
                         widget.snackBarType == SnackBarType.success
@@ -256,19 +264,19 @@ class _AnimatedSnackBarContentState extends State<_AnimatedSnackBarContent>
                               : widget.snackBarType == SnackBarType.warning
                               ? AppLocalizations.current.warning
                               : AppLocalizations.current.info}',
-                          fontSize: widget.fontSize ?? AppSize.fontSizeMedium,
+                          fontSize: widget.fontSize ?? AppSize.fontSizeLarge,
                           color:
                               widget.textColor ??
-                              Theme.of(context).colorScheme.onSurface,
+                              Theme.of(context).colorScheme.onSecondary,
                           fontWeight: FontWeight.w500,
                         ),
                         const SizedBox(height: AppDimens.SIZE_4),
                         CustomTextLabel(
                           widget.message,
-                          fontSize: widget.fontSize ?? AppSize.fontSizeSmall,
+                          fontSize: widget.fontSize ?? AppSize.fontSizeMedium,
                           color:
                               widget.textColor ??
-                              Theme.of(context).colorScheme.onSurface,
+                              Theme.of(context).colorScheme.onSecondary,
                           fontWeight: FontWeight.w400,
                         ),
                       ],

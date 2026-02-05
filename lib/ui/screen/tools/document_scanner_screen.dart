@@ -59,28 +59,6 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
     }
   }
 
-  Future<void> _chooseFromGallery() async {
-    try {
-      final List<XFile> images = await _picker.pickMultiImage(
-        imageQuality: 85,
-      );
-
-      if (images.isNotEmpty) {
-        setState(() {
-          _scannedPages.addAll(images.map((image) => File(image.path)));
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        AppSnackBar.show(
-          context,
-          message: '${AppLocalizations.current.error}: $e',
-          snackBarType: SnackBarType.error,
-        );
-      }
-    }
-  }
-
   void _removePage(int index) {
     setState(() {
       _scannedPages.removeAt(index);

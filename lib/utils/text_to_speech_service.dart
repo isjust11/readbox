@@ -97,6 +97,9 @@ class TextToSpeechService {
         debugPrint('Vietnamese not available, fallback to English');
       }
 
+      // set voice 
+      
+
       _isInitialized = true;
       debugPrint('TTS Service initialized successfully');
     } catch (e) {
@@ -175,7 +178,7 @@ class TextToSpeechService {
   /// Nhận diện ngôn ngữ từ text và chuyển TTS sang ngôn ngữ đó (cho ebook)
   Future<void> setLanguageFromText(String text) async {
     final locale = await detectTtsLocale(text);
-    if (locale != null && locale != _language) {
+    if (locale != null) {
       await setLanguage(locale);
     }
   }
@@ -266,13 +269,13 @@ class TextToSpeechService {
   }
 
   /// Đặt giọng nói cụ thể
-  Future<void> setVoice(Map<String, String> voice) async {
+  Future<void> setVoice(Map<String, String> voiceMap) async {
     if (!_isInitialized) {
       await initialize();
     }
 
     try {
-      await _flutterTts!.setVoice(voice);
+      await _flutterTts!.setVoice(voiceMap);
     } catch (e) {
       debugPrint('Error setting voice: $e');
     }

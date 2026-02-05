@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/auth/auth_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
-import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/injection_container.dart';
-import 'package:readbox/res/enum.dart';
 import 'package:readbox/res/resources.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-import 'package:readbox/ui/screen/auth/confirm_pin_screen.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});

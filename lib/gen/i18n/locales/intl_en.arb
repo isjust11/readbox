@@ -1,4 +1,7 @@
 {
+  "app_name": "ReadBox",
+  "google": "Google",
+  "facebook": "Facebook",
   "loading": "Loading...",
   "error": "Error",
   "success": "Success",
@@ -146,6 +149,7 @@
   "please_enter_username": "Please enter username",
   "please_enter_password": "Please enter password",
   "password_must_be_at_least_6_characters": "Password must be at least 6 characters",
+  "username_must_be_at_least_3_characters": "Username must be at least 3 characters",
   "no_account": "No account? ",
   "have_account": "Have account? ",
   "password": "Password",
@@ -538,5 +542,36 @@
   "find_image": "Find image file",
   "no_word_file_found": "No file .docx found",
   "no_image_file_found": "No file .jpg, .jpeg, .png found",
-  "no_file_found": "No file found"
+  "no_file_found": "No file found",
+  "tap_to_view": "Tap to view",
+  "please_authenticate_to_login": "Please authenticate to login",
+  "authentication_failed": "Authentication failed",
+  "biometric_not_available_on_this_device": "Biometric not available on this device",
+  "biometric_not_enrolled": "Biometric not enrolled. Please set up in Settings",
+  "too_many_attempts": "Too many attempts. Please try again later",
+  "biometric_permanently_locked_out": "Biometric permanently locked out. Please use password",
+  "authentication_error": "Authentication error",
+  "biometric_not_enabled": "Biometric not enabled",
+  "no_login_info_saved": "No login info saved",
+  "login_error": "Login error",
+  "biometric_not_supported_on_this_device": "Biometric not supported on this device",
+  "biometric_available": "Biometric available",
+  "biometric_not_available": "Biometric not available",
+  "verify_pin": "Verify PIN",
+  "enter_pin_4_digits_sent_to_email": "Enter PIN 4 digits sent to email",
+  "verify": "Verify",
+  "clear_and_reenter": "Clear and reenter",
+  "resend_pin_in": "Resend pin in",
+  "seconds": "seconds",
+  "resend_pin": "Resend pin",
+  "pin_resend_success": "PIN resend successfully",
+  "verifying_pin": "Verifying pin...",
+  "authentication_success": "Authentication success",
+  "delete_book_confirmation": "Are you sure you want to delete book \"{title}\" from library?",
+  "@delete_book_confirmation": {
+    "placeholders": {
+      "title": {"type": "String"}
+    }
+  },
+  "view": "View"
 }

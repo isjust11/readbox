@@ -17,8 +17,6 @@ class AuthRemoteDataSource {
   Future<UserModel> register(Map<String, dynamic> param) async {
     ApiResponse apiResponse = await network.post(url: '${ApiConstant.apiHost}${ApiConstant.register}', body: param);
     if (apiResponse.isSuccess) {
-      
-      
       final registerResult = UserRegisterModel.fromJson(apiResponse.data ?? {});
       if (registerResult.code == 'ok') {
         return registerResult.data ?? UserModel.fromJson({});

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
@@ -68,12 +70,16 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
       _speechRate = prefs.getDouble('tts_speech_rate') ?? 0.5;
       _volume = prefs.getDouble('tts_volume') ?? 1.0;
       _pitch = prefs.getDouble('tts_pitch') ?? 1.0;
+      _selectedVoice = prefs.getString('tts_voice') != null ? jsonDecode(prefs.getString('tts_voice')!) : null;
     });
 
     // Apply loaded settings to TTS service
     await _ttsService.setSpeechRate(_speechRate);
     await _ttsService.setVolume(_volume);
     await _ttsService.setPitch(_pitch);
+    if (_selectedVoice != null) {
+      await _ttsService.setVoice(_selectedVoice!);
+    }
   }
 
   Future<void> _saveSettings() async {
@@ -468,8 +474,9 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
             ),
             child: ListView.separated(
+              physics: const BouncingScrollPhysics(),
               itemCount:
-                  _availableVoices.length > 10 ? 10 : _availableVoices.length,
+                   _availableVoices.length,
               separatorBuilder:
                   (context, index) => Divider(
                     height: 1,
@@ -479,7 +486,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
                   ),
               itemBuilder: (context, index) {
                 final voice = _availableVoices[index];
-                final voiceName = voice.toString();
+                final voiceName = voice['name'];
 
                 return ListTile(
                   dense: true,
@@ -491,15 +498,25 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
                         AppColors.colorTitle,
                   ),
                   trailing:
-                      _selectedVoice?['name'] == voiceName
+                      _selectedVoice?['name'] == voice['name']  
                           ? Icon(
                             Icons.check_circle,
                             color: Theme.of(context).primaryColor,
                           )
                           : null,
-                  onTap: () {
-                    // Voice selection logic can be implemented here
-                    // _ttsService.setVoice({'name': voiceName});
+                  onTap: () async {
+                    Map<String, String> voiceMap = {
+                      'name': voice['name'] as String,
+                      'latency': voice['latency'] as String,
+                      'locale': voice['locale'] as String,
+                      'quality': voice['quality'] as String,
+                    };
+                    final prefs = await SharedPreferences.getInstance();
+                    await prefs.setString('tts_voice', jsonEncode(voiceMap));
+                    await _ttsService.setVoice(voiceMap);
+                    setState(() {
+                      _selectedVoice = voiceMap;
+                    });
                   },
                 );
               },
