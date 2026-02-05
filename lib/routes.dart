@@ -113,7 +113,6 @@ class Routes {
           child: PdfViewerScreen(
             fileUrl: args.fileUrl!,
             title: args.displayTitle,
-            bookLanguage: args.language,
           ),
           type: PageTransitionType.rightToLeft,
         );

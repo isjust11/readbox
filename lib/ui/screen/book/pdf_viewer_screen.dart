@@ -26,14 +26,12 @@ class PdfViewerScreen extends StatefulWidget {
   final String fileUrl;
   final String title;
   final String? bookId;
-  final String? bookLanguage;
 
   const PdfViewerScreen({
     super.key,
     required this.fileUrl,
     required this.title,
     this.bookId,
-    this.bookLanguage,
   });
 
   @override
