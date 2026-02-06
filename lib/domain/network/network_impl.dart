@@ -196,19 +196,28 @@ class Network {
     }
     switch (e.type) {
       case DioErrorType.cancel:
-      case DioErrorType.connectTimeout:
-      case DioErrorType.receiveTimeout:
-      case DioErrorType.sendTimeout:
         return ApiResponse.error(
-          AppLocalizations.current.error_connection
+          AppLocalizations.current.error_cancel
+        );
+      case DioErrorType.connectTimeout:
+        return ApiResponse.error(
+          AppLocalizations.current.error_timeout
+        );
+      case DioErrorType.receiveTimeout:
+        return ApiResponse.error(
+          AppLocalizations.current.error_request_timeout
         );
       case DioErrorType.other:
         return ApiResponse.error(
-          AppLocalizations.current.error_common
+          AppLocalizations.current.error_internal_server_error
         );
       case DioErrorType.response:
         return ApiResponse.error(e.response?.data['message'] ?? '', data: getDataReplace(e.response?.data), code: e.response?.statusCode);
-      }
+      default:
+        return ApiResponse.error(
+          AppLocalizations.current.error_common
+        );
+    }
   }
 
   ApiResponse getApiResponse(Response response) {
@@ -219,15 +228,6 @@ class Network {
         errMessage: response.statusMessage ?? '');
   }
 
-  // void handleTokenExpired() async {
-  //   NavigationService.instance.showDialog(
-  //     title: AppLocalizations.current.error,
-  //     message: AppLocalizations.current.error_connection,
-  //     onPressed: () {
-  //       NavigationService.instance.pop();ß
-  //     },
-  //   );
-  // }
 
    Future<bool> _refreshToken() async {
     if (_isRefreshing) {
@@ -249,7 +249,7 @@ class Network {
       // Sử dụng một Dio riêng không có interceptor để tránh vòng lặp 401
       final Dio refreshDio = Dio(options);
       final Response response = await refreshDio.post(
-        ApiConstant.refreshToken,
+        '${ApiConstant.apiHost}${ApiConstant.refreshToken}',
         data: {'refreshToken': refreshToken},
         options: Options(responseType: ResponseType.json),
       );

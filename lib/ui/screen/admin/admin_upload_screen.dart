@@ -238,7 +238,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         MaterialPageRoute(
           builder:
               (context) => const PdfScannerScreen(
-                multiSelect: true,
+                multiSelect: false,
                 scanFormat: ScanFormatEnum.pdf,
               ),
         ),

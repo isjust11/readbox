@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:share_plus/share_plus.dart';
@@ -26,12 +27,14 @@ class PdfViewerScreen extends StatefulWidget {
   final String fileUrl;
   final String title;
   final String? bookId;
+  final String? userIdCreate;
 
   const PdfViewerScreen({
     super.key,
     required this.fileUrl,
     required this.title,
     this.bookId,
+    this.userIdCreate,
   });
 
   @override
@@ -89,12 +92,15 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   List<Map<String, dynamic>> _notes = [];
   Size _drawOverlaySize = Size.zero;
 
+  UserModel? _currentUser;
+
   bool get _hasDrawingsForCurrentPage =>
       (_allDrawStrokes[_currentPage]?.isNotEmpty ?? false) && !_isDrawMode;
 
   @override
   void initState() {
     super.initState();
+    _loadCurrentUser();
     _checkInternetConnection();
     final file = File(widget.fileUrl);
     _isLocal = file.existsSync();
@@ -121,6 +127,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
     _loadDrawings();
     _loadNotes();
+  }
+
+  void _loadCurrentUser() {
+    final user = context.read<AppCubit>().getUser();
+    if (user != null) {
+      _currentUser = user;
+    }
   }
 
   // load user data settings
@@ -169,6 +182,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
   }
 
+  bool get isOwner => _currentUser?.id == widget.userIdCreate;
+
   Future<Uint8List> _downloadPdf() async {
     final dio = Dio();
     final response = await dio.get<List<int>>(
@@ -176,6 +191,55 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       options: Options(responseType: ResponseType.bytes),
     );
     return Uint8List.fromList(response.data!);
+  }
+
+  Future<void> _downloadAndSavePdf() async {
+    try {
+      // Nếu file đã là local thì coi như đã có trên máy
+      if (_isLocal) {
+        if (!mounted) return;
+        AppSnackBar.show(
+          context,
+          message: AppLocalizations.current.tools_saved_successfully,
+          snackBarType: SnackBarType.success,
+        );
+        return;
+      }
+
+      // Tải PDF từ server (nếu chưa có bytes trong bộ nhớ)
+      final bytes = _pdfBytes ?? await _downloadPdf();
+
+      // Lưu vào thư mục Downloads (Android)
+      final downloadsDir = Directory('/storage/emulated/0/Download');
+      if (!await downloadsDir.exists()) {
+        await downloadsDir.create(recursive: true);
+      }
+
+      final baseName = path.basename(widget.fileUrl);
+      final safeTitle =
+          widget.title.replaceAll(RegExp(r'[^\w\s-]'), '_').trim();
+      final fileName =
+          (baseName.isNotEmpty && baseName.toLowerCase().endsWith('.pdf'))
+              ? baseName
+              : '$safeTitle.pdf';
+
+      final file = File(path.join(downloadsDir.path, fileName));
+      await file.writeAsBytes(bytes, flush: true);
+
+      if (!mounted) return;
+      AppSnackBar.show(
+        context,
+        message: '${AppLocalizations.current.tools_saved_successfully} ${file.path}',
+        snackBarType: SnackBarType.success,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      AppSnackBar.show(
+        context,
+        message: AppLocalizations.current.tools_save_failed,
+        snackBarType: SnackBarType.error,
+      );
+    }
   }
 
   Future<void> _loadLocalBytesForTts() async {
@@ -260,6 +324,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         });
         actionToolbar = 'read_continuous_ebook';
         _readContinuousEbook();
+        break;
+      case 'download':
+        _downloadAndSavePdf();
         break;
       case 'share':
         _shareEbook();
@@ -962,24 +1029,22 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                     //   "bookmark",
                                     //   Colors.teal,
                                     // ),
-                                    _buildMenuItem(
-                                      'share',
-                                      Icons.share_rounded,
-                                      AppLocalizations.current.pdf_share,
-                                      Colors.blue,
-                                    ),
-                                    // _buildMenuItem(
-                                    //   'draw',
-                                    //   Icons.brush_rounded,
-                                    //   AppLocalizations.current.pdf_draw,
-                                    //   Colors.deepPurple,
-                                    // ),
-                                    // _buildMenuItem(
-                                    //   'notes',
-                                    //   Icons.note_add_rounded,
-                                    //   AppLocalizations.current.pdf_notes,
-                                    //   Colors.orange,
-                                    // ),
+                                    if (isOwner)
+                                      _buildMenuItem(
+                                        'share',
+                                        Icons.share_rounded,
+                                        AppLocalizations.current.pdf_share,
+                                        Colors.blue,
+                                      )
+                                    else
+                                      _buildMenuItem(
+                                        'download',
+                                        Icons.download_rounded,
+                                        AppLocalizations
+                                            .current.tools_save_as_pdf,
+                                        Colors.blue,
+                                      ),
+                                   
                                   ],
                             ),
                           ),

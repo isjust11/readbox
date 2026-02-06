@@ -80,6 +80,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^28.1.33
   timezone: ^0.10.1
   uuid: ^4.0.0
+  flutter_file_dialog: ^3.0.3
 dev_dependencies:
   build_runner: null
   flutter_launcher_icons: ^0.14.4

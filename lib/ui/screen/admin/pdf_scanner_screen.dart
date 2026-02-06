@@ -69,8 +69,8 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
             widget.scanFormat == ScanFormatEnum.pdf
                 ? ['pdf', 'epub', 'mobi']
                 : widget.scanFormat == ScanFormatEnum.word
-                    ? ['doc', 'docx']
-                    : ['jpg', 'jpeg', 'png'],
+                ? ['doc', 'docx']
+                : ['jpg', 'jpeg', 'png'],
         allowMultiple: true,
       );
       if (result == null || result.files.isEmpty) return;
@@ -163,7 +163,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     try {
       final entities = directory.listSync(recursive: true, followLinks: false);
       for (var entity in entities) {
-        if (entity is File) {
+        if (entity is File && entity.lengthSync() > 0) {
           final path = entity.path.toLowerCase();
           if (widget.scanFormat == ScanFormatEnum.pdf) {
             if (path.endsWith('.pdf') ||
@@ -299,6 +299,10 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
     return file.path.split('/').last;
   }
 
+  Widget _imageThumbnail(String filePath) {
+    return Image.file(File(filePath), width: 32, height: 32, fit: BoxFit.cover);
+  }
+
   SvgPicture _getFileIcon(String fileName) {
     final extension = fileName.toLowerCase().split('.').last;
     switch (extension) {
@@ -343,9 +347,9 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
   Widget _buildEmptyState() {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    String headerNotFound = ''; 
+    String headerNotFound = '';
     String title = '';
-    String subtitle = AppLocalizations.current.use_select_file_to_browse_directory;
+
     switch (widget.scanFormat) {
       case ScanFormatEnum.pdf:
         headerNotFound = AppLocalizations.current.no_book_found;
@@ -357,35 +361,18 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
         break;
       case ScanFormatEnum.image:
         headerNotFound = AppLocalizations.current.no_file_found;
-        title = AppLocalizations.current.no_image_file_found;        
+        title = AppLocalizations.current.no_image_file_found;
         break;
     }
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.search_off, size: 64, color: colorScheme.outline),
-          const SizedBox(height: 16),
-          Text(
-            headerNotFound,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
-            ),
+          EmptyData(
+            emptyDataEnum: EmptyDataEnum.no_filter,
+            title: headerNotFound,
+            description: title,
           ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: TextStyle(color: colorScheme.onSurface),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: TextStyle(fontSize: 13, color: colorScheme.onSurfaceVariant),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
           Wrap(
             spacing: 12,
             children: [
@@ -406,8 +393,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: colorScheme.primary,
                 ),
-                label: Text(AppLocalizations.current.select_file,
-                ),
+                label: Text(AppLocalizations.current.select_file),
               ),
             ],
           ),
@@ -541,7 +527,11 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                     color: colorScheme.primaryContainer,
                     child: Row(
                       children: [
-                        Icon(Icons.info_outline, color: colorScheme.primary, size: AppSize.iconSizeSmall,),
+                        Icon(
+                          Icons.info_outline,
+                          color: colorScheme.primary,
+                          size: AppSize.iconSizeSmall,
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
                           child:
@@ -593,12 +583,22 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                               side: BorderSide(
-                                color: isSelected ? colorScheme.primary.withValues(alpha: 0.5) : colorScheme.outline.withValues(alpha: 0.2)  ,
+                                color:
+                                    isSelected
+                                        ? colorScheme.primary.withValues(
+                                          alpha: 0.5,
+                                        )
+                                        : colorScheme.outline.withValues(
+                                          alpha: 0.2,
+                                        ),
                                 width: 1,
                               ),
                             ),
                             leading: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 8,
+                              ),
                               decoration: BoxDecoration(
                                 color: _getFileColor(
                                   context,
@@ -613,11 +613,14 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                                   width: 1,
                                 ),
                               ),
-                              child: SizedBox(
-                                width: 32,
-                                height: 32,
-                                child: _getFileIcon(fileName),
-                              ),
+                              child:
+                                  widget.scanFormat == ScanFormatEnum.image
+                                      ? _imageThumbnail(file.path)
+                                      : SizedBox(
+                                        width: 32,
+                                        height: 32,
+                                        child: _getFileIcon(fileName),
+                                      ),
                             ),
                             title: Text(
                               fileName,
@@ -676,7 +679,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
                   color: colorScheme.onPrimary,
                 ),
                 label: Text(
-                  '${!widget.multiSelect ? AppLocalizations.current.select_file : AppLocalizations.current.add_book} (${_selectedFiles.length})',
+                  '${!widget.multiSelect ? AppLocalizations.current.select_file : _getButtonLabel()} (${_selectedFiles.length})',
                   style: TextStyle(
                     color: colorScheme.onPrimary,
                     fontSize: AppSize.fontSizeMedium,
@@ -687,5 +690,16 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
               )
               : null,
     );
+  }
+
+  String _getButtonLabel() {
+    if (widget.scanFormat == ScanFormatEnum.pdf) {
+      return AppLocalizations.current.add_book;
+    } else if (widget.scanFormat == ScanFormatEnum.word) {
+      return AppLocalizations.current.tools_add_word_file;
+    } else if (widget.scanFormat == ScanFormatEnum.image) {
+      return AppLocalizations.current.tools_add_image_file;
+    }
+    return AppLocalizations.current.select_file;
   }
 }

@@ -88,9 +88,12 @@ class MainBodyState extends State<MainBody> {
   Future<void> loadUserInfo() async {
     final user = await SecureStorageService().getUserInfo();
     if (user != null) {
-      setState(() {
-        userInfo = user;
-      });
+      if (mounted) {
+        context.read<AppCubit>().setUser(user);
+        setState(() {
+          userInfo = user;
+        });
+      }
     }
   }
 
@@ -221,8 +224,10 @@ class MainBodyState extends State<MainBody> {
   Widget _buildCategoryBar(ColorScheme colorScheme) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: AppDimens.SIZE_16,
-       vertical: AppDimens.SIZE_8),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppDimens.SIZE_16,
+        vertical: AppDimens.SIZE_8,
+      ),
       decoration: BoxDecoration(
         color: colorScheme.surface,
         border: Border(
@@ -299,20 +304,25 @@ class MainBodyState extends State<MainBody> {
           ),
           child: Row(
             children: [
-             isSelected ? Padding(
-               padding: EdgeInsets.only(right: AppDimens.SIZE_4),
-               child: Icon(
-                  Icons.check,
-                  color: colorScheme.onPrimary,
-                  size: AppDimens.SIZE_12,
-                ),
-             ) : SizedBox.shrink(),
+              isSelected
+                  ? Padding(
+                    padding: EdgeInsets.only(right: AppDimens.SIZE_4),
+                    child: Icon(
+                      Icons.check,
+                      color: colorScheme.onPrimary,
+                      size: AppDimens.SIZE_12,
+                    ),
+                  )
+                  : SizedBox.shrink(),
               Text(
                 label,
                 style: TextStyle(
                   fontSize: AppDimens.SIZE_10,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? colorScheme.onPrimary : colorScheme.onSurface,
+                  color:
+                      isSelected
+                          ? colorScheme.onPrimary
+                          : colorScheme.onSurface,
                 ),
               ),
             ],
@@ -470,7 +480,8 @@ class MainBodyState extends State<MainBody> {
               widgetView = Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(
+                  children: [
+                    Icon(
                       Icons.error_outline,
                       size: 64,
                       color: colorScheme.error,
@@ -494,33 +505,10 @@ class MainBodyState extends State<MainBody> {
 
             // Hiển thị empty state
             if (state is LoadedState && books.isEmpty) {
-              widgetView = Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.book_outlined,
-                      size: 64,
-                      color: colorScheme.onSurface,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      AppLocalizations.current.no_books,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      AppLocalizations.current.add_book_to_start_reading,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                  ],
-                ),
+              widgetView = EmptyData(
+                emptyDataEnum: EmptyDataEnum.no_data,
+                title: AppLocalizations.current.no_books,
+                description: AppLocalizations.current.add_book_to_start_reading,
               );
             }
 
@@ -577,29 +565,9 @@ class MainBodyState extends State<MainBody> {
                   filteredBooks.isEmpty &&
                           _isSearching &&
                           (_filterModel?.format != null)
-                      ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.filter_alt_outlined,
-                              size: 64,
-                              color: colorScheme.onSurface.withValues(
-                                alpha: 0.5,
-                              ),
-                            ),
-                            SizedBox(height: 16),
-                            Text(
-                              AppLocalizations.current.no_book_found,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: colorScheme.onSurface.withValues(
-                                  alpha: 0.7,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      ? EmptyData(
+                        emptyDataEnum: EmptyDataEnum.no_filter,
+                        title: AppLocalizations.current.no_book_found,
                       )
                       : GridView.builder(
                         padding: EdgeInsets.all(16),
@@ -625,13 +593,19 @@ class MainBodyState extends State<MainBody> {
                                 getBooks(isLoadMore: true);
                                 AppSnackBar.show(
                                   context,
-                                  message: AppLocalizations.current.book_deleted_successfully,
+                                  message:
+                                      AppLocalizations
+                                          .current
+                                          .book_deleted_successfully,
                                   snackBarType: SnackBarType.success,
                                 );
                               } else {
                                 AppSnackBar.show(
                                   context,
-                                  message: AppLocalizations.current.error_deleting_book,
+                                  message:
+                                      AppLocalizations
+                                          .current
+                                          .error_deleting_book,
                                   snackBarType: SnackBarType.error,
                                 );
                               }

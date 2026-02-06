@@ -13,6 +13,7 @@ class AuthRepository {
   Future<AuthenModel> login(Map<String, dynamic> param) async {
     AuthenModel authenModel = await remoteDataSource.login(param);
     await localDataSource.saveToken(authenModel.accessToken ?? '');
+    await localDataSource.saveRefreshToken(authenModel.refreshToken ?? '');
     await localDataSource.saveUserInfo(authenModel.user ?? UserModel.fromJson({}));
     return authenModel;
   }
@@ -44,6 +45,7 @@ class AuthRepository {
   Future<AuthenModel> mobileSocialLogin(Map<String, dynamic> param) async {
     AuthenModel authModel = await remoteDataSource.mobileSocialLogin(param);
     await localDataSource.saveToken(authModel.accessToken ?? '');
+    await localDataSource.saveRefreshToken(authModel.refreshToken ?? '');
     await localDataSource.saveUserInfo(authModel.user!);
     return authModel;
   }

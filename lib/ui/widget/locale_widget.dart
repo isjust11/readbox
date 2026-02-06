@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readbox/blocs/language_cubit.dart';
+import 'package:readbox/blocs/app_cubit.dart';
 
 class LocaleWidget extends StatelessWidget {
   final Widget Function(String) builder;
@@ -9,7 +9,7 @@ class LocaleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LanguageCubit, String>(
+    return BlocBuilder<AppCubit, String>(
       builder: (context, state) {
         // This will rebuild whenever LanguageCubit emits a new state
         return builder(state);

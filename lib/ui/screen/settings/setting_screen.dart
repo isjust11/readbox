@@ -436,7 +436,7 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Widget _buildLanguageDropdown(BuildContext context) {
-    return BlocBuilder<LanguageCubit, String>(
+    return BlocBuilder<AppCubit, String>(
       builder: (context, lang) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
@@ -460,7 +460,7 @@ class _SettingScreenState extends State<SettingScreen> {
             ],
             onChanged: (value) {
               if (value != null) {
-                context.read<LanguageCubit>().changeLanguage(value);
+                context.read<AppCubit>().changeLanguage(value);
               }
             },
           ),

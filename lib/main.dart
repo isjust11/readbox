@@ -1,3 +1,5 @@
+import 'dart:ui' show PlatformDispatcher;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,11 +9,24 @@ import 'package:readbox/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/services/fcm_service.dart';
 import 'injection_container.dart' as di;
 import 'ui/app.dart';
 import 'utils/language_detector.dart';
 import 'utils/shared_preference.dart';
+
+/// Map locale hệ thống sang mã ngôn ngữ app hỗ trợ (vi, en).
+String _languageFromSystemLocale() {
+  final locale = PlatformDispatcher.instance.locale;
+  final supported = AppLocalizationDelegate().supportedLocales;
+  for (final supportedLocale in supported) {
+    if (supportedLocale.languageCode == locale.languageCode) {
+      return supportedLocale.languageCode;
+    }
+  }
+  return supported.first.languageCode;
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,11 +39,19 @@ void main() async {
   // Register background message handler
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-  String language = await SharedPreferenceUtil.getCurrentLanguage();
+  // Lần đầu mở app (chưa có ngôn ngữ lưu): dùng ngôn ngữ hệ thống và lưu lại
+  String language;
+  final savedLanguage = await SharedPreferenceUtil.getSavedLanguage();
+  if (savedLanguage == null || savedLanguage.isEmpty) {
+    language = _languageFromSystemLocale();
+    await SharedPreferenceUtil.setCurrentLanguage(language);
+  } else {
+    language = savedLanguage;
+  }
   String theme = await SharedPreferenceUtil.getTheme();
   runApp(MultiBlocProvider(providers: [
     BlocProvider(
-      create: (_) => LanguageCubit(language),
+      create: (_) => AppCubit(language),
     ),
     BlocProvider(
       create: (_) => BookRefreshCubit(),

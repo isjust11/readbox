@@ -43,7 +43,7 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
       MaterialPageRoute(
         builder:
             (context) => const PdfScannerScreen(
-              multiSelect: true,
+              multiSelect: false,
               scanFormat: ScanFormatEnum.word,
             ),
       ),

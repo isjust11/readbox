@@ -48,10 +48,16 @@ class SharedPreferenceUtil {
     await prefs.setString(SPrefCache.PREF_KEY_LANGUAGE, languageCode);
   }
 
-  /// Lấy ngôn ngữ hiện tại
-  static Future<String> getCurrentLanguage() async {
+  /// Lấy ngôn ngữ đã lưu (null nếu chưa từng set — lần đầu mở app)
+  static Future<String?> getSavedLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(SPrefCache.PREF_KEY_LANGUAGE) ??
+    return prefs.getString(SPrefCache.PREF_KEY_LANGUAGE);
+  }
+
+  /// Lấy ngôn ngữ hiện tại (đã lưu hoặc fallback mặc định)
+  static Future<String> getCurrentLanguage() async {
+    final saved = await getSavedLanguage();
+    return saved ??
         AppLocalizationDelegate().supportedLocales.first.languageCode;
   }
 

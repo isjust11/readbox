@@ -217,53 +217,6 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
     }
   }
 
-  Widget _buildEmptyState(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.library_books,
-            size: 80,
-            color: colorScheme.outlineVariant,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            AppLocalizations.current.no_books,
-            style: TextStyle(
-              fontSize: 18,
-              color: colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            AppLocalizations.current.add_book_to_start_reading,
-            style: TextStyle(color: colorScheme.outline),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNoSearchResults(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.search_off, size: 80, color: colorScheme.outlineVariant),
-          const SizedBox(height: 16),
-          Text(
-            AppLocalizations.current.no_books_found,
-            style: TextStyle(fontSize: 18, color: colorScheme.onSurfaceVariant),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildBookCover(BuildContext context, BookModel book) {
     const w = 70.0;
     const h = 100.0;
@@ -526,9 +479,14 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
           _isLoading
               ? const Center(child: CircularProgressIndicator())
               : _books.isEmpty
-              ? _buildEmptyState(context)
+              ? EmptyData(emptyDataEnum: EmptyDataEnum.no_data,
+              title: AppLocalizations.current.no_books,
+              description: AppLocalizations.current.add_book_to_start_reading,
+              )
               : _filteredBooks.isEmpty
-              ? _buildNoSearchResults(context)
+              ? EmptyData(emptyDataEnum: EmptyDataEnum.no_filter,
+              title: AppLocalizations.current.no_book_found,
+              )
               : ListView.builder(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 88),
                 itemCount: _filteredBooks.length,

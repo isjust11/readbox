@@ -14,9 +14,6 @@ import 'package:flutter/widgets.dart';
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
-  /// File path: assets/icons/box_empty.svg
-  String get boxEmpty => 'assets/icons/box_empty.svg';
-
   /// File path: assets/icons/ic_avatar.svg
   String get icAvatar => 'assets/icons/ic_avatar.svg';
 
@@ -52,6 +49,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/ic_email.svg
   String get icEmail => 'assets/icons/ic_email.svg';
+
+  /// File path: assets/icons/ic_empty_box.svg
+  String get icEmptyBox => 'assets/icons/ic_empty_box.svg';
 
   /// File path: assets/icons/ic_epub.svg
   String get icEpub => 'assets/icons/ic_epub.svg';
@@ -92,6 +92,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_news.svg
   String get icNews => 'assets/icons/ic_news.svg';
 
+  /// File path: assets/icons/ic_no_document.svg
+  String get icNoDocument => 'assets/icons/ic_no_document.svg';
+
+  /// File path: assets/icons/ic_no_image.svg
+  String get icNoImage => 'assets/icons/ic_no_image.svg';
+
   /// File path: assets/icons/ic_pdf.svg
   String get icPdf => 'assets/icons/ic_pdf.svg';
 
@@ -100,6 +106,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/ic_ring.svg
   String get icRing => 'assets/icons/ic_ring.svg';
+
+  /// File path: assets/icons/ic_search_empty.svg
+  String get icSearchEmpty => 'assets/icons/ic_search_empty.svg';
 
   /// File path: assets/icons/ic_setting.svg
   String get icSetting => 'assets/icons/ic_setting.svg';
@@ -115,7 +124,6 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<String> get values => [
-    boxEmpty,
     icAvatar,
     icBaithuoc,
     icCalendar,
@@ -128,6 +136,7 @@ class $AssetsIconsGen {
     icDocx,
     icDotHorizontal,
     icEmail,
+    icEmptyBox,
     icEpub,
     icFaceId,
     icFacebook,
@@ -141,9 +150,12 @@ class $AssetsIconsGen {
     icLockPassword,
     icMobi,
     icNews,
+    icNoDocument,
+    icNoImage,
     icPdf,
     icQrcode,
     icRing,
+    icSearchEmpty,
     icSetting,
     icTime,
     icTrash,

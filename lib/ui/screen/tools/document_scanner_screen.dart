@@ -119,7 +119,7 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
       final directory = await getApplicationDocumentsDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final outputPath = '${directory.path}/scanned_document_$timestamp.pdf';
-      
+
       final File outputFile = File(outputPath);
       await outputFile.writeAsBytes(await document.save());
       document.dispose();
@@ -131,7 +131,8 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
       if (mounted) {
         AppSnackBar.show(
           context,
-          message: '${AppLocalizations.current.tools_saved_successfully}\n$outputPath',
+          message:
+              '${AppLocalizations.current.tools_saved_successfully}\n$outputPath',
           snackBarType: SnackBarType.success,
         );
 
@@ -178,9 +179,11 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
                   final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PdfScannerScreen(scanFormat: ScanFormatEnum.image,
-                      multiSelect: false,
-                      ),
+                      builder:
+                          (context) => PdfScannerScreen(
+                            scanFormat: ScanFormatEnum.image,
+                            multiSelect: true,
+                          ),
                     ),
                   );
                   if (result != null && mounted) {
@@ -215,16 +218,17 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
           if (_scannedPages.isNotEmpty)
             TextButton.icon(
               onPressed: _isProcessing ? null : _saveAsPdf,
-              icon: _isProcessing
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                  : Icon(Icons.save, color: colorScheme.onPrimary),
+              icon:
+                  _isProcessing
+                      ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                      : Icon(Icons.save, color: colorScheme.onPrimary),
               label: Text(
                 AppLocalizations.current.tools_save_as_pdf,
                 style: TextStyle(color: colorScheme.onPrimary),
@@ -232,15 +236,18 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
             ),
         ],
       ),
-      body: _scannedPages.isEmpty
-          ? _buildEmptyState(colorScheme)
-          : _buildPagesList(colorScheme),
+      body:
+          _scannedPages.isEmpty
+              ? _buildEmptyState(colorScheme)
+              : _buildPagesList(colorScheme),
       floatingButton: FloatingActionButton.extended(
         onPressed: _isProcessing ? null : _showOptionsDialog,
         icon: const Icon(Icons.add_a_photo),
-        label: Text(_scannedPages.isEmpty
-            ? AppLocalizations.current.tools_scan_document
-            : AppLocalizations.current.tools_add_more_pages),
+        label: Text(
+          _scannedPages.isEmpty
+              ? AppLocalizations.current.tools_scan_document
+              : AppLocalizations.current.tools_add_more_pages,
+        ),
       ),
     );
   }
@@ -296,10 +303,7 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
               children: [
                 Row(
                   children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: colorScheme.primary,
-                    ),
+                    Icon(Icons.info_outline, color: colorScheme.primary),
                     const SizedBox(width: 8),
                     Text(
                       AppLocalizations.current.info,
@@ -315,9 +319,7 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
                   '• Take photos or select from gallery\n'
                   '• Add multiple pages\n'
                   '• Save as PDF document',
-                  style: TextStyle(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
+                  style: TextStyle(color: colorScheme.onSurfaceVariant),
                 ),
               ],
             ),
@@ -376,10 +378,7 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.file(
-            _scannedPages[index],
-            fit: BoxFit.cover,
-          ),
+          Image.file(_scannedPages[index], fit: BoxFit.cover),
           // Overlay
           Container(
             decoration: BoxDecoration(
@@ -425,11 +424,7 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
                   color: Colors.red,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 20,
-                ),
+                child: const Icon(Icons.close, color: Colors.white, size: 20),
               ),
               onPressed: () => _removePage(index),
             ),

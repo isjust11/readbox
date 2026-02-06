@@ -24,3 +24,7 @@ enum SnackBarType {
   info,
   custom,
 }
+enum EmptyDataEnum {
+  no_data,
+  no_filter
+}

@@ -150,9 +150,9 @@ class _ToolCard extends StatelessWidget {
                 child: widgetIcon,
               ),
               const SizedBox(height: 12),
-              Text(title, style: theme.textTheme.titleMedium),
+              Flexible(fit: FlexFit.tight,child: Text(title, style: theme.textTheme.titleMedium),),
               const SizedBox(height: 4),
-              Text(
+              Flexible(child: Text(
                 description,
                 style: TextStyle(
                   fontSize: 12,
@@ -161,7 +161,7 @@ class _ToolCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-              ),
+              )),
             ],
           ),
         ),
