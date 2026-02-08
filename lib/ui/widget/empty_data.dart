@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/app_size.dart';
-import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';

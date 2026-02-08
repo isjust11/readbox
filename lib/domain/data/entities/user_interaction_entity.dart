@@ -1,5 +1,4 @@
 import 'package:readbox/domain/data/entities/base_entity.dart';
-import 'package:readbox/domain/data/entities/book_entity.dart';
 import 'package:readbox/domain/data/entities/user_entity.dart';
 import 'package:readbox/domain/data/models/book_model.dart';
 import 'package:readbox/domain/enums/enums.dart';
@@ -58,7 +57,7 @@ class UserInteractionEntity extends BaseEntity {
 
     // Additional data
     metadata = json['metadata'];
-    rating = json['rating']?.toDouble();
+    rating = json['rating'] != null ? double.parse(json['rating'].toString()) : 0;
     comment = json['comment'];
     sharePlatform = json['sharePlatform'];
     createdAt = json['createdAt'];

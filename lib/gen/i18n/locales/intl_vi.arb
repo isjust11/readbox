@@ -34,6 +34,12 @@
   "news": "Tin tức",
   "profile": "Hồ sơ",
   "settings": "Cài đặt",
+  "years_ago": "năm trước",
+  "months_ago": "tháng trước",
+  "days_ago": "ngày trước",
+  "hours_ago": "giờ trước",
+  "minutes_ago": "phút trước",
+  "just_now": "vừa xong",
   "error_connection": "Không có kết nối internet",
   "error_cancel": "Yêu cầu đã bị hủy bỏ",
   "error_timeout": "Đã hết thời gian kết nối tới máy chủ, vui lòng thử lại sau!",
@@ -600,5 +606,28 @@
       "title": {"type": "String"}
     }
   },
-  "view": "Xem"
+  "view": "Xem",
+  "cannot_load_pdf_description": "Không thể tải PDF, vui lòng thử lại sau hoặc liên hệ quản trị viên để được hỗ trợ.",
+  "rate_and_review": "Đánh giá & Nhận xét",
+  "rate_this_book": "Đánh giá sách này",
+  "your_rating": "Đánh giá của bạn",
+  "write_a_review": "Viết nhận xét",
+  "write_your_review_here": "Viết nhận xét của bạn...",
+  "submit_rating": "Gửi đánh giá",
+  "rating_submitted_successfully": "Đánh giá thành công",
+  "rating_submission_failed": "Đánh giá thất bại",
+  "please_select_rating": "Vui lòng chọn đánh giá",
+  "tap_to_rate": "Nhấn để đánh giá",
+  "your_review": "Nhận xét của bạn",
+  "edit_review": "Sửa nhận xét",
+  "delete_review": "Xóa nhận xét",
+  "no_reviews_yet": "Chưa có nhận xét",
+  "reviews": "Nhận xét",
+  "average_rating": "Đánh giá trung bình",
+  "total_ratings": "{count} đánh giá",
+  "@total_ratings": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  }
 }

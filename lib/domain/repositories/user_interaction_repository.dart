@@ -57,6 +57,29 @@ class UserInteractionRepository {
     rating: rating,
   );
 
+  Future<UserInteractionModel> rateAndComment({
+    required String targetType,
+    required dynamic targetId,
+    required double rating,
+    String? comment,
+  }) => remoteDataSource.rateAndComment(
+    targetType: targetType,
+    targetId: targetId,
+    rating: rating,
+    comment: comment,
+  );
+
+  Future<List<UserInteractionModel>> loadInteractions({
+    required InteractionTarget targetType,
+    required dynamic targetId,
+    Map<String, dynamic>? query,
+  }) =>
+    remoteDataSource.loadInteractions(
+      targetType: targetType,
+      targetId: targetId,
+      query: query,
+    );
+
   Future<dynamic> follow({
     required String targetType,
     required dynamic targetId,

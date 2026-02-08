@@ -33,6 +33,7 @@ class Routes {
   static const String notificationScreen = "/notificationScreen";
   static const String notificationDetailScreen = "/notificationDetailScreen";
   static const String toolsScreen = "/toolsScreen";
+  static const String reviewsScreen = "/reviewsScreen";
 
   static const String search = "/search";
   //init screen name
@@ -166,6 +167,17 @@ class Routes {
       case toolsScreen:
         return PageTransition(
           child: ToolsScreen(),
+          type: PageTransitionType.rightToLeft,
+        );
+      case reviewsScreen:
+        final args = settings.arguments as Map<String, dynamic>?;
+        return PageTransition(
+          child: ReviewsScreen(
+            bookId: args?['bookId'] as String? ?? '',
+            bookTitle: args?['bookTitle'] as String?,
+            averageRating: (args?['averageRating'] as num?)?.toDouble(),
+            totalRatings: args?['totalRatings'] as int?,
+          ),
           type: PageTransitionType.rightToLeft,
         );
       default:

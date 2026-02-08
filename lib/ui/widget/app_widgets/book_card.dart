@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/api_constant.dart';
+import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/resources.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/ui/widget/rating_dialog.dart';
 
 class BookCard extends StatefulWidget {
   final BookModel book;
@@ -31,6 +35,7 @@ class BookCard extends StatefulWidget {
 class _BookCardState extends State<BookCard> {
   bool? _isFavorite;
   bool? _isArchive;
+  double? _rating = 0;
   @override
   void initState() {
     super.initState();
@@ -68,6 +73,28 @@ class _BookCardState extends State<BookCard> {
         widget.onDelete(book);
         Navigator.pop(context);
       },
+    );
+  }
+
+  void _showRatingDialog(BookModel book) {
+    // Close the bottom sheet first
+    Navigator.pop(context);
+    
+    showDialog(
+      context: context,
+      builder: (context) => RatingDialog(
+        onSubmit: (rating, comment) async {
+          await widget.userInteractionCubit.rateAndComment(
+            targetType: 'book',
+            targetId: book.id!,
+            rating: rating,
+            comment: comment.isNotEmpty ? comment : null,
+          );
+          
+          // Reload stats after rating
+          await _loadInteractionStats();
+        },
+      ),
     );
   }
 
@@ -218,7 +245,7 @@ class _BookCardState extends State<BookCard> {
                 _buildActionButton(
                   icon: Icons.info_outline_rounded,
                   label: AppLocalizations.current.view_details,
-                  color: Colors.blue,
+                  color: Colors.lightBlueAccent,
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pushNamed(
@@ -226,6 +253,18 @@ class _BookCardState extends State<BookCard> {
                       Routes.bookDetailScreen,
                       arguments: book.id,
                     );
+                  },
+                ),
+
+                SizedBox(height: 12),
+
+                // Rate and Review button
+                _buildActionButton(
+                  icon: Icons.star_rate_rounded,
+                  label: AppLocalizations.current.rate_and_review,
+                  color: Colors.amber,
+                  onTap: () {
+                    _showRatingDialog(book);
                   },
                 ),
 
@@ -292,7 +331,7 @@ class _BookCardState extends State<BookCard> {
                             // Reload stats after toggle
                             await _loadInteractionStats();
                           },
-                          isOutlined: true,
+                          isOutlined: false,
                         ),
                       ],
                     );
@@ -328,12 +367,9 @@ class _BookCardState extends State<BookCard> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         decoration: BoxDecoration(
-          color: isOutlined ? Colors.white : color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(16),
-          border:
-              isOutlined
-                  ? Border.all(color: Colors.grey[300]!, width: 1.5)
-                  : Border.all(color: color.withValues(alpha: 0.3), width: 1),
+          // color: isOutlined ? Colors.white : color.withValues(alpha: 0.1),
+          // borderRadius: BorderRadius.circular(16),
+          border: Border(bottom: BorderSide(color: color.withValues(alpha: 0.3), width: 1)),
         ),
         child: Row(
           children: [
@@ -371,6 +407,20 @@ class _BookCardState extends State<BookCard> {
     );
   }
 
+  Widget _buildErrorCover() {
+    return Padding(
+      padding: EdgeInsets.all(AppDimens.SIZE_16),
+      child: Center(
+        child: SvgPicture.asset(
+          Assets.icons.icPdfCover,
+          width: 120,
+          height: 120,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserInteractionCubit, BaseState>(
@@ -385,6 +435,7 @@ class _BookCardState extends State<BookCard> {
               setState(() {
                 _isFavorite = stats.favoriteStatus == true;
                 _isArchive = stats.archiveStatus == true;
+                _rating = stats.averageRating;
               });
             }
           } else if (state.data is Map<String, dynamic>) {
@@ -395,6 +446,9 @@ class _BookCardState extends State<BookCard> {
               }
               if (data.containsKey('archiveStatus')) {
                 _isArchive = data['archiveStatus'] == true;
+              }
+              if (data.containsKey('averageRating')) {
+                _rating = data['averageRating'];
               }
             });
           }
@@ -466,29 +520,11 @@ class _BookCardState extends State<BookCard> {
                                     fit: BoxFit.cover,
                                     width: double.infinity,
                                     errorBuilder: (context, error, stackTrace) {
-                                      return Center(
-                                        child: Icon(
-                                          Icons.book,
-                                          size: 48,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface
-                                              .withValues(alpha: 0.4),
-                                        ),
-                                      );
+                                      return _buildErrorCover();
                                     },
                                   ),
                                 )
-                                : Center(
-                                  child: Icon(
-                                    Icons.book,
-                                    size: 48,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.4),
-                                  ),
-                                ),
+                                : _buildErrorCover(),
                       ),
                       // Favorite badge
                       if (_favoriteStatus)
@@ -520,7 +556,7 @@ class _BookCardState extends State<BookCard> {
                 ),
                 // Book Info
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: Padding(
                     padding: EdgeInsets.all(12),
                     child: Column(
@@ -541,31 +577,127 @@ class _BookCardState extends State<BookCard> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 4),
-                            Text(
-                              widget.book.author ?? '',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[600],
+
+                            if (widget.book.author != null) ...[
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    Assets.icons.icUser,
+                                    width: AppSize.iconSizeMedium,
+                                    height: AppSize.iconSizeMedium,
+                                    colorFilter: ColorFilter.mode(
+                                      Colors.blue[500]!,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      widget.book.author ?? '',
+                                      style: TextStyle(
+                                        fontSize: AppSize.fontSizeMedium,
+                                        color: Colors.grey[600],
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            ],
+                            // Category
+                            if (widget.book.category != null)
+                              Column(
+                                children: [
+                                  const SizedBox(height: AppDimens.SIZE_6),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        Assets.icons.icCategory,
+                                        width: AppSize.iconSizeMedium,
+                                        height: AppSize.iconSizeMedium,
+                                        colorFilter: ColorFilter.mode(
+                                          Colors.orange[400]!,
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                      SizedBox(width: AppDimens.SIZE_8),
+                                      Text(
+                                        widget.book.category?.name ?? '',
+                                        style: TextStyle(
+                                          fontSize: AppSize.fontSizeMedium,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                           ],
                         ),
                         // Rating
                         Flexible(
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              if (widget.book.rating != null &&
-                                  widget.book.rating! > 0) ...[
+                              if (widget.book.totalPages != null && widget.book.totalPages! > 0) ...[
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppDimens.SIZE_8,
+                                  vertical: AppDimens.SIZE_6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
+                                  border: Border.all(
+                                    color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.numbers_rounded,
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimaryContainer,
+                                      size: 12,
+                                    ),
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      '${widget.book.totalPages} ${AppLocalizations.current.pages}',
+                                      style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: AppSize.fontSizeSmall,
+                                        fontWeight: FontWeight.w500,
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimaryContainer,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                ),
+                              ],
+                                if (_rating != null && _rating! > 0) ...[
                                 Container(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
+                                    horizontal: AppDimens.SIZE_8,
+                                    vertical: AppDimens.SIZE_4,
                                   ),
                                   decoration: BoxDecoration(
                                     color: Colors.amber.withValues(alpha: 0.15),
-                                    borderRadius: BorderRadius.circular(8),
+                                    borderRadius: BorderRadius.circular(
+                                      AppDimens.SIZE_8,
+                                    ),
+                                    border: Border.all(
+                                      color: Colors.amber.withValues(
+                                        alpha: 0.3,
+                                      ),
+                                      width: 1,
+                                    ),
                                   ),
                                   child: Row(
                                     children: [
@@ -576,7 +708,7 @@ class _BookCardState extends State<BookCard> {
                                       ),
                                       SizedBox(width: 4),
                                       Text(
-                                        widget.book.rating!.toStringAsFixed(1),
+                                        '$_rating',
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600,
@@ -586,30 +718,7 @@ class _BookCardState extends State<BookCard> {
                                     ],
                                   ),
                                 ),
-                              ] else ...[
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.surface
-                                        .withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    AppLocalizations.current.new_book,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.secondary,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                                ],
                             ],
                           ),
                         ),

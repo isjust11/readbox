@@ -78,6 +78,7 @@ dependencies:
   sqflite: ^2.3.0
   syncfusion_flutter_pdf: ^28.1.33
   syncfusion_flutter_pdfviewer: ^28.1.33
+  timeago: ^3.7.0
   timezone: ^0.10.1
   uuid: ^4.0.0
   flutter_file_dialog: ^3.0.3

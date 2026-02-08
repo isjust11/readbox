@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:readbox/domain/data/entities/entities.dart';
-import 'base_entity.dart';
+
 
 class UserEntity extends BaseEntity {
   String? id;
@@ -42,9 +42,10 @@ class UserEntity extends BaseEntity {
     isBlock = json['isBlock'];
     fullName = json['fullName'];
     picture = json['picture'];
-    roles = (json['roles'] as List)
-        .map((role) => RoleEntity.fromJson(role as Map<String, dynamic>))
-        .toList();
+    roles = json['roles'] != null ? (json['roles'] as List)
+          .map((role) => RoleEntity.fromJson(role as Map<String, dynamic>))
+          .toList()
+        : [];
     permissions = json['permissions'] ?? [];
     email = json['email'];
     platformId = json['platformId'];

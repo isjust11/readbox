@@ -11,7 +11,6 @@ import 'package:readbox/ui/widget/widget.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:readbox/blocs/user_interaction_cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
@@ -92,6 +91,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   List<Map<String, dynamic>> _notes = [];
   Size _drawOverlaySize = Size.zero;
 
+  bool get isEnableAction => _error == null;
   UserModel? _currentUser;
 
   bool get _hasDrawingsForCurrentPage =>
@@ -977,7 +977,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                     _visibleAppbarToolAction
                         ? _buildAppBarToolActions()
                         : [
-                          Container(
+                         isEnableAction ? Container(
                             margin: EdgeInsets.only(
                               right: 8,
                               top: 8,
@@ -1047,7 +1047,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                    
                                   ],
                             ),
-                          ),
+                          ) : SizedBox(),
                         ],
               )
               : null,
@@ -1058,7 +1058,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
                   SizedBox(height: 16),
                   Text(
                     AppLocalizations.current.pdf_cannot_load,
@@ -1068,7 +1068,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 32),
                     child: Text(
-                      _error!,
+                      AppLocalizations.current.cannot_load_pdf_description,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.grey[600]),
                     ),
@@ -1077,12 +1077,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   ElevatedButton(
                     onPressed: _isLocal ? null : () => _loadFromNetwork(),
                     child: Text(AppLocalizations.current.retry),
-                  ),
-                  SizedBox(height: 16),
-                  TextButton(
-                    onPressed: () => _showPdfInfo(),
-                    child: Text(AppLocalizations.current.pdf_view_file_info),
-                  ),
+                  )
                 ],
               ),
             )

@@ -23,6 +23,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_calendar.svg
   String get icCalendar => 'assets/icons/ic_calendar.svg';
 
+  /// File path: assets/icons/ic_category.svg
+  String get icCategory => 'assets/icons/ic_category.svg';
+
   /// File path: assets/icons/ic_caythuoc.svg
   String get icCaythuoc => 'assets/icons/ic_caythuoc.svg';
 
@@ -49,9 +52,6 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/ic_email.svg
   String get icEmail => 'assets/icons/ic_email.svg';
-
-  /// File path: assets/icons/ic_empty_box.svg
-  String get icEmptyBox => 'assets/icons/ic_empty_box.svg';
 
   /// File path: assets/icons/ic_epub.svg
   String get icEpub => 'assets/icons/ic_epub.svg';
@@ -101,6 +101,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_pdf.svg
   String get icPdf => 'assets/icons/ic_pdf.svg';
 
+  /// File path: assets/icons/ic_pdf_cover.svg
+  String get icPdfCover => 'assets/icons/ic_pdf_cover.svg';
+
   /// File path: assets/icons/ic_qrcode.svg
   String get icQrcode => 'assets/icons/ic_qrcode.svg';
 
@@ -119,6 +122,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_trash.svg
   String get icTrash => 'assets/icons/ic_trash.svg';
 
+  /// File path: assets/icons/ic_user.svg
+  String get icUser => 'assets/icons/ic_user.svg';
+
   /// File path: assets/icons/ic_word.svg
   String get icWord => 'assets/icons/ic_word.svg';
 
@@ -127,6 +133,7 @@ class $AssetsIconsGen {
     icAvatar,
     icBaithuoc,
     icCalendar,
+    icCategory,
     icCaythuoc,
     icCertificate,
     icCheck,
@@ -136,7 +143,6 @@ class $AssetsIconsGen {
     icDocx,
     icDotHorizontal,
     icEmail,
-    icEmptyBox,
     icEpub,
     icFaceId,
     icFacebook,
@@ -153,12 +159,14 @@ class $AssetsIconsGen {
     icNoDocument,
     icNoImage,
     icPdf,
+    icPdfCover,
     icQrcode,
     icRing,
     icSearchEmpty,
     icSetting,
     icTime,
     icTrash,
+    icUser,
     icWord,
   ];
 }

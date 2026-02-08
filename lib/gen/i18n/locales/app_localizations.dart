@@ -98,6 +98,24 @@ abstract class AppLocalizations {
     Locale('en'),
   ];
 
+  /// No description provided for @app_name.
+  ///
+  /// In en, this message translates to:
+  /// **'ReadBox'**
+  String get app_name;
+
+  /// No description provided for @google.
+  ///
+  /// In en, this message translates to:
+  /// **'Google'**
+  String get google;
+
+  /// No description provided for @facebook.
+  ///
+  /// In en, this message translates to:
+  /// **'Facebook'**
+  String get facebook;
+
   /// No description provided for @loading.
   ///
   /// In en, this message translates to:
@@ -290,11 +308,71 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// No description provided for @years_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'years ago'**
+  String get years_ago;
+
+  /// No description provided for @months_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'months ago'**
+  String get months_ago;
+
+  /// No description provided for @days_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'days ago'**
+  String get days_ago;
+
+  /// No description provided for @hours_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'hours ago'**
+  String get hours_ago;
+
+  /// No description provided for @minutes_ago.
+  ///
+  /// In en, this message translates to:
+  /// **'minutes ago'**
+  String get minutes_ago;
+
+  /// No description provided for @just_now.
+  ///
+  /// In en, this message translates to:
+  /// **'just now'**
+  String get just_now;
+
   /// No description provided for @error_connection.
   ///
   /// In en, this message translates to:
   /// **'No internet connection'**
   String get error_connection;
+
+  /// No description provided for @error_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Request cancelled'**
+  String get error_cancel;
+
+  /// No description provided for @error_timeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection timeout, please try again later!'**
+  String get error_timeout;
+
+  /// No description provided for @error_request_timeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Request timeout, please try again later!'**
+  String get error_request_timeout;
+
+  /// No description provided for @error_internal_server_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Internal server error, please try again later!'**
+  String get error_internal_server_error;
 
   /// No description provided for @my_library.
   ///
@@ -979,6 +1057,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password must be at least 6 characters'**
   String get password_must_be_at_least_6_characters;
+
+  /// No description provided for @username_must_be_at_least_3_characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Username must be at least 3 characters'**
+  String get username_must_be_at_least_3_characters;
 
   /// No description provided for @no_account.
   ///
@@ -2441,7 +2525,7 @@ abstract class AppLocalizations {
   /// No description provided for @use_select_file_to_browse_directory.
   ///
   /// In en, this message translates to:
-  /// **'Use \'Select file\' to browse directory (e.g. Download/Telegram)'**
+  /// **'Use \'Select file\' to browse directory'**
   String get use_select_file_to_browse_directory;
 
   /// No description provided for @no_pdf_epub_mobi_found.
@@ -2479,6 +2563,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan again'**
   String get scan_again;
+
+  /// No description provided for @tap_or_long_press_to_select_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap on file to select or long press to select file'**
+  String get tap_or_long_press_to_select_file;
 
   /// No description provided for @delete_book_confirmation_message.
   ///
@@ -2891,7 +2981,7 @@ abstract class AppLocalizations {
   /// No description provided for @tools_document_scanner.
   ///
   /// In en, this message translates to:
-  /// **'Document Scanner'**
+  /// **'Scanner'**
   String get tools_document_scanner;
 
   /// No description provided for @tools_document_scanner_description.
@@ -2936,6 +3026,18 @@ abstract class AppLocalizations {
   /// **'Scan document'**
   String get tools_scan_document;
 
+  /// No description provided for @tools_add_word_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Add word file'**
+  String get tools_add_word_file;
+
+  /// No description provided for @tools_add_image_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Add image file'**
+  String get tools_add_image_file;
+
   /// No description provided for @tools_take_photo.
   ///
   /// In en, this message translates to:
@@ -2951,7 +3053,7 @@ abstract class AppLocalizations {
   /// No description provided for @tools_save_as_pdf.
   ///
   /// In en, this message translates to:
-  /// **'Save as PDF'**
+  /// **'Download PDF'**
   String get tools_save_as_pdf;
 
   /// No description provided for @tools_add_more_pages.
@@ -3013,6 +3115,402 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please select a file first'**
   String get tools_select_file_first;
+
+  /// No description provided for @need_permission_to_access_memory.
+  ///
+  /// In en, this message translates to:
+  /// **'Need permission to access memory'**
+  String get need_permission_to_access_memory;
+
+  /// No description provided for @please_grant_permission_to_search_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Please grant permission to search file'**
+  String get please_grant_permission_to_search_file;
+
+  /// No description provided for @or_use_select_file_to_browse_directory_without_permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Or use \'Select file\' to browse directory (without permission)'**
+  String get or_use_select_file_to_browse_directory_without_permission;
+
+  /// No description provided for @grant_permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant permission'**
+  String get grant_permission;
+
+  /// No description provided for @added.
+  ///
+  /// In en, this message translates to:
+  /// **'Added'**
+  String get added;
+
+  /// No description provided for @books.
+  ///
+  /// In en, this message translates to:
+  /// **'books'**
+  String get books;
+
+  /// No description provided for @to_library.
+  ///
+  /// In en, this message translates to:
+  /// **'to library'**
+  String get to_library;
+
+  /// No description provided for @books_already_exist.
+  ///
+  /// In en, this message translates to:
+  /// **'books already exist'**
+  String get books_already_exist;
+
+  /// No description provided for @error_selecting_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Error selecting file'**
+  String get error_selecting_file;
+
+  /// No description provided for @error_scanning_files.
+  ///
+  /// In en, this message translates to:
+  /// **'Error scanning files'**
+  String get error_scanning_files;
+
+  /// No description provided for @scanning_in_memory.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning in memory...'**
+  String get scanning_in_memory;
+
+  /// No description provided for @found.
+  ///
+  /// In en, this message translates to:
+  /// **'Found'**
+  String get found;
+
+  /// No description provided for @files.
+  ///
+  /// In en, this message translates to:
+  /// **'files'**
+  String get files;
+
+  /// No description provided for @selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get selected;
+
+  /// No description provided for @from_directory.
+  ///
+  /// In en, this message translates to:
+  /// **'from directory'**
+  String get from_directory;
+
+  /// No description provided for @file_selected.
+  ///
+  /// In en, this message translates to:
+  /// **'File selected'**
+  String get file_selected;
+
+  /// No description provided for @book_added_to_local_library.
+  ///
+  /// In en, this message translates to:
+  /// **'Book added to local library'**
+  String get book_added_to_local_library;
+
+  /// No description provided for @find_word.
+  ///
+  /// In en, this message translates to:
+  /// **'Find word file'**
+  String get find_word;
+
+  /// No description provided for @find_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Find image file'**
+  String get find_image;
+
+  /// No description provided for @no_word_file_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No file .docx found'**
+  String get no_word_file_found;
+
+  /// No description provided for @no_image_file_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No file .jpg, .jpeg, .png found'**
+  String get no_image_file_found;
+
+  /// No description provided for @no_file_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No file found'**
+  String get no_file_found;
+
+  /// No description provided for @tap_to_view.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view'**
+  String get tap_to_view;
+
+  /// No description provided for @please_authenticate_to_login.
+  ///
+  /// In en, this message translates to:
+  /// **'Please authenticate to login'**
+  String get please_authenticate_to_login;
+
+  /// No description provided for @authentication_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed'**
+  String get authentication_failed;
+
+  /// No description provided for @biometric_not_available_on_this_device.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric not available on this device'**
+  String get biometric_not_available_on_this_device;
+
+  /// No description provided for @biometric_not_enrolled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric not enrolled. Please set up in Settings'**
+  String get biometric_not_enrolled;
+
+  /// No description provided for @too_many_attempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please try again later'**
+  String get too_many_attempts;
+
+  /// No description provided for @biometric_permanently_locked_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric permanently locked out. Please use password'**
+  String get biometric_permanently_locked_out;
+
+  /// No description provided for @authentication_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication error'**
+  String get authentication_error;
+
+  /// No description provided for @biometric_not_enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric not enabled'**
+  String get biometric_not_enabled;
+
+  /// No description provided for @no_login_info_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'No login info saved'**
+  String get no_login_info_saved;
+
+  /// No description provided for @login_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Login error'**
+  String get login_error;
+
+  /// No description provided for @biometric_not_supported_on_this_device.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric not supported on this device'**
+  String get biometric_not_supported_on_this_device;
+
+  /// No description provided for @biometric_available.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric available'**
+  String get biometric_available;
+
+  /// No description provided for @biometric_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric not available'**
+  String get biometric_not_available;
+
+  /// No description provided for @verify_pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify PIN'**
+  String get verify_pin;
+
+  /// No description provided for @enter_pin_4_digits_sent_to_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter PIN 4 digits sent to email'**
+  String get enter_pin_4_digits_sent_to_email;
+
+  /// No description provided for @verify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verify;
+
+  /// No description provided for @clear_and_reenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear and reenter'**
+  String get clear_and_reenter;
+
+  /// No description provided for @resend_pin_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend pin in'**
+  String get resend_pin_in;
+
+  /// No description provided for @seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'seconds'**
+  String get seconds;
+
+  /// No description provided for @resend_pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend pin'**
+  String get resend_pin;
+
+  /// No description provided for @pin_resend_success.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN resend successfully'**
+  String get pin_resend_success;
+
+  /// No description provided for @verifying_pin.
+  ///
+  /// In en, this message translates to:
+  /// **'Verifying pin...'**
+  String get verifying_pin;
+
+  /// No description provided for @authentication_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication success'**
+  String get authentication_success;
+
+  /// No description provided for @delete_book_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete book \"{title}\" from library?'**
+  String delete_book_confirmation(String title);
+
+  /// No description provided for @view.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get view;
+
+  /// No description provided for @cannot_load_pdf_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot load PDF, please try again later or contact administrator for support.'**
+  String get cannot_load_pdf_description;
+
+  /// No description provided for @rate_and_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate & Review'**
+  String get rate_and_review;
+
+  /// No description provided for @rate_this_book.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate this book'**
+  String get rate_this_book;
+
+  /// No description provided for @your_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Your rating'**
+  String get your_rating;
+
+  /// No description provided for @write_a_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a review'**
+  String get write_a_review;
+
+  /// No description provided for @write_your_review_here.
+  ///
+  /// In en, this message translates to:
+  /// **'Write your review here...'**
+  String get write_your_review_here;
+
+  /// No description provided for @submit_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Rating'**
+  String get submit_rating;
+
+  /// No description provided for @rating_submitted_successfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating submitted successfully'**
+  String get rating_submitted_successfully;
+
+  /// No description provided for @rating_submission_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating submission failed'**
+  String get rating_submission_failed;
+
+  /// No description provided for @please_select_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a rating'**
+  String get please_select_rating;
+
+  /// No description provided for @tap_to_rate.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to rate'**
+  String get tap_to_rate;
+
+  /// No description provided for @your_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Your review'**
+  String get your_review;
+
+  /// No description provided for @edit_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit review'**
+  String get edit_review;
+
+  /// No description provided for @delete_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete review'**
+  String get delete_review;
+
+  /// No description provided for @no_reviews_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews yet'**
+  String get no_reviews_yet;
+
+  /// No description provided for @reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get reviews;
+
+  /// No description provided for @average_rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Average rating'**
+  String get average_rating;
+
+  /// No description provided for @total_ratings.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} ratings'**
+  String total_ratings(int count);
 }
 
 class _AppLocalizationsDelegate

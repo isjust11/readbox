@@ -1,3 +1,5 @@
+import 'package:readbox/domain/data/models/models.dart';
+
 import 'base_entity.dart';
 
 enum BookType { epub, pdf }
@@ -27,6 +29,7 @@ class BookEntity extends BaseEntity {
   DateTime? updatedAt;
   String? categoryId;
   bool? isLocalBook;
+  CategoryModel? category;
   BookEntity({
     this.id,
     this.title,
@@ -88,6 +91,7 @@ class BookEntity extends BaseEntity {
     updatedAt = json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null;
     categoryId = json['categoryId'];
     isLocalBook = json['isLocalBook'] ?? false;
+    category = json['category'] != null ? CategoryModel.fromJson(json['category']) : null;
   }
 
   @override
@@ -115,6 +119,7 @@ class BookEntity extends BaseEntity {
     data['createById'] = createById;
     data['createdAt'] = createAt?.toIso8601String();
     data['updatedAt'] = updatedAt?.toIso8601String();
+    data['category'] = category?.toJson();
     return data;
   }
 }

@@ -34,6 +34,12 @@
   "news": "News",
   "profile": "Profile",
   "settings": "Settings",
+  "years_ago": "years ago",
+  "months_ago": "months ago",
+  "days_ago": "days ago",
+  "hours_ago": "hours ago",
+  "minutes_ago": "minutes ago",
+  "just_now": "just now",
   "error_connection": "No internet connection",
   "error_cancel": "Request cancelled",
   "error_timeout": "Connection timeout, please try again later!",
@@ -579,5 +585,28 @@
       "title": {"type": "String"}
     }
   },
-  "view": "View"
+  "view": "View",
+  "cannot_load_pdf_description": "Cannot load PDF, please try again later or contact administrator for support.",
+  "rate_and_review": "Rate & Review",
+  "rate_this_book": "Rate this book",
+  "your_rating": "Your rating",
+  "write_a_review": "Write a review",
+  "write_your_review_here": "Write your review here...",
+  "submit_rating": "Submit Rating",
+  "rating_submitted_successfully": "Rating submitted successfully",
+  "rating_submission_failed": "Rating submission failed",
+  "please_select_rating": "Please select a rating",
+  "tap_to_rate": "Tap to rate",
+  "your_review": "Your review",
+  "edit_review": "Edit review",
+  "delete_review": "Delete review",
+  "no_reviews_yet": "No reviews yet",
+  "reviews": "Reviews",
+  "average_rating": "Average rating",
+  "total_ratings": "{count} ratings",
+  "@total_ratings": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  }
 }

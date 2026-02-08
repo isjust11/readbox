@@ -9,6 +9,15 @@ class AppLocalizationsVi extends AppLocalizations {
   AppLocalizationsVi([String locale = 'vi']) : super(locale);
 
   @override
+  String get app_name => 'ReadBox';
+
+  @override
+  String get google => 'Google';
+
+  @override
+  String get facebook => 'Facebook';
+
+  @override
   String get loading => 'Đang tải...';
 
   @override
@@ -105,7 +114,40 @@ class AppLocalizationsVi extends AppLocalizations {
   String get settings => 'Cài đặt';
 
   @override
+  String get years_ago => 'năm trước';
+
+  @override
+  String get months_ago => 'tháng trước';
+
+  @override
+  String get days_ago => 'ngày trước';
+
+  @override
+  String get hours_ago => 'giờ trước';
+
+  @override
+  String get minutes_ago => 'phút trước';
+
+  @override
+  String get just_now => 'vừa xong';
+
+  @override
   String get error_connection => 'Không có kết nối internet';
+
+  @override
+  String get error_cancel => 'Yêu cầu đã bị hủy bỏ';
+
+  @override
+  String get error_timeout =>
+      'Đã hết thời gian kết nối tới máy chủ, vui lòng thử lại sau!';
+
+  @override
+  String get error_request_timeout =>
+      'Yêu cầu đã hết thời gian chờ, vui lòng thử lại sau!';
+
+  @override
+  String get error_internal_server_error =>
+      'Đã xảy ra lỗi server, vui lòng thử lại sau!';
 
   @override
   String get my_library => 'Thư viện của tôi';
@@ -460,6 +502,10 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get password_must_be_at_least_6_characters =>
       'Mật khẩu phải có ít nhất 6 ký tự';
+
+  @override
+  String get username_must_be_at_least_3_characters =>
+      'Tên đăng nhập phải có ít nhất 3 ký tự';
 
   @override
   String get no_account => 'Chưa có tài khoản? ';
@@ -1210,7 +1256,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get use_select_file_to_browse_directory =>
-      'Dùng \'Chọn file\' để duyệt thư mục (ví dụ Download/Telegram)';
+      'Dùng \'Chọn file\' để duyệt thư mục';
 
   @override
   String get no_pdf_epub_mobi_found =>
@@ -1230,6 +1276,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get scan_again => 'Quét lại';
+
+  @override
+  String get tap_or_long_press_to_select_file =>
+      'Nhấn vào file để chọn hoặc long press để chọn file';
 
   @override
   String get delete_book_confirmation_message =>
@@ -1476,13 +1526,19 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tools_scan_document => 'Quét tài liệu';
 
   @override
+  String get tools_add_word_file => 'Thêm file Word';
+
+  @override
+  String get tools_add_image_file => 'Thêm file ảnh';
+
+  @override
   String get tools_take_photo => 'Chụp ảnh';
 
   @override
   String get tools_choose_from_gallery => 'Chọn từ thư viện';
 
   @override
-  String get tools_save_as_pdf => 'Lưu dưới dạng PDF';
+  String get tools_save_as_pdf => 'Tải xuống PDF';
 
   @override
   String get tools_add_more_pages => 'Thêm trang';
@@ -1517,4 +1573,216 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get tools_select_file_first => 'Vui lòng chọn file trước';
+
+  @override
+  String get need_permission_to_access_memory => 'Cần quyền truy cập bộ nhớ';
+
+  @override
+  String get please_grant_permission_to_search_file =>
+      'Vui lòng cấp quyền để tìm kiếu file';
+
+  @override
+  String get or_use_select_file_to_browse_directory_without_permission =>
+      'Hoặc dùng \'Chọn file\' để duyệt thư mục (không cần quyền)';
+
+  @override
+  String get grant_permission => 'Cấp quyền';
+
+  @override
+  String get added => 'Đã thêm';
+
+  @override
+  String get books => 'sách';
+
+  @override
+  String get to_library => 'vào thư viện';
+
+  @override
+  String get books_already_exist => 'sách đã tồn tại';
+
+  @override
+  String get error_selecting_file => 'Lỗi chọn file';
+
+  @override
+  String get error_scanning_files => 'Lỗi quét file';
+
+  @override
+  String get scanning_in_memory => 'Đang quét bộ nhớ...';
+
+  @override
+  String get found => 'Tìm thấy';
+
+  @override
+  String get files => 'file';
+
+  @override
+  String get selected => 'Đã chọn';
+
+  @override
+  String get from_directory => 'từ thư mục';
+
+  @override
+  String get file_selected => 'File đã chọn';
+
+  @override
+  String get book_added_to_local_library =>
+      'Sách đã được thêm vào thư viện local';
+
+  @override
+  String get find_word => 'Tìm file word';
+
+  @override
+  String get find_image => 'Tìm file ảnh';
+
+  @override
+  String get no_word_file_found => 'Không tìm thấy file .docx';
+
+  @override
+  String get no_image_file_found => 'Không tìm thấy file .jpg, .jpeg, .png';
+
+  @override
+  String get no_file_found => 'Không tìm thấy file';
+
+  @override
+  String get tap_to_view => 'Chạm để xem';
+
+  @override
+  String get please_authenticate_to_login => 'Vui lòng xác thực để đăng nhập';
+
+  @override
+  String get authentication_failed => 'Xác thực thất bại';
+
+  @override
+  String get biometric_not_available_on_this_device =>
+      'Sinh trắc học không khả dụng trên thiết bị này';
+
+  @override
+  String get biometric_not_enrolled =>
+      'Chưa thiết lập sinh trắc học. Vui lòng thiết lập trong Cài đặt';
+
+  @override
+  String get too_many_attempts => 'Quá nhiều lần thử. Vui lòng thử lại sau';
+
+  @override
+  String get biometric_permanently_locked_out =>
+      'Sinh trắc học bị khóa vĩnh viễn. Vui lòng sử dụng mật khẩu';
+
+  @override
+  String get authentication_error => 'Lỗi xác thực';
+
+  @override
+  String get biometric_not_enabled =>
+      'Đăng nhập bằng sinh trắc học chưa được bật';
+
+  @override
+  String get no_login_info_saved => 'Chưa có thông tin đăng nhập được lưu';
+
+  @override
+  String get login_error => 'Lỗi đăng nhập';
+
+  @override
+  String get biometric_not_supported_on_this_device =>
+      'Thiết bị không hỗ trợ sinh trắc học';
+
+  @override
+  String get biometric_available => 'Sinh trắc học khả dụng';
+
+  @override
+  String get biometric_not_available => 'Sinh trắc học không khả dụng';
+
+  @override
+  String get verify_pin => 'Xác thực mã PIN';
+
+  @override
+  String get enter_pin_4_digits_sent_to_email =>
+      'Nhập mã PIN 4 chữ số đã được gửi đến email của bạn';
+
+  @override
+  String get verify => 'Xác thực';
+
+  @override
+  String get clear_and_reenter => 'Xóa và nhập lại';
+
+  @override
+  String get resend_pin_in => 'Gửi lại sau';
+
+  @override
+  String get seconds => 'giây';
+
+  @override
+  String get resend_pin => 'Gửi lại';
+
+  @override
+  String get pin_resend_success => 'Mã PIN đã được gửi lại thành công';
+
+  @override
+  String get verifying_pin => 'Đang xác thực...';
+
+  @override
+  String get authentication_success => 'Xác thực thành công';
+
+  @override
+  String delete_book_confirmation(String title) {
+    return 'Bạn có chắc chắn muốn xóa sách \"$title\" khỏi thư viện?';
+  }
+
+  @override
+  String get view => 'Xem';
+
+  @override
+  String get cannot_load_pdf_description =>
+      'Không thể tải PDF, vui lòng thử lại sau hoặc liên hệ quản trị viên để được hỗ trợ.';
+
+  @override
+  String get rate_and_review => 'Đánh giá & Nhận xét';
+
+  @override
+  String get rate_this_book => 'Đánh giá sách này';
+
+  @override
+  String get your_rating => 'Đánh giá của bạn';
+
+  @override
+  String get write_a_review => 'Viết nhận xét';
+
+  @override
+  String get write_your_review_here => 'Viết nhận xét của bạn...';
+
+  @override
+  String get submit_rating => 'Gửi đánh giá';
+
+  @override
+  String get rating_submitted_successfully => 'Đánh giá thành công';
+
+  @override
+  String get rating_submission_failed => 'Đánh giá thất bại';
+
+  @override
+  String get please_select_rating => 'Vui lòng chọn đánh giá';
+
+  @override
+  String get tap_to_rate => 'Nhấn để đánh giá';
+
+  @override
+  String get your_review => 'Nhận xét của bạn';
+
+  @override
+  String get edit_review => 'Sửa nhận xét';
+
+  @override
+  String get delete_review => 'Xóa nhận xét';
+
+  @override
+  String get no_reviews_yet => 'Chưa có nhận xét';
+
+  @override
+  String get reviews => 'Nhận xét';
+
+  @override
+  String get average_rating => 'Đánh giá trung bình';
+
+  @override
+  String total_ratings(int count) {
+    return '$count đánh giá';
+  }
 }

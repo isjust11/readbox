@@ -14,11 +14,19 @@ class UserInteractionCubit extends Cubit<BaseState> {
   int likeCount = 0;
   bool hasTrackedView = false;
   List<UserInteractionModel> readingBooks = [];
+  List<UserInteractionModel> reviews = [];
+  bool _hasMore = true;
+  bool get hasMore => _hasMore;
+  bool _isLoadingMore = false;
+  bool get isLoadingMore => _isLoadingMore;
   final UserInteractionRepository repository;
   UserInteractionCubit({required this.repository}) : super(InitState());
 
   // toggle favorite
-  Future<dynamic> toggleFavorite({required String targetType, required dynamic targetId}) async {
+  Future<dynamic> toggleFavorite({
+    required String targetType,
+    required dynamic targetId,
+  }) async {
     try {
       emit(LoadingState());
       final response = await repository.toggleFavorite(
@@ -32,8 +40,11 @@ class UserInteractionCubit extends Cubit<BaseState> {
     }
   }
 
-    // toggle favorite
-  Future<dynamic> toggleArchive({required String targetType, required dynamic targetId}) async {
+  // toggle favorite
+  Future<dynamic> toggleArchive({
+    required String targetType,
+    required dynamic targetId,
+  }) async {
     try {
       emit(LoadingState());
       final response = await repository.toggleArchive(
@@ -47,17 +58,30 @@ class UserInteractionCubit extends Cubit<BaseState> {
   }
 
   // save reading progress
-  Future<dynamic> saveReadingProgress({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId, required ReadingProgressModel readingProgress}) async {
+  Future<dynamic> saveReadingProgress({
+    required InteractionTarget targetType,
+    required InteractionType actionType,
+    required dynamic targetId,
+    required ReadingProgressModel readingProgress,
+  }) async {
     try {
       emit(LoadingState());
-      final response = await repository.saveReadingProgress(targetType: targetType, actionType: actionType, targetId: targetId, readingProgress: readingProgress);
+      final response = await repository.saveReadingProgress(
+        targetType: targetType,
+        actionType: actionType,
+        targetId: targetId,
+        readingProgress: readingProgress,
+      );
       return response;
     } catch (e) {
       throw Exception(BlocUtils.getMessageError(e));
     }
   }
 
-  Future<dynamic> bookmark({required String targetType, required dynamic targetId}) async {
+  Future<dynamic> bookmark({
+    required String targetType,
+    required dynamic targetId,
+  }) async {
     try {
       emit(LoadingState());
       final response = await repository.bookmark(
@@ -137,6 +161,56 @@ class UserInteractionCubit extends Cubit<BaseState> {
     }
   }
 
+  Future<void> rateAndComment({
+    required String targetType,
+    required dynamic targetId,
+    required double rating,
+    String? comment,
+  }) async {
+    try {
+      emit(LoadingState());
+      final response = await repository.rateAndComment(
+        targetType: targetType,
+        targetId: targetId,
+        rating: rating,
+        comment: comment,
+      );
+      emit(LoadedState(response));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+      rethrow;
+    }
+  }
+
+  Future<void> loadInteractions({
+    required InteractionTarget targetType,
+    required dynamic targetId,
+    Map<String, dynamic>? query,
+    bool isLoadMore = false,
+  }) async {
+    if (!isLoadMore) {
+      emit(LoadingState());
+      reviews = [];
+      _hasMore = true;
+    } else {
+      _isLoadingMore = true;
+    }
+    final response = await repository.loadInteractions(
+      targetType: targetType,
+      targetId: targetId,
+      query: query,
+    );
+    if (isLoadMore) {
+      reviews.addAll(response);
+      _hasMore = response.length >= (query?['limit'] ?? 10);
+      _isLoadingMore = false;
+    } else {
+      reviews = response;
+      _hasMore = response.length >= (query?['limit'] ?? 10);
+    }
+    emit(LoadedState(List.from(reviews)));
+  }
+
   void follow({required String targetType, required dynamic targetId}) async {
     try {
       emit(LoadingState());
@@ -171,13 +245,16 @@ class UserInteractionCubit extends Cubit<BaseState> {
         targetId: targetId,
       );
       isFavorite = response != null && response['like'] == true;
-        emit(LoadedState(response));
+      emit(LoadedState(response));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
 
-  Future<void> getStats({required String targetType, required dynamic targetId}) async {
+  Future<void> getStats({
+    required String targetType,
+    required dynamic targetId,
+  }) async {
     try {
       emit(LoadingState());
       final response = await repository.getStats(
@@ -203,15 +280,24 @@ class UserInteractionCubit extends Cubit<BaseState> {
     }
   }
 
-  // get interaction by target 
-  Future<UserInteractionModel> getInteractionAction({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId}) async {
+  // get interaction by target
+  Future<UserInteractionModel> getInteractionAction({
+    required InteractionTarget targetType,
+    required InteractionType actionType,
+    required dynamic targetId,
+  }) async {
     try {
-      final response = await repository.getInteractionAction(targetType: targetType, actionType: actionType, targetId: targetId);
+      final response = await repository.getInteractionAction(
+        targetType: targetType,
+        actionType: actionType,
+        targetId: targetId,
+      );
       return response;
     } catch (e) {
       throw Exception(BlocUtils.getMessageError(e));
     }
   }
+
   void initInteraction({
     required bool isView,
     required bool isFavorite,

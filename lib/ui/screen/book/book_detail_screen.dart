@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/api_constant.dart';
+import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/common.dart';
 
 class BookDetailScreen extends StatelessWidget {
   final String bookId;
@@ -38,6 +42,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
 
   bool get isFavorite => _isFavorite;
   bool get isArchived => _isArchived;
+  UserModel? currentUser;
   @override
   void initState() {
     super.initState();
@@ -45,6 +50,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadInteractionStats();
     });
+    currentUser = context.read<AppCubit>().getUser();
   }
 
   void _loadInteractionStats() async {
@@ -86,11 +92,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
 
   void _openPdfViewer(BookModel book) {
     if (book.fileUrl != null) {
-      Navigator.pushNamed(
-        context,
-        Routes.pdfViewerScreen,
-        arguments: book,
-      );
+      Navigator.pushNamed(context, Routes.pdfViewerScreen, arguments: book);
     }
   }
 
@@ -130,9 +132,9 @@ class BookDetailBodyState extends State<BookDetailBody> {
     );
   }
 
- Widget _buildErrorContent(BuildContext context, String message) {
+  Widget _buildErrorContent(BuildContext context, String message) {
     return BaseScreen(
-     title: AppLocalizations.current.view_details,
+      title: AppLocalizations.current.view_details,
       body: Padding(
         padding: EdgeInsets.all(AppDimens.SIZE_16),
         child: Center(
@@ -156,6 +158,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
       ),
     );
   }
+
   Widget _buildBody(BuildContext context, BookModel book) {
     return Scaffold(
       body: CustomScrollView(
@@ -246,18 +249,26 @@ class BookDetailBodyState extends State<BookDetailBody> {
                   // Title
                   Text(
                     book.displayTitle,
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: AppSize.fontSizeXXXLarge, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
 
                   // Author
                   Row(
                     children: [
-                      Icon(Icons.person, size: 20, color: Colors.grey),
+                      SvgPicture.asset(
+                        Assets.icons.icUser,
+                        width: 20,
+                        height: 20,
+                        colorFilter: ColorFilter.mode(
+                          Colors.grey[700]!,
+                          BlendMode.srcIn,
+                        ),
+                      ),
                       SizedBox(width: 8),
                       Text(
                         book.author ?? '',
-                        style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                        style: TextStyle(fontSize: AppSize.fontSizeLarge, color: Colors.grey[700]),
                       ),
                     ],
                   ),
@@ -315,6 +326,23 @@ class BookDetailBodyState extends State<BookDetailBody> {
                         ],
                       ),
                     ),
+                  SizedBox(height: 8),
+                  TextButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.reviewsScreen,
+                        arguments: {
+                          'bookId': widget.bookId,
+                          'bookTitle': book.displayTitle,
+                          'averageRating': book.rating,
+                          'totalRatings': null,
+                        },
+                      );
+                    },
+                    icon: Icon(Icons.rate_review, size: 18),
+                    label: Text(AppLocalizations.current.reviews),
+                  ),
                   SizedBox(height: 24),
 
                   // Info Cards
@@ -328,6 +356,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                         ),
                       ),
                       SizedBox(width: 12),
+                     if( book.fileSizeFormatted.isNotEmpty) ...[
                       Expanded(
                         child: _buildInfoCard(
                           icon: Icons.insert_drive_file,
@@ -336,6 +365,8 @@ class BookDetailBodyState extends State<BookDetailBody> {
                         ),
                       ),
                       SizedBox(width: 12),
+                      ],
+                      if( book.language?.isNotEmpty ?? false) ...[
                       Expanded(
                         child: _buildInfoCard(
                           icon: Icons.language,
@@ -343,10 +374,25 @@ class BookDetailBodyState extends State<BookDetailBody> {
                           value: book.language?.toUpperCase() ?? 'VI',
                         ),
                       ),
+                      SizedBox(width: 12),
+                      ],
                     ],
                   ),
                   SizedBox(height: 24),
-
+                  if (book.createAt!= null) ...[
+                    _buildDetailRow(
+                      AppLocalizations.current.created_at,
+                      Common.formatDate(book.createAt!, format: 'dd/MM/yyyy HH:mm'),
+                    ),
+                    SizedBox(height: 8),
+                  ],
+                  if (book.category!= null && book.category!.name!.isNotEmpty) ...[
+                    _buildDetailRow(
+                      AppLocalizations.current.category,
+                      book.category!.name!,
+                    ),
+                    SizedBox(height: 8),
+                  ],
                   // Publisher & ISBN
                   if (book.publisher != null) ...[
                     _buildDetailRow(

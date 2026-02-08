@@ -4,7 +4,9 @@ enum InteractionType {
   save('save'),
   reading('reading'),
   download('download'),
+  rating('rating'),
   archived('archived');
+
 
   const InteractionType(this.value);
   final String value;

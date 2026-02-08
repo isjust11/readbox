@@ -61,6 +61,7 @@ class ApiConstant {
 
   static final getMyInteractions = "user-interactions/my-interactions";
   static final interactionAction = "user-interactions/action";
+  static final loadInteraction = "user-interactions/load-interaction";
   // Chapter endpoints
   static final getChapters = "books";
   

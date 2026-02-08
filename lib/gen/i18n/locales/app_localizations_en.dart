@@ -9,6 +9,15 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get app_name => 'ReadBox';
+
+  @override
+  String get google => 'Google';
+
+  @override
+  String get facebook => 'Facebook';
+
+  @override
   String get loading => 'Loading...';
 
   @override
@@ -105,7 +114,39 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get years_ago => 'years ago';
+
+  @override
+  String get months_ago => 'months ago';
+
+  @override
+  String get days_ago => 'days ago';
+
+  @override
+  String get hours_ago => 'hours ago';
+
+  @override
+  String get minutes_ago => 'minutes ago';
+
+  @override
+  String get just_now => 'just now';
+
+  @override
   String get error_connection => 'No internet connection';
+
+  @override
+  String get error_cancel => 'Request cancelled';
+
+  @override
+  String get error_timeout => 'Connection timeout, please try again later!';
+
+  @override
+  String get error_request_timeout =>
+      'Request timeout, please try again later!';
+
+  @override
+  String get error_internal_server_error =>
+      'Internal server error, please try again later!';
 
   @override
   String get my_library => 'My library';
@@ -456,6 +497,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get password_must_be_at_least_6_characters =>
       'Password must be at least 6 characters';
+
+  @override
+  String get username_must_be_at_least_3_characters =>
+      'Username must be at least 3 characters';
 
   @override
   String get no_account => 'No account? ';
@@ -1209,7 +1254,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get use_select_file_to_browse_directory =>
-      'Use \'Select file\' to browse directory (e.g. Download/Telegram)';
+      'Use \'Select file\' to browse directory';
 
   @override
   String get no_pdf_epub_mobi_found => 'No PDF, EPUB, or MOBI found';
@@ -1228,6 +1273,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scan_again => 'Scan again';
+
+  @override
+  String get tap_or_long_press_to_select_file =>
+      'Tap on file to select or long press to select file';
 
   @override
   String get delete_book_confirmation_message =>
@@ -1449,7 +1498,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tools_word_to_pdf_description => 'Convert Word documents to PDF';
 
   @override
-  String get tools_document_scanner => 'Document Scanner';
+  String get tools_document_scanner => 'Scanner';
 
   @override
   String get tools_document_scanner_description =>
@@ -1474,13 +1523,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tools_scan_document => 'Scan document';
 
   @override
+  String get tools_add_word_file => 'Add word file';
+
+  @override
+  String get tools_add_image_file => 'Add image file';
+
+  @override
   String get tools_take_photo => 'Take photo';
 
   @override
   String get tools_choose_from_gallery => 'Choose from gallery';
 
   @override
-  String get tools_save_as_pdf => 'Save as PDF';
+  String get tools_save_as_pdf => 'Download PDF';
 
   @override
   String get tools_add_more_pages => 'Add more pages';
@@ -1515,4 +1570,215 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tools_select_file_first => 'Please select a file first';
+
+  @override
+  String get need_permission_to_access_memory =>
+      'Need permission to access memory';
+
+  @override
+  String get please_grant_permission_to_search_file =>
+      'Please grant permission to search file';
+
+  @override
+  String get or_use_select_file_to_browse_directory_without_permission =>
+      'Or use \'Select file\' to browse directory (without permission)';
+
+  @override
+  String get grant_permission => 'Grant permission';
+
+  @override
+  String get added => 'Added';
+
+  @override
+  String get books => 'books';
+
+  @override
+  String get to_library => 'to library';
+
+  @override
+  String get books_already_exist => 'books already exist';
+
+  @override
+  String get error_selecting_file => 'Error selecting file';
+
+  @override
+  String get error_scanning_files => 'Error scanning files';
+
+  @override
+  String get scanning_in_memory => 'Scanning in memory...';
+
+  @override
+  String get found => 'Found';
+
+  @override
+  String get files => 'files';
+
+  @override
+  String get selected => 'Selected';
+
+  @override
+  String get from_directory => 'from directory';
+
+  @override
+  String get file_selected => 'File selected';
+
+  @override
+  String get book_added_to_local_library => 'Book added to local library';
+
+  @override
+  String get find_word => 'Find word file';
+
+  @override
+  String get find_image => 'Find image file';
+
+  @override
+  String get no_word_file_found => 'No file .docx found';
+
+  @override
+  String get no_image_file_found => 'No file .jpg, .jpeg, .png found';
+
+  @override
+  String get no_file_found => 'No file found';
+
+  @override
+  String get tap_to_view => 'Tap to view';
+
+  @override
+  String get please_authenticate_to_login => 'Please authenticate to login';
+
+  @override
+  String get authentication_failed => 'Authentication failed';
+
+  @override
+  String get biometric_not_available_on_this_device =>
+      'Biometric not available on this device';
+
+  @override
+  String get biometric_not_enrolled =>
+      'Biometric not enrolled. Please set up in Settings';
+
+  @override
+  String get too_many_attempts => 'Too many attempts. Please try again later';
+
+  @override
+  String get biometric_permanently_locked_out =>
+      'Biometric permanently locked out. Please use password';
+
+  @override
+  String get authentication_error => 'Authentication error';
+
+  @override
+  String get biometric_not_enabled => 'Biometric not enabled';
+
+  @override
+  String get no_login_info_saved => 'No login info saved';
+
+  @override
+  String get login_error => 'Login error';
+
+  @override
+  String get biometric_not_supported_on_this_device =>
+      'Biometric not supported on this device';
+
+  @override
+  String get biometric_available => 'Biometric available';
+
+  @override
+  String get biometric_not_available => 'Biometric not available';
+
+  @override
+  String get verify_pin => 'Verify PIN';
+
+  @override
+  String get enter_pin_4_digits_sent_to_email =>
+      'Enter PIN 4 digits sent to email';
+
+  @override
+  String get verify => 'Verify';
+
+  @override
+  String get clear_and_reenter => 'Clear and reenter';
+
+  @override
+  String get resend_pin_in => 'Resend pin in';
+
+  @override
+  String get seconds => 'seconds';
+
+  @override
+  String get resend_pin => 'Resend pin';
+
+  @override
+  String get pin_resend_success => 'PIN resend successfully';
+
+  @override
+  String get verifying_pin => 'Verifying pin...';
+
+  @override
+  String get authentication_success => 'Authentication success';
+
+  @override
+  String delete_book_confirmation(String title) {
+    return 'Are you sure you want to delete book \"$title\" from library?';
+  }
+
+  @override
+  String get view => 'View';
+
+  @override
+  String get cannot_load_pdf_description =>
+      'Cannot load PDF, please try again later or contact administrator for support.';
+
+  @override
+  String get rate_and_review => 'Rate & Review';
+
+  @override
+  String get rate_this_book => 'Rate this book';
+
+  @override
+  String get your_rating => 'Your rating';
+
+  @override
+  String get write_a_review => 'Write a review';
+
+  @override
+  String get write_your_review_here => 'Write your review here...';
+
+  @override
+  String get submit_rating => 'Submit Rating';
+
+  @override
+  String get rating_submitted_successfully => 'Rating submitted successfully';
+
+  @override
+  String get rating_submission_failed => 'Rating submission failed';
+
+  @override
+  String get please_select_rating => 'Please select a rating';
+
+  @override
+  String get tap_to_rate => 'Tap to rate';
+
+  @override
+  String get your_review => 'Your review';
+
+  @override
+  String get edit_review => 'Edit review';
+
+  @override
+  String get delete_review => 'Delete review';
+
+  @override
+  String get no_reviews_yet => 'No reviews yet';
+
+  @override
+  String get reviews => 'Reviews';
+
+  @override
+  String get average_rating => 'Average rating';
+
+  @override
+  String total_ratings(int count) {
+    return '$count ratings';
+  }
 }

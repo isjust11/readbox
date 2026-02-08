@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/app_size.dart';
+import 'package:readbox/res/dimens.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/shared_preference.dart';
@@ -373,6 +374,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
             title: headerNotFound,
             description: title,
           ),
+          const SizedBox(height: AppDimens.SIZE_8),
           Wrap(
             spacing: 12,
             children: [

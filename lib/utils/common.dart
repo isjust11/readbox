@@ -1,4 +1,3 @@
-import 'dart:math' as Math;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
@@ -48,7 +47,7 @@ class Common {
       if (data.isEmpty) return defaultValue;
       return int.parse(data);
     } catch (e) {
-      return defaultValue ?? -1;
+      return defaultValue;
     }
   }
 
@@ -64,7 +63,7 @@ class Common {
       if (data.isEmpty) return 0;
       return double.parse(data);
     } catch (e) {
-      return defaultValue ?? -Math.e;
+      return defaultValue ?? 0;
     }
   }
 
@@ -86,7 +85,7 @@ class Common {
   }
 
   static bool validatePhone(String text) {
-    RegExp regex = RegExp("^[0-9\-\+]{10,15}\$");
+    RegExp regex = RegExp("^[0-9-+]{10,15}\$");
     return regex.hasMatch(text);
   }
 
@@ -101,27 +100,27 @@ class Common {
   }
 
   static String getStringDateToday() {
-    var now = new DateTime.now();
-    var formatter = new DateFormat('dd/MM/yyyy');
+    var now = DateTime.now();
+    var formatter = DateFormat('dd/MM/yyyy');
     return formatter.format(now);
   }
 
   static String getStringDateFirstDayOfMonth() {
-    var now = new DateTime.now();
+    var now = DateTime.now();
     var date = DateTime(now.year, now.month, 1);
-    var formatter = new DateFormat('dd/MM/yyyy');
+    var formatter = DateFormat('dd/MM/yyyy');
     return formatter.format(date);
   }
 
   static String getStringDateLastDayOfMonth() {
-    var now = new DateTime.now();
+    var now = DateTime.now();
     var date = DateTime(now.year, now.month + 1, 0);
-    var formatter = new DateFormat('dd/MM/yyyy');
+    var formatter = DateFormat('dd/MM/yyyy');
     return formatter.format(date);
   }
 
   static String datetimeToSting(DateTime date) {
-    var formatter = new DateFormat('dd/MM/yyyy');
+    var formatter = DateFormat('dd/MM/yyyy');
     return formatter.format(date);
   }
 
