@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/res/app_size.dart';
+import 'package:readbox/res/dimens.dart';
+import 'package:readbox/ui/widget/widget.dart';
 
 class RatingDialog extends StatefulWidget {
   final double? initialRating;
@@ -37,11 +40,9 @@ class _RatingDialogState extends State<RatingDialog> {
 
   void _submit() async {
     if (_rating == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.current.please_select_rating),
-          backgroundColor: Colors.orange,
-        ),
+      AppSnackBar.show(
+        context,
+        message: AppLocalizations.current.please_select_rating,
       );
       return;
     }
@@ -50,25 +51,21 @@ class _RatingDialogState extends State<RatingDialog> {
 
     try {
       await widget.onSubmit(_rating, _commentController.text.trim());
-      
+
       if (mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.current.rating_submitted_successfully),
-            backgroundColor: Colors.green,
-          ),
+        AppSnackBar.show(
+          context,
+          message: AppLocalizations.current.rating_submitted_successfully,
         );
       }
     } catch (e) {
       setState(() => _isSubmitting = false);
-      
+
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppLocalizations.current.rating_submission_failed}: $e'),
-            backgroundColor: Colors.red,
-          ),
+        AppSnackBar.show(
+          context,
+          message: '${AppLocalizations.current.rating_submission_failed}: $e',
         );
       }
     }
@@ -80,12 +77,10 @@ class _RatingDialogState extends State<RatingDialog> {
     final colorScheme = theme.colorScheme;
 
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.SIZE_12)),
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.symmetric(vertical: AppDimens.SIZE_12, horizontal: AppDimens.SIZE_24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -97,7 +92,7 @@ class _RatingDialogState extends State<RatingDialog> {
                     child: Text(
                       AppLocalizations.current.rate_and_review,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: AppSize.fontSizeXXLarge,
                         fontWeight: FontWeight.bold,
                         color: colorScheme.onSurface,
                       ),
@@ -105,22 +100,23 @@ class _RatingDialogState extends State<RatingDialog> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
-                    onPressed: _isSubmitting ? null : () => Navigator.pop(context),
+                    onPressed:
+                        _isSubmitting ? null : () => Navigator.pop(context),
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: AppDimens.SIZE_12),
 
               // Rating title
               Text(
                 AppLocalizations.current.your_rating,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: AppSize.fontSizeLarge,
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: AppDimens.SIZE_12),
 
               // Star rating
               Center(
@@ -129,13 +125,14 @@ class _RatingDialogState extends State<RatingDialog> {
                   children: List.generate(5, (index) {
                     final starValue = index + 1;
                     return GestureDetector(
-                      onTap: _isSubmitting
-                          ? null
-                          : () {
-                              setState(() {
-                                _rating = starValue.toDouble();
-                              });
-                            },
+                      onTap:
+                          _isSubmitting
+                              ? null
+                              : () {
+                                setState(() {
+                                  _rating = starValue.toDouble();
+                                });
+                              },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
                         child: Icon(
@@ -143,16 +140,17 @@ class _RatingDialogState extends State<RatingDialog> {
                               ? Icons.star_rounded
                               : Icons.star_border_rounded,
                           size: 48,
-                          color: _rating >= starValue
-                              ? Colors.amber
-                              : Colors.grey.shade400,
+                          color:
+                              _rating >= starValue
+                                  ? Colors.amber
+                                  : Colors.grey.shade400,
                         ),
                       ),
                     );
                   }),
                 ),
               ),
-              
+
               // Rating value display
               if (_rating > 0) ...[
                 const SizedBox(height: 8),
@@ -220,22 +218,23 @@ class _RatingDialogState extends State<RatingDialog> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: _isSubmitting
-                    ? SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: colorScheme.onPrimary,
+                child:
+                    _isSubmitting
+                        ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: colorScheme.onPrimary,
+                          ),
+                        )
+                        : Text(
+                          AppLocalizations.current.submit_rating,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      )
-                    : Text(
-                        AppLocalizations.current.submit_rating,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
               ),
             ],
           ),

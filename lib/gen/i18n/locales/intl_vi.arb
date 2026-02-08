@@ -629,5 +629,6 @@
     "placeholders": {
       "count": {"type": "int"}
     }
-  }
+  },
+  "my_uploaded_books": "Sách đã đăng tải"
 }

@@ -5193,6 +5193,16 @@ class AppLocalizations {
       args: [count],
     );
   }
+
+  /// `Sách đã đăng tải`
+  String get my_uploaded_books {
+    return Intl.message(
+      'Sách đã đăng tải',
+      name: 'my_uploaded_books',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

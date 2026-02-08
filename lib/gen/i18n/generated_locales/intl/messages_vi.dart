@@ -582,6 +582,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "months_ago": MessageLookupByLibrary.simpleMessage("tháng trước"),
     "my_books": MessageLookupByLibrary.simpleMessage("Sách của tôi"),
     "my_library": MessageLookupByLibrary.simpleMessage("Thư viện của tôi"),
+    "my_uploaded_books": MessageLookupByLibrary.simpleMessage(
+      "Sách đã đăng tải",
+    ),
     "need_permission_to_access_memory": MessageLookupByLibrary.simpleMessage(
       "Cần quyền truy cập bộ nhớ",
     ),

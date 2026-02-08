@@ -1785,4 +1785,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String total_ratings(int count) {
     return '$count đánh giá';
   }
+
+  @override
+  String get my_uploaded_books => 'Sách đã đăng tải';
 }

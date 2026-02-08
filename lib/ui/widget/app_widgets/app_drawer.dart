@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/res/dimens.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/app_widgets/app_profile.dart';
@@ -32,6 +35,9 @@ class _AppDrawerState extends State<AppDrawer> {
       case 'archived':
         widget.onSelected('archived', title);
         break;
+      case 'uploaded':
+        widget.onSelected('uploaded', title);
+        break;
     }
     Navigator.pop(context); // Close drawer
   }
@@ -60,32 +66,84 @@ class _AppDrawerState extends State<AppDrawer> {
                 padding: EdgeInsets.zero,
                 children: [
                   _buildDrawerItem(
-                    icon: Icons.explore,
+                    svgIcon: SvgPicture.asset(
+                      Assets.icons.icGlobal,
+                      width: AppDimens.SIZE_22,
+                      height: AppDimens.SIZE_22,
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).primaryColor,
+                        BlendMode.srcIn,
+                      ),
+                    ),
                     title: AppLocalizations.current.book_discover,
                     isSelected: _currentFilter == 'all',
-                    onTap: () => _filterBooks('all', AppLocalizations.current.book_discover),
+                    onTap:
+                        () => _filterBooks(
+                          'all',
+                          AppLocalizations.current.book_discover,
+                        ),
                     iconColor: Theme.of(context).primaryColor,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   _buildDrawerItem(
-                    icon: Icons.favorite,
+                    svgIcon: SvgPicture.asset(
+                      Assets.icons.icFavorite,
+                      width: AppDimens.SIZE_22,
+                      height: AppDimens.SIZE_22,
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.error,
+                        BlendMode.srcIn,
+                      ),
+                    ),
                     title: AppLocalizations.current.favorite_books,
                     isSelected: _currentFilter == 'favorite',
-                    onTap: () => _filterBooks('favorite', AppLocalizations.current.favorite_books),
+                    onTap:
+                        () => _filterBooks(
+                          'favorite',
+                          AppLocalizations.current.favorite_books,
+                        ),
                     iconColor: Theme.of(context).colorScheme.error,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   _buildDrawerItem(
-                    icon: Icons.archive,
+                    svgIcon: SvgPicture.asset(
+                      Assets.icons.icStorage,
+                      width: AppDimens.SIZE_24,
+                      height: AppDimens.SIZE_24,
+                      colorFilter: ColorFilter.mode(
+                        const Color.fromARGB(255, 228, 228, 228),
+                        BlendMode.srcIn,
+                      ),
+                    ),
                     title: AppLocalizations.current.archived_books,
                     isSelected: _currentFilter == 'archived',
-                    onTap: () => _filterBooks('archived', AppLocalizations.current.archived_books),
+                    onTap:
+                        () => _filterBooks(
+                          'archived',
+                          AppLocalizations.current.archived_books,
+                        ),
                     iconColor: Theme.of(context).colorScheme.primary,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Divider(height: 1, color: Theme.of(context).dividerColor),
+                  _buildDrawerItem(
+                    svgIcon: SvgPicture.asset(
+                      Assets.icons.icCloud,
+                      width: AppDimens.SIZE_20,
+                      height: AppDimens.SIZE_20,
+                      colorFilter: ColorFilter.mode(
+                        const Color.fromARGB(255, 230, 252, 255),
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    title: AppLocalizations.current.my_uploaded_books,
+                    isSelected: _currentFilter == 'uploaded',
+                    onTap:
+                        () => _filterBooks(
+                          'uploaded',
+                          AppLocalizations.current.my_uploaded_books,
+                        ),
+                    iconColor: Theme.of(context).colorScheme.primary,
+                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   _buildDrawerItem(
                     icon: Icons.phone_android,
@@ -97,10 +155,6 @@ class _AppDrawerState extends State<AppDrawer> {
                     iconColor: Colors.green,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Divider(height: 1, color: Theme.of(context).dividerColor),
-                  ),
                   _buildDrawerItem(
                     icon: Icons.upload_file,
                     title: AppLocalizations.current.upload_book,
@@ -111,14 +165,23 @@ class _AppDrawerState extends State<AppDrawer> {
                     iconColor: Theme.of(context).colorScheme.secondary,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
-                   _buildDrawerItem(
-                    icon: Icons.extension_outlined,
+                  _buildDrawerItem(
+                    svgIcon: SvgPicture.asset(
+                      Assets.icons.icTools,
+                      width: AppDimens.SIZE_22,
+                      height: AppDimens.SIZE_22,
+                      colorFilter: ColorFilter.mode(
+                        const Color.fromARGB(255, 228, 228, 228),
+                        BlendMode.srcIn,
+                      ),
+                    ),
                     title: AppLocalizations.current.tools,
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, Routes.toolsScreen);
                     },
-                    iconColor: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+                    iconColor:
+                        Theme.of(context).colorScheme.onPrimaryFixedVariant,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   _buildDrawerItem(
@@ -132,14 +195,26 @@ class _AppDrawerState extends State<AppDrawer> {
                     textColor: Theme.of(context).colorScheme.onSurface,
                   ),
                   _buildDrawerItem(
-                    icon: Icons.settings,
+                    svgIcon: SvgPicture.asset(
+                      Assets.icons.icSetting,
+                      width: AppDimens.SIZE_22,
+                      height: AppDimens.SIZE_22,
+                      colorFilter: ColorFilter.mode(
+                        Colors.blueGrey,
+                        BlendMode.srcIn,
+                      ),
+                    ),
                     title: AppLocalizations.current.settings,
                     onTap: () {
                       Navigator.pop(context);
-                      Navigator.pushNamed(context, Routes.settingsScreen, arguments: widget.user);
+                      Navigator.pushNamed(
+                        context,
+                        Routes.settingsScreen,
+                        arguments: widget.user,
+                      );
                     },
                     iconColor: Colors.blueGrey,
-                    textColor: Theme.of(context).textTheme.bodyLarge?.color
+                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   // Padding(
                   //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -172,7 +247,8 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   Widget _buildDrawerItem({
-    required IconData icon,
+    Widget? svgIcon,
+    IconData? icon,
     required String title,
     required VoidCallback onTap,
     bool isSelected = false,
@@ -180,31 +256,47 @@ class _AppDrawerState extends State<AppDrawer> {
     Color? textColor,
   }) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      margin: EdgeInsets.symmetric(
+        horizontal: AppDimens.SIZE_8,
+        vertical: AppDimens.SIZE_6,
+      ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color:
-            isSelected
-                ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                : null,
+        border: Border(
+          bottom: BorderSide(
+            color: Theme.of(
+              context,
+            ).colorScheme.onSecondary.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
       ),
       child: ListTile(
         leading: Container(
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color:
-                isSelected
-                    ? Theme.of(context).primaryColor.withValues(alpha: 0.15)
-                    : (iconColor?.withValues(alpha: 0.25) ?? Colors.grey[100]),
+            gradient: LinearGradient(
+              colors: [
+                iconColor?.withValues(alpha: 0.15) ?? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15),
+                iconColor?.withValues(alpha: 0.55) ?? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(
-            icon,
-            color:
-                isSelected
-                    ? Theme.of(context).primaryColor
-                    : (iconColor ?? Colors.grey[700]),
-            size: 22,
+          child: SizedBox(
+            width: 22,
+            height: 22,
+            child:
+                svgIcon ??
+                Icon(
+                  icon ?? Icons.menu_outlined,
+                  color:
+                      isSelected
+                          ? Theme.of(context).primaryColor
+                          : (iconColor ?? Colors.grey[700]),
+                  size: 22,
+                ),
           ),
         ),
         title: Text(

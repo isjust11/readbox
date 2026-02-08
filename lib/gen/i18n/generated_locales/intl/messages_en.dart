@@ -560,6 +560,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "months_ago": MessageLookupByLibrary.simpleMessage("months ago"),
     "my_books": MessageLookupByLibrary.simpleMessage("My books"),
     "my_library": MessageLookupByLibrary.simpleMessage("My library"),
+    "my_uploaded_books": MessageLookupByLibrary.simpleMessage(
+      "My uploaded books",
+    ),
     "need_permission_to_access_memory": MessageLookupByLibrary.simpleMessage(
       "Need permission to access memory",
     ),

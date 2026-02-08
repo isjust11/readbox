@@ -1781,4 +1781,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String total_ratings(int count) {
     return '$count ratings';
   }
+
+  @override
+  String get my_uploaded_books => 'My uploaded books';
 }

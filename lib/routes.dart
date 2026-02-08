@@ -34,6 +34,7 @@ class Routes {
   static const String notificationDetailScreen = "/notificationDetailScreen";
   static const String toolsScreen = "/toolsScreen";
   static const String reviewsScreen = "/reviewsScreen";
+  static const String dataStorageScreen = "/dataStorageScreen";
 
   static const String search = "/search";
   //init screen name
@@ -178,6 +179,11 @@ class Routes {
             averageRating: (args?['averageRating'] as num?)?.toDouble(),
             totalRatings: args?['totalRatings'] as int?,
           ),
+          type: PageTransitionType.rightToLeft,
+        );
+      case dataStorageScreen:
+        return PageTransition(
+          child: DataStorageScreen(),
           type: PageTransitionType.rightToLeft,
         );
       default:

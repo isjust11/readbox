@@ -4,7 +4,7 @@ enum FilterType {
   favorite,
   archived,
   discover,
-  my,
+  uploaded,
 }
 
 enum CategoryTypeEnum {

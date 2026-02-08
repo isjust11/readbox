@@ -647,8 +647,15 @@ class _BookCardState extends State<BookCard> {
                                   vertical: AppDimens.SIZE_6,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor.withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Theme.of(context).primaryColor.withValues(alpha: 0.45),
+                                      Theme.of(context).primaryColor.withValues(alpha: 0.15),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
                                   border: Border.all(
                                     color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                                     width: 1,
@@ -688,10 +695,17 @@ class _BookCardState extends State<BookCard> {
                                     vertical: AppDimens.SIZE_4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.amber.withValues(alpha: 0.15),
                                     borderRadius: BorderRadius.circular(
                                       AppDimens.SIZE_8,
                                     ),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                      Colors.amber.withValues(alpha: 0.45),
+                                      Colors.amber.withValues(alpha: 0.15),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
                                     border: Border.all(
                                       color: Colors.amber.withValues(
                                         alpha: 0.3,

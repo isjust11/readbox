@@ -3511,6 +3511,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} ratings'**
   String total_ratings(int count);
+
+  /// No description provided for @my_uploaded_books.
+  ///
+  /// In en, this message translates to:
+  /// **'My uploaded books'**
+  String get my_uploaded_books;
 }
 
 class _AppLocalizationsDelegate

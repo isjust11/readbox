@@ -608,5 +608,6 @@
     "placeholders": {
       "count": {"type": "int"}
     }
-  }
+  },
+  "my_uploaded_books": "My uploaded books"
 }

@@ -32,11 +32,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_certificate.svg
   String get icCertificate => 'assets/icons/ic_certificate.svg';
 
+  /// File path: assets/icons/ic_chart_storage.svg
+  String get icChartStorage => 'assets/icons/ic_chart_storage.svg';
+
   /// File path: assets/icons/ic_check.svg
   String get icCheck => 'assets/icons/ic_check.svg';
 
   /// File path: assets/icons/ic_close_circle.svg
   String get icCloseCircle => 'assets/icons/ic_close_circle.svg';
+
+  /// File path: assets/icons/ic_cloud.svg
+  String get icCloud => 'assets/icons/ic_cloud.svg';
 
   /// File path: assets/icons/ic_complant.svg
   String get icComplant => 'assets/icons/ic_complant.svg';
@@ -50,6 +56,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_dot_horizontal.svg
   String get icDotHorizontal => 'assets/icons/ic_dot_horizontal.svg';
 
+  /// File path: assets/icons/ic_edit.svg
+  String get icEdit => 'assets/icons/ic_edit.svg';
+
   /// File path: assets/icons/ic_email.svg
   String get icEmail => 'assets/icons/ic_email.svg';
 
@@ -62,11 +71,20 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_facebook.svg
   String get icFacebook => 'assets/icons/ic_facebook.svg';
 
+  /// File path: assets/icons/ic_favorite.svg
+  String get icFavorite => 'assets/icons/ic_favorite.svg';
+
+  /// File path: assets/icons/ic_feedback.svg
+  String get icFeedback => 'assets/icons/ic_feedback.svg';
+
   /// File path: assets/icons/ic_file.svg
   String get icFile => 'assets/icons/ic_file.svg';
 
   /// File path: assets/icons/ic_folder_empty.svg
   String get icFolderEmpty => 'assets/icons/ic_folder_empty.svg';
+
+  /// File path: assets/icons/ic_global.svg
+  String get icGlobal => 'assets/icons/ic_global.svg';
 
   /// File path: assets/icons/ic_google.svg
   String get icGoogle => 'assets/icons/ic_google.svg';
@@ -98,6 +116,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_no_image.svg
   String get icNoImage => 'assets/icons/ic_no_image.svg';
 
+  /// File path: assets/icons/ic_notification.png
+  AssetGenImage get icNotification =>
+      const AssetGenImage('assets/icons/ic_notification.png');
+
   /// File path: assets/icons/ic_pdf.svg
   String get icPdf => 'assets/icons/ic_pdf.svg';
 
@@ -106,6 +128,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/ic_qrcode.svg
   String get icQrcode => 'assets/icons/ic_qrcode.svg';
+
+  /// File path: assets/icons/ic_remove.svg
+  String get icRemove => 'assets/icons/ic_remove.svg';
 
   /// File path: assets/icons/ic_ring.svg
   String get icRing => 'assets/icons/ic_ring.svg';
@@ -116,8 +141,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_setting.svg
   String get icSetting => 'assets/icons/ic_setting.svg';
 
+  /// File path: assets/icons/ic_share.svg
+  String get icShare => 'assets/icons/ic_share.svg';
+
+  /// File path: assets/icons/ic_storage.svg
+  String get icStorage => 'assets/icons/ic_storage.svg';
+
   /// File path: assets/icons/ic_time.svg
   String get icTime => 'assets/icons/ic_time.svg';
+
+  /// File path: assets/icons/ic_tools.svg
+  String get icTools => 'assets/icons/ic_tools.svg';
 
   /// File path: assets/icons/ic_trash.svg
   String get icTrash => 'assets/icons/ic_trash.svg';
@@ -129,25 +163,31 @@ class $AssetsIconsGen {
   String get icWord => 'assets/icons/ic_word.svg';
 
   /// List of all assets
-  List<String> get values => [
+  List<dynamic> get values => [
     icAvatar,
     icBaithuoc,
     icCalendar,
     icCategory,
     icCaythuoc,
     icCertificate,
+    icChartStorage,
     icCheck,
     icCloseCircle,
+    icCloud,
     icComplant,
     icDoc,
     icDocx,
     icDotHorizontal,
+    icEdit,
     icEmail,
     icEpub,
     icFaceId,
     icFacebook,
+    icFavorite,
+    icFeedback,
     icFile,
     icFolderEmpty,
+    icGlobal,
     icGoogle,
     icHistory,
     icHome,
@@ -158,13 +198,18 @@ class $AssetsIconsGen {
     icNews,
     icNoDocument,
     icNoImage,
+    icNotification,
     icPdf,
     icPdfCover,
     icQrcode,
+    icRemove,
     icRing,
     icSearchEmpty,
     icSetting,
+    icShare,
+    icStorage,
     icTime,
+    icTools,
     icTrash,
     icUser,
     icWord,
