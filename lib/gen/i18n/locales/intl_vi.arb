@@ -233,6 +233,7 @@
   "please_enter_valid_bitbucket_link": "Vui lòng nhập liên kết Bitbucket hợp lệ",
   "cannot_select_image_message": "Không thể chọn ảnh",
   "cannot_access_camera": "Không thể truy cập camera",
+  "please_enter_review": "Vui lòng nhập ý kiến, ít nhất 10 ký tự",
   "please_grant_permission_to_access_camera_or_gallery_in_settings": "Vui lòng cấp quyền truy cập camera/thư viện ảnh trong cài đặt",
   "no_available_camera": "Không có camera khả dụng",
   "no_content_to_display": "Không có nội dung để hiển thị",
@@ -630,5 +631,25 @@
       "count": {"type": "int"}
     }
   },
-  "my_uploaded_books": "Sách đã đăng tải"
+  "my_uploaded_books": "Sách đã đăng tải",
+  "subscriptionPlans": "Gói dịch vụ",
+  "choosePlanDescription": "Chọn gói phù hợp với nhu cầu đọc sách và lưu trữ của bạn.",
+  "noSubscriptionPlans": "Hiện chưa có gói dịch vụ.",
+  "selectPlan": "Chọn gói",
+  "popular": "Phổ biến",
+  "storageLimit": "Dung lượng",
+  "ttsLimit": "Đọc văn bản (TTS)",
+  "convertLimit": "Chuyển Word sang PDF",
+  "perPeriod": "/kỳ",
+  "free": "Miễn phí",
+  "useFree": "Dùng miễn phí",
+  "viewAndManagePlans": "Xem và quản lý gói của bạn",
+  "payment": "Thanh toán",
+  "paymentResult": "Kết quả thanh toán",
+  "paymentSuccess": "Thanh toán thành công",
+  "paymentFailed": "Thanh toán thất bại",
+  "transactionId": "Mã giao dịch",
+  "backToHome": "Về trang chủ",
+  "tryAgain": "Thử lại",
+  "selectPaymentMethod": "Chọn phương thức thanh toán"
 }

@@ -35,6 +35,7 @@ class Routes {
   static const String toolsScreen = "/toolsScreen";
   static const String reviewsScreen = "/reviewsScreen";
   static const String dataStorageScreen = "/dataStorageScreen";
+  static const String subscriptionPlanScreen = "/subscriptionPlanScreen";
 
   static const String search = "/search";
   //init screen name
@@ -184,6 +185,11 @@ class Routes {
       case dataStorageScreen:
         return PageTransition(
           child: DataStorageScreen(),
+          type: PageTransitionType.rightToLeft,
+        );
+      case subscriptionPlanScreen:
+        return PageTransition(
+          child: SubscriptionPlanScreen(),
           type: PageTransitionType.rightToLeft,
         );
       default:

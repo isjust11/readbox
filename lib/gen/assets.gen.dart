@@ -144,6 +144,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_share.svg
   String get icShare => 'assets/icons/ic_share.svg';
 
+  /// File path: assets/icons/ic_star.svg
+  String get icStar => 'assets/icons/ic_star.svg';
+
   /// File path: assets/icons/ic_storage.svg
   String get icStorage => 'assets/icons/ic_storage.svg';
 
@@ -207,6 +210,7 @@ class $AssetsIconsGen {
     icSearchEmpty,
     icSetting,
     icShare,
+    icStar,
     icStorage,
     icTime,
     icTools,

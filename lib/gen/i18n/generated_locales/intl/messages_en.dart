@@ -40,1156 +40,972 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "aboutApp": MessageLookupByLibrary.simpleMessage("About app"),
-    "add_archive": MessageLookupByLibrary.simpleMessage("Add archive"),
-    "add_book": MessageLookupByLibrary.simpleMessage("Add book"),
-    "add_book_to_start_reading": MessageLookupByLibrary.simpleMessage(
-      "Add book to start reading",
-    ),
-    "add_favorite": MessageLookupByLibrary.simpleMessage("Add favorite"),
-    "add_new_book_to_library": MessageLookupByLibrary.simpleMessage(
-      "Add new book to library",
-    ),
-    "added": MessageLookupByLibrary.simpleMessage("Added"),
-    "agree": MessageLookupByLibrary.simpleMessage("Agree"),
-    "all": MessageLookupByLibrary.simpleMessage("All"),
-    "all_data_loaded": MessageLookupByLibrary.simpleMessage("All data loaded"),
-    "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
-    "apply_filters": MessageLookupByLibrary.simpleMessage("Apply filters"),
-    "archived_books": MessageLookupByLibrary.simpleMessage("Archived books"),
-    "areYouSureYouWantToDeleteAllNotifications":
-        MessageLookupByLibrary.simpleMessage(
-          "Are you sure you want to delete all notifications?",
-        ),
-    "areYouSureYouWantToDeleteNotification":
-        MessageLookupByLibrary.simpleMessage(
-          "Are you sure you want to delete this notification?",
-        ),
-    "authentication_error": MessageLookupByLibrary.simpleMessage(
-      "Authentication error",
-    ),
-    "authentication_failed": MessageLookupByLibrary.simpleMessage(
-      "Authentication failed",
-    ),
-    "authentication_success": MessageLookupByLibrary.simpleMessage(
-      "Authentication success",
-    ),
-    "author": MessageLookupByLibrary.simpleMessage("Author"),
-    "availableLanguages": MessageLookupByLibrary.simpleMessage(
-      "Available languages",
-    ),
-    "average_rating": MessageLookupByLibrary.simpleMessage("Average rating"),
-    "back_to_login": MessageLookupByLibrary.simpleMessage("Back to login"),
-    "biometricDisabled": MessageLookupByLibrary.simpleMessage(
-      "Biometric disabled",
-    ),
-    "biometricLogin": MessageLookupByLibrary.simpleMessage("Biometric login"),
-    "biometricNotAvailable": MessageLookupByLibrary.simpleMessage(
-      "Biometric not available",
-    ),
-    "biometricSetupSuccess": MessageLookupByLibrary.simpleMessage(
-      "Biometric setup successful",
-    ),
-    "biometric_available": MessageLookupByLibrary.simpleMessage(
-      "Biometric available",
-    ),
-    "biometric_not_available": MessageLookupByLibrary.simpleMessage(
-      "Biometric not available",
-    ),
-    "biometric_not_available_on_this_device":
-        MessageLookupByLibrary.simpleMessage(
-          "Biometric not available on this device",
-        ),
-    "biometric_not_enabled": MessageLookupByLibrary.simpleMessage(
-      "Biometric not enabled",
-    ),
-    "biometric_not_enrolled": MessageLookupByLibrary.simpleMessage(
-      "Biometric not enrolled. Please set up in Settings",
-    ),
-    "biometric_not_supported_on_this_device":
-        MessageLookupByLibrary.simpleMessage(
-          "Biometric not supported on this device",
-        ),
-    "biometric_permanently_locked_out": MessageLookupByLibrary.simpleMessage(
-      "Biometric permanently locked out. Please use password",
-    ),
-    "bookUpdates": MessageLookupByLibrary.simpleMessage("Book Updates"),
-    "book_added_to_local_library": MessageLookupByLibrary.simpleMessage(
-      "Book added to local library",
-    ),
-    "book_deleted_successfully": MessageLookupByLibrary.simpleMessage(
-      "Book deleted successfully",
-    ),
-    "book_discover": MessageLookupByLibrary.simpleMessage("Discover"),
-    "book_has_been_added_to_local_library":
-        MessageLookupByLibrary.simpleMessage(
-          "Book has been added to local library",
-        ),
-    "book_information": MessageLookupByLibrary.simpleMessage(
-      "Book information",
-    ),
-    "book_removed_from_library": MessageLookupByLibrary.simpleMessage(
-      "Book removed from library",
-    ),
-    "book_will_be_displayed_for_admin": MessageLookupByLibrary.simpleMessage(
-      "Book will be displayed for admin",
-    ),
-    "book_will_be_displayed_for_everyone": MessageLookupByLibrary.simpleMessage(
-      "Book will be displayed for everyone",
-    ),
-    "books": MessageLookupByLibrary.simpleMessage("books"),
-    "books_already_exist": MessageLookupByLibrary.simpleMessage(
-      "books already exist",
-    ),
-    "camera": MessageLookupByLibrary.simpleMessage("Camera"),
-    "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
-    "cannot_access_camera": MessageLookupByLibrary.simpleMessage(
-      "Cannot access camera",
-    ),
-    "cannot_load_pdf_description": MessageLookupByLibrary.simpleMessage(
-      "Cannot load PDF, please try again later or contact administrator for support.",
-    ),
-    "cannot_select_image_message": MessageLookupByLibrary.simpleMessage(
-      "Cannot select image",
-    ),
-    "category": MessageLookupByLibrary.simpleMessage("Category"),
-    "changeAppLanguage": MessageLookupByLibrary.simpleMessage(
-      "Change app language",
-    ),
-    "chooseAppAppearance": MessageLookupByLibrary.simpleMessage(
-      "Choose app appearance",
-    ),
-    "clearAllNotifications": MessageLookupByLibrary.simpleMessage(
-      "Clear all notifications",
-    ),
-    "clear_and_reenter": MessageLookupByLibrary.simpleMessage(
-      "Clear and reenter",
-    ),
-    "close": MessageLookupByLibrary.simpleMessage("Close"),
-    "completed": MessageLookupByLibrary.simpleMessage("Completed"),
-    "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
-    "confirm_password": MessageLookupByLibrary.simpleMessage(
-      "Confirm password",
-    ),
-    "continue_reading": MessageLookupByLibrary.simpleMessage(
-      "Continue reading",
-    ),
-    "continue_reading_books": MessageLookupByLibrary.simpleMessage(
-      "Continue reading books",
-    ),
-    "continue_reading_books_description": MessageLookupByLibrary.simpleMessage(
-      "Continue reading books",
-    ),
-    "convertTextToSpeech": MessageLookupByLibrary.simpleMessage(
-      "Convert text to speech",
-    ),
-    "copyToken": MessageLookupByLibrary.simpleMessage("Copy token"),
-    "cover_image": MessageLookupByLibrary.simpleMessage("Cover image"),
-    "cover_image_uploaded_successfully": MessageLookupByLibrary.simpleMessage(
-      "Cover image uploaded successfully",
-    ),
-    "create_book_success": MessageLookupByLibrary.simpleMessage(
-      "Book created successfully!",
-    ),
-    "create_new_account": MessageLookupByLibrary.simpleMessage(
-      "Create new account",
-    ),
-    "create_new_book": MessageLookupByLibrary.simpleMessage("Create new book"),
-    "creating_account": MessageLookupByLibrary.simpleMessage(
-      "Creating account...",
-    ),
-    "creating_book": MessageLookupByLibrary.simpleMessage("Creating book..."),
-    "currentLanguage": MessageLookupByLibrary.simpleMessage("Current language"),
-    "current_ebook_file_cannot_be_changed_from_this_screen":
-        MessageLookupByLibrary.simpleMessage(
-          "Current ebook file cannot be changed from this screen.",
-        ),
-    "dark": MessageLookupByLibrary.simpleMessage("Dark"),
-    "days_ago": MessageLookupByLibrary.simpleMessage("days ago"),
-    "defaultVoice": MessageLookupByLibrary.simpleMessage("Default voice"),
-    "delete": MessageLookupByLibrary.simpleMessage("Delete"),
-    "deleteAll": MessageLookupByLibrary.simpleMessage("Delete all"),
-    "deleteAllNotificationsFailed": MessageLookupByLibrary.simpleMessage(
-      "Delete all notifications failed",
-    ),
-    "deleteAllNotificationsSuccess": MessageLookupByLibrary.simpleMessage(
-      "Delete all notifications successfully",
-    ),
-    "deleteNotification": MessageLookupByLibrary.simpleMessage(
-      "Delete notification",
-    ),
-    "deleteNotificationFailed": MessageLookupByLibrary.simpleMessage(
-      "Delete notification failed",
-    ),
-    "deleteNotificationSuccess": MessageLookupByLibrary.simpleMessage(
-      "Delete notification successfully",
-    ),
-    "delete_book": MessageLookupByLibrary.simpleMessage("Delete book"),
-    "delete_book_confirmation": m0,
-    "delete_book_confirmation_message": MessageLookupByLibrary.simpleMessage(
-      "Are you sure you want to delete this book?",
-    ),
-    "delete_book_failed": MessageLookupByLibrary.simpleMessage(
-      "Book deleted failed",
-    ),
-    "delete_book_success": MessageLookupByLibrary.simpleMessage(
-      "Book deleted successfully",
-    ),
-    "delete_review": MessageLookupByLibrary.simpleMessage("Delete review"),
-    "description": MessageLookupByLibrary.simpleMessage("Description"),
-    "disableNotifications": MessageLookupByLibrary.simpleMessage(
-      "Disable notifications",
-    ),
-    "disagree": MessageLookupByLibrary.simpleMessage("Disagree"),
-    "done": MessageLookupByLibrary.simpleMessage("Done"),
-    "editProfile": MessageLookupByLibrary.simpleMessage("Edit profile"),
-    "edit_book": MessageLookupByLibrary.simpleMessage("Edit book"),
-    "edit_book_failed": MessageLookupByLibrary.simpleMessage(
-      "Book edited failed",
-    ),
-    "edit_book_success": MessageLookupByLibrary.simpleMessage(
-      "Book edited successfully",
-    ),
-    "edit_review": MessageLookupByLibrary.simpleMessage("Edit review"),
-    "email": MessageLookupByLibrary.simpleMessage("Email"),
-    "email_invalid": MessageLookupByLibrary.simpleMessage("Email invalid"),
-    "empty": MessageLookupByLibrary.simpleMessage("No data"),
-    "enableNotifications": MessageLookupByLibrary.simpleMessage(
-      "Enable notifications",
-    ),
-    "enableSound": MessageLookupByLibrary.simpleMessage("Enable sound"),
-    "enableVibration": MessageLookupByLibrary.simpleMessage("Enable vibration"),
-    "enter_confirm_password": MessageLookupByLibrary.simpleMessage(
-      "Enter confirm password",
-    ),
-    "enter_email": MessageLookupByLibrary.simpleMessage("Enter email"),
-    "enter_full_name": MessageLookupByLibrary.simpleMessage("Enter full name"),
-    "enter_information_to_start": MessageLookupByLibrary.simpleMessage(
-      "Enter information to start",
-    ),
-    "enter_password": MessageLookupByLibrary.simpleMessage("Enter password"),
-    "enter_phone": MessageLookupByLibrary.simpleMessage("Enter phone number"),
-    "enter_pin_4_digits_sent_to_email": MessageLookupByLibrary.simpleMessage(
-      "Enter PIN 4 digits sent to email",
-    ),
-    "enter_username": MessageLookupByLibrary.simpleMessage("Enter username"),
-    "epub": MessageLookupByLibrary.simpleMessage("EPUB"),
-    "error": MessageLookupByLibrary.simpleMessage("Error"),
-    "errorChangingLanguage": MessageLookupByLibrary.simpleMessage(
-      "Error changing language",
-    ),
-    "errorSavingSettings": MessageLookupByLibrary.simpleMessage(
-      "Error saving settings",
-    ),
-    "error_cancel": MessageLookupByLibrary.simpleMessage("Request cancelled"),
-    "error_common": MessageLookupByLibrary.simpleMessage(
-      "Something went wrong, please try again later",
-    ),
-    "error_connection": MessageLookupByLibrary.simpleMessage(
-      "No internet connection",
-    ),
-    "error_deleting_book": MessageLookupByLibrary.simpleMessage(
-      "Error deleting book! Please try again later.",
-    ),
-    "error_internal_server_error": MessageLookupByLibrary.simpleMessage(
-      "Internal server error, please try again later!",
-    ),
-    "error_loading_books": MessageLookupByLibrary.simpleMessage(
-      "Error loading books",
-    ),
-    "error_occurred": MessageLookupByLibrary.simpleMessage("Error occurred"),
-    "error_request_timeout": MessageLookupByLibrary.simpleMessage(
-      "Request timeout, please try again later!",
-    ),
-    "error_scanning_files": MessageLookupByLibrary.simpleMessage(
-      "Error scanning files",
-    ),
-    "error_selecting_file": MessageLookupByLibrary.simpleMessage(
-      "Error selecting file",
-    ),
-    "error_timeout": MessageLookupByLibrary.simpleMessage(
-      "Connection timeout, please try again later!",
-    ),
-    "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
-    "facebook_access_token_is_null": MessageLookupByLibrary.simpleMessage(
-      "Facebook access token is null",
-    ),
-    "facebook_invalid_client": MessageLookupByLibrary.simpleMessage(
-      "Facebook invalid client",
-    ),
-    "facebook_login_failed": MessageLookupByLibrary.simpleMessage(
-      "Facebook login failed",
-    ),
-    "facebook_network_error": MessageLookupByLibrary.simpleMessage(
-      "Facebook network error",
-    ),
-    "fast": MessageLookupByLibrary.simpleMessage("Fast"),
-    "favorite_books": MessageLookupByLibrary.simpleMessage("Favorite books"),
-    "fcmToken": MessageLookupByLibrary.simpleMessage("FCM Token"),
-    "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
-    "feedbackAnonymous": MessageLookupByLibrary.simpleMessage(
-      "Send anonymously",
-    ),
-    "feedbackAnonymousDescription": MessageLookupByLibrary.simpleMessage(
-      "Send feedback without displaying personal information",
-    ),
-    "feedbackContact": MessageLookupByLibrary.simpleMessage(
-      "Contact information",
-    ),
-    "feedbackContent": MessageLookupByLibrary.simpleMessage("Content"),
-    "feedbackContentMinLength": MessageLookupByLibrary.simpleMessage(
-      "Content must be at least 10 characters",
-    ),
-    "feedbackContentRequired": MessageLookupByLibrary.simpleMessage(
-      "Please enter content",
-    ),
-    "feedbackDescription": MessageLookupByLibrary.simpleMessage(
-      "We would love to hear your feedback to improve the app",
-    ),
-    "feedbackEmailInvalid": MessageLookupByLibrary.simpleMessage(
-      "Invalid email",
-    ),
-    "feedbackName": MessageLookupByLibrary.simpleMessage("Name"),
-    "feedbackOptions": MessageLookupByLibrary.simpleMessage("Options"),
-    "feedbackPhone": MessageLookupByLibrary.simpleMessage("Phone number"),
-    "feedbackPhoneInvalid": MessageLookupByLibrary.simpleMessage(
-      "Invalid phone number",
-    ),
-    "feedbackPriority": MessageLookupByLibrary.simpleMessage("Priority"),
-    "feedbackSend": MessageLookupByLibrary.simpleMessage("Send feedback"),
-    "feedbackSuccess": MessageLookupByLibrary.simpleMessage(
-      "Feedback sent successfully",
-    ),
-    "feedbackTitle": MessageLookupByLibrary.simpleMessage("Title"),
-    "feedbackTitleMinLength": MessageLookupByLibrary.simpleMessage(
-      "Title must be at least 5 characters",
-    ),
-    "feedbackTitleRequired": MessageLookupByLibrary.simpleMessage(
-      "Please enter a title",
-    ),
-    "feedbackType": MessageLookupByLibrary.simpleMessage("Feedback type"),
-    "fileEbook": MessageLookupByLibrary.simpleMessage("File Ebook"),
-    "file_ebook_not_found": MessageLookupByLibrary.simpleMessage(
-      "File ebook not found",
-    ),
-    "file_path": MessageLookupByLibrary.simpleMessage("File path"),
-    "file_selected": MessageLookupByLibrary.simpleMessage("File selected"),
-    "file_size": MessageLookupByLibrary.simpleMessage("File size"),
-    "file_type": MessageLookupByLibrary.simpleMessage("File type"),
-    "files": MessageLookupByLibrary.simpleMessage("files"),
-    "filter": MessageLookupByLibrary.simpleMessage("Filter"),
-    "find_book": MessageLookupByLibrary.simpleMessage("Find book"),
-    "find_image": MessageLookupByLibrary.simpleMessage("Find image file"),
-    "find_word": MessageLookupByLibrary.simpleMessage("Find word file"),
-    "forgot_password": MessageLookupByLibrary.simpleMessage("Forgot password"),
-    "format": MessageLookupByLibrary.simpleMessage("Format"),
-    "found": MessageLookupByLibrary.simpleMessage("Found"),
-    "from_directory": MessageLookupByLibrary.simpleMessage("from directory"),
-    "from_file_picker": MessageLookupByLibrary.simpleMessage(
-      "From file picker",
-    ),
-    "full_name": MessageLookupByLibrary.simpleMessage("Full name"),
-    "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
-    "getHelpAndSupport": MessageLookupByLibrary.simpleMessage(
-      "Get help and support",
-    ),
-    "go_back": MessageLookupByLibrary.simpleMessage("Go back"),
-    "google": MessageLookupByLibrary.simpleMessage("Google"),
-    "google_developer_error": MessageLookupByLibrary.simpleMessage(
-      "Google developer error",
-    ),
-    "google_invalid_client": MessageLookupByLibrary.simpleMessage(
-      "Google invalid client",
-    ),
-    "google_network_error": MessageLookupByLibrary.simpleMessage(
-      "Google network error",
-    ),
-    "google_play_services_not_available": MessageLookupByLibrary.simpleMessage(
-      "Google Play Services not available",
-    ),
-    "google_signin_failed": MessageLookupByLibrary.simpleMessage(
-      "Google signin failed",
-    ),
-    "google_timeout": MessageLookupByLibrary.simpleMessage("Google timeout"),
-    "grant_permission": MessageLookupByLibrary.simpleMessage(
-      "Grant permission",
-    ),
-    "have_account": MessageLookupByLibrary.simpleMessage("Have account? "),
-    "helpCenter": MessageLookupByLibrary.simpleMessage("Help center"),
-    "high": MessageLookupByLibrary.simpleMessage("High"),
-    "home": MessageLookupByLibrary.simpleMessage("Home"),
-    "hours_ago": MessageLookupByLibrary.simpleMessage("hours ago"),
-    "i_uploaded": MessageLookupByLibrary.simpleMessage("I uploaded"),
-    "in_memory": MessageLookupByLibrary.simpleMessage("In memory"),
-    "info": MessageLookupByLibrary.simpleMessage("Info"),
-    "initializingTTS": MessageLookupByLibrary.simpleMessage(
-      "Initializing TTS...",
-    ),
-    "input_username": MessageLookupByLibrary.simpleMessage("Enter username"),
-    "invalid_email": MessageLookupByLibrary.simpleMessage("Invalid email"),
-    "isbn": MessageLookupByLibrary.simpleMessage("ISBN"),
-    "jpgPngWebp": MessageLookupByLibrary.simpleMessage("JPG, PNG, WEBP"),
-    "just_now": MessageLookupByLibrary.simpleMessage("just now"),
-    "language": MessageLookupByLibrary.simpleMessage("Language"),
-    "languageChanged": MessageLookupByLibrary.simpleMessage("Language changed"),
-    "last_read": MessageLookupByLibrary.simpleMessage("Last read"),
-    "library": MessageLookupByLibrary.simpleMessage("Ebook library"),
-    "light": MessageLookupByLibrary.simpleMessage("Light"),
-    "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
-    "loading_books": MessageLookupByLibrary.simpleMessage("Loading books"),
-    "loading_more_books": MessageLookupByLibrary.simpleMessage(
-      "Loading more books",
-    ),
-    "loading_more_books_completed": MessageLookupByLibrary.simpleMessage(
-      "Loading more books completed",
-    ),
-    "loading_more_books_failed": MessageLookupByLibrary.simpleMessage(
-      "Loading more books failed",
-    ),
-    "loading_more_books_no_data": MessageLookupByLibrary.simpleMessage(
-      "Loading more books no data",
-    ),
-    "localNotifications": MessageLookupByLibrary.simpleMessage(
-      "Local Notifications",
-    ),
-    "local_library": MessageLookupByLibrary.simpleMessage("On device"),
-    "logging_in": MessageLookupByLibrary.simpleMessage("Logging in..."),
-    "login": MessageLookupByLibrary.simpleMessage("Login"),
-    "login_error": MessageLookupByLibrary.simpleMessage("Login error"),
-    "login_now": MessageLookupByLibrary.simpleMessage("Login now"),
-    "login_to_continue": MessageLookupByLibrary.simpleMessage(
-      "Login to continue",
-    ),
-    "login_with_apple": MessageLookupByLibrary.simpleMessage(
-      "Login with Apple",
-    ),
-    "login_with_biometric": MessageLookupByLibrary.simpleMessage(
-      "Login with biometric",
-    ),
-    "login_with_bitbucket": MessageLookupByLibrary.simpleMessage(
-      "Login with Bitbucket",
-    ),
-    "login_with_email": MessageLookupByLibrary.simpleMessage(
-      "Login with email",
-    ),
-    "login_with_face_id": MessageLookupByLibrary.simpleMessage(
-      "Login with Face ID",
-    ),
-    "login_with_facebook": MessageLookupByLibrary.simpleMessage(
-      "Login with Facebook",
-    ),
-    "login_with_fingerprint": MessageLookupByLibrary.simpleMessage(
-      "Login with fingerprint",
-    ),
-    "login_with_github": MessageLookupByLibrary.simpleMessage(
-      "Login with GitHub",
-    ),
-    "login_with_gitlab": MessageLookupByLibrary.simpleMessage(
-      "Login with GitLab",
-    ),
-    "login_with_google": MessageLookupByLibrary.simpleMessage(
-      "Login with Google",
-    ),
-    "login_with_linkedin": MessageLookupByLibrary.simpleMessage(
-      "Login with LinkedIn",
-    ),
-    "login_with_otp": MessageLookupByLibrary.simpleMessage("Login with OTP"),
-    "login_with_password": MessageLookupByLibrary.simpleMessage(
-      "Login with password",
-    ),
-    "login_with_phone": MessageLookupByLibrary.simpleMessage(
-      "Login with phone",
-    ),
-    "login_with_pin": MessageLookupByLibrary.simpleMessage("Login with PIN"),
-    "login_with_twitter": MessageLookupByLibrary.simpleMessage(
-      "Login with Twitter",
-    ),
-    "login_with_username": MessageLookupByLibrary.simpleMessage(
-      "Login with username",
-    ),
-    "logout": MessageLookupByLibrary.simpleMessage("Logout"),
-    "low": MessageLookupByLibrary.simpleMessage("Low"),
-    "manageNotificationCategories": MessageLookupByLibrary.simpleMessage(
-      "Manage notification categories",
-    ),
-    "manageNotifications": MessageLookupByLibrary.simpleMessage(
-      "Manage notifications",
-    ),
-    "markAllAsRead": MessageLookupByLibrary.simpleMessage("Mark all as read"),
-    "markAllAsReadFailed": MessageLookupByLibrary.simpleMessage(
-      "Mark all as read failed",
-    ),
-    "markAllAsReadSuccess": MessageLookupByLibrary.simpleMessage(
-      "Mark all as read successfully",
-    ),
-    "markAllAsUnread": MessageLookupByLibrary.simpleMessage(
-      "Mark all as unread",
-    ),
-    "markAllAsUnreadFailed": MessageLookupByLibrary.simpleMessage(
-      "Mark all as unread failed",
-    ),
-    "markAllAsUnreadSuccess": MessageLookupByLibrary.simpleMessage(
-      "Mark all as unread successfully",
-    ),
-    "markAsRead": MessageLookupByLibrary.simpleMessage("Mark as read"),
-    "markAsReadFailed": MessageLookupByLibrary.simpleMessage(
-      "Mark as read failed",
-    ),
-    "markAsReadSuccess": MessageLookupByLibrary.simpleMessage(
-      "Mark as read successfully",
-    ),
-    "markAsUnread": MessageLookupByLibrary.simpleMessage("Mark as unread"),
-    "markAsUnreadFailed": MessageLookupByLibrary.simpleMessage(
-      "Mark as unread failed",
-    ),
-    "markAsUnreadSuccess": MessageLookupByLibrary.simpleMessage(
-      "Mark as unread successfully",
-    ),
-    "markReadFailed": MessageLookupByLibrary.simpleMessage("Mark read failed"),
-    "markReadSuccess": MessageLookupByLibrary.simpleMessage(
-      "Mark read successfully",
-    ),
-    "markUnreadFailed": MessageLookupByLibrary.simpleMessage(
-      "Mark unread failed",
-    ),
-    "markUnreadSuccess": MessageLookupByLibrary.simpleMessage(
-      "Mark unread successfully",
-    ),
-    "medium": MessageLookupByLibrary.simpleMessage("Medium"),
-    "minutes_ago": MessageLookupByLibrary.simpleMessage("minutes ago"),
-    "months_ago": MessageLookupByLibrary.simpleMessage("months ago"),
-    "my_books": MessageLookupByLibrary.simpleMessage("My books"),
-    "my_library": MessageLookupByLibrary.simpleMessage("My library"),
-    "my_uploaded_books": MessageLookupByLibrary.simpleMessage(
-      "My uploaded books",
-    ),
-    "need_permission_to_access_memory": MessageLookupByLibrary.simpleMessage(
-      "Need permission to access memory",
-    ),
-    "new_book": MessageLookupByLibrary.simpleMessage("New"),
-    "news": MessageLookupByLibrary.simpleMessage("News"),
-    "noLanguagesAvailable": MessageLookupByLibrary.simpleMessage(
-      "No languages available",
-    ),
-    "noLoginInfo": MessageLookupByLibrary.simpleMessage("No login information"),
-    "noName": MessageLookupByLibrary.simpleMessage("No name"),
-    "noNotifications": MessageLookupByLibrary.simpleMessage("No notifications"),
-    "no_account": MessageLookupByLibrary.simpleMessage("No account? "),
-    "no_available_camera": MessageLookupByLibrary.simpleMessage(
-      "No available camera",
-    ),
-    "no_book_found": MessageLookupByLibrary.simpleMessage("No book found"),
-    "no_books": MessageLookupByLibrary.simpleMessage("No books"),
-    "no_books_found": MessageLookupByLibrary.simpleMessage("No books found"),
-    "no_content_to_display": MessageLookupByLibrary.simpleMessage(
-      "No content to display",
-    ),
-    "no_file_found": MessageLookupByLibrary.simpleMessage("No file found"),
-    "no_image_file_found": MessageLookupByLibrary.simpleMessage(
-      "No file .jpg, .jpeg, .png found",
-    ),
-    "no_login_info_saved": MessageLookupByLibrary.simpleMessage(
-      "No login info saved",
-    ),
-    "no_name": MessageLookupByLibrary.simpleMessage("No name"),
-    "no_pdf_epub_mobi_found": MessageLookupByLibrary.simpleMessage(
-      "No PDF, EPUB, or MOBI found",
-    ),
-    "no_reviews_yet": MessageLookupByLibrary.simpleMessage("No reviews yet"),
-    "no_word_file_found": MessageLookupByLibrary.simpleMessage(
-      "No file .docx found",
-    ),
-    "normal": MessageLookupByLibrary.simpleMessage("Normal"),
-    "notificationBadge": MessageLookupByLibrary.simpleMessage("Badge"),
-    "notificationCategories": MessageLookupByLibrary.simpleMessage(
-      "Notification Categories",
-    ),
-    "notificationDeletedFailed": MessageLookupByLibrary.simpleMessage(
-      "Notification deleted failed",
-    ),
-    "notificationDeletedSuccessfully": MessageLookupByLibrary.simpleMessage(
-      "Notification deleted successfully",
-    ),
-    "notificationHistory": MessageLookupByLibrary.simpleMessage(
-      "Notification History",
-    ),
-    "notificationPermissionRequired": MessageLookupByLibrary.simpleMessage(
-      "Notification permission required",
-    ),
-    "notificationPreferences": MessageLookupByLibrary.simpleMessage(
-      "Notification Preferences",
-    ),
-    "notificationPreview": MessageLookupByLibrary.simpleMessage(
-      "Notification Preview",
-    ),
-    "notificationSettings": MessageLookupByLibrary.simpleMessage(
-      "Notification Settings",
-    ),
-    "notificationSound": MessageLookupByLibrary.simpleMessage(
-      "Notification Sound",
-    ),
-    "notificationStatus": MessageLookupByLibrary.simpleMessage(
-      "Notification Status",
-    ),
-    "notificationVibration": MessageLookupByLibrary.simpleMessage("Vibration"),
-    "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
-    "notificationsCleared": MessageLookupByLibrary.simpleMessage(
-      "All notifications cleared",
-    ),
-    "openSettings": MessageLookupByLibrary.simpleMessage("Open Settings"),
-    "optional": MessageLookupByLibrary.simpleMessage("Optional"),
-    "or_use_select_file_to_browse_directory_without_permission":
-        MessageLookupByLibrary.simpleMessage(
-          "Or use \'Select file\' to browse directory (without permission)",
-        ),
-    "pages": MessageLookupByLibrary.simpleMessage("Pages"),
-    "password": MessageLookupByLibrary.simpleMessage("Password"),
-    "password_must_be_at_least_6_characters":
-        MessageLookupByLibrary.simpleMessage(
-          "Password must be at least 6 characters",
-        ),
-    "passwords_do_not_match": MessageLookupByLibrary.simpleMessage(
-      "Passwords do not match",
-    ),
-    "pdf": MessageLookupByLibrary.simpleMessage("PDF"),
-    "pdfEpubMobi": MessageLookupByLibrary.simpleMessage("PDF, EPUB, MOBI"),
-    "pdf_add_note": MessageLookupByLibrary.simpleMessage("Add note"),
-    "pdf_add_note_description": MessageLookupByLibrary.simpleMessage(
-      "Add note description",
-    ),
-    "pdf_add_note_description_failed": MessageLookupByLibrary.simpleMessage(
-      "Add note description failed",
-    ),
-    "pdf_add_note_description_successfully":
-        MessageLookupByLibrary.simpleMessage(
-          "Add note description successfully",
-        ),
-    "pdf_cannot_load": MessageLookupByLibrary.simpleMessage("Cannot load PDF"),
-    "pdf_document_read_complete": MessageLookupByLibrary.simpleMessage(
-      "Document finished reading",
-    ),
-    "pdf_done_drawing": MessageLookupByLibrary.simpleMessage("Done drawing"),
-    "pdf_drawings_saved": MessageLookupByLibrary.simpleMessage(
-      "Drawings saved",
-    ),
-    "pdf_file_info": MessageLookupByLibrary.simpleMessage("PDF file info"),
-    "pdf_go": MessageLookupByLibrary.simpleMessage("Go"),
-    "pdf_invalid_page": MessageLookupByLibrary.simpleMessage(
-      "Invalid page number",
-    ),
-    "pdf_jump_to_page": MessageLookupByLibrary.simpleMessage("Jump to page"),
-    "pdf_load_failed_retry": MessageLookupByLibrary.simpleMessage(
-      "PDF not loaded yet, try again later",
-    ),
-    "pdf_loading": MessageLookupByLibrary.simpleMessage("Loading PDF..."),
-    "pdf_no_notes": MessageLookupByLibrary.simpleMessage("No notes"),
-    "pdf_note_added": MessageLookupByLibrary.simpleMessage("Note added"),
-    "pdf_note_added_description": MessageLookupByLibrary.simpleMessage(
-      "Note added description",
-    ),
-    "pdf_note_added_description_failed": MessageLookupByLibrary.simpleMessage(
-      "Note added description failed",
-    ),
-    "pdf_note_added_description_successfully":
-        MessageLookupByLibrary.simpleMessage(
-          "Note added description successfully",
-        ),
-    "pdf_note_added_failed": MessageLookupByLibrary.simpleMessage(
-      "Note added failed",
-    ),
-    "pdf_note_added_successfully": MessageLookupByLibrary.simpleMessage(
-      "Note added successfully",
-    ),
-    "pdf_note_hint": MessageLookupByLibrary.simpleMessage("Enter note"),
-    "pdf_notes_list": MessageLookupByLibrary.simpleMessage("Notes list"),
-    "pdf_page_number": MessageLookupByLibrary.simpleMessage("Page number"),
-    "pdf_page_of": m1,
-    "pdf_path_label": MessageLookupByLibrary.simpleMessage("Path:"),
-    "pdf_please_wait": MessageLookupByLibrary.simpleMessage("Please wait"),
-    "pdf_read_ebook": MessageLookupByLibrary.simpleMessage("Read ebook"),
-    "pdf_reading": MessageLookupByLibrary.simpleMessage("Reading"),
-    "pdf_search_in_pdf": MessageLookupByLibrary.simpleMessage(
-      "Search in PDF...",
-    ),
-    "pdf_search_tooltip": MessageLookupByLibrary.simpleMessage("Search"),
-    "pdf_share": MessageLookupByLibrary.simpleMessage("Share"),
-    "pdf_share_error": m2,
-    "pdf_share_file_not_found": MessageLookupByLibrary.simpleMessage(
-      "File not found to share",
-    ),
-    "pdf_share_success": MessageLookupByLibrary.simpleMessage(
-      "Shared successfully",
-    ),
-    "pdf_share_text": m3,
-    "pdf_share_wait_download": MessageLookupByLibrary.simpleMessage(
-      "PDF is loading, please wait and try again",
-    ),
-    "pdf_toolbar": MessageLookupByLibrary.simpleMessage("Toolbar"),
-    "pdf_tts_read_error": m4,
-    "pdf_undo": MessageLookupByLibrary.simpleMessage("Undo"),
-    "pdf_view_file_info": MessageLookupByLibrary.simpleMessage(
-      "View file info",
-    ),
-    "pdf_zoom_in_out": MessageLookupByLibrary.simpleMessage("Zoom in/out"),
-    "permissionDenied": MessageLookupByLibrary.simpleMessage(
-      "Permission denied",
-    ),
-    "permissionGranted": MessageLookupByLibrary.simpleMessage(
-      "Permission granted",
-    ),
-    "permissionStatus": MessageLookupByLibrary.simpleMessage(
-      "Permission Status",
-    ),
-    "phone": MessageLookupByLibrary.simpleMessage("Phone number"),
-    "pin_resend_success": MessageLookupByLibrary.simpleMessage(
-      "PIN resend successfully",
-    ),
-    "playTest": MessageLookupByLibrary.simpleMessage("Play test"),
-    "please_authenticate_to_login": MessageLookupByLibrary.simpleMessage(
-      "Please authenticate to login",
-    ),
-    "please_enter_author": MessageLookupByLibrary.simpleMessage(
-      "Please enter author",
-    ),
-    "please_enter_bitbucket_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter Bitbucket link",
-    ),
-    "please_enter_category": MessageLookupByLibrary.simpleMessage(
-      "Please enter category",
-    ),
-    "please_enter_code": MessageLookupByLibrary.simpleMessage(
-      "Please enter code",
-    ),
-    "please_enter_confirm_code": MessageLookupByLibrary.simpleMessage(
-      "Please enter confirm code",
-    ),
-    "please_enter_confirm_password": MessageLookupByLibrary.simpleMessage(
-      "Please enter confirm password",
-    ),
-    "please_enter_description": MessageLookupByLibrary.simpleMessage(
-      "Please enter description",
-    ),
-    "please_enter_email": MessageLookupByLibrary.simpleMessage(
-      "Please enter email",
-    ),
-    "please_enter_facebook_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter Facebook link",
-    ),
-    "please_enter_full_name": MessageLookupByLibrary.simpleMessage(
-      "Please enter full name",
-    ),
-    "please_enter_github_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter GitHub link",
-    ),
-    "please_enter_gitlab_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter GitLab link",
-    ),
-    "please_enter_instagram_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter Instagram link",
-    ),
-    "please_enter_isbn": MessageLookupByLibrary.simpleMessage(
-      "Please enter ISBN",
-    ),
-    "please_enter_linkedin_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter LinkedIn link",
-    ),
-    "please_enter_password": MessageLookupByLibrary.simpleMessage(
-      "Please enter password",
-    ),
-    "please_enter_phone": MessageLookupByLibrary.simpleMessage(
-      "Please enter phone number",
-    ),
-    "please_enter_publisher": MessageLookupByLibrary.simpleMessage(
-      "Please enter publisher",
-    ),
-    "please_enter_title": MessageLookupByLibrary.simpleMessage(
-      "Please enter title",
-    ),
-    "please_enter_total_pages": MessageLookupByLibrary.simpleMessage(
-      "Please enter total pages",
-    ),
-    "please_enter_twitter_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter Twitter link",
-    ),
-    "please_enter_username": MessageLookupByLibrary.simpleMessage(
-      "Please enter username",
-    ),
-    "please_enter_valid_address": MessageLookupByLibrary.simpleMessage(
-      "Please enter valid address",
-    ),
-    "please_enter_valid_birth_date": MessageLookupByLibrary.simpleMessage(
-      "Please enter valid birth date",
-    ),
-    "please_enter_valid_bitbucket_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter valid Bitbucket link",
-    ),
-    "please_enter_valid_facebook_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter valid Facebook link",
-    ),
-    "please_enter_valid_github_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter valid GitHub link",
-    ),
-    "please_enter_valid_gitlab_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter valid GitLab link",
-    ),
-    "please_enter_valid_instagram_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter valid Instagram link",
-    ),
-    "please_enter_valid_linkedin_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter valid LinkedIn link",
-    ),
-    "please_enter_valid_phone_number": MessageLookupByLibrary.simpleMessage(
-      "Please enter valid phone number",
-    ),
-    "please_enter_valid_twitter_link": MessageLookupByLibrary.simpleMessage(
-      "Please enter valid Twitter link",
-    ),
-    "please_grant_permission_to_access_camera_or_gallery_in_settings":
-        MessageLookupByLibrary.simpleMessage(
-          "Please grant permission to access camera or gallery in settings",
-        ),
-    "please_grant_permission_to_search_file":
-        MessageLookupByLibrary.simpleMessage(
-          "Please grant permission to search file",
-        ),
-    "please_select_rating": MessageLookupByLibrary.simpleMessage(
-      "Please select a rating",
-    ),
-    "please_upload_ebook_file_first": MessageLookupByLibrary.simpleMessage(
-      "Please upload ebook file first",
-    ),
-    "pls_input_username": MessageLookupByLibrary.simpleMessage(
-      "Please enter username",
-    ),
-    "privacySettings": MessageLookupByLibrary.simpleMessage("Privacy settings"),
-    "privacy_and_security": MessageLookupByLibrary.simpleMessage(
-      "Privacy and security",
-    ),
-    "private": MessageLookupByLibrary.simpleMessage("Private"),
-    "private_books": MessageLookupByLibrary.simpleMessage("Private books"),
-    "profile": MessageLookupByLibrary.simpleMessage("Profile"),
-    "public": MessageLookupByLibrary.simpleMessage("Public"),
-    "public_books": MessageLookupByLibrary.simpleMessage("Public books"),
-    "publisher": MessageLookupByLibrary.simpleMessage("Publisher"),
-    "pull_to_refresh": MessageLookupByLibrary.simpleMessage(
-      "Pull down to refresh",
-    ),
-    "pushNotifications": MessageLookupByLibrary.simpleMessage(
-      "Push Notifications",
-    ),
-    "rate_and_review": MessageLookupByLibrary.simpleMessage("Rate & Review"),
-    "rate_this_book": MessageLookupByLibrary.simpleMessage("Rate this book"),
-    "rating_submission_failed": MessageLookupByLibrary.simpleMessage(
-      "Rating submission failed",
-    ),
-    "rating_submitted_successfully": MessageLookupByLibrary.simpleMessage(
-      "Rating submitted successfully",
-    ),
-    "read": MessageLookupByLibrary.simpleMessage("Read"),
-    "read_book": MessageLookupByLibrary.simpleMessage("Read book"),
-    "readingReminders": MessageLookupByLibrary.simpleMessage(
-      "Reading Reminders",
-    ),
-    "readingSpeed": MessageLookupByLibrary.simpleMessage("Reading speed"),
-    "reading_books": MessageLookupByLibrary.simpleMessage("Reading books"),
-    "reading_progress": MessageLookupByLibrary.simpleMessage(
-      "Reading progress",
-    ),
-    "reading_time": MessageLookupByLibrary.simpleMessage("Reading time:"),
-    "ready_to_upload": MessageLookupByLibrary.simpleMessage("Ready to upload"),
-    "receiveBookUpdates": MessageLookupByLibrary.simpleMessage(
-      "Receive notifications for new books",
-    ),
-    "receiveLocalNotifications": MessageLookupByLibrary.simpleMessage(
-      "Receive reminders and local notifications",
-    ),
-    "receivePushNotifications": MessageLookupByLibrary.simpleMessage(
-      "Receive push notifications from server",
-    ),
-    "receiveSystemNotifications": MessageLookupByLibrary.simpleMessage(
-      "Receive app update notifications",
-    ),
-    "recommended_size": MessageLookupByLibrary.simpleMessage(
-      "Recommended size",
-    ),
-    "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
-    "refreshToken": MessageLookupByLibrary.simpleMessage("Refresh token"),
-    "register": MessageLookupByLibrary.simpleMessage("Register"),
-    "register_now": MessageLookupByLibrary.simpleMessage("Register now"),
-    "register_to_continue": MessageLookupByLibrary.simpleMessage(
-      "Register to continue",
-    ),
-    "remember_me": MessageLookupByLibrary.simpleMessage("Remember me"),
-    "reminderTime": MessageLookupByLibrary.simpleMessage("Reminder Time"),
-    "remove_archive": MessageLookupByLibrary.simpleMessage("Remove archive"),
-    "remove_favorite": MessageLookupByLibrary.simpleMessage("Remove favorite"),
-    "required_field": MessageLookupByLibrary.simpleMessage("Required"),
-    "resend_code": MessageLookupByLibrary.simpleMessage("Resend code"),
-    "resend_pin": MessageLookupByLibrary.simpleMessage("Resend pin"),
-    "resend_pin_in": MessageLookupByLibrary.simpleMessage("Resend pin in"),
-    "reset": MessageLookupByLibrary.simpleMessage("Reset"),
-    "reset_password": MessageLookupByLibrary.simpleMessage("Reset password"),
-    "retry": MessageLookupByLibrary.simpleMessage("Retry"),
-    "retry_loading_books": MessageLookupByLibrary.simpleMessage(
-      "Retry loading books",
-    ),
-    "reviews": MessageLookupByLibrary.simpleMessage("Reviews"),
-    "scan_again": MessageLookupByLibrary.simpleMessage("Scan again"),
-    "scanning_in_memory": MessageLookupByLibrary.simpleMessage(
-      "Scanning in memory...",
-    ),
-    "search": MessageLookupByLibrary.simpleMessage("Search"),
-    "search_book": MessageLookupByLibrary.simpleMessage("Search book"),
-    "search_books": MessageLookupByLibrary.simpleMessage("Search books..."),
-    "search_filter": MessageLookupByLibrary.simpleMessage("Search filter"),
-    "seconds": MessageLookupByLibrary.simpleMessage("seconds"),
-    "security": MessageLookupByLibrary.simpleMessage("Security"),
-    "selectReminderTime": MessageLookupByLibrary.simpleMessage(
-      "Select reminder time",
-    ),
-    "selectTTSLanguage": MessageLookupByLibrary.simpleMessage(
-      "Select reading language",
-    ),
-    "selectVoice": MessageLookupByLibrary.simpleMessage("Select voice"),
-    "select_all": MessageLookupByLibrary.simpleMessage("Select all"),
-    "select_all_books": MessageLookupByLibrary.simpleMessage(
-      "Select all books",
-    ),
-    "select_cover_image": MessageLookupByLibrary.simpleMessage(
-      "Select cover image",
-    ),
-    "select_file": MessageLookupByLibrary.simpleMessage("Select file"),
-    "select_language": MessageLookupByLibrary.simpleMessage(
-      "Please enter language",
-    ),
-    "selected": MessageLookupByLibrary.simpleMessage("Selected"),
-    "sendFeedback": MessageLookupByLibrary.simpleMessage("Send feedback"),
-    "sendTestNotification": MessageLookupByLibrary.simpleMessage(
-      "Send test notification",
-    ),
-    "setReadingReminders": MessageLookupByLibrary.simpleMessage(
-      "Set daily reading reminders",
-    ),
-    "settings": MessageLookupByLibrary.simpleMessage("Settings"),
-    "settingsSaved": MessageLookupByLibrary.simpleMessage("Settings saved"),
-    "shareYourThoughts": MessageLookupByLibrary.simpleMessage(
-      "Share your thoughts",
-    ),
-    "showBadge": MessageLookupByLibrary.simpleMessage("Show badge on app icon"),
-    "showPreview": MessageLookupByLibrary.simpleMessage(
-      "Show content on lock screen",
-    ),
-    "size": MessageLookupByLibrary.simpleMessage("Size"),
-    "slow": MessageLookupByLibrary.simpleMessage("Slow"),
-    "start_reading": MessageLookupByLibrary.simpleMessage("Start reading"),
-    "stopTest": MessageLookupByLibrary.simpleMessage("Stop"),
-    "submit_rating": MessageLookupByLibrary.simpleMessage("Submit Rating"),
-    "success": MessageLookupByLibrary.simpleMessage("Success"),
-    "systemNotifications": MessageLookupByLibrary.simpleMessage(
-      "System Notifications",
-    ),
-    "tap_or_long_press_to_select_file": MessageLookupByLibrary.simpleMessage(
-      "Tap on file to select or long press to select file",
-    ),
-    "tap_to_rate": MessageLookupByLibrary.simpleMessage("Tap to rate"),
-    "tap_to_view": MessageLookupByLibrary.simpleMessage("Tap to view"),
-    "testNotification": MessageLookupByLibrary.simpleMessage(
-      "Test Notification",
-    ),
-    "testNotificationSent": MessageLookupByLibrary.simpleMessage(
-      "Test notification sent",
-    ),
-    "testTTS": MessageLookupByLibrary.simpleMessage("Test reading"),
-    "textToSpeech": MessageLookupByLibrary.simpleMessage("Text to speech"),
-    "theme": MessageLookupByLibrary.simpleMessage("Theme"),
-    "title": MessageLookupByLibrary.simpleMessage("Title"),
-    "to_library": MessageLookupByLibrary.simpleMessage("to library"),
-    "tokenCopied": MessageLookupByLibrary.simpleMessage("Token copied"),
-    "tokenRefreshed": MessageLookupByLibrary.simpleMessage("Token refreshed"),
-    "too_many_attempts": MessageLookupByLibrary.simpleMessage(
-      "Too many attempts. Please try again later",
-    ),
-    "tools": MessageLookupByLibrary.simpleMessage("Tools"),
-    "tools_add_image_file": MessageLookupByLibrary.simpleMessage(
-      "Add image file",
-    ),
-    "tools_add_more_pages": MessageLookupByLibrary.simpleMessage(
-      "Add more pages",
-    ),
-    "tools_add_word_file": MessageLookupByLibrary.simpleMessage(
-      "Add word file",
-    ),
-    "tools_choose_from_gallery": MessageLookupByLibrary.simpleMessage(
-      "Choose from gallery",
-    ),
-    "tools_conversion_failed": MessageLookupByLibrary.simpleMessage(
-      "Conversion failed",
-    ),
-    "tools_conversion_success": MessageLookupByLibrary.simpleMessage(
-      "Conversion successful",
-    ),
-    "tools_convert_to_pdf": MessageLookupByLibrary.simpleMessage(
-      "Convert to PDF",
-    ),
-    "tools_converting": MessageLookupByLibrary.simpleMessage("Converting..."),
-    "tools_document_scanner": MessageLookupByLibrary.simpleMessage("Scanner"),
-    "tools_document_scanner_description": MessageLookupByLibrary.simpleMessage(
-      "Scan documents using camera",
-    ),
-    "tools_file_saved_to": m5,
-    "tools_no_file_selected": MessageLookupByLibrary.simpleMessage(
-      "No file selected",
-    ),
-    "tools_pages_count": m6,
-    "tools_preview": MessageLookupByLibrary.simpleMessage("Preview"),
-    "tools_processing": MessageLookupByLibrary.simpleMessage("Processing..."),
-    "tools_remove_page": MessageLookupByLibrary.simpleMessage("Remove page"),
-    "tools_save_as_pdf": MessageLookupByLibrary.simpleMessage("Download PDF"),
-    "tools_save_failed": MessageLookupByLibrary.simpleMessage("Save failed"),
-    "tools_saved_successfully": MessageLookupByLibrary.simpleMessage(
-      "Saved successfully",
-    ),
-    "tools_scan_document": MessageLookupByLibrary.simpleMessage(
-      "Scan document",
-    ),
-    "tools_select_file_first": MessageLookupByLibrary.simpleMessage(
-      "Please select a file first",
-    ),
-    "tools_select_word_file": MessageLookupByLibrary.simpleMessage(
-      "Select Word file",
-    ),
-    "tools_take_photo": MessageLookupByLibrary.simpleMessage("Take photo"),
-    "tools_word_to_pdf": MessageLookupByLibrary.simpleMessage("Word to PDF"),
-    "tools_word_to_pdf_description": MessageLookupByLibrary.simpleMessage(
-      "Convert Word documents to PDF",
-    ),
-    "total_pages": MessageLookupByLibrary.simpleMessage("Total pages"),
-    "total_ratings": m7,
-    "translate": MessageLookupByLibrary.simpleMessage("Language translation"),
-    "try_again": MessageLookupByLibrary.simpleMessage("Try again"),
-    "ttsLanguageSettings": MessageLookupByLibrary.simpleMessage(
-      "TTS Language Settings",
-    ),
-    "ttsNotInitialized": MessageLookupByLibrary.simpleMessage(
-      "TTS not initialized",
-    ),
-    "ttsPitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
-    "ttsSettings": MessageLookupByLibrary.simpleMessage("TTS Settings"),
-    "ttsSpeed": MessageLookupByLibrary.simpleMessage("Reading speed"),
-    "ttsTestText": MessageLookupByLibrary.simpleMessage(
-      "Hello, this is a text-to-speech test.",
-    ),
-    "ttsVoice": MessageLookupByLibrary.simpleMessage("Voice"),
-    "ttsVolume": MessageLookupByLibrary.simpleMessage("Volume"),
-    "unread": MessageLookupByLibrary.simpleMessage("Unread"),
-    "unreadNotifications": MessageLookupByLibrary.simpleMessage(
-      "unread notifications",
-    ),
-    "unselect_all": MessageLookupByLibrary.simpleMessage("Unselect all"),
-    "unselect_all_books": MessageLookupByLibrary.simpleMessage(
-      "Unselect all books",
-    ),
-    "update": MessageLookupByLibrary.simpleMessage("Update"),
-    "updateYourInfo": MessageLookupByLibrary.simpleMessage(
-      "Update your information",
-    ),
-    "update_book": MessageLookupByLibrary.simpleMessage("Update book"),
-    "update_book_info": MessageLookupByLibrary.simpleMessage(
-      "Update book information",
-    ),
-    "update_book_success": MessageLookupByLibrary.simpleMessage(
-      "Book updated successfully!",
-    ),
-    "update_profile": MessageLookupByLibrary.simpleMessage("Update profile"),
-    "update_profile_description": MessageLookupByLibrary.simpleMessage(
-      "Update your information",
-    ),
-    "update_profile_description_failed": MessageLookupByLibrary.simpleMessage(
-      "Update your information failed",
-    ),
-    "update_profile_description_success": MessageLookupByLibrary.simpleMessage(
-      "Update your information successfully",
-    ),
-    "update_profile_failed": MessageLookupByLibrary.simpleMessage(
-      "Update profile failed",
-    ),
-    "update_profile_success": MessageLookupByLibrary.simpleMessage(
-      "Update profile successfully",
-    ),
-    "updating_book": MessageLookupByLibrary.simpleMessage("Updating book..."),
-    "upload_book": MessageLookupByLibrary.simpleMessage("Upload book"),
-    "upload_cover_image": MessageLookupByLibrary.simpleMessage(
-      "Upload cover image",
-    ),
-    "upload_file": MessageLookupByLibrary.simpleMessage("Upload File"),
-    "upload_success": MessageLookupByLibrary.simpleMessage("Upload success"),
-    "uploading": MessageLookupByLibrary.simpleMessage("Uploading..."),
-    "useFingerprintOrFaceID": MessageLookupByLibrary.simpleMessage(
-      "Use fingerprint or Face ID",
-    ),
-    "use_select_file_to_browse_directory": MessageLookupByLibrary.simpleMessage(
-      "Use \'Select file\' to browse directory",
-    ),
-    "user_cancelled_apple_sign_in": MessageLookupByLibrary.simpleMessage(
-      "User cancelled Apple sign in",
-    ),
-    "user_cancelled_bitbucket_sign_in": MessageLookupByLibrary.simpleMessage(
-      "User cancelled Bitbucket sign in",
-    ),
-    "user_cancelled_facebook_sign_in": MessageLookupByLibrary.simpleMessage(
-      "User cancelled Facebook sign in",
-    ),
-    "user_cancelled_github_sign_in": MessageLookupByLibrary.simpleMessage(
-      "User cancelled GitHub sign in",
-    ),
-    "user_cancelled_gitlab_sign_in": MessageLookupByLibrary.simpleMessage(
-      "User cancelled GitLab sign in",
-    ),
-    "user_cancelled_google_sign_in": MessageLookupByLibrary.simpleMessage(
-      "User cancelled Google sign in",
-    ),
-    "user_cancelled_linkedin_sign_in": MessageLookupByLibrary.simpleMessage(
-      "User cancelled LinkedIn sign in",
-    ),
-    "user_cancelled_sign_in": MessageLookupByLibrary.simpleMessage(
-      "User cancelled sign in",
-    ),
-    "user_cancelled_twitter_sign_in": MessageLookupByLibrary.simpleMessage(
-      "User cancelled Twitter sign in",
-    ),
-    "username": MessageLookupByLibrary.simpleMessage("Username"),
-    "username_must_be_at_least_3_characters":
-        MessageLookupByLibrary.simpleMessage(
-          "Username must be at least 3 characters",
-        ),
-    "verify": MessageLookupByLibrary.simpleMessage("Verify"),
-    "verify_code": MessageLookupByLibrary.simpleMessage("Verify code"),
-    "verify_email": MessageLookupByLibrary.simpleMessage("Verify email"),
-    "verify_pin": MessageLookupByLibrary.simpleMessage("Verify PIN"),
-    "verifying_pin": MessageLookupByLibrary.simpleMessage("Verifying pin..."),
-    "version": MessageLookupByLibrary.simpleMessage("Version"),
-    "veryFast": MessageLookupByLibrary.simpleMessage("Very fast"),
-    "view": MessageLookupByLibrary.simpleMessage("View"),
-    "viewNotificationHistory": MessageLookupByLibrary.simpleMessage(
-      "View notification history",
-    ),
-    "view_details": MessageLookupByLibrary.simpleMessage("View details"),
-    "voicePitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
-    "warning": MessageLookupByLibrary.simpleMessage("Warning"),
-    "welcome_back": MessageLookupByLibrary.simpleMessage("Welcome back!"),
-    "write_a_review": MessageLookupByLibrary.simpleMessage("Write a review"),
-    "write_your_review_here": MessageLookupByLibrary.simpleMessage(
-      "Write your review here...",
-    ),
-    "years_ago": MessageLookupByLibrary.simpleMessage("years ago"),
-    "youHave": MessageLookupByLibrary.simpleMessage("You have"),
-    "youWillReceiveNotificationsHere": MessageLookupByLibrary.simpleMessage(
-      "You will receive notifications here",
-    ),
-    "you_have_no_book_reading": MessageLookupByLibrary.simpleMessage(
-      "You have no book reading.",
-    ),
-    "your_rating": MessageLookupByLibrary.simpleMessage("Your rating"),
-    "your_review": MessageLookupByLibrary.simpleMessage("Your review"),
-  };
+        "aboutApp": MessageLookupByLibrary.simpleMessage("About app"),
+        "add_archive": MessageLookupByLibrary.simpleMessage("Add archive"),
+        "add_book": MessageLookupByLibrary.simpleMessage("Add book"),
+        "add_book_to_start_reading":
+            MessageLookupByLibrary.simpleMessage("Add book to start reading"),
+        "add_favorite": MessageLookupByLibrary.simpleMessage("Add favorite"),
+        "add_new_book_to_library":
+            MessageLookupByLibrary.simpleMessage("Add new book to library"),
+        "added": MessageLookupByLibrary.simpleMessage("Added"),
+        "agree": MessageLookupByLibrary.simpleMessage("Agree"),
+        "all": MessageLookupByLibrary.simpleMessage("All"),
+        "all_data_loaded":
+            MessageLookupByLibrary.simpleMessage("All data loaded"),
+        "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
+        "apply_filters": MessageLookupByLibrary.simpleMessage("Apply filters"),
+        "archived_books":
+            MessageLookupByLibrary.simpleMessage("Archived books"),
+        "areYouSureYouWantToDeleteAllNotifications":
+            MessageLookupByLibrary.simpleMessage(
+                "Are you sure you want to delete all notifications?"),
+        "areYouSureYouWantToDeleteNotification":
+            MessageLookupByLibrary.simpleMessage(
+                "Are you sure you want to delete this notification?"),
+        "authentication_error":
+            MessageLookupByLibrary.simpleMessage("Authentication error"),
+        "authentication_failed":
+            MessageLookupByLibrary.simpleMessage("Authentication failed"),
+        "authentication_success":
+            MessageLookupByLibrary.simpleMessage("Authentication success"),
+        "author": MessageLookupByLibrary.simpleMessage("Author"),
+        "availableLanguages":
+            MessageLookupByLibrary.simpleMessage("Available languages"),
+        "average_rating":
+            MessageLookupByLibrary.simpleMessage("Average rating"),
+        "backToHome": MessageLookupByLibrary.simpleMessage("Back to Home"),
+        "back_to_login": MessageLookupByLibrary.simpleMessage("Back to login"),
+        "biometricDisabled":
+            MessageLookupByLibrary.simpleMessage("Biometric disabled"),
+        "biometricLogin":
+            MessageLookupByLibrary.simpleMessage("Biometric login"),
+        "biometricNotAvailable":
+            MessageLookupByLibrary.simpleMessage("Biometric not available"),
+        "biometricSetupSuccess":
+            MessageLookupByLibrary.simpleMessage("Biometric setup successful"),
+        "biometric_available":
+            MessageLookupByLibrary.simpleMessage("Biometric available"),
+        "biometric_not_available":
+            MessageLookupByLibrary.simpleMessage("Biometric not available"),
+        "biometric_not_available_on_this_device":
+            MessageLookupByLibrary.simpleMessage(
+                "Biometric not available on this device"),
+        "biometric_not_enabled":
+            MessageLookupByLibrary.simpleMessage("Biometric not enabled"),
+        "biometric_not_enrolled": MessageLookupByLibrary.simpleMessage(
+            "Biometric not enrolled. Please set up in Settings"),
+        "biometric_not_supported_on_this_device":
+            MessageLookupByLibrary.simpleMessage(
+                "Biometric not supported on this device"),
+        "biometric_permanently_locked_out":
+            MessageLookupByLibrary.simpleMessage(
+                "Biometric permanently locked out. Please use password"),
+        "bookUpdates": MessageLookupByLibrary.simpleMessage("Book Updates"),
+        "book_added_to_local_library":
+            MessageLookupByLibrary.simpleMessage("Book added to local library"),
+        "book_deleted_successfully":
+            MessageLookupByLibrary.simpleMessage("Book deleted successfully"),
+        "book_discover": MessageLookupByLibrary.simpleMessage("Discover"),
+        "book_has_been_added_to_local_library":
+            MessageLookupByLibrary.simpleMessage(
+                "Book has been added to local library"),
+        "book_information":
+            MessageLookupByLibrary.simpleMessage("Book information"),
+        "book_removed_from_library":
+            MessageLookupByLibrary.simpleMessage("Book removed from library"),
+        "book_will_be_displayed_for_admin":
+            MessageLookupByLibrary.simpleMessage(
+                "Book will be displayed for admin"),
+        "book_will_be_displayed_for_everyone":
+            MessageLookupByLibrary.simpleMessage(
+                "Book will be displayed for everyone"),
+        "books": MessageLookupByLibrary.simpleMessage("books"),
+        "books_already_exist":
+            MessageLookupByLibrary.simpleMessage("books already exist"),
+        "camera": MessageLookupByLibrary.simpleMessage("Camera"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "cannot_access_camera":
+            MessageLookupByLibrary.simpleMessage("Cannot access camera"),
+        "cannot_load_pdf_description": MessageLookupByLibrary.simpleMessage(
+            "Cannot load PDF, please try again later or contact administrator for support."),
+        "cannot_select_image_message":
+            MessageLookupByLibrary.simpleMessage("Cannot select image"),
+        "category": MessageLookupByLibrary.simpleMessage("Category"),
+        "changeAppLanguage":
+            MessageLookupByLibrary.simpleMessage("Change app language"),
+        "chooseAppAppearance":
+            MessageLookupByLibrary.simpleMessage("Choose app appearance"),
+        "choosePlanDescription": MessageLookupByLibrary.simpleMessage(
+            "Choose a plan that fits your reading and storage needs."),
+        "clearAllNotifications":
+            MessageLookupByLibrary.simpleMessage("Clear all notifications"),
+        "clear_and_reenter":
+            MessageLookupByLibrary.simpleMessage("Clear and reenter"),
+        "close": MessageLookupByLibrary.simpleMessage("Close"),
+        "completed": MessageLookupByLibrary.simpleMessage("Completed"),
+        "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+        "confirm_password":
+            MessageLookupByLibrary.simpleMessage("Confirm password"),
+        "continue_reading":
+            MessageLookupByLibrary.simpleMessage("Continue reading"),
+        "continue_reading_books":
+            MessageLookupByLibrary.simpleMessage("Continue reading books"),
+        "continue_reading_books_description":
+            MessageLookupByLibrary.simpleMessage("Continue reading books"),
+        "convertLimit": MessageLookupByLibrary.simpleMessage("Word to PDF"),
+        "convertTextToSpeech":
+            MessageLookupByLibrary.simpleMessage("Convert text to speech"),
+        "copyToken": MessageLookupByLibrary.simpleMessage("Copy token"),
+        "cover_image": MessageLookupByLibrary.simpleMessage("Cover image"),
+        "cover_image_uploaded_successfully":
+            MessageLookupByLibrary.simpleMessage(
+                "Cover image uploaded successfully"),
+        "create_book_success":
+            MessageLookupByLibrary.simpleMessage("Book created successfully!"),
+        "create_new_account":
+            MessageLookupByLibrary.simpleMessage("Create new account"),
+        "create_new_book":
+            MessageLookupByLibrary.simpleMessage("Create new book"),
+        "creating_account":
+            MessageLookupByLibrary.simpleMessage("Creating account..."),
+        "creating_book":
+            MessageLookupByLibrary.simpleMessage("Creating book..."),
+        "currentLanguage":
+            MessageLookupByLibrary.simpleMessage("Current language"),
+        "current_ebook_file_cannot_be_changed_from_this_screen":
+            MessageLookupByLibrary.simpleMessage(
+                "Current ebook file cannot be changed from this screen."),
+        "dark": MessageLookupByLibrary.simpleMessage("Dark"),
+        "days_ago": MessageLookupByLibrary.simpleMessage("days ago"),
+        "defaultVoice": MessageLookupByLibrary.simpleMessage("Default voice"),
+        "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "deleteAll": MessageLookupByLibrary.simpleMessage("Delete all"),
+        "deleteAllNotificationsFailed": MessageLookupByLibrary.simpleMessage(
+            "Delete all notifications failed"),
+        "deleteAllNotificationsSuccess": MessageLookupByLibrary.simpleMessage(
+            "Delete all notifications successfully"),
+        "deleteNotification":
+            MessageLookupByLibrary.simpleMessage("Delete notification"),
+        "deleteNotificationFailed":
+            MessageLookupByLibrary.simpleMessage("Delete notification failed"),
+        "deleteNotificationSuccess": MessageLookupByLibrary.simpleMessage(
+            "Delete notification successfully"),
+        "delete_book": MessageLookupByLibrary.simpleMessage("Delete book"),
+        "delete_book_confirmation": m0,
+        "delete_book_confirmation_message":
+            MessageLookupByLibrary.simpleMessage(
+                "Are you sure you want to delete this book?"),
+        "delete_book_failed":
+            MessageLookupByLibrary.simpleMessage("Book deleted failed"),
+        "delete_book_success":
+            MessageLookupByLibrary.simpleMessage("Book deleted successfully"),
+        "delete_review": MessageLookupByLibrary.simpleMessage("Delete review"),
+        "description": MessageLookupByLibrary.simpleMessage("Description"),
+        "disableNotifications":
+            MessageLookupByLibrary.simpleMessage("Disable notifications"),
+        "disagree": MessageLookupByLibrary.simpleMessage("Disagree"),
+        "done": MessageLookupByLibrary.simpleMessage("Done"),
+        "editProfile": MessageLookupByLibrary.simpleMessage("Edit profile"),
+        "edit_book": MessageLookupByLibrary.simpleMessage("Edit book"),
+        "edit_book_failed":
+            MessageLookupByLibrary.simpleMessage("Book edited failed"),
+        "edit_book_success":
+            MessageLookupByLibrary.simpleMessage("Book edited successfully"),
+        "edit_review": MessageLookupByLibrary.simpleMessage("Edit review"),
+        "email": MessageLookupByLibrary.simpleMessage("Email"),
+        "email_invalid": MessageLookupByLibrary.simpleMessage("Email invalid"),
+        "empty": MessageLookupByLibrary.simpleMessage("No data"),
+        "enableNotifications":
+            MessageLookupByLibrary.simpleMessage("Enable notifications"),
+        "enableSound": MessageLookupByLibrary.simpleMessage("Enable sound"),
+        "enableVibration":
+            MessageLookupByLibrary.simpleMessage("Enable vibration"),
+        "enter_confirm_password":
+            MessageLookupByLibrary.simpleMessage("Enter confirm password"),
+        "enter_email": MessageLookupByLibrary.simpleMessage("Enter email"),
+        "enter_full_name":
+            MessageLookupByLibrary.simpleMessage("Enter full name"),
+        "enter_information_to_start":
+            MessageLookupByLibrary.simpleMessage("Enter information to start"),
+        "enter_password":
+            MessageLookupByLibrary.simpleMessage("Enter password"),
+        "enter_phone":
+            MessageLookupByLibrary.simpleMessage("Enter phone number"),
+        "enter_pin_4_digits_sent_to_email":
+            MessageLookupByLibrary.simpleMessage(
+                "Enter PIN 4 digits sent to email"),
+        "enter_username":
+            MessageLookupByLibrary.simpleMessage("Enter username"),
+        "epub": MessageLookupByLibrary.simpleMessage("EPUB"),
+        "error": MessageLookupByLibrary.simpleMessage("Error"),
+        "errorChangingLanguage":
+            MessageLookupByLibrary.simpleMessage("Error changing language"),
+        "errorSavingSettings":
+            MessageLookupByLibrary.simpleMessage("Error saving settings"),
+        "error_cancel":
+            MessageLookupByLibrary.simpleMessage("Request cancelled"),
+        "error_common": MessageLookupByLibrary.simpleMessage(
+            "Something went wrong, please try again later"),
+        "error_connection":
+            MessageLookupByLibrary.simpleMessage("No internet connection"),
+        "error_deleting_book": MessageLookupByLibrary.simpleMessage(
+            "Error deleting book! Please try again later."),
+        "error_internal_server_error": MessageLookupByLibrary.simpleMessage(
+            "Internal server error, please try again later!"),
+        "error_loading_books":
+            MessageLookupByLibrary.simpleMessage("Error loading books"),
+        "error_occurred":
+            MessageLookupByLibrary.simpleMessage("Error occurred"),
+        "error_request_timeout": MessageLookupByLibrary.simpleMessage(
+            "Request timeout, please try again later!"),
+        "error_scanning_files":
+            MessageLookupByLibrary.simpleMessage("Error scanning files"),
+        "error_selecting_file":
+            MessageLookupByLibrary.simpleMessage("Error selecting file"),
+        "error_timeout": MessageLookupByLibrary.simpleMessage(
+            "Connection timeout, please try again later!"),
+        "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
+        "facebook_access_token_is_null": MessageLookupByLibrary.simpleMessage(
+            "Facebook access token is null"),
+        "facebook_invalid_client":
+            MessageLookupByLibrary.simpleMessage("Facebook invalid client"),
+        "facebook_login_failed":
+            MessageLookupByLibrary.simpleMessage("Facebook login failed"),
+        "facebook_network_error":
+            MessageLookupByLibrary.simpleMessage("Facebook network error"),
+        "fast": MessageLookupByLibrary.simpleMessage("Fast"),
+        "favorite_books":
+            MessageLookupByLibrary.simpleMessage("Favorite books"),
+        "fcmToken": MessageLookupByLibrary.simpleMessage("FCM Token"),
+        "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
+        "feedbackAnonymous":
+            MessageLookupByLibrary.simpleMessage("Send anonymously"),
+        "feedbackAnonymousDescription": MessageLookupByLibrary.simpleMessage(
+            "Send feedback without displaying personal information"),
+        "feedbackContact":
+            MessageLookupByLibrary.simpleMessage("Contact information"),
+        "feedbackContent": MessageLookupByLibrary.simpleMessage("Content"),
+        "feedbackContentMinLength": MessageLookupByLibrary.simpleMessage(
+            "Content must be at least 10 characters"),
+        "feedbackContentRequired":
+            MessageLookupByLibrary.simpleMessage("Please enter content"),
+        "feedbackDescription": MessageLookupByLibrary.simpleMessage(
+            "We would love to hear your feedback to improve the app"),
+        "feedbackEmailInvalid":
+            MessageLookupByLibrary.simpleMessage("Invalid email"),
+        "feedbackName": MessageLookupByLibrary.simpleMessage("Name"),
+        "feedbackOptions": MessageLookupByLibrary.simpleMessage("Options"),
+        "feedbackPhone": MessageLookupByLibrary.simpleMessage("Phone number"),
+        "feedbackPhoneInvalid":
+            MessageLookupByLibrary.simpleMessage("Invalid phone number"),
+        "feedbackPriority": MessageLookupByLibrary.simpleMessage("Priority"),
+        "feedbackSend": MessageLookupByLibrary.simpleMessage("Send feedback"),
+        "feedbackSuccess":
+            MessageLookupByLibrary.simpleMessage("Feedback sent successfully"),
+        "feedbackTitle": MessageLookupByLibrary.simpleMessage("Title"),
+        "feedbackTitleMinLength": MessageLookupByLibrary.simpleMessage(
+            "Title must be at least 5 characters"),
+        "feedbackTitleRequired":
+            MessageLookupByLibrary.simpleMessage("Please enter a title"),
+        "feedbackType": MessageLookupByLibrary.simpleMessage("Feedback type"),
+        "fileEbook": MessageLookupByLibrary.simpleMessage("File Ebook"),
+        "file_ebook_not_found":
+            MessageLookupByLibrary.simpleMessage("File ebook not found"),
+        "file_path": MessageLookupByLibrary.simpleMessage("File path"),
+        "file_selected": MessageLookupByLibrary.simpleMessage("File selected"),
+        "file_size": MessageLookupByLibrary.simpleMessage("File size"),
+        "file_type": MessageLookupByLibrary.simpleMessage("File type"),
+        "files": MessageLookupByLibrary.simpleMessage("files"),
+        "filter": MessageLookupByLibrary.simpleMessage("Filter"),
+        "find_book": MessageLookupByLibrary.simpleMessage("Find book"),
+        "find_image": MessageLookupByLibrary.simpleMessage("Find image file"),
+        "find_word": MessageLookupByLibrary.simpleMessage("Find word file"),
+        "forgot_password":
+            MessageLookupByLibrary.simpleMessage("Forgot password"),
+        "format": MessageLookupByLibrary.simpleMessage("Format"),
+        "found": MessageLookupByLibrary.simpleMessage("Found"),
+        "free": MessageLookupByLibrary.simpleMessage("Free"),
+        "from_directory":
+            MessageLookupByLibrary.simpleMessage("from directory"),
+        "from_file_picker":
+            MessageLookupByLibrary.simpleMessage("From file picker"),
+        "full_name": MessageLookupByLibrary.simpleMessage("Full name"),
+        "gallery": MessageLookupByLibrary.simpleMessage("Gallery"),
+        "getHelpAndSupport":
+            MessageLookupByLibrary.simpleMessage("Get help and support"),
+        "go_back": MessageLookupByLibrary.simpleMessage("Go back"),
+        "google": MessageLookupByLibrary.simpleMessage("Google"),
+        "google_developer_error":
+            MessageLookupByLibrary.simpleMessage("Google developer error"),
+        "google_invalid_client":
+            MessageLookupByLibrary.simpleMessage("Google invalid client"),
+        "google_network_error":
+            MessageLookupByLibrary.simpleMessage("Google network error"),
+        "google_play_services_not_available":
+            MessageLookupByLibrary.simpleMessage(
+                "Google Play Services not available"),
+        "google_signin_failed":
+            MessageLookupByLibrary.simpleMessage("Google signin failed"),
+        "google_timeout":
+            MessageLookupByLibrary.simpleMessage("Google timeout"),
+        "grant_permission":
+            MessageLookupByLibrary.simpleMessage("Grant permission"),
+        "have_account": MessageLookupByLibrary.simpleMessage("Have account? "),
+        "helpCenter": MessageLookupByLibrary.simpleMessage("Help center"),
+        "high": MessageLookupByLibrary.simpleMessage("High"),
+        "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "hours_ago": MessageLookupByLibrary.simpleMessage("hours ago"),
+        "i_uploaded": MessageLookupByLibrary.simpleMessage("I uploaded"),
+        "in_memory": MessageLookupByLibrary.simpleMessage("In memory"),
+        "info": MessageLookupByLibrary.simpleMessage("Info"),
+        "initializingTTS":
+            MessageLookupByLibrary.simpleMessage("Initializing TTS..."),
+        "input_username":
+            MessageLookupByLibrary.simpleMessage("Enter username"),
+        "invalid_email": MessageLookupByLibrary.simpleMessage("Invalid email"),
+        "isbn": MessageLookupByLibrary.simpleMessage("ISBN"),
+        "jpgPngWebp": MessageLookupByLibrary.simpleMessage("JPG, PNG, WEBP"),
+        "just_now": MessageLookupByLibrary.simpleMessage("just now"),
+        "language": MessageLookupByLibrary.simpleMessage("Language"),
+        "languageChanged":
+            MessageLookupByLibrary.simpleMessage("Language changed"),
+        "last_read": MessageLookupByLibrary.simpleMessage("Last read"),
+        "library": MessageLookupByLibrary.simpleMessage("Ebook library"),
+        "light": MessageLookupByLibrary.simpleMessage("Light"),
+        "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
+        "loading_books": MessageLookupByLibrary.simpleMessage("Loading books"),
+        "loading_more_books":
+            MessageLookupByLibrary.simpleMessage("Loading more books"),
+        "loading_more_books_completed": MessageLookupByLibrary.simpleMessage(
+            "Loading more books completed"),
+        "loading_more_books_failed":
+            MessageLookupByLibrary.simpleMessage("Loading more books failed"),
+        "loading_more_books_no_data":
+            MessageLookupByLibrary.simpleMessage("Loading more books no data"),
+        "localNotifications":
+            MessageLookupByLibrary.simpleMessage("Local Notifications"),
+        "local_library": MessageLookupByLibrary.simpleMessage("On device"),
+        "logging_in": MessageLookupByLibrary.simpleMessage("Logging in..."),
+        "login": MessageLookupByLibrary.simpleMessage("Login"),
+        "login_error": MessageLookupByLibrary.simpleMessage("Login error"),
+        "login_now": MessageLookupByLibrary.simpleMessage("Login now"),
+        "login_to_continue":
+            MessageLookupByLibrary.simpleMessage("Login to continue"),
+        "login_with_apple":
+            MessageLookupByLibrary.simpleMessage("Login with Apple"),
+        "login_with_biometric":
+            MessageLookupByLibrary.simpleMessage("Login with biometric"),
+        "login_with_bitbucket":
+            MessageLookupByLibrary.simpleMessage("Login with Bitbucket"),
+        "login_with_email":
+            MessageLookupByLibrary.simpleMessage("Login with email"),
+        "login_with_face_id":
+            MessageLookupByLibrary.simpleMessage("Login with Face ID"),
+        "login_with_facebook":
+            MessageLookupByLibrary.simpleMessage("Login with Facebook"),
+        "login_with_fingerprint":
+            MessageLookupByLibrary.simpleMessage("Login with fingerprint"),
+        "login_with_github":
+            MessageLookupByLibrary.simpleMessage("Login with GitHub"),
+        "login_with_gitlab":
+            MessageLookupByLibrary.simpleMessage("Login with GitLab"),
+        "login_with_google":
+            MessageLookupByLibrary.simpleMessage("Login with Google"),
+        "login_with_linkedin":
+            MessageLookupByLibrary.simpleMessage("Login with LinkedIn"),
+        "login_with_otp":
+            MessageLookupByLibrary.simpleMessage("Login with OTP"),
+        "login_with_password":
+            MessageLookupByLibrary.simpleMessage("Login with password"),
+        "login_with_phone":
+            MessageLookupByLibrary.simpleMessage("Login with phone"),
+        "login_with_pin":
+            MessageLookupByLibrary.simpleMessage("Login with PIN"),
+        "login_with_twitter":
+            MessageLookupByLibrary.simpleMessage("Login with Twitter"),
+        "login_with_username":
+            MessageLookupByLibrary.simpleMessage("Login with username"),
+        "logout": MessageLookupByLibrary.simpleMessage("Logout"),
+        "low": MessageLookupByLibrary.simpleMessage("Low"),
+        "manageNotificationCategories": MessageLookupByLibrary.simpleMessage(
+            "Manage notification categories"),
+        "manageNotifications":
+            MessageLookupByLibrary.simpleMessage("Manage notifications"),
+        "markAllAsRead":
+            MessageLookupByLibrary.simpleMessage("Mark all as read"),
+        "markAllAsReadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark all as read failed"),
+        "markAllAsReadSuccess": MessageLookupByLibrary.simpleMessage(
+            "Mark all as read successfully"),
+        "markAllAsUnread":
+            MessageLookupByLibrary.simpleMessage("Mark all as unread"),
+        "markAllAsUnreadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark all as unread failed"),
+        "markAllAsUnreadSuccess": MessageLookupByLibrary.simpleMessage(
+            "Mark all as unread successfully"),
+        "markAsRead": MessageLookupByLibrary.simpleMessage("Mark as read"),
+        "markAsReadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark as read failed"),
+        "markAsReadSuccess":
+            MessageLookupByLibrary.simpleMessage("Mark as read successfully"),
+        "markAsUnread": MessageLookupByLibrary.simpleMessage("Mark as unread"),
+        "markAsUnreadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark as unread failed"),
+        "markAsUnreadSuccess":
+            MessageLookupByLibrary.simpleMessage("Mark as unread successfully"),
+        "markReadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark read failed"),
+        "markReadSuccess":
+            MessageLookupByLibrary.simpleMessage("Mark read successfully"),
+        "markUnreadFailed":
+            MessageLookupByLibrary.simpleMessage("Mark unread failed"),
+        "markUnreadSuccess":
+            MessageLookupByLibrary.simpleMessage("Mark unread successfully"),
+        "medium": MessageLookupByLibrary.simpleMessage("Medium"),
+        "minutes_ago": MessageLookupByLibrary.simpleMessage("minutes ago"),
+        "months_ago": MessageLookupByLibrary.simpleMessage("months ago"),
+        "my_books": MessageLookupByLibrary.simpleMessage("My books"),
+        "my_library": MessageLookupByLibrary.simpleMessage("My library"),
+        "my_uploaded_books":
+            MessageLookupByLibrary.simpleMessage("My uploaded books"),
+        "need_permission_to_access_memory":
+            MessageLookupByLibrary.simpleMessage(
+                "Need permission to access memory"),
+        "new_book": MessageLookupByLibrary.simpleMessage("New"),
+        "news": MessageLookupByLibrary.simpleMessage("News"),
+        "noLanguagesAvailable":
+            MessageLookupByLibrary.simpleMessage("No languages available"),
+        "noLoginInfo":
+            MessageLookupByLibrary.simpleMessage("No login information"),
+        "noName": MessageLookupByLibrary.simpleMessage("No name"),
+        "noNotifications":
+            MessageLookupByLibrary.simpleMessage("No notifications"),
+        "noSubscriptionPlans": MessageLookupByLibrary.simpleMessage(
+            "No plans available at the moment."),
+        "no_account": MessageLookupByLibrary.simpleMessage("No account? "),
+        "no_available_camera":
+            MessageLookupByLibrary.simpleMessage("No available camera"),
+        "no_book_found": MessageLookupByLibrary.simpleMessage("No book found"),
+        "no_books": MessageLookupByLibrary.simpleMessage("No books"),
+        "no_books_found":
+            MessageLookupByLibrary.simpleMessage("No books found"),
+        "no_content_to_display":
+            MessageLookupByLibrary.simpleMessage("No content to display"),
+        "no_file_found": MessageLookupByLibrary.simpleMessage("No file found"),
+        "no_image_file_found": MessageLookupByLibrary.simpleMessage(
+            "No file .jpg, .jpeg, .png found"),
+        "no_login_info_saved":
+            MessageLookupByLibrary.simpleMessage("No login info saved"),
+        "no_name": MessageLookupByLibrary.simpleMessage("No name"),
+        "no_pdf_epub_mobi_found":
+            MessageLookupByLibrary.simpleMessage("No PDF, EPUB, or MOBI found"),
+        "no_reviews_yet":
+            MessageLookupByLibrary.simpleMessage("No reviews yet"),
+        "no_word_file_found":
+            MessageLookupByLibrary.simpleMessage("No file .docx found"),
+        "normal": MessageLookupByLibrary.simpleMessage("Normal"),
+        "notificationBadge": MessageLookupByLibrary.simpleMessage("Badge"),
+        "notificationCategories":
+            MessageLookupByLibrary.simpleMessage("Notification Categories"),
+        "notificationDeletedFailed":
+            MessageLookupByLibrary.simpleMessage("Notification deleted failed"),
+        "notificationDeletedSuccessfully": MessageLookupByLibrary.simpleMessage(
+            "Notification deleted successfully"),
+        "notificationHistory":
+            MessageLookupByLibrary.simpleMessage("Notification History"),
+        "notificationPermissionRequired": MessageLookupByLibrary.simpleMessage(
+            "Notification permission required"),
+        "notificationPreferences":
+            MessageLookupByLibrary.simpleMessage("Notification Preferences"),
+        "notificationPreview":
+            MessageLookupByLibrary.simpleMessage("Notification Preview"),
+        "notificationSettings":
+            MessageLookupByLibrary.simpleMessage("Notification Settings"),
+        "notificationSound":
+            MessageLookupByLibrary.simpleMessage("Notification Sound"),
+        "notificationStatus":
+            MessageLookupByLibrary.simpleMessage("Notification Status"),
+        "notificationVibration":
+            MessageLookupByLibrary.simpleMessage("Vibration"),
+        "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
+        "notificationsCleared":
+            MessageLookupByLibrary.simpleMessage("All notifications cleared"),
+        "openSettings": MessageLookupByLibrary.simpleMessage("Open Settings"),
+        "optional": MessageLookupByLibrary.simpleMessage("Optional"),
+        "or_use_select_file_to_browse_directory_without_permission":
+            MessageLookupByLibrary.simpleMessage(
+                "Or use \'Select file\' to browse directory (without permission)"),
+        "pages": MessageLookupByLibrary.simpleMessage("Pages"),
+        "password": MessageLookupByLibrary.simpleMessage("Password"),
+        "password_must_be_at_least_6_characters":
+            MessageLookupByLibrary.simpleMessage(
+                "Password must be at least 6 characters"),
+        "passwords_do_not_match":
+            MessageLookupByLibrary.simpleMessage("Passwords do not match"),
+        "payment": MessageLookupByLibrary.simpleMessage("Payment"),
+        "paymentFailed": MessageLookupByLibrary.simpleMessage("Payment Failed"),
+        "paymentResult": MessageLookupByLibrary.simpleMessage("Payment Result"),
+        "paymentSuccess":
+            MessageLookupByLibrary.simpleMessage("Payment Successful"),
+        "pdf": MessageLookupByLibrary.simpleMessage("PDF"),
+        "pdfEpubMobi": MessageLookupByLibrary.simpleMessage("PDF, EPUB, MOBI"),
+        "pdf_add_note": MessageLookupByLibrary.simpleMessage("Add note"),
+        "pdf_add_note_description":
+            MessageLookupByLibrary.simpleMessage("Add note description"),
+        "pdf_add_note_description_failed":
+            MessageLookupByLibrary.simpleMessage("Add note description failed"),
+        "pdf_add_note_description_successfully":
+            MessageLookupByLibrary.simpleMessage(
+                "Add note description successfully"),
+        "pdf_cannot_load":
+            MessageLookupByLibrary.simpleMessage("Cannot load PDF"),
+        "pdf_document_read_complete":
+            MessageLookupByLibrary.simpleMessage("Document finished reading"),
+        "pdf_done_drawing":
+            MessageLookupByLibrary.simpleMessage("Done drawing"),
+        "pdf_drawings_saved":
+            MessageLookupByLibrary.simpleMessage("Drawings saved"),
+        "pdf_file_info": MessageLookupByLibrary.simpleMessage("PDF file info"),
+        "pdf_go": MessageLookupByLibrary.simpleMessage("Go"),
+        "pdf_invalid_page":
+            MessageLookupByLibrary.simpleMessage("Invalid page number"),
+        "pdf_jump_to_page":
+            MessageLookupByLibrary.simpleMessage("Jump to page"),
+        "pdf_load_failed_retry": MessageLookupByLibrary.simpleMessage(
+            "PDF not loaded yet, try again later"),
+        "pdf_loading": MessageLookupByLibrary.simpleMessage("Loading PDF..."),
+        "pdf_no_notes": MessageLookupByLibrary.simpleMessage("No notes"),
+        "pdf_note_added": MessageLookupByLibrary.simpleMessage("Note added"),
+        "pdf_note_added_description":
+            MessageLookupByLibrary.simpleMessage("Note added description"),
+        "pdf_note_added_description_failed":
+            MessageLookupByLibrary.simpleMessage(
+                "Note added description failed"),
+        "pdf_note_added_description_successfully":
+            MessageLookupByLibrary.simpleMessage(
+                "Note added description successfully"),
+        "pdf_note_added_failed":
+            MessageLookupByLibrary.simpleMessage("Note added failed"),
+        "pdf_note_added_successfully":
+            MessageLookupByLibrary.simpleMessage("Note added successfully"),
+        "pdf_note_hint": MessageLookupByLibrary.simpleMessage("Enter note"),
+        "pdf_notes_list": MessageLookupByLibrary.simpleMessage("Notes list"),
+        "pdf_page_number": MessageLookupByLibrary.simpleMessage("Page number"),
+        "pdf_page_of": m1,
+        "pdf_path_label": MessageLookupByLibrary.simpleMessage("Path:"),
+        "pdf_please_wait": MessageLookupByLibrary.simpleMessage("Please wait"),
+        "pdf_read_ebook": MessageLookupByLibrary.simpleMessage("Read ebook"),
+        "pdf_reading": MessageLookupByLibrary.simpleMessage("Reading"),
+        "pdf_search_in_pdf":
+            MessageLookupByLibrary.simpleMessage("Search in PDF..."),
+        "pdf_search_tooltip": MessageLookupByLibrary.simpleMessage("Search"),
+        "pdf_share": MessageLookupByLibrary.simpleMessage("Share"),
+        "pdf_share_error": m2,
+        "pdf_share_file_not_found":
+            MessageLookupByLibrary.simpleMessage("File not found to share"),
+        "pdf_share_success":
+            MessageLookupByLibrary.simpleMessage("Shared successfully"),
+        "pdf_share_text": m3,
+        "pdf_share_wait_download": MessageLookupByLibrary.simpleMessage(
+            "PDF is loading, please wait and try again"),
+        "pdf_toolbar": MessageLookupByLibrary.simpleMessage("Toolbar"),
+        "pdf_tts_read_error": m4,
+        "pdf_undo": MessageLookupByLibrary.simpleMessage("Undo"),
+        "pdf_view_file_info":
+            MessageLookupByLibrary.simpleMessage("View file info"),
+        "pdf_zoom_in_out": MessageLookupByLibrary.simpleMessage("Zoom in/out"),
+        "perPeriod": MessageLookupByLibrary.simpleMessage("per period"),
+        "permissionDenied":
+            MessageLookupByLibrary.simpleMessage("Permission denied"),
+        "permissionGranted":
+            MessageLookupByLibrary.simpleMessage("Permission granted"),
+        "permissionStatus":
+            MessageLookupByLibrary.simpleMessage("Permission Status"),
+        "phone": MessageLookupByLibrary.simpleMessage("Phone number"),
+        "pin_resend_success":
+            MessageLookupByLibrary.simpleMessage("PIN resend successfully"),
+        "playTest": MessageLookupByLibrary.simpleMessage("Play test"),
+        "please_authenticate_to_login": MessageLookupByLibrary.simpleMessage(
+            "Please authenticate to login"),
+        "please_enter_author":
+            MessageLookupByLibrary.simpleMessage("Please enter author"),
+        "please_enter_bitbucket_link":
+            MessageLookupByLibrary.simpleMessage("Please enter Bitbucket link"),
+        "please_enter_category":
+            MessageLookupByLibrary.simpleMessage("Please enter category"),
+        "please_enter_code":
+            MessageLookupByLibrary.simpleMessage("Please enter code"),
+        "please_enter_confirm_code":
+            MessageLookupByLibrary.simpleMessage("Please enter confirm code"),
+        "please_enter_confirm_password": MessageLookupByLibrary.simpleMessage(
+            "Please enter confirm password"),
+        "please_enter_description":
+            MessageLookupByLibrary.simpleMessage("Please enter description"),
+        "please_enter_email":
+            MessageLookupByLibrary.simpleMessage("Please enter email"),
+        "please_enter_facebook_link":
+            MessageLookupByLibrary.simpleMessage("Please enter Facebook link"),
+        "please_enter_full_name":
+            MessageLookupByLibrary.simpleMessage("Please enter full name"),
+        "please_enter_github_link":
+            MessageLookupByLibrary.simpleMessage("Please enter GitHub link"),
+        "please_enter_gitlab_link":
+            MessageLookupByLibrary.simpleMessage("Please enter GitLab link"),
+        "please_enter_instagram_link":
+            MessageLookupByLibrary.simpleMessage("Please enter Instagram link"),
+        "please_enter_isbn":
+            MessageLookupByLibrary.simpleMessage("Please enter ISBN"),
+        "please_enter_linkedin_link":
+            MessageLookupByLibrary.simpleMessage("Please enter LinkedIn link"),
+        "please_enter_password":
+            MessageLookupByLibrary.simpleMessage("Please enter password"),
+        "please_enter_phone":
+            MessageLookupByLibrary.simpleMessage("Please enter phone number"),
+        "please_enter_publisher":
+            MessageLookupByLibrary.simpleMessage("Please enter publisher"),
+        "please_enter_review": MessageLookupByLibrary.simpleMessage(
+            "Please enter review, at least 10 characters"),
+        "please_enter_title":
+            MessageLookupByLibrary.simpleMessage("Please enter title"),
+        "please_enter_total_pages":
+            MessageLookupByLibrary.simpleMessage("Please enter total pages"),
+        "please_enter_twitter_link":
+            MessageLookupByLibrary.simpleMessage("Please enter Twitter link"),
+        "please_enter_username":
+            MessageLookupByLibrary.simpleMessage("Please enter username"),
+        "please_enter_valid_address":
+            MessageLookupByLibrary.simpleMessage("Please enter valid address"),
+        "please_enter_valid_birth_date": MessageLookupByLibrary.simpleMessage(
+            "Please enter valid birth date"),
+        "please_enter_valid_bitbucket_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Please enter valid Bitbucket link"),
+        "please_enter_valid_facebook_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Please enter valid Facebook link"),
+        "please_enter_valid_github_link": MessageLookupByLibrary.simpleMessage(
+            "Please enter valid GitHub link"),
+        "please_enter_valid_gitlab_link": MessageLookupByLibrary.simpleMessage(
+            "Please enter valid GitLab link"),
+        "please_enter_valid_instagram_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Please enter valid Instagram link"),
+        "please_enter_valid_linkedin_link":
+            MessageLookupByLibrary.simpleMessage(
+                "Please enter valid LinkedIn link"),
+        "please_enter_valid_phone_number": MessageLookupByLibrary.simpleMessage(
+            "Please enter valid phone number"),
+        "please_enter_valid_twitter_link": MessageLookupByLibrary.simpleMessage(
+            "Please enter valid Twitter link"),
+        "please_grant_permission_to_access_camera_or_gallery_in_settings":
+            MessageLookupByLibrary.simpleMessage(
+                "Please grant permission to access camera or gallery in settings"),
+        "please_grant_permission_to_search_file":
+            MessageLookupByLibrary.simpleMessage(
+                "Please grant permission to search file"),
+        "please_select_rating":
+            MessageLookupByLibrary.simpleMessage("Please select a rating"),
+        "please_upload_ebook_file_first": MessageLookupByLibrary.simpleMessage(
+            "Please upload ebook file first"),
+        "pls_input_username":
+            MessageLookupByLibrary.simpleMessage("Please enter username"),
+        "popular": MessageLookupByLibrary.simpleMessage("Popular"),
+        "privacySettings":
+            MessageLookupByLibrary.simpleMessage("Privacy settings"),
+        "privacy_and_security":
+            MessageLookupByLibrary.simpleMessage("Privacy and security"),
+        "private": MessageLookupByLibrary.simpleMessage("Private"),
+        "private_books": MessageLookupByLibrary.simpleMessage("Private books"),
+        "profile": MessageLookupByLibrary.simpleMessage("Profile"),
+        "public": MessageLookupByLibrary.simpleMessage("Public"),
+        "public_books": MessageLookupByLibrary.simpleMessage("Public books"),
+        "publisher": MessageLookupByLibrary.simpleMessage("Publisher"),
+        "pull_to_refresh":
+            MessageLookupByLibrary.simpleMessage("Pull down to refresh"),
+        "pushNotifications":
+            MessageLookupByLibrary.simpleMessage("Push Notifications"),
+        "rate_and_review":
+            MessageLookupByLibrary.simpleMessage("Rate & Review"),
+        "rate_this_book":
+            MessageLookupByLibrary.simpleMessage("Rate this book"),
+        "rating_submission_failed":
+            MessageLookupByLibrary.simpleMessage("Rating submission failed"),
+        "rating_submitted_successfully": MessageLookupByLibrary.simpleMessage(
+            "Rating submitted successfully"),
+        "read": MessageLookupByLibrary.simpleMessage("Read"),
+        "read_book": MessageLookupByLibrary.simpleMessage("Read book"),
+        "readingReminders":
+            MessageLookupByLibrary.simpleMessage("Reading Reminders"),
+        "readingSpeed": MessageLookupByLibrary.simpleMessage("Reading speed"),
+        "reading_books": MessageLookupByLibrary.simpleMessage("Reading books"),
+        "reading_progress":
+            MessageLookupByLibrary.simpleMessage("Reading progress"),
+        "reading_time": MessageLookupByLibrary.simpleMessage("Reading time:"),
+        "ready_to_upload":
+            MessageLookupByLibrary.simpleMessage("Ready to upload"),
+        "receiveBookUpdates": MessageLookupByLibrary.simpleMessage(
+            "Receive notifications for new books"),
+        "receiveLocalNotifications": MessageLookupByLibrary.simpleMessage(
+            "Receive reminders and local notifications"),
+        "receivePushNotifications": MessageLookupByLibrary.simpleMessage(
+            "Receive push notifications from server"),
+        "receiveSystemNotifications": MessageLookupByLibrary.simpleMessage(
+            "Receive app update notifications"),
+        "recommended_size":
+            MessageLookupByLibrary.simpleMessage("Recommended size"),
+        "refresh": MessageLookupByLibrary.simpleMessage("Refresh"),
+        "refreshToken": MessageLookupByLibrary.simpleMessage("Refresh token"),
+        "register": MessageLookupByLibrary.simpleMessage("Register"),
+        "register_now": MessageLookupByLibrary.simpleMessage("Register now"),
+        "register_to_continue":
+            MessageLookupByLibrary.simpleMessage("Register to continue"),
+        "remember_me": MessageLookupByLibrary.simpleMessage("Remember me"),
+        "reminderTime": MessageLookupByLibrary.simpleMessage("Reminder Time"),
+        "remove_archive":
+            MessageLookupByLibrary.simpleMessage("Remove archive"),
+        "remove_favorite":
+            MessageLookupByLibrary.simpleMessage("Remove favorite"),
+        "required_field": MessageLookupByLibrary.simpleMessage("Required"),
+        "resend_code": MessageLookupByLibrary.simpleMessage("Resend code"),
+        "resend_pin": MessageLookupByLibrary.simpleMessage("Resend pin"),
+        "resend_pin_in": MessageLookupByLibrary.simpleMessage("Resend pin in"),
+        "reset": MessageLookupByLibrary.simpleMessage("Reset"),
+        "reset_password":
+            MessageLookupByLibrary.simpleMessage("Reset password"),
+        "retry": MessageLookupByLibrary.simpleMessage("Retry"),
+        "retry_loading_books":
+            MessageLookupByLibrary.simpleMessage("Retry loading books"),
+        "reviews": MessageLookupByLibrary.simpleMessage("Reviews"),
+        "scan_again": MessageLookupByLibrary.simpleMessage("Scan again"),
+        "scanning_in_memory":
+            MessageLookupByLibrary.simpleMessage("Scanning in memory..."),
+        "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "search_book": MessageLookupByLibrary.simpleMessage("Search book"),
+        "search_books": MessageLookupByLibrary.simpleMessage("Search books..."),
+        "search_filter": MessageLookupByLibrary.simpleMessage("Search filter"),
+        "seconds": MessageLookupByLibrary.simpleMessage("seconds"),
+        "security": MessageLookupByLibrary.simpleMessage("Security"),
+        "selectPaymentMethod":
+            MessageLookupByLibrary.simpleMessage("Select Payment Method"),
+        "selectPlan": MessageLookupByLibrary.simpleMessage("Select plan"),
+        "selectReminderTime":
+            MessageLookupByLibrary.simpleMessage("Select reminder time"),
+        "selectTTSLanguage":
+            MessageLookupByLibrary.simpleMessage("Select reading language"),
+        "selectVoice": MessageLookupByLibrary.simpleMessage("Select voice"),
+        "select_all": MessageLookupByLibrary.simpleMessage("Select all"),
+        "select_all_books":
+            MessageLookupByLibrary.simpleMessage("Select all books"),
+        "select_cover_image":
+            MessageLookupByLibrary.simpleMessage("Select cover image"),
+        "select_file": MessageLookupByLibrary.simpleMessage("Select file"),
+        "select_language":
+            MessageLookupByLibrary.simpleMessage("Please enter language"),
+        "selected": MessageLookupByLibrary.simpleMessage("Selected"),
+        "sendFeedback": MessageLookupByLibrary.simpleMessage("Send feedback"),
+        "sendTestNotification":
+            MessageLookupByLibrary.simpleMessage("Send test notification"),
+        "setReadingReminders":
+            MessageLookupByLibrary.simpleMessage("Set daily reading reminders"),
+        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "settingsSaved": MessageLookupByLibrary.simpleMessage("Settings saved"),
+        "shareYourThoughts":
+            MessageLookupByLibrary.simpleMessage("Share your thoughts"),
+        "showBadge":
+            MessageLookupByLibrary.simpleMessage("Show badge on app icon"),
+        "showPreview":
+            MessageLookupByLibrary.simpleMessage("Show content on lock screen"),
+        "size": MessageLookupByLibrary.simpleMessage("Size"),
+        "slow": MessageLookupByLibrary.simpleMessage("Slow"),
+        "start_reading": MessageLookupByLibrary.simpleMessage("Start reading"),
+        "stopTest": MessageLookupByLibrary.simpleMessage("Stop"),
+        "storageLimit": MessageLookupByLibrary.simpleMessage("Storage"),
+        "submit_rating": MessageLookupByLibrary.simpleMessage("Submit Rating"),
+        "subscriptionPlans":
+            MessageLookupByLibrary.simpleMessage("Subscription plans"),
+        "success": MessageLookupByLibrary.simpleMessage("Success"),
+        "systemNotifications":
+            MessageLookupByLibrary.simpleMessage("System Notifications"),
+        "tap_or_long_press_to_select_file":
+            MessageLookupByLibrary.simpleMessage(
+                "Tap on file to select or long press to select file"),
+        "tap_to_rate": MessageLookupByLibrary.simpleMessage("Tap to rate"),
+        "tap_to_view": MessageLookupByLibrary.simpleMessage("Tap to view"),
+        "testNotification":
+            MessageLookupByLibrary.simpleMessage("Test Notification"),
+        "testNotificationSent":
+            MessageLookupByLibrary.simpleMessage("Test notification sent"),
+        "testTTS": MessageLookupByLibrary.simpleMessage("Test reading"),
+        "textToSpeech": MessageLookupByLibrary.simpleMessage("Text to speech"),
+        "theme": MessageLookupByLibrary.simpleMessage("Theme"),
+        "title": MessageLookupByLibrary.simpleMessage("Title"),
+        "to_library": MessageLookupByLibrary.simpleMessage("to library"),
+        "tokenCopied": MessageLookupByLibrary.simpleMessage("Token copied"),
+        "tokenRefreshed":
+            MessageLookupByLibrary.simpleMessage("Token refreshed"),
+        "too_many_attempts": MessageLookupByLibrary.simpleMessage(
+            "Too many attempts. Please try again later"),
+        "tools": MessageLookupByLibrary.simpleMessage("Tools"),
+        "tools_add_image_file":
+            MessageLookupByLibrary.simpleMessage("Add image file"),
+        "tools_add_more_pages":
+            MessageLookupByLibrary.simpleMessage("Add more pages"),
+        "tools_add_word_file":
+            MessageLookupByLibrary.simpleMessage("Add word file"),
+        "tools_choose_from_gallery":
+            MessageLookupByLibrary.simpleMessage("Choose from gallery"),
+        "tools_conversion_failed":
+            MessageLookupByLibrary.simpleMessage("Conversion failed"),
+        "tools_conversion_success":
+            MessageLookupByLibrary.simpleMessage("Conversion successful"),
+        "tools_convert_to_pdf":
+            MessageLookupByLibrary.simpleMessage("Convert to PDF"),
+        "tools_converting":
+            MessageLookupByLibrary.simpleMessage("Converting..."),
+        "tools_document_scanner":
+            MessageLookupByLibrary.simpleMessage("Scanner"),
+        "tools_document_scanner_description":
+            MessageLookupByLibrary.simpleMessage("Scan documents using camera"),
+        "tools_file_saved_to": m5,
+        "tools_no_file_selected":
+            MessageLookupByLibrary.simpleMessage("No file selected"),
+        "tools_pages_count": m6,
+        "tools_preview": MessageLookupByLibrary.simpleMessage("Preview"),
+        "tools_processing":
+            MessageLookupByLibrary.simpleMessage("Processing..."),
+        "tools_remove_page":
+            MessageLookupByLibrary.simpleMessage("Remove page"),
+        "tools_save_as_pdf":
+            MessageLookupByLibrary.simpleMessage("Download PDF"),
+        "tools_save_failed":
+            MessageLookupByLibrary.simpleMessage("Save failed"),
+        "tools_saved_successfully":
+            MessageLookupByLibrary.simpleMessage("Saved successfully"),
+        "tools_scan_document":
+            MessageLookupByLibrary.simpleMessage("Scan document"),
+        "tools_select_file_first":
+            MessageLookupByLibrary.simpleMessage("Please select a file first"),
+        "tools_select_word_file":
+            MessageLookupByLibrary.simpleMessage("Select Word file"),
+        "tools_take_photo": MessageLookupByLibrary.simpleMessage("Take photo"),
+        "tools_word_to_pdf":
+            MessageLookupByLibrary.simpleMessage("Word to PDF"),
+        "tools_word_to_pdf_description": MessageLookupByLibrary.simpleMessage(
+            "Convert Word documents to PDF"),
+        "total_pages": MessageLookupByLibrary.simpleMessage("Total pages"),
+        "total_ratings": m7,
+        "transactionId": MessageLookupByLibrary.simpleMessage("Transaction ID"),
+        "translate":
+            MessageLookupByLibrary.simpleMessage("Language translation"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
+        "try_again": MessageLookupByLibrary.simpleMessage("Try again"),
+        "ttsLanguageSettings":
+            MessageLookupByLibrary.simpleMessage("TTS Language Settings"),
+        "ttsLimit": MessageLookupByLibrary.simpleMessage("Text-to-speech"),
+        "ttsNotInitialized":
+            MessageLookupByLibrary.simpleMessage("TTS not initialized"),
+        "ttsPitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
+        "ttsSettings": MessageLookupByLibrary.simpleMessage("TTS Settings"),
+        "ttsSpeed": MessageLookupByLibrary.simpleMessage("Reading speed"),
+        "ttsTestText": MessageLookupByLibrary.simpleMessage(
+            "Hello, this is a text-to-speech test."),
+        "ttsVoice": MessageLookupByLibrary.simpleMessage("Voice"),
+        "ttsVolume": MessageLookupByLibrary.simpleMessage("Volume"),
+        "unread": MessageLookupByLibrary.simpleMessage("Unread"),
+        "unreadNotifications":
+            MessageLookupByLibrary.simpleMessage("unread notifications"),
+        "unselect_all": MessageLookupByLibrary.simpleMessage("Unselect all"),
+        "unselect_all_books":
+            MessageLookupByLibrary.simpleMessage("Unselect all books"),
+        "update": MessageLookupByLibrary.simpleMessage("Update"),
+        "updateYourInfo":
+            MessageLookupByLibrary.simpleMessage("Update your information"),
+        "update_book": MessageLookupByLibrary.simpleMessage("Update book"),
+        "update_book_info":
+            MessageLookupByLibrary.simpleMessage("Update book information"),
+        "update_book_success":
+            MessageLookupByLibrary.simpleMessage("Book updated successfully!"),
+        "update_profile":
+            MessageLookupByLibrary.simpleMessage("Update profile"),
+        "update_profile_description":
+            MessageLookupByLibrary.simpleMessage("Update your information"),
+        "update_profile_description_failed":
+            MessageLookupByLibrary.simpleMessage(
+                "Update your information failed"),
+        "update_profile_description_success":
+            MessageLookupByLibrary.simpleMessage(
+                "Update your information successfully"),
+        "update_profile_failed":
+            MessageLookupByLibrary.simpleMessage("Update profile failed"),
+        "update_profile_success":
+            MessageLookupByLibrary.simpleMessage("Update profile successfully"),
+        "updating_book":
+            MessageLookupByLibrary.simpleMessage("Updating book..."),
+        "upload_book": MessageLookupByLibrary.simpleMessage("Upload book"),
+        "upload_cover_image":
+            MessageLookupByLibrary.simpleMessage("Upload cover image"),
+        "upload_file": MessageLookupByLibrary.simpleMessage("Upload File"),
+        "upload_success":
+            MessageLookupByLibrary.simpleMessage("Upload success"),
+        "uploading": MessageLookupByLibrary.simpleMessage("Uploading..."),
+        "useFingerprintOrFaceID":
+            MessageLookupByLibrary.simpleMessage("Use fingerprint or Face ID"),
+        "useFree": MessageLookupByLibrary.simpleMessage("Use free"),
+        "use_select_file_to_browse_directory":
+            MessageLookupByLibrary.simpleMessage(
+                "Use \'Select file\' to browse directory"),
+        "user_cancelled_apple_sign_in": MessageLookupByLibrary.simpleMessage(
+            "User cancelled Apple sign in"),
+        "user_cancelled_bitbucket_sign_in":
+            MessageLookupByLibrary.simpleMessage(
+                "User cancelled Bitbucket sign in"),
+        "user_cancelled_facebook_sign_in": MessageLookupByLibrary.simpleMessage(
+            "User cancelled Facebook sign in"),
+        "user_cancelled_github_sign_in": MessageLookupByLibrary.simpleMessage(
+            "User cancelled GitHub sign in"),
+        "user_cancelled_gitlab_sign_in": MessageLookupByLibrary.simpleMessage(
+            "User cancelled GitLab sign in"),
+        "user_cancelled_google_sign_in": MessageLookupByLibrary.simpleMessage(
+            "User cancelled Google sign in"),
+        "user_cancelled_linkedin_sign_in": MessageLookupByLibrary.simpleMessage(
+            "User cancelled LinkedIn sign in"),
+        "user_cancelled_sign_in":
+            MessageLookupByLibrary.simpleMessage("User cancelled sign in"),
+        "user_cancelled_twitter_sign_in": MessageLookupByLibrary.simpleMessage(
+            "User cancelled Twitter sign in"),
+        "username": MessageLookupByLibrary.simpleMessage("Username"),
+        "username_must_be_at_least_3_characters":
+            MessageLookupByLibrary.simpleMessage(
+                "Username must be at least 3 characters"),
+        "verify": MessageLookupByLibrary.simpleMessage("Verify"),
+        "verify_code": MessageLookupByLibrary.simpleMessage("Verify code"),
+        "verify_email": MessageLookupByLibrary.simpleMessage("Verify email"),
+        "verify_pin": MessageLookupByLibrary.simpleMessage("Verify PIN"),
+        "verifying_pin":
+            MessageLookupByLibrary.simpleMessage("Verifying pin..."),
+        "version": MessageLookupByLibrary.simpleMessage("Version"),
+        "veryFast": MessageLookupByLibrary.simpleMessage("Very fast"),
+        "view": MessageLookupByLibrary.simpleMessage("View"),
+        "viewAndManagePlans":
+            MessageLookupByLibrary.simpleMessage("View and manage your plan"),
+        "viewNotificationHistory":
+            MessageLookupByLibrary.simpleMessage("View notification history"),
+        "view_details": MessageLookupByLibrary.simpleMessage("View details"),
+        "voicePitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
+        "warning": MessageLookupByLibrary.simpleMessage("Warning"),
+        "welcome_back": MessageLookupByLibrary.simpleMessage("Welcome back!"),
+        "write_a_review":
+            MessageLookupByLibrary.simpleMessage("Write a review"),
+        "write_your_review_here":
+            MessageLookupByLibrary.simpleMessage("Write your review here..."),
+        "years_ago": MessageLookupByLibrary.simpleMessage("years ago"),
+        "youHave": MessageLookupByLibrary.simpleMessage("You have"),
+        "youWillReceiveNotificationsHere": MessageLookupByLibrary.simpleMessage(
+            "You will receive notifications here"),
+        "you_have_no_book_reading":
+            MessageLookupByLibrary.simpleMessage("You have no book reading."),
+        "your_rating": MessageLookupByLibrary.simpleMessage("Your rating"),
+        "your_review": MessageLookupByLibrary.simpleMessage("Your review")
+      };
 }

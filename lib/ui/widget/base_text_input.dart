@@ -224,12 +224,12 @@ class TextFieldState extends State<CustomTextInput> with SingleTickerProviderSta
                             },
                           )
                           : widget.suffixIcon,
-                  prefixIcon: Padding(
+                  prefixIcon: widget.prefixIcon != null ? Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimens.SIZE_12,
                     ),
                     child: widget.prefixIcon,
-                  ),
+                  ) : null,
                   focusColor: theme.colorScheme.surface,
                   border: OutlineInputBorder(
                     borderRadius: widget.borderRadius ?? BorderRadius.circular(12),

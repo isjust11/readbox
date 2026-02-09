@@ -114,6 +114,12 @@ void registerRepositories(GetIt getIt) {
   getIt.registerLazySingleton(
     () => CategoryRepository(remoteDataSource: getIt.get<CategoryRemoteDataSource>()),
   );
+  getIt.registerLazySingleton(
+    () => SubscriptionRepository(remoteDataSource: getIt.get<SubscriptionRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton(
+    () => PaymentRepository(remoteDataSource: getIt.get<PaymentRemoteDataSource>()),
+  );
 }
 
 
@@ -130,6 +136,8 @@ void registerDataSource(GetIt getIt) {
   getIt.registerLazySingleton(() => UserInteractionRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => CategoryRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => ConverterRemoteDataSource(network: getIt.get()));
+  getIt.registerLazySingleton(() => SubscriptionRemoteDataSource(network: getIt.get()));
+  getIt.registerLazySingleton(() => PaymentRemoteDataSource(network: getIt.get()));
 }
 
 void registerNetwork(GetIt getIt) {

@@ -75,6 +75,7 @@ dependencies:
   scale_size: 0.0.6
   share_plus: 11.0.0
   shared_preferences: ^2.3.2
+  webview_flutter: ^4.13.0
   sqflite: ^2.3.0
   syncfusion_flutter_pdf: ^28.1.33
   syncfusion_flutter_pdfviewer: ^28.1.33

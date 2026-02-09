@@ -556,7 +556,7 @@ class _BookCardState extends State<BookCard> {
                 ),
                 // Book Info
                 Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: Padding(
                     padding: EdgeInsets.all(12),
                     child: Column(

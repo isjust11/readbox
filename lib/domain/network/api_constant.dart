@@ -96,4 +96,7 @@ class ApiConstant {
   static final deleteNotification = "notifications";
   static final deleteAllNotifications = "notifications/delete-all";
   static final getNotificationUnreadCount = "notifications/unread-count";
+
+  // Subscription / Payment
+  static final subscriptionPlans = "subscription-plans";
 }

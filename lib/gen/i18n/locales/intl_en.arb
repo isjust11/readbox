@@ -215,6 +215,7 @@
   "please_enter_valid_bitbucket_link": "Please enter valid Bitbucket link",
   "cannot_select_image_message": "Cannot select image",
   "cannot_access_camera": "Cannot access camera",
+  "please_enter_review": "Please enter review, at least 10 characters",
   "please_grant_permission_to_access_camera_or_gallery_in_settings": "Please grant permission to access camera or gallery in settings",
   "no_available_camera": "No available camera",
   "no_content_to_display": "No content to display",
@@ -609,5 +610,25 @@
       "count": {"type": "int"}
     }
   },
-  "my_uploaded_books": "My uploaded books"
+  "my_uploaded_books": "My uploaded books",
+  "subscriptionPlans": "Subscription plans",
+  "choosePlanDescription": "Choose a plan that fits your reading and storage needs.",
+  "noSubscriptionPlans": "No plans available at the moment.",
+  "selectPlan": "Select plan",
+  "popular": "Popular",
+  "storageLimit": "Storage",
+  "ttsLimit": "Text-to-speech",
+  "convertLimit": "Word to PDF",
+  "perPeriod": "per period",
+  "free": "Free",
+  "useFree": "Use free",
+  "viewAndManagePlans": "View and manage your plan",
+  "payment": "Payment",
+  "paymentResult": "Payment Result",
+  "paymentSuccess": "Payment Successful",
+  "paymentFailed": "Payment Failed",
+  "transactionId": "Transaction ID",
+  "backToHome": "Back to Home",
+  "tryAgain": "Try Again",
+  "selectPaymentMethod": "Select Payment Method"
 }
