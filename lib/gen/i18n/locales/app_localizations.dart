@@ -1394,6 +1394,12 @@ abstract class AppLocalizations {
   /// **'Cannot access camera'**
   String get cannot_access_camera;
 
+  /// No description provided for @please_enter_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter review, at least 10 characters'**
+  String get please_enter_review;
+
   /// No description provided for @please_grant_permission_to_access_camera_or_gallery_in_settings.
   ///
   /// In en, this message translates to:
@@ -3517,6 +3523,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'My uploaded books'**
   String get my_uploaded_books;
+
+  /// No description provided for @subscriptionPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription plans'**
+  String get subscriptionPlans;
+
+  /// No description provided for @choosePlanDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a plan that fits your reading and storage needs.'**
+  String get choosePlanDescription;
+
+  /// No description provided for @noSubscriptionPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'No plans available at the moment.'**
+  String get noSubscriptionPlans;
+
+  /// No description provided for @selectPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Select plan'**
+  String get selectPlan;
+
+  /// No description provided for @popular.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular'**
+  String get popular;
+
+  /// No description provided for @storageLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage'**
+  String get storageLimit;
+
+  /// No description provided for @ttsLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Text-to-speech'**
+  String get ttsLimit;
+
+  /// No description provided for @convertLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Word to PDF'**
+  String get convertLimit;
+
+  /// No description provided for @perPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'per period'**
+  String get perPeriod;
+
+  /// No description provided for @free.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get free;
+
+  /// No description provided for @useFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Use free'**
+  String get useFree;
+
+  /// No description provided for @viewAndManagePlans.
+  ///
+  /// In en, this message translates to:
+  /// **'View and manage your plan'**
+  String get viewAndManagePlans;
+
+  /// No description provided for @payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get payment;
+
+  /// No description provided for @paymentResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Result'**
+  String get paymentResult;
+
+  /// No description provided for @paymentSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Successful'**
+  String get paymentSuccess;
+
+  /// No description provided for @paymentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Failed'**
+  String get paymentFailed;
+
+  /// No description provided for @transactionId.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID'**
+  String get transactionId;
+
+  /// No description provided for @backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get backToHome;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @selectPaymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Payment Method'**
+  String get selectPaymentMethod;
 }
 
 class _AppLocalizationsDelegate

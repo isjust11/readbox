@@ -676,6 +676,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cannot_access_camera => 'Cannot access camera';
 
   @override
+  String get please_enter_review =>
+      'Please enter review, at least 10 characters';
+
+  @override
   String get please_grant_permission_to_access_camera_or_gallery_in_settings =>
       'Please grant permission to access camera or gallery in settings';
 
@@ -1784,4 +1788,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get my_uploaded_books => 'My uploaded books';
+
+  @override
+  String get subscriptionPlans => 'Subscription plans';
+
+  @override
+  String get choosePlanDescription =>
+      'Choose a plan that fits your reading and storage needs.';
+
+  @override
+  String get noSubscriptionPlans => 'No plans available at the moment.';
+
+  @override
+  String get selectPlan => 'Select plan';
+
+  @override
+  String get popular => 'Popular';
+
+  @override
+  String get storageLimit => 'Storage';
+
+  @override
+  String get ttsLimit => 'Text-to-speech';
+
+  @override
+  String get convertLimit => 'Word to PDF';
+
+  @override
+  String get perPeriod => 'per period';
+
+  @override
+  String get free => 'Free';
+
+  @override
+  String get useFree => 'Use free';
+
+  @override
+  String get viewAndManagePlans => 'View and manage your plan';
+
+  @override
+  String get payment => 'Payment';
+
+  @override
+  String get paymentResult => 'Payment Result';
+
+  @override
+  String get paymentSuccess => 'Payment Successful';
+
+  @override
+  String get paymentFailed => 'Payment Failed';
+
+  @override
+  String get transactionId => 'Transaction ID';
+
+  @override
+  String get backToHome => 'Back to Home';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get selectPaymentMethod => 'Select Payment Method';
 }

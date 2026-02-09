@@ -682,6 +682,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get cannot_access_camera => 'Không thể truy cập camera';
 
   @override
+  String get please_enter_review => 'Vui lòng nhập ý kiến, ít nhất 10 ký tự';
+
+  @override
   String get please_grant_permission_to_access_camera_or_gallery_in_settings =>
       'Vui lòng cấp quyền truy cập camera/thư viện ảnh trong cài đặt';
 
@@ -1788,4 +1791,65 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get my_uploaded_books => 'Sách đã đăng tải';
+
+  @override
+  String get subscriptionPlans => 'Gói dịch vụ';
+
+  @override
+  String get choosePlanDescription =>
+      'Chọn gói phù hợp với nhu cầu đọc sách và lưu trữ của bạn.';
+
+  @override
+  String get noSubscriptionPlans => 'Hiện chưa có gói dịch vụ.';
+
+  @override
+  String get selectPlan => 'Chọn gói';
+
+  @override
+  String get popular => 'Phổ biến';
+
+  @override
+  String get storageLimit => 'Dung lượng';
+
+  @override
+  String get ttsLimit => 'Đọc văn bản (TTS)';
+
+  @override
+  String get convertLimit => 'Chuyển Word sang PDF';
+
+  @override
+  String get perPeriod => '/kỳ';
+
+  @override
+  String get free => 'Miễn phí';
+
+  @override
+  String get useFree => 'Dùng miễn phí';
+
+  @override
+  String get viewAndManagePlans => 'Xem và quản lý gói của bạn';
+
+  @override
+  String get payment => 'Thanh toán';
+
+  @override
+  String get paymentResult => 'Kết quả thanh toán';
+
+  @override
+  String get paymentSuccess => 'Thanh toán thành công';
+
+  @override
+  String get paymentFailed => 'Thanh toán thất bại';
+
+  @override
+  String get transactionId => 'Mã giao dịch';
+
+  @override
+  String get backToHome => 'Về trang chủ';
+
+  @override
+  String get tryAgain => 'Thử lại';
+
+  @override
+  String get selectPaymentMethod => 'Chọn phương thức thanh toán';
 }
