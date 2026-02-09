@@ -81,6 +81,12 @@ void registerCubit(GetIt getIt) {
   getIt.registerFactory(
     () => ConverterCubit(getIt.get<ConverterRemoteDataSource>()),
   );
+  getIt.registerFactory(
+    () => SubscriptionPlanCubit(repository: getIt.get<SubscriptionRepository>()),
+  );
+  getIt.registerFactory(
+    () => PaymentCubit(repository: getIt.get<PaymentRepository>()),
+  );
 }
 
 void registerRepositories(GetIt getIt) {

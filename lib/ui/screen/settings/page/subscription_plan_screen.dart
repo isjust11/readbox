@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readbox/blocs/base_bloc/base.dart';
+import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
@@ -18,49 +21,48 @@ class SubscriptionPlanScreen extends StatefulWidget {
 }
 
 class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
-  late Future<List<SubscriptionPlanModel>> _plansFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _plansFuture = getIt.get<SubscriptionRepository>().getPlans(activeOnly: true);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
-      title: AppLocalizations.current.subscriptionPlans,
-      colorTitle: Theme.of(context).colorScheme.onSurface,
-      colorBg: Theme.of(context).colorScheme.surfaceContainerLowest,
-      body: RefreshIndicator(
-        onRefresh: () async {
-          setState(() {
-            _plansFuture = getIt.get<SubscriptionRepository>().getPlans(activeOnly: true);
-          });
+    return BlocProvider(
+      create: (_) => getIt.get<SubscriptionPlanCubit>()..loadPlans(activeOnly: true),
+      child: BlocBuilder<SubscriptionPlanCubit, BaseState>(
+        builder: (context, state) {
+          return BaseScreen(
+            title: AppLocalizations.current.subscriptionPlans,
+            colorTitle: Theme.of(context).colorScheme.onSurface,
+            colorBg: Theme.of(context).colorScheme.surfaceContainerLowest,
+            body: RefreshIndicator(
+              onRefresh: () async {
+                context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
+              },
+              child: _buildBodyByState(context, state),
+            ),
+          );
         },
-        child: FutureBuilder<List<SubscriptionPlanModel>>(
-          future: _plansFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(AppDimens.SIZE_24),
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
-            if (snapshot.hasError) {
-              return _buildError(context, snapshot.error.toString());
-            }
-            final plans = snapshot.data ?? [];
-            if (plans.isEmpty) {
-              return _buildEmpty(context);
-            }
-            return _buildPlanList(context, plans);
-          },
-        ),
       ),
     );
+  }
+
+  Widget _buildBodyByState(BuildContext context, BaseState state) {
+    if (state is LoadingState || state is InitState) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(AppDimens.SIZE_24),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    if (state is ErrorState) {
+      return _buildError(context, state.data.toString());
+    }
+    if (state is LoadedState<List<SubscriptionPlanModel>>) {
+      final plans = state.data;
+      if (plans.isEmpty) {
+        return _buildEmpty(context);
+      }
+      return _buildPlanList(context, plans);
+    }
+    return const SizedBox.shrink();
   }
 
   Widget _buildError(BuildContext context, String message) {
@@ -86,9 +88,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
             const SizedBox(height: AppDimens.SIZE_16),
             FilledButton.icon(
               onPressed: () {
-                setState(() {
-                  _plansFuture = getIt.get<SubscriptionRepository>().getPlans(activeOnly: true);
-                });
+                context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
               },
               icon: const Icon(Icons.refresh, size: AppDimens.SIZE_20),
               label: Text(AppLocalizations.current.retry),
@@ -170,7 +170,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     );
 
     try {
-      // Gọi API tạo payment
+      // Gọi API tạo payment trực tiếp qua repository
       final paymentRepo = getIt.get<PaymentRepository>();
       final payment = await paymentRepo.createPayment(
         planId: plan.id,

@@ -32,16 +32,16 @@ class SubscriptionPlanModel {
   factory SubscriptionPlanModel.fromJson(Map<String, dynamic> json) {
     return SubscriptionPlanModel(
       id: (json['id'] as num?)?.toInt() ?? 0,
-      code: json['code'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      description: json['description'] as String?,
+      code: json['code'],
+      name: json['name'],
+      description: json['description'],
       storageLimitBytes: _parseBigInt(json['storageLimitBytes']),
-      ttsLimitPerPeriod: (json['ttsLimitPerPeriod'] as num?)?.toInt() ?? 0,
-      convertLimitPerPeriod: (json['convertLimitPerPeriod'] as num?)?.toInt() ?? 0,
-      periodType: json['periodType'] as String? ?? 'month',
+      ttsLimitPerPeriod: json['ttsLimitPerPeriod'],
+      convertLimitPerPeriod: json['convertLimitPerPeriod'],
+      periodType: json['periodType'],
       price: _parsePrice(json['price']),
-      sortOrder: (json['sortOrder'] as num?)?.toInt() ?? 0,
-      isActive: json['isActive'] as bool? ?? true,
+      sortOrder: json['sortOrder'],
+      isActive: json['isActive'],
     );
   }
 

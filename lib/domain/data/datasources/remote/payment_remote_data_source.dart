@@ -24,7 +24,7 @@ class PaymentRemoteDataSource {
     if (apiResponse.isSuccess && apiResponse.data != null) {
       return PaymentModel.fromJson(Map<String, dynamic>.from(apiResponse.data as Map));
     }
-    return Future.error(apiResponse.errMessage ?? 'Failed to create payment');
+    return Future.error(apiResponse.errMessage);
   }
 
   /// Kiểm tra trạng thái payment
@@ -35,6 +35,6 @@ class PaymentRemoteDataSource {
     if (apiResponse.isSuccess && apiResponse.data != null) {
       return PaymentStatusModel.fromJson(Map<String, dynamic>.from(apiResponse.data as Map));
     }
-    return Future.error(apiResponse.errMessage ?? 'Failed to get payment status');
+    return Future.error(apiResponse.errMessage);
   }
 }
