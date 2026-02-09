@@ -47,6 +47,21 @@
 			<string>fb884129041238432</string> </array>
 		</dict>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLName</key>
+		<string>com.readbox.app</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<string>readbox</string>
+		</array>
+	</dict>
+	</array>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 	<key>FacebookAppID</key>
 	<string>884129041238432</string> <key>FacebookClientToken</key>
 	<string>fa9a622a5b0786ac54a76767a2118bcb</string> <key>FacebookDisplayName</key>
