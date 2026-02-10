@@ -44,7 +44,7 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             });
           },
           onNavigationRequest: (NavigationRequest request) {
-            // Kiểm tra URL callback
+            // Kiểm tra URL callback custom scheme từ backend
             if (request.url.startsWith('readbox://payment/result')) {
               _handleCallback(request.url);
               return NavigationDecision.prevent;

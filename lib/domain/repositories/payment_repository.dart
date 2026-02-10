@@ -7,7 +7,7 @@ class PaymentRepository {
   PaymentRepository({required this.remoteDataSource});
 
   Future<PaymentModel> createPayment({
-    required int planId,
+    required String planId,
     required String paymentMethod,
     String? bankCode,
   }) async {

@@ -8,7 +8,7 @@ class PaymentRemoteDataSource {
 
   /// Tạo payment và lấy payment URL
   Future<PaymentModel> createPayment({
-    required int planId,
+    required String planId,
     required String paymentMethod, // 'vnpay', 'momo', 'zalopay'
     String? bankCode,
   }) async {

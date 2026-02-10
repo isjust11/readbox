@@ -1,6 +1,6 @@
 /// Model cho payment response từ API
 class PaymentModel {
-  final int paymentId;
+  final String paymentId;
   final String transactionId;
   final String paymentUrl;
   final double amount;
@@ -16,11 +16,11 @@ class PaymentModel {
 
   factory PaymentModel.fromJson(Map<String, dynamic> json) {
     return PaymentModel(
-      paymentId: (json['paymentId'] as num?)?.toInt() ?? 0,
-      transactionId: json['transactionId'] as String? ?? '',
-      paymentUrl: json['paymentUrl'] as String? ?? '',
-      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
-      status: json['status'] as String?,
+      paymentId: json['paymentId'],
+      transactionId: json['transactionId'],
+      paymentUrl: json['paymentUrl'],
+      amount: double.parse(json['amount'].toString()),
+      status: json['status'],
     );
   }
 

@@ -25,6 +25,6 @@ class SubscriptionRemoteDataSource {
           .map((e) => SubscriptionPlanModel.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList();
     }
-    return Future.error(apiResponse.errMessage ?? 'Failed to load plans');
+    return Future.error(apiResponse.errMessage);
   }
 }

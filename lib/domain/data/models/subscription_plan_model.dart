@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 /// Model cho gói đăng ký (subscription plan) từ API.
 /// Khớp với entity SubscriptionPlan ở backend.
 class SubscriptionPlanModel {
-  final int id;
+  final String? id;
   final String code;
   final String name;
   final String? description;
@@ -31,7 +31,7 @@ class SubscriptionPlanModel {
 
   factory SubscriptionPlanModel.fromJson(Map<String, dynamic> json) {
     return SubscriptionPlanModel(
-      id: (json['id'] as num?)?.toInt() ?? 0,
+      id: json['id'],
       code: json['code'],
       name: json['name'],
       description: json['description'],

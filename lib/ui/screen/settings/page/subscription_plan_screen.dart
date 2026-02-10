@@ -173,7 +173,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
       // Gọi API tạo payment trực tiếp qua repository
       final paymentRepo = getIt.get<PaymentRepository>();
       final payment = await paymentRepo.createPayment(
-        planId: plan.id,
+        planId: plan.id!,
         paymentMethod: paymentMethod,
       );
 

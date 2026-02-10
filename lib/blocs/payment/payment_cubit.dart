@@ -11,7 +11,7 @@ class PaymentCubit extends Cubit<BaseState> {
 
   /// Tạo payment cho gói dịch vụ
   Future<void> createPayment({
-    required int planId,
+    required String planId,
     required String paymentMethod,
     String? bankCode,
   }) async {
