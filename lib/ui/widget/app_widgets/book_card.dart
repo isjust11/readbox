@@ -413,9 +413,7 @@ class _BookCardState extends State<BookCard> {
       child: Center(
         child: SvgPicture.asset(
           Assets.icons.icPdfCover,
-          width: 120,
-          height: 120,
-          fit: BoxFit.cover,
+          fit: BoxFit.fitHeight,
         ),
       ),
     );
@@ -636,105 +634,103 @@ class _BookCardState extends State<BookCard> {
                           ],
                         ),
                         // Rating
-                        Flexible(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              if (widget.book.totalPages != null && widget.book.totalPages! > 0) ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            if (widget.book.totalPages != null && widget.book.totalPages! > 0) ...[
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppDimens.SIZE_8,
+                                vertical: AppDimens.SIZE_6,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Theme.of(context).primaryColor.withValues(alpha: 0.45),
+                                    Theme.of(context).primaryColor.withValues(alpha: 0.15),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                border: Border.all(
+                                  color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.numbers_rounded,
+                                    color:
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimaryContainer,
+                                    size: 12,
+                                  ),
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    '${widget.book.totalPages} ${AppLocalizations.current.pages}',
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: AppSize.fontSizeSmall,
+                                      fontWeight: FontWeight.w500,
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onPrimaryContainer,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              ),
+                            ],
+                              if (_rating != null && _rating! > 0) ...[
                               Container(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: AppDimens.SIZE_8,
-                                  vertical: AppDimens.SIZE_6,
+                                  vertical: AppDimens.SIZE_4,
                                 ),
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
+                                  borderRadius: BorderRadius.circular(
+                                    AppDimens.SIZE_8,
+                                  ),
                                   gradient: LinearGradient(
                                     colors: [
-                                      Theme.of(context).primaryColor.withValues(alpha: 0.45),
-                                      Theme.of(context).primaryColor.withValues(alpha: 0.15),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
+                                    Colors.amber.withValues(alpha: 0.45),
+                                    Colors.amber.withValues(alpha: 0.15),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
                                   border: Border.all(
-                                    color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+                                    color: Colors.amber.withValues(
+                                      alpha: 0.3,
+                                    ),
                                     width: 1,
                                   ),
                                 ),
                                 child: Row(
                                   children: [
                                     Icon(
-                                      Icons.numbers_rounded,
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.onPrimaryContainer,
-                                      size: 12,
+                                      Icons.star,
+                                      size: 14,
+                                      color: Colors.amber[700],
                                     ),
-                                    const SizedBox(width: 2),
+                                    SizedBox(width: 4),
                                     Text(
-                                      '${widget.book.totalPages} ${AppLocalizations.current.pages}',
+                                      '$_rating',
                                       style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: AppSize.fontSizeSmall,
-                                        fontWeight: FontWeight.w500,
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.onPrimaryContainer,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.amber[900],
                                       ),
                                     ),
                                   ],
                                 ),
-                                ),
+                              ),
                               ],
-                                if (_rating != null && _rating! > 0) ...[
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: AppDimens.SIZE_8,
-                                    vertical: AppDimens.SIZE_4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                      AppDimens.SIZE_8,
-                                    ),
-                                    gradient: LinearGradient(
-                                      colors: [
-                                      Colors.amber.withValues(alpha: 0.45),
-                                      Colors.amber.withValues(alpha: 0.15),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                    border: Border.all(
-                                      color: Colors.amber.withValues(
-                                        alpha: 0.3,
-                                      ),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.star,
-                                        size: 14,
-                                        color: Colors.amber[700],
-                                      ),
-                                      SizedBox(width: 4),
-                                      Text(
-                                        '$_rating',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.amber[900],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                ],
-                            ],
-                          ),
+                          ],
                         ),
                       ],
                     ),

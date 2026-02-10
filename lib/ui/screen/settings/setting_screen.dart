@@ -100,13 +100,13 @@ class _SettingScreenState extends State<SettingScreen> {
 
   Widget _buildFloatingButton() {
     return FloatingActionButton(
-      backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.5),
+      backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 1),
       onPressed: () {
         Navigator.of(context).pop();
       },
       child: Icon(
-        Icons.arrow_back_ios_new_outlined,
-        color: Theme.of(context).primaryColor,
+        Icons.arrow_back_ios_new,
+        color: Theme.of(context).colorScheme.onPrimary,
         size: AppDimens.SIZE_18,
       ),
     );

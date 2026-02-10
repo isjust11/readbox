@@ -6,7 +6,6 @@ import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
@@ -32,10 +31,10 @@ class ProfileScreen extends StatelessWidget {
       onPressed: () {
         Navigator.pop(context);
       },
-      backgroundColor: theme.primaryColor.withValues(alpha: 0.6),
+      backgroundColor: theme.primaryColor.withValues(alpha: 1),
       child: Icon(
-        Icons.arrow_back_ios_new_outlined,
-        color: theme.primaryColor,
+        Icons.arrow_back_ios_new,
+        color: theme.colorScheme.onPrimary,
         size: AppDimens.SIZE_18,
       ),
     );

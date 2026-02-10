@@ -56,24 +56,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
   final _instagramLinkController = TextEditingController();
   final _twitterLinkController = TextEditingController();
   final _linkedinLinkController = TextEditingController();
-  // validator
-  final GlobalKey<TextFieldState> _fullNameFieldKey =
-      GlobalKey<TextFieldState>();
-  final GlobalKey<TextFieldState> _emailFieldKey = GlobalKey<TextFieldState>();
-  final GlobalKey<TextFieldState> _phoneNumberFieldKey =
-      GlobalKey<TextFieldState>();
-  final GlobalKey<TextFieldState> _addressFieldKey =
-      GlobalKey<TextFieldState>();
-  final GlobalKey<TextFieldState> _birthDateFieldKey =
-      GlobalKey<TextFieldState>();
-  final GlobalKey<TextFieldState> _facebookLinkFieldKey =
-      GlobalKey<TextFieldState>();
-  final GlobalKey<TextFieldState> _instagramLinkFieldKey =
-      GlobalKey<TextFieldState>();
-  final GlobalKey<TextFieldState> _twitterLinkFieldKey =
-      GlobalKey<TextFieldState>();
-  final GlobalKey<TextFieldState> _linkedinLinkFieldKey =
-      GlobalKey<TextFieldState>();
+
   File? _selectedImage;
   String? _currentAvatarUrl;
   String? _pathRelativeAvatar;
@@ -95,16 +78,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
     _formKey.currentState?.dispose();
     _fullNameController.dispose();
     _emailController.dispose();
-    _fullNameFieldKey.currentState?.dispose();
-    _emailFieldKey.currentState?.dispose();
     _phoneNumberController.dispose();
-    _phoneNumberFieldKey.currentState?.dispose();
-    _addressFieldKey.currentState?.dispose();
-    _birthDateFieldKey.currentState?.dispose();
-    _facebookLinkFieldKey.currentState?.dispose();
-    _instagramLinkFieldKey.currentState?.dispose();
-    _twitterLinkFieldKey.currentState?.dispose();
-    _linkedinLinkFieldKey.currentState?.dispose();
     super.dispose();
   }
 
@@ -212,8 +186,8 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
                                     fit: BoxFit.cover,
                                   )
                                   : _currentAvatarUrl != null &&
-                                      _currentAvatarUrl!.isNotEmpty ?
-                                  CachedNetworkImage(
+                                      _currentAvatarUrl!.isNotEmpty
+                                  ? CachedNetworkImage(
                                     imageUrl: _currentAvatarUrl!,
                                     fit: BoxFit.cover,
                                   )
@@ -253,7 +227,10 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
   Widget _buildDefaultAvatar() {
     final theme = Theme.of(context);
     return Container(
-      decoration: BoxDecoration(color: theme.colorScheme.surfaceContainerHighest, shape: BoxShape.circle),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        shape: BoxShape.circle,
+      ),
       child: Container(
         margin: const EdgeInsets.all(AppDimens.SIZE_4),
         decoration: BoxDecoration(
@@ -279,13 +256,13 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
           isRequired: true,
         ),
         CustomTextInput(
-          key: _fullNameFieldKey,
           textController: _fullNameController,
-          hintText: AppLocalizations.current.please_enter_full_name,
+          hintText: AppLocalizations.current.full_name,
           prefixIcon: Icon(
             Icons.person_outline,
             color: AppColors.textMediumGrey,
           ),
+          isRequired: true,
           validator: (value) {
             if (value.trim().isEmpty) {
               return AppLocalizations.current.please_enter_full_name;
@@ -300,9 +277,8 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
           isRequired: false,
         ),
         CustomTextInput(
-          key: _emailFieldKey,
           textController: _emailController,
-          hintText: AppLocalizations.current.please_enter_email,
+          hintText: AppLocalizations.current.email,
           keyboardType: TextInputType.emailAddress,
           borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
           enabled: false,
@@ -324,19 +300,20 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
         CustomTextLabel.renderBaseTitle(
           context,
           title: AppLocalizations.current.phone_number,
-          isRequired: false,
+          isRequired: true,
         ),
         CustomTextInput(
-          key: _phoneNumberFieldKey,
           textController: _phoneNumberController,
-          hintText: AppLocalizations.current.please_enter_phone_number,
-          isRequired: false,
+          hintText: AppLocalizations.current.phone_number,
+          isRequired: true,
           keyboardType: TextInputType.phone,
           validator: (value) {
-            if (value.trim().isNotEmpty) {
-              if (!RegExp(r'^[0-9-+]{10}$').hasMatch(value)) {
-                return AppLocalizations.current.please_enter_valid_phone_number;
-              }
+            final text = value.trim();
+            if (text.isEmpty) {
+              return AppLocalizations.current.please_enter_valid_phone_number;
+            }
+            if (!RegExp(r'^[0-9-+]{10}$').hasMatch(text)) {
+              return AppLocalizations.current.please_enter_valid_phone_number;
             }
             return null;
           },
@@ -352,9 +329,8 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
           isRequired: false,
         ),
         CustomTextInput(
-          key: _addressFieldKey,
           textController: _addressController,
-          hintText: AppLocalizations.current.please_enter_valid_address,
+          hintText: AppLocalizations.current.address,
           isRequired: false,
           keyboardType: TextInputType.streetAddress,
           prefixIcon: Icon(
@@ -369,9 +345,8 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
           isRequired: false,
         ),
         CustomTextInput(
-          key: _birthDateFieldKey,
           textController: _birthDateController,
-          hintText: AppLocalizations.current.please_enter_valid_birth_date,
+          hintText: AppLocalizations.current.birth_date,
           isRequired: false,
           keyboardType: TextInputType.datetime,
           validator: (value) {
@@ -393,9 +368,8 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
           isRequired: false,
         ),
         CustomTextInput(
-          key: _facebookLinkFieldKey,
           textController: _facebookLinkController,
-          hintText: AppLocalizations.current.please_enter_facebook_link,
+          hintText: AppLocalizations.current.facebook_link,
           isRequired: false,
           keyboardType: TextInputType.url,
           prefixIcon: Icon(
@@ -410,9 +384,8 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
           isRequired: false,
         ),
         CustomTextInput(
-          key: _instagramLinkFieldKey,
           textController: _instagramLinkController,
-          hintText: AppLocalizations.current.please_enter_instagram_link,
+          hintText: AppLocalizations.current.instagram_link,
           isRequired: false,
           keyboardType: TextInputType.url,
           prefixIcon: Icon(
@@ -438,37 +411,6 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
               : theme.primaryColor,
       width: double.infinity,
     );
-  }
-
-  bool _validateForm() {
-    if (_fullNameFieldKey.currentState!.isValid) {
-      return _fullNameFieldKey.currentState!.isValid;
-    }
-    if (_emailFieldKey.currentState!.isValid) {
-      return _emailFieldKey.currentState!.isValid;
-    }
-    if (_phoneNumberFieldKey.currentState!.isValid) {
-      return _phoneNumberFieldKey.currentState!.isValid;
-    }
-    if (_addressFieldKey.currentState!.isValid) {
-      return _addressFieldKey.currentState!.isValid;
-    }
-    if (_birthDateFieldKey.currentState!.isValid) {
-      return _birthDateFieldKey.currentState!.isValid;
-    }
-    if (_facebookLinkFieldKey.currentState!.isValid) {
-      return _facebookLinkFieldKey.currentState!.isValid;
-    }
-    if (_instagramLinkFieldKey.currentState!.isValid) {
-      return _instagramLinkFieldKey.currentState!.isValid;
-    }
-    if (_twitterLinkFieldKey.currentState!.isValid) {
-      return _twitterLinkFieldKey.currentState!.isValid;
-    }
-    if (_linkedinLinkFieldKey.currentState!.isValid) {
-      return _linkedinLinkFieldKey.currentState!.isValid;
-    }
-    return true;
   }
 
   void _showImagePicker() {
@@ -549,7 +491,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
   }
 
   Future<void> _saveProfile() async {
-    if (!_validateForm()) {
+    if (!_formKey.currentState!.validate()) {
       return;
     }
     setState(() {
@@ -584,7 +526,12 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
       'linkedinLink': _linkedinLinkController.text.trim(),
     });
     await authCubit.updateProfile(userModel: userModel);
+    AppSnackBar.show(
+      context,
+      message: AppLocalizations.current.update_profile_success,
+      snackBarType: SnackBarType.success,
+    );
     // Listen for success
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
   }
 }

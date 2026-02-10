@@ -196,12 +196,12 @@ class TextFieldState extends State<CustomTextInput> with SingleTickerProviderSta
                 ),
                 decoration: InputDecoration(
                   counterText: "",
-                  labelText: widget.title + (widget.isRequired ? ' *' : ''),
-                  labelStyle: TextStyle(
-                    color: widget.titleStyle?.color ?? theme.colorScheme.secondary.withValues(alpha: 0.6),
-                    fontSize: widget.titleStyle?.fontSize ?? 16,
-                    fontWeight: widget.titleStyle?.fontWeight ?? FontWeight.w400,
-                  ),
+                  // labelText: widget.title + (widget.isRequired ? ' *' : ''),
+                  // labelStyle: TextStyle(
+                  //   color: widget.titleStyle?.color ?? theme.colorScheme.secondary.withValues(alpha: 0.6),
+                  //   fontSize: widget.titleStyle?.fontSize ?? 16,
+                  //   fontWeight: widget.titleStyle?.fontWeight ?? FontWeight.w400,
+                  // ),
                   hintText: widget.hintText,
                   hintStyle: TextStyle(
                     color: errorText.isNotEmpty ? theme.colorScheme.error : widget.hintTextColor ?? theme.colorScheme.secondary.withValues(alpha: 0.6),
