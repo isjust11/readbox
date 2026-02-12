@@ -19,7 +19,10 @@ class AdminRemoteDataSource {
     final response = await network.postWithFormData(
       url: '${ApiConstant.apiHost}${ApiConstant.uploadMedia}',
       formData: formData,
-      contentType: 'multipart/form-data',
+      options: Options(
+        responseType: ResponseType.json,
+        contentType: 'multipart/form-data',
+      ),
     );
 
     if (response.isSuccess) {
@@ -38,6 +41,10 @@ class AdminRemoteDataSource {
       final response = await network.postWithFormData(
         url: '${ApiConstant.apiHost}${ApiConstant.uploadMedia}',
         formData: formData,
+        options: Options(
+          responseType: ResponseType.json,
+          contentType: 'multipart/form-data',
+        ),
       );
 
       if (response.isSuccess) {

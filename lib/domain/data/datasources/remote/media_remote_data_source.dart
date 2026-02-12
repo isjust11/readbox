@@ -63,6 +63,10 @@ class MediaRemoteDataSource {
     ApiResponse apiResponse = await network.postWithFormData(
       url: '${ApiConstant.apiHost}${ApiConstant.uploadMedia}',
       formData: formData,
+      options: Options(
+        responseType: ResponseType.json,
+        contentType: 'multipart/form-data',
+      ),
     );
 
     if (apiResponse.isSuccess) {
