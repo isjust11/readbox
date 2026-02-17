@@ -87,6 +87,37 @@ flutter build appbundle --release
 
 Dùng AAB khi upload lên Google Play Console.
 
+### 3.4 Lỗi Play Console: "Bạn đã không dùng đúng khóa để ký Android App Bundle"
+
+Play Console yêu cầu mọi bản cập nhật phải ký bằng **cùng upload key** đã dùng lần đầu. Nếu bạn thấy lỗi dạng:
+
+- **Chứng chỉ dự kiến (Play yêu cầu)**: SHA1 `1C:A4:DE:9C:...`
+- **Chứng chỉ bạn đang dùng**: SHA1 `DA:86:A9:0B:...` (thường là debug key)
+
+**Cách xử lý:**
+
+1. **Tìm đúng keystore** (file `.jks` hoặc `.keystore`) đã dùng khi upload bản đầu lên Play — thường nằm trên máy/backup của người build lần đầu.
+
+2. **Kiểm tra vân tay SHA1 của keystore** (thay đường dẫn và alias cho đúng):
+
+   ```bash
+   keytool -list -v -keystore android/upload-keystore.jks -alias upload
+   ```
+
+   Trong output, tìm dòng **SHA1**. Nó phải **trùng** với SHA1 mà Play Console báo "dự kiến" (ví dụ `1C:A4:DE:9C:C1:5C:8A:12:F0:05:92:DB:52:26:3E:52:79:17:B8:47`).
+
+3. **Dùng đúng keystore để build:**
+   - Đặt file keystore vào `android/` (ví dụ `android/upload-keystore.jks`) hoặc ghi rõ đường dẫn trong `key.properties`.
+   - Tạo/cập nhật `android/key.properties` với `storeFile`, `storePassword`, `keyPassword`, `keyAlias` của keystore đó (xem bước 3.2).
+   - Build lại AAB:
+
+   ```bash
+   flutter clean
+   flutter build appbundle --release
+   ```
+
+4. **Nếu mất keystore gốc:** Bạn không thể dùng key mới tùy ý. Cần vào Play Console → **Setup** → **App signing** (App signing by Google Play). Nếu đã bật, có thể liên hệ Google hỗ trợ **reset upload key** (quy trình đặc biệt, cần xác minh quyền sở hữu app).
+
 ---
 
 ## 4. Tăng version / build number
