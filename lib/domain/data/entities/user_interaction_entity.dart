@@ -18,7 +18,7 @@ class UserInteractionEntity extends BaseEntity {
   BookModel? book;
 
   // Additional data for specific interaction types (for example: reading progress)
-  Map<String, dynamic>? metadata;
+  String? metadata;
 
   // For rating interactions
   double? rating;

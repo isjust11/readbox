@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -379,7 +381,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
               Navigator.pushNamed(
                 context,
                 Routes.bookDetailScreen,
-                arguments: notification.metadata?['id'],
+                arguments: jsonDecode(notification.metadata ?? '{}')['id'],
               );
               break;
             case NotificationType.feedback:

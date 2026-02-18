@@ -26,7 +26,7 @@ class NotificationEntity extends BaseEntity {
   String? userId;
   String? imageUrl;
   String? actionUrl;
-  Map<String, dynamic>? metadata;
+  String? metadata;
 
   NotificationEntity({
     this.id,
@@ -72,9 +72,7 @@ class NotificationEntity extends BaseEntity {
     userId = json['userId']?.toString();
     imageUrl = json['imageUrl'];
     actionUrl = json['actionUrl'];
-    metadata = json['metadata'] != null
-        ? Map<String, dynamic>.from(json['metadata'])
-        : null;
+    metadata = json['metadata'];
   }
 
   NotificationType _parseNotificationType(dynamic typeValue) {

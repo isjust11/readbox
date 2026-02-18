@@ -98,5 +98,12 @@
 	<string>This app needs access to speech recognition for text-to-speech features</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app needs microphone access for text-to-speech features</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This app uses the local network to connect to the development tools when debugging from your computer.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_dartobservatory._tcp</string>
+		<string>_services._dns-sd._udp</string>
+	</array>
 </dict>
 </plist>

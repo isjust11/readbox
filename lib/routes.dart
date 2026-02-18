@@ -115,6 +115,7 @@ class Routes {
         return PageTransition(
           child: PdfViewerScreen(
             fileUrl: args.fileUrl!,
+            bookId: args.id,
             title: args.displayTitle,
             userIdCreate: args.createById,
           ),
