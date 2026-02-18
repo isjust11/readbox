@@ -34,7 +34,6 @@ void main() async {
   await dotenv.load(fileName: '.env');
   await initLanguageDetector();
   await di.init();
-  await TtsLockScreenController.instance.initialize();
    // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -77,4 +76,11 @@ void main() async {
       ),
     ),
   ], child: MyApp()));
+
+  // Init lock-screen TTS asynchronously to avoid blocking app startup.
+  Future<void>(() async {
+    try {
+      await TtsLockScreenController.instance.initialize();
+    } catch (_) {}
+  });
 }

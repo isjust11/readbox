@@ -8,14 +8,26 @@ class TtsLockScreenController {
   static final TtsLockScreenController instance = TtsLockScreenController._();
 
   AudioHandler? _handler;
+  Future<void>? _initializing;
 
   Future<void> initialize() async {
     if (_handler != null) return;
+    if (_initializing != null) {
+      await _initializing;
+      return;
+    }
 
+    _initializing = _doInitialize();
+    try {
+      await _initializing;
+    } finally {
+      _initializing = null;
+    }
+  }
+
+  Future<void> _doInitialize() async {
     final session = await AudioSession.instance;
-    await session.configure(
-      const AudioSessionConfiguration.speech(),
-    );
+    await session.configure(const AudioSessionConfiguration.speech());
 
     _handler = await AudioService.init(
       builder: () => _TtsAudioHandler(),
@@ -28,11 +40,23 @@ class TtsLockScreenController {
     );
   }
 
+  Future<bool> _ensureInitializedSafe() async {
+    if (_handler != null) return true;
+    try {
+      await initialize().timeout(const Duration(seconds: 5));
+      return _handler != null;
+    } catch (e) {
+      debugPrint('[TTS LockScreen] init skipped: $e');
+      return false;
+    }
+  }
+
   Future<void> startReadingSession({
     required String bookTitle,
     required int page,
     required String text,
   }) async {
+    if (!await _ensureInitializedSafe()) return;
     final handler = _handler;
     if (handler is! _TtsAudioHandler) return;
     await handler.setReadingContext(
@@ -48,6 +72,7 @@ class TtsLockScreenController {
     required int start,
     required int end,
   }) async {
+    if (_handler == null && !await _ensureInitializedSafe()) return;
     final handler = _handler;
     if (handler is! _TtsAudioHandler) return;
     await handler.updateWordProgress(
@@ -58,12 +83,14 @@ class TtsLockScreenController {
   }
 
   Future<void> markCompleted() async {
+    if (_handler == null) return;
     final handler = _handler;
     if (handler is! _TtsAudioHandler) return;
     await handler.setCompletedState();
   }
 
   Future<void> markError(String message) async {
+    if (_handler == null) return;
     final handler = _handler;
     if (handler is! _TtsAudioHandler) return;
     await handler.setErrorState(message);
