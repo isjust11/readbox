@@ -19,6 +19,7 @@ import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/utils/pdf_drawing_service.dart';
 import 'package:readbox/utils/pdf_text_extractor.dart';
 import 'package:readbox/utils/shared_preference.dart';
+import 'package:readbox/utils/tts_lock_screen_controller.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -525,6 +526,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             // _showTtsReadingPanel = true;
           });
         }
+        await TtsLockScreenController.instance.startReadingSession(
+          bookTitle: widget.title,
+          page: _currentPage,
+          text: pageText,
+        );
         await _ttsService.speak(pageText);
       } else {
         // Trang trống → chuyển sang trang tiếp
@@ -582,6 +588,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, _currentPage);
     _ttsService.stop();
+    TtsLockScreenController.instance.stop();
     _removePdfWordHighlight();
     _ttsProgressTimer?.cancel();
     _saveProgressTimer?.cancel();
@@ -730,6 +737,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             onPressed: () async {
               if (_isReadingContinuous) {
                 await _ttsService.stop();
+                await TtsLockScreenController.instance.stop();
                 _removePdfWordHighlight();
                 setState(() {
                   _isReadingContinuous = false;
@@ -760,6 +768,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             onPressed: () async {
               if (_isReadingContinuous) {
                 await _ttsService.stop();
+                await TtsLockScreenController.instance.stop();
                 _removePdfWordHighlight();
                 setState(() {
                   _isReadingContinuous = false;
@@ -1260,10 +1269,16 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         _ttsWordStart = start.clamp(0, text.length);
         _ttsWordEnd = end.clamp(0, text.length);
       });
+      TtsLockScreenController.instance.updateWordProgress(
+        fullText: text,
+        start: start,
+        end: end,
+      );
       _updatePdfWordHighlight(start, end);
     };
 
     _ttsService.onSpeechComplete = (_) {
+      TtsLockScreenController.instance.markCompleted();
       _removePdfWordHighlight();
       // Nếu đang đọc liên tục, chuyển sang trang tiếp theo
       if (_isReadingContinuous && _currentPage < _totalPages) {
@@ -1281,6 +1296,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     };
 
     _ttsService.onSpeechError = (error) {
+      TtsLockScreenController.instance.markError(error);
       _removePdfWordHighlight();
       setState(() {
         _isReadingContinuous = false;
@@ -1377,6 +1393,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             // _showTtsReadingPanel = true;
           });
         }
+        await TtsLockScreenController.instance.startReadingSession(
+          bookTitle: widget.title,
+          page: nextPageNumber,
+          text: pageText,
+        );
         await _ttsService.speak(pageText);
       } else {
         if (nextPageNumber < _totalPages) {

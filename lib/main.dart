@@ -15,6 +15,7 @@ import 'injection_container.dart' as di;
 import 'ui/app.dart';
 import 'utils/language_detector.dart';
 import 'utils/shared_preference.dart';
+import 'utils/tts_lock_screen_controller.dart';
 
 /// Map locale hệ thống sang mã ngôn ngữ app hỗ trợ (vi, en).
 String _languageFromSystemLocale() {
@@ -33,6 +34,7 @@ void main() async {
   await dotenv.load(fileName: '.env');
   await initLanguageDetector();
   await di.init();
+  await TtsLockScreenController.instance.initialize();
    // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 

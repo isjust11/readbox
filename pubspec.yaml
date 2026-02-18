@@ -68,6 +68,8 @@ dependencies:
   path: ^1.8.3
   path_provider: ^2.1.0
   archive: ^4.0.7
+  audio_service: ^0.18.18
+  audio_session: ^0.1.23
   xml: ^6.5.0
   pdfx: ^2.0.0
   permission_handler: ^11.0.0

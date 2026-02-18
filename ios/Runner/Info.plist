@@ -105,5 +105,9 @@
 		<string>_dartobservatory._tcp</string>
 		<string>_services._dns-sd._udp</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 </dict>
 </plist>
