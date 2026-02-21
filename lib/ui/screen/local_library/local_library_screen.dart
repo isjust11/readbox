@@ -497,8 +497,8 @@ class _LocalLibraryScreenState extends State<LocalLibraryScreen> {
               ),
       floatingButton: FloatingActionButton.small(
         onPressed: _scanAndAddBooks,
-        child: Icon(Icons.add, color: Theme.of(context).primaryColor),
-      ),
-    );
+          child: Icon(Icons.add, color: Theme.of(context).primaryColor),
+        ),
+      );
+    }
   }
-}

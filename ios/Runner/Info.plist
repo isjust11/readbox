@@ -105,6 +105,15 @@
 		<string>_dartobservatory._tcp</string>
 		<string>_services._dns-sd._udp</string>
 	</array>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This app uses tracking to personalize content and measure ads</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

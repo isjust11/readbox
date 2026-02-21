@@ -53,7 +53,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
         }
       }
     } else if (Platform.isIOS) {
-      final status = await Permission.photos.request();
+      final status = await Permission.storage.request();
       setState(() => _hasPermission = status.isGranted);
       if (status.isGranted) {
         _scanForFiles();
