@@ -107,6 +107,9 @@ class UserInteractionRepository {
     Future<List<UserInteractionModel>> getMyInteractions({Map<String, dynamic>? query}) =>
       remoteDataSource.getMyInteractions(query: query);
 
+  Future<Map<String, dynamic>> getUserInteractionStatus({required InteractionTarget targetType, required dynamic targetId}) =>
+    remoteDataSource.getUserInteractionStatus(targetType: targetType, targetId: targetId);
+
   Future<UserInteractionModel> getInteractionAction({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId}) =>
     remoteDataSource.getInteractionAction(targetType: targetType, actionType: actionType, targetId: targetId);
 }

@@ -280,6 +280,19 @@ class UserInteractionCubit extends Cubit<BaseState> {
     }
   }
 
+  Future<void> getUserInteractionStatus({
+    required InteractionTarget targetType,
+    required dynamic targetId,
+  }) async {
+    try {
+      emit(LoadingState());
+      final response = await repository.getUserInteractionStatus(targetType: targetType, targetId: targetId);
+      emit(LoadedState(response));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
+
   // get interaction by target
   Future<UserInteractionModel> getInteractionAction({
     required InteractionTarget targetType,

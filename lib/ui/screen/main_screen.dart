@@ -587,6 +587,7 @@ class MainBodyState extends State<MainBody> {
                         itemCount: filteredBooks.length,
                         itemBuilder: (context, index) {
                           return BookCard(
+                            filterType: filterType,
                             book: filteredBooks[index],
                             onRead: (book) => _openBook(context, book),
                             ownerId: userInfo?.id,

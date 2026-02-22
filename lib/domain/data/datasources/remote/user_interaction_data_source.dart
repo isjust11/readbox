@@ -246,6 +246,20 @@ class UserInteractionRemoteDataSource {
     return Future.error(apiResponse.data);
   }
 
+  Future<Map<String, dynamic>> getUserInteractionStatus({
+    required InteractionTarget targetType,
+    required dynamic targetId,
+  }) async {
+    final ApiResponse apiResponse = await network.get(
+      url:
+          '${ApiConstant.apiHost}${ApiConstant.getInteractionStatus}/$targetType/$targetId',
+    );
+    if (apiResponse.isSuccess) {
+      return apiResponse.data;
+    }
+    return Future.error(apiResponse.data);
+  }
+
   Future<UserInteractionModel> getInteractionAction({
     required InteractionTarget targetType,
     required InteractionType actionType,

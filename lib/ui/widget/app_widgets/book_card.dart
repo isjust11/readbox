@@ -4,11 +4,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/app_size.dart';
-import 'package:readbox/res/resources.dart';
+import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/ui/widget/rating_dialog.dart';
@@ -17,6 +18,7 @@ class BookCard extends StatefulWidget {
   final BookModel book;
   final UserInteractionCubit userInteractionCubit;
   final String? ownerId;
+  final FilterType? filterType;
   final Function(BookModel book) onDelete;
   final Function(BookModel book) onRead;
   const BookCard({
@@ -26,6 +28,7 @@ class BookCard extends StatefulWidget {
     required this.ownerId,
     required this.onDelete,
     required this.onRead,
+    this.filterType,
   });
 
   @override
@@ -39,12 +42,12 @@ class _BookCardState extends State<BookCard> {
   @override
   void initState() {
     super.initState();
-    _loadInteractionStats();
+    _loadUserInteractionStatus(); 
   }
 
-  Future<void> _loadInteractionStats() async {
-    await widget.userInteractionCubit.getStats(
-      targetType: 'book',
+  Future<void> _loadUserInteractionStatus() async {
+    await widget.userInteractionCubit.getUserInteractionStatus(
+      targetType: InteractionTarget.book,
       targetId: widget.book.id!,
     );
   }
@@ -92,7 +95,7 @@ class _BookCardState extends State<BookCard> {
           );
           
           // Reload stats after rating
-          await _loadInteractionStats();
+          await _loadUserInteractionStatus();
         },
       ),
     );
@@ -274,13 +277,21 @@ class _BookCardState extends State<BookCard> {
                   bloc: widget.userInteractionCubit,
                   listener: (context, state) {
                     if (state is LoadedState) {
-                      if (state.data is InteractionStatsModel) {
+                      if (state.data is Map<String, dynamic>) {
+                        final data = state.data as Map<String, dynamic>;
+                        setState(() {
+                          if (data.containsKey('favorite') == true) {
+                            _isFavorite = data['favorite'] == true;
+                          }
+                          if (data.containsKey('archive') == true) {
+                            _isArchive = data['archive'] == true;
+                          }
+                        });
+                      } else if (state.data is InteractionStatsModel) {
                         final stats = state.data as InteractionStatsModel;
                         setState(() {
-                          _isFavorite = stats.favoriteStatus;
-                          _isArchive = stats.archiveStatus;
-                          book.isFavorite = stats.favoriteStatus;
-                          book.isArchived = stats.archiveStatus;
+                          _isFavorite = stats.favoriteStatus == true;
+                          _isArchive = stats.archiveStatus == true;
                         });
                       }
                     }
@@ -305,7 +316,7 @@ class _BookCardState extends State<BookCard> {
                               targetId: widget.book.id!,
                             );
                             // Reload stats after toggle
-                            await _loadInteractionStats();
+                            await _loadUserInteractionStatus();
                           },
                         ),
                         SizedBox(height: 12),
@@ -329,7 +340,7 @@ class _BookCardState extends State<BookCard> {
                               targetId: widget.book.id!,
                             );
                             // Reload stats after toggle
-                            await _loadInteractionStats();
+                            await _loadUserInteractionStatus();
                           },
                           isOutlined: false,
                         ),
@@ -525,7 +536,7 @@ class _BookCardState extends State<BookCard> {
                                 : _buildErrorCover(),
                       ),
                       // Favorite badge
-                      if (_favoriteStatus)
+                      if (_favoriteStatus && widget.filterType == FilterType.favorite)
                         Positioned(
                           top: 8,
                           right: 8,
