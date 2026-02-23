@@ -7,8 +7,7 @@ import 'package:readbox/gen/assets.gen.dart';
 
 class AppProfile extends StatelessWidget {
   final UserModel? user;
-  const AppProfile({super.key, this.user,});
-
+  const AppProfile({super.key, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,11 @@ class AppProfile extends StatelessWidget {
                 // User Avatar
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, Routes.profileScreen, arguments: user);
+                    Navigator.pushNamed(
+                      context,
+                      Routes.profileScreen,
+                      arguments: user,
+                    );
                   },
                   child: Container(
                     padding: EdgeInsets.all(4),
@@ -66,39 +69,38 @@ class AppProfile extends StatelessWidget {
                 SizedBox(width: 16),
 
                 // User Name
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user?.fullName ??
-                            user?.username ??
-                            '',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.5,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 4),
-
-                      // User Email
-                      if (user?.email != null &&
-                          user!.email!.isNotEmpty)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          user!.email!,
+                          user?.fullName ?? user?.username ?? '',
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            fontSize: 14,
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                    ],
+                        SizedBox(height: 4),
+
+                        // User Email
+                        if (user?.email != null && user!.email!.isNotEmpty)
+                          Text(
+                            user!.email!,
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontSize: 14,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -132,9 +134,11 @@ class AppProfile extends StatelessWidget {
     if (user?.picture != null && user!.picture!.isNotEmpty) {
       return CircleAvatar(
         radius: 40,
-        backgroundImage: CachedNetworkImageProvider( 
-          _isSocialPlatform() ? user!.picture! :
-           ApiConstant.storageHost + (user!.picture ?? '')),
+        backgroundImage: CachedNetworkImageProvider(
+          _isSocialPlatform()
+              ? user!.picture!
+              : ApiConstant.storageHost + (user!.picture ?? ''),
+        ),
         backgroundColor: Colors.white,
         onBackgroundImageError: (_, __) {
           // Fallback sẽ hiển thị initials bên dưới
@@ -183,6 +187,8 @@ class AppProfile extends StatelessWidget {
   }
 
   bool _isSocialPlatform() {
-    return user?.isGoogleUser == true || user?.isFacebookUser == true || user?.isAppleUser == true;
+    return user?.isGoogleUser == true ||
+        user?.isFacebookUser == true ||
+        user?.isAppleUser == true;
   }
 }

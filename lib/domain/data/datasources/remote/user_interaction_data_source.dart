@@ -252,7 +252,7 @@ class UserInteractionRemoteDataSource {
   }) async {
     final ApiResponse apiResponse = await network.get(
       url:
-          '${ApiConstant.apiHost}${ApiConstant.getInteractionStatus}/$targetType/$targetId',
+          '${ApiConstant.apiHost}${ApiConstant.getInteractionStatus}/${targetType.value}/$targetId',
     );
     if (apiResponse.isSuccess) {
       return apiResponse.data;

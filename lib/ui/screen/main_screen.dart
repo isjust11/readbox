@@ -56,7 +56,7 @@ class MainBodyState extends State<MainBody> {
       context.read<NotificationCubit>().getUnreadCount();
       getBooks();
       //my interactions
-      loadUserInteractions();
+      loadUserReadingBooks();
     });
     loadUserInfo();
     loadCategories();
@@ -75,7 +75,7 @@ class MainBodyState extends State<MainBody> {
   }
 
   // load user interactions
-  Future<void> loadUserInteractions() async {
+  Future<void> loadUserReadingBooks() async {
     Map<String, dynamic> query = {
       'page': 1,
       'limit': 10,
@@ -1003,7 +1003,7 @@ class MainBodyState extends State<MainBody> {
       arguments: book,
     );
     if (result == true) {
-      loadUserInteractions();
+      loadUserReadingBooks();
     }
   }
 }

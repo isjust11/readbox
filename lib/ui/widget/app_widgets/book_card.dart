@@ -283,15 +283,9 @@ class _BookCardState extends State<BookCard> {
                           if (data.containsKey('favorite') == true) {
                             _isFavorite = data['favorite'] == true;
                           }
-                          if (data.containsKey('archive') == true) {
-                            _isArchive = data['archive'] == true;
+                          if (data.containsKey('archived') == true) {
+                            _isArchive = data['archived'] == true;
                           }
-                        });
-                      } else if (state.data is InteractionStatsModel) {
-                        final stats = state.data as InteractionStatsModel;
-                        setState(() {
-                          _isFavorite = stats.favoriteStatus == true;
-                          _isArchive = stats.archiveStatus == true;
                         });
                       }
                     }
@@ -437,36 +431,17 @@ class _BookCardState extends State<BookCard> {
       listener: (context, state) {
         if (state is LoadedState && state.data != null) {
           // Update favorite/archive status from stats response
-          if (state.data is InteractionStatsModel) {
-            final stats = state.data as InteractionStatsModel;
-            if (stats.targetId == widget.book.id?.toString() &&
-                stats.targetType?.value == 'book') {
-              setState(() {
-                _isFavorite = stats.favoriteStatus == true;
-                _isArchive = stats.archiveStatus == true;
-                _rating = stats.averageRating;
-              });
-            }
-          } else if (state.data is Map<String, dynamic>) {
+          if (state.data is Map<String, dynamic>) {
             final data = state.data as Map<String, dynamic>;
             setState(() {
-              if (data.containsKey('favoriteStatus')) {
-                _isFavorite = data['favoriteStatus'] == true;
+              if (data.containsKey('favorite') == true) {
+                _isFavorite = data['favorite'] == true;
               }
-              if (data.containsKey('archiveStatus')) {
-                _isArchive = data['archiveStatus'] == true;
-              }
-              if (data.containsKey('averageRating')) {
-                _rating = data['averageRating'];
+              if (data.containsKey('archived') == true) {
+                _isArchive = data['archived'] == true;
               }
             });
           }
-        } else if (state is ErrorState) {
-          // Fallback to book fields if error
-          setState(() {
-            _isFavorite = widget.book.isFavorite;
-            _isArchive = widget.book.isArchived;
-          });
         }
       },
       child: Container(
