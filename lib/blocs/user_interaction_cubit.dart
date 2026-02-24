@@ -252,7 +252,7 @@ class UserInteractionCubit extends Cubit<BaseState> {
   }
 
   Future<void> getStats({
-    required String targetType,
+    required InteractionTarget targetType,
     required dynamic targetId,
   }) async {
     try {
@@ -261,8 +261,6 @@ class UserInteractionCubit extends Cubit<BaseState> {
         targetType: targetType,
         targetId: targetId,
       );
-      isFavorite = response.favoriteStatus == true;
-      isArchived = response.archiveStatus == true;
       emit(LoadedState(response));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));

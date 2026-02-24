@@ -4680,10 +4680,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Đang đọc "{title}" trên Readbox. Tải app để đọc sách miễn phí! 📚`
+  /// `"{title}"được chia sẻ từ Readbox. Tải app để đọc sách miễn phí! 📚`
   String pdf_share_text(String title) {
     return Intl.message(
-      'Đang đọc "$title" trên Readbox. Tải app để đọc sách miễn phí! 📚',
+      '"$title"được chia sẻ từ Readbox. Tải app để đọc sách miễn phí! 📚',
       name: 'pdf_share_text',
       desc: '',
       args: [title],
@@ -5190,10 +5190,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Tải xuống PDF`
+  /// `Lưu thành file PDF`
   String get tools_save_as_pdf {
     return Intl.message(
-      'Tải xuống PDF',
+      'Lưu thành file PDF',
       name: 'tools_save_as_pdf',
       desc: '',
       args: [],

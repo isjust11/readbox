@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/injection_container.dart';
@@ -48,14 +49,21 @@ class BookDetailBodyState extends State<BookDetailBody> {
     super.initState();
     // Đảm bảo listener được đăng ký trước khi gọi getStats()
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadInteractionStatus();
       _loadInteractionStats();
     });
     currentUser = context.read<AppCubit>().getUser();
   }
 
+  void _loadInteractionStatus() async {
+    await context.read<UserInteractionCubit>().getUserInteractionStatus(
+      targetType: InteractionTarget.book,
+      targetId: widget.bookId,
+    );
+  }
   void _loadInteractionStats() async {
     await context.read<UserInteractionCubit>().getStats(
-      targetType: 'book',
+      targetType: InteractionTarget.book,
       targetId: widget.bookId,
     );
   }
@@ -101,11 +109,15 @@ class BookDetailBodyState extends State<BookDetailBody> {
     return BlocListener<UserInteractionCubit, BaseState>(
       listener: (context, state) {
         if (state is LoadedState && state.data != null) {
-          if (state.data is InteractionStatsModel) {
-            final stats = state.data as InteractionStatsModel;
+          if (state.data is Map<String, dynamic>) {
+            final data = state.data as Map<String, dynamic>;
             setState(() {
-              _isFavorite = stats.favoriteStatus == true;
-              _isArchived = stats.archiveStatus == true;
+              if (data.containsKey('favorite') == true) {
+                _isFavorite = data['favorite'] == true;
+              }
+              if (data.containsKey('archived') == true) {
+                _isArchived = data['archived'] == true;
+              }
             });
           }
         }
@@ -273,60 +285,29 @@ class BookDetailBodyState extends State<BookDetailBody> {
                     ],
                   ),
                   SizedBox(height: 16),
-
-                  // Rating
-                  if (book.rating != null && book.rating! > 0)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.amber.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.amber.withValues(alpha: 0.3),
-                          width: 1,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          ...List.generate(5, (index) {
-                            return Padding(
-                              padding: EdgeInsets.only(right: 4),
-                              child: Icon(
-                                index < book.rating!.floor()
-                                    ? Icons.star_rounded
-                                    : Icons.star_outline_rounded,
-                                color: Colors.amber[700],
-                                size: 26,
-                              ),
-                            );
-                          }),
-                          SizedBox(width: 12),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.amber[700],
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              '${book.rating!.toStringAsFixed(1)}/5.0',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
+                  // build statistical row  // likeCount, dislikeCount, bookmarkCount, shareCount, viewCount, commentCount, rateCount, followCount, favoriteCount, archiveCount
+                  BlocBuilder<UserInteractionCubit, BaseState>(
+                    buildWhen: (previous, current) => current is LoadedState && current.data is InteractionStatsModel,
+                    bloc: context.read<UserInteractionCubit>(),
+                    builder: (context, state) {
+                      if (state is LoadedState && state.data is InteractionStatsModel) {
+                        final stats = state.data as InteractionStatsModel;
+                        return SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                            _buildStatisticalRow(Icons.favorite, Colors.red, '${stats.favoriteCount}'),
+                            _buildStatisticalRow(Icons.archive, Colors.blue, '${stats.archiveCount}'),
+                            _buildStatisticalRow(Icons.comment, Colors.grey, '${stats.commentCount}'),
+                            if(stats.averageRating != null && stats.averageRating! > 0) _buildStatisticalRow(Icons.star, Colors.yellow, '${stats.averageRating}'),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  SizedBox(height: 8),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                  // Rating
                   TextButton.icon(
                     onPressed: () {
                       Navigator.pushNamed(
@@ -635,6 +616,32 @@ class BookDetailBodyState extends State<BookDetailBody> {
               fontSize: 13,
               color: Colors.grey[600],
               fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // build statistical row count 
+  Widget _buildStatisticalRow(IconData icon, Color? iconColor, String value) {
+    return SizedBox(
+      width: 70,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 40,
+            child: Icon(
+              icon,
+              size: 24,
+              color: iconColor,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
           ),
         ],

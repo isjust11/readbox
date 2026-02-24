@@ -441,7 +441,7 @@
   "pdf_toolbar": "Toolbar",
   "pdf_read_ebook": "Read ebook",
   "pdf_share": "Share",
-  "pdf_share_text": "Reading \"{title}\" on Readbox. Download the app to read for free! 📚",
+  "pdf_share_text": "\"{title}\"is shared from Readbox. Download the app to read for free! 📚",
   "@pdf_share_text": {
     "placeholders": {
       "title": {"type": "String"}
@@ -513,7 +513,7 @@
   "tools_add_image_file": "Add image file",
   "tools_take_photo": "Take photo",
   "tools_choose_from_gallery": "Choose from gallery",
-  "tools_save_as_pdf": "Download PDF",
+  "tools_save_as_pdf": "Save as PDF",
   "tools_add_more_pages": "Add more pages",
   "tools_remove_page": "Remove page",
   "tools_preview": "Preview",

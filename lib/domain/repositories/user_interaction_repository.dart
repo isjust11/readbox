@@ -96,7 +96,7 @@ class UserInteractionRepository {
   }) => remoteDataSource.getStatus(targetType: targetType, targetId: targetId);
 
   Future<InteractionStatsModel> getStats({
-    required String targetType,
+    required InteractionTarget targetType,
     required dynamic targetId,
   }) => remoteDataSource.getStats(targetType: targetType, targetId: targetId);
 

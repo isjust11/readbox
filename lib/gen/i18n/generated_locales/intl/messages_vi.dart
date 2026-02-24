@@ -28,7 +28,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m2(error) => "Không thể chia sẻ: ${error}";
 
   static String m3(title) =>
-      "Đang đọc \"${title}\" trên Readbox. Tải app để đọc sách miễn phí! 📚";
+      "\"${title}\"được chia sẻ từ Readbox. Tải app để đọc sách miễn phí! 📚";
 
   static String m4(error) => "Lỗi đọc: ${error}";
 
@@ -915,7 +915,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Đang xử lý..."),
         "tools_remove_page": MessageLookupByLibrary.simpleMessage("Xóa trang"),
         "tools_save_as_pdf":
-            MessageLookupByLibrary.simpleMessage("Tải xuống PDF"),
+            MessageLookupByLibrary.simpleMessage("Lưu thành file PDF"),
         "tools_save_failed":
             MessageLookupByLibrary.simpleMessage("Lưu thất bại"),
         "tools_saved_successfully":
