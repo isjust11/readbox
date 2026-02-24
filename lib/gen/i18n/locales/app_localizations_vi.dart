@@ -1376,7 +1376,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String pdf_share_text(String title) {
-    return 'Đang đọc \"$title\" trên Readbox. Tải app để đọc sách miễn phí! 📚';
+    return '\"$title\"được chia sẻ từ Readbox. Tải app để đọc sách miễn phí! 📚';
   }
 
   @override
@@ -1541,7 +1541,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get tools_choose_from_gallery => 'Chọn từ thư viện';
 
   @override
-  String get tools_save_as_pdf => 'Tải xuống PDF';
+  String get tools_save_as_pdf => 'Lưu thành file PDF';
 
   @override
   String get tools_add_more_pages => 'Thêm trang';

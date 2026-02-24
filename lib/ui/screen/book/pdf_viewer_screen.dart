@@ -455,10 +455,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         return;
       }
 
-      final result = await Share.shareXFiles(
-        [XFile(filePath)],
-        text: shareText,
-        subject: widget.title,
+      final result = await SharePlus.instance.share(
+        ShareParams(
+          text: shareText,
+          subject: widget.title,
+          files: [XFile(filePath)],
+        ),
       );
 
       if (!mounted) return;

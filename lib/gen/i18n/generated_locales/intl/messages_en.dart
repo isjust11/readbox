@@ -28,7 +28,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m2(error) => "Cannot share: ${error}";
 
   static String m3(title) =>
-      "Reading \"${title}\" on Readbox. Download the app to read for free! 📚";
+      "\"${title}\"is shared from Readbox. Download the app to read for free! 📚";
 
   static String m4(error) => "Read error: ${error}";
 
@@ -877,7 +877,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tools_remove_page":
             MessageLookupByLibrary.simpleMessage("Remove page"),
         "tools_save_as_pdf":
-            MessageLookupByLibrary.simpleMessage("Download PDF"),
+            MessageLookupByLibrary.simpleMessage("Save as PDF"),
         "tools_save_failed":
             MessageLookupByLibrary.simpleMessage("Save failed"),
         "tools_saved_successfully":

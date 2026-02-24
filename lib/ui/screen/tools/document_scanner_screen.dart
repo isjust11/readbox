@@ -7,6 +7,7 @@ import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/shared_preference.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class DocumentScannerScreen extends StatefulWidget {
@@ -119,7 +120,6 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
       final directory = await getApplicationDocumentsDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final outputPath = '${directory.path}/scanned_document_$timestamp.pdf';
-
       final File outputFile = File(outputPath);
       await outputFile.writeAsBytes(await document.save());
       document.dispose();
@@ -135,7 +135,8 @@ class _DocumentScannerScreenState extends State<DocumentScannerScreen> {
               '${AppLocalizations.current.tools_saved_successfully}\n$outputPath',
           snackBarType: SnackBarType.success,
         );
-
+         // lưu vào thư viện local
+        await SharedPreferenceUtil.addLocalBook(outputPath);
         // Clear pages after successful save
         setState(() {
           _scannedPages.clear();

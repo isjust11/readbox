@@ -462,7 +462,7 @@
   "pdf_toolbar": "Thanh công cụ",
   "pdf_read_ebook": "Đọc ebook",
   "pdf_share": "Chia sẻ",
-  "pdf_share_text": "Đang đọc \"{title}\" trên Readbox. Tải app để đọc sách miễn phí! 📚",
+  "pdf_share_text": "\"{title}\"được chia sẻ từ Readbox. Tải app để đọc sách miễn phí! 📚",
   "@pdf_share_text": {
     "placeholders": {
       "title": {"type": "String"}
@@ -534,7 +534,7 @@
   "tools_add_image_file": "Thêm file ảnh",
   "tools_take_photo": "Chụp ảnh",
   "tools_choose_from_gallery": "Chọn từ thư viện",
-  "tools_save_as_pdf": "Tải xuống PDF",
+  "tools_save_as_pdf": "Lưu thành file PDF",
   "tools_add_more_pages": "Thêm trang",
   "tools_remove_page": "Xóa trang",
   "tools_preview": "Xem trước",

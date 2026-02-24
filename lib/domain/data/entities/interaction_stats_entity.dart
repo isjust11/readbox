@@ -20,8 +20,8 @@ class InteractionStatsEntity extends BaseEntity {
   int? commentCount;
   int? rateCount;
   int? followCount;
-  bool? favoriteStatus;
-  bool? archiveStatus;
+  int? favoriteCount;
+  int? archiveCount;
 
   // Average rating (for rate interactions)
   double? averageRating;
@@ -40,8 +40,8 @@ class InteractionStatsEntity extends BaseEntity {
         : null;
     targetId = json['targetId'];
 
-    favoriteStatus = json['favoriteStatus'];
-    archiveStatus = json['archiveStatus'];
+    favoriteCount = json['favoriteCount'];
+    archiveCount = json['archiveCount'];
     if (json['book'] != null) {
       book = BookEntity.fromJson(json['book']);
     }
@@ -95,8 +95,8 @@ class InteractionStatsEntity extends BaseEntity {
 
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
-    data['favoriteStatus'] = favoriteStatus;
-    data['archiveStatus'] = archiveStatus;
+    data['favoriteCount'] = favoriteCount;
+    data['archiveCount'] = archiveCount;
     return data;
   }
 }

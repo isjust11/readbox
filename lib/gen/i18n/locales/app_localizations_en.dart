@@ -1374,7 +1374,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String pdf_share_text(String title) {
-    return 'Reading \"$title\" on Readbox. Download the app to read for free! 📚';
+    return '\"$title\"is shared from Readbox. Download the app to read for free! 📚';
   }
 
   @override
@@ -1539,7 +1539,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tools_choose_from_gallery => 'Choose from gallery';
 
   @override
-  String get tools_save_as_pdf => 'Download PDF';
+  String get tools_save_as_pdf => 'Save as PDF';
 
   @override
   String get tools_add_more_pages => 'Add more pages';

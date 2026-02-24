@@ -38,7 +38,7 @@ class BookCard extends StatefulWidget {
 class _BookCardState extends State<BookCard> {
   bool? _isFavorite;
   bool? _isArchive;
-  double? _rating = 0;
+  double? _rating;
   @override
   void initState() {
     super.initState();
@@ -627,7 +627,7 @@ class _BookCardState extends State<BookCard> {
                             Container(
                               padding: EdgeInsets.symmetric(
                                 horizontal: AppDimens.SIZE_8,
-                                vertical: AppDimens.SIZE_6,
+                                vertical: AppDimens.SIZE_4,
                               ),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(AppDimens.SIZE_8),

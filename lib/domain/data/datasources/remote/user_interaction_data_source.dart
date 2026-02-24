@@ -200,12 +200,12 @@ class UserInteractionRemoteDataSource {
 
   // get stats
   Future<InteractionStatsModel> getStats({
-    required String targetType,
+    required InteractionTarget targetType,
     required dynamic targetId,
   }) async {
     final ApiResponse apiResponse = await network.get(
       url:
-          '${ApiConstant.apiHost}${ApiConstant.getInteractionStats}/$targetType/$targetId',
+          '${ApiConstant.apiHost}${ApiConstant.getInteractionStats}/${targetType.value}/$targetId',
     );
     if (apiResponse.isSuccess) {
       return InteractionStatsModel.fromJson(apiResponse.data);
