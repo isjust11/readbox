@@ -2753,7 +2753,7 @@ abstract class AppLocalizations {
   /// No description provided for @pdf_share_text.
   ///
   /// In en, this message translates to:
-  /// **'Reading \"{title}\" on Readbox. Download the app to read for free! 📚'**
+  /// **'\"{title}\"is shared from Readbox. Download the app to read for free! 📚'**
   String pdf_share_text(String title);
 
   /// No description provided for @pdf_share_file_not_found.
@@ -3059,7 +3059,7 @@ abstract class AppLocalizations {
   /// No description provided for @tools_save_as_pdf.
   ///
   /// In en, this message translates to:
-  /// **'Download PDF'**
+  /// **'Save as PDF'**
   String get tools_save_as_pdf;
 
   /// No description provided for @tools_add_more_pages.
