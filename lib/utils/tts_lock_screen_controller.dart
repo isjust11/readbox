@@ -10,6 +10,10 @@ class TtsLockScreenController {
   AudioHandler? _handler;
   Future<void>? _initializing;
 
+  VoidCallback? onSkipForward;
+  VoidCallback? onSkipBackward;
+  VoidCallback? onRestartPage;
+
   Future<void> initialize() async {
     if (_handler != null) return;
     if (_initializing != null) {
@@ -30,7 +34,7 @@ class TtsLockScreenController {
     await session.configure(const AudioSessionConfiguration.speech());
 
     _handler = await AudioService.init(
-      builder: () => _TtsAudioHandler(),
+      builder: () => _TtsAudioHandler(this),
       config: const AudioServiceConfig(
         androidNotificationChannelId: 'readbox_tts_channel',
         androidNotificationChannelName: 'Readbox TTS',
@@ -103,12 +107,45 @@ class TtsLockScreenController {
 
 class _TtsAudioHandler extends BaseAudioHandler {
   final TextToSpeechService _ttsService = TextToSpeechService();
+  final TtsLockScreenController _controller;
+
+  _TtsAudioHandler(this._controller);
 
   String _bookTitle = '';
   String _fullText = '';
   int _page = 1;
   int _wordStart = 0;
   int _wordEnd = 0;
+
+  static const _skipForward = MediaControl(
+    androidIcon: 'drawable/audio_service_fast_forward',
+    label: 'Forward',
+    action: MediaAction.fastForward,
+  );
+
+  static const _skipBackward = MediaControl(
+    androidIcon: 'drawable/audio_service_rewind',
+    label: 'Backward',
+    action: MediaAction.rewind,
+  );
+
+  static const _restart = MediaControl(
+    androidIcon: 'drawable/audio_service_skip_to_previous',
+    label: 'Restart',
+    action: MediaAction.skipToPrevious,
+  );
+
+  List<MediaControl> get _playingControls => const [
+    _skipBackward,
+    MediaControl.pause,
+    _skipForward,
+  ];
+
+  List<MediaControl> get _pausedControls => const [
+    _restart,
+    MediaControl.play,
+    _skipForward,
+  ];
 
   Future<void> setReadingContext({
     required String bookTitle,
@@ -121,12 +158,15 @@ class _TtsAudioHandler extends BaseAudioHandler {
     _wordStart = 0;
     _wordEnd = 0;
 
+    final duration = Duration(milliseconds: text.length);
+
     mediaItem.add(
       MediaItem(
         id: 'tts-$page-${DateTime.now().millisecondsSinceEpoch}',
         title: _bookTitle,
         artist: 'Page $_page',
         album: _shorten(text),
+        duration: duration,
       ),
     );
   }
@@ -144,9 +184,11 @@ class _TtsAudioHandler extends BaseAudioHandler {
     final current = mediaItem.value;
     if (current == null) return;
 
-    mediaItem.add(
-      current.copyWith(
-        album: snippet,
+    mediaItem.add(current.copyWith(album: snippet));
+
+    playbackState.add(
+      playbackState.value.copyWith(
+        updatePosition: Duration(milliseconds: _wordStart),
       ),
     );
   }
@@ -154,12 +196,15 @@ class _TtsAudioHandler extends BaseAudioHandler {
   Future<void> setPlayingState() async {
     playbackState.add(
       playbackState.value.copyWith(
-        controls: const [
-          MediaControl.pause,
-          MediaControl.stop,
-        ],
+        controls: _playingControls,
+        systemActions: const {
+          MediaAction.fastForward,
+          MediaAction.rewind,
+          MediaAction.skipToPrevious,
+        },
         processingState: AudioProcessingState.ready,
         playing: true,
+        updatePosition: Duration(milliseconds: _wordStart),
       ),
     );
   }
@@ -167,10 +212,7 @@ class _TtsAudioHandler extends BaseAudioHandler {
   Future<void> setCompletedState() async {
     playbackState.add(
       playbackState.value.copyWith(
-        controls: const [
-          MediaControl.play,
-          MediaControl.stop,
-        ],
+        controls: _pausedControls,
         processingState: AudioProcessingState.completed,
         playing: false,
       ),
@@ -181,10 +223,7 @@ class _TtsAudioHandler extends BaseAudioHandler {
     debugPrint('[TTS LockScreen] Error: $message');
     playbackState.add(
       playbackState.value.copyWith(
-        controls: const [
-          MediaControl.play,
-          MediaControl.stop,
-        ],
+        controls: _pausedControls,
         processingState: AudioProcessingState.error,
         playing: false,
       ),
@@ -208,10 +247,7 @@ class _TtsAudioHandler extends BaseAudioHandler {
     await _ttsService.pause();
     playbackState.add(
       playbackState.value.copyWith(
-        controls: const [
-          MediaControl.play,
-          MediaControl.stop,
-        ],
+        controls: _pausedControls,
         processingState: AudioProcessingState.ready,
         playing: false,
       ),
@@ -223,13 +259,26 @@ class _TtsAudioHandler extends BaseAudioHandler {
     await _ttsService.stop();
     playbackState.add(
       playbackState.value.copyWith(
-        controls: const [
-          MediaControl.play,
-        ],
+        controls: const [MediaControl.play],
         processingState: AudioProcessingState.idle,
         playing: false,
       ),
     );
+  }
+
+  @override
+  Future<void> fastForward() async {
+    _controller.onSkipForward?.call();
+  }
+
+  @override
+  Future<void> rewind() async {
+    _controller.onSkipBackward?.call();
+  }
+
+  @override
+  Future<void> skipToPrevious() async {
+    _controller.onRestartPage?.call();
   }
 
   String _currentSnippet() {

@@ -1312,6 +1312,27 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         snackBarType: SnackBarType.error,
       );
     };
+
+    TtsLockScreenController.instance.onSkipForward = () {
+      if (!mounted) return;
+      final text = _ttsReadingText ?? '';
+      final pos = (_ttsWordStart + 200).clamp(0, text.length);
+      if (pos < text.length) {
+        _speakFromPosition(_findWordBoundary(text, pos));
+      }
+    };
+
+    TtsLockScreenController.instance.onSkipBackward = () {
+      if (!mounted) return;
+      final text = _ttsReadingText ?? '';
+      final pos = (_ttsWordStart - 200).clamp(0, text.length);
+      _speakFromPosition(_findWordBoundary(text, pos));
+    };
+
+    TtsLockScreenController.instance.onRestartPage = () {
+      if (!mounted) return;
+      _speakFromPosition(0);
+    };
   }
 
   void _removePdfWordHighlight() {
@@ -1450,12 +1471,60 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   }
 
   /// Panel hiển thị text đang đọc với từ đang đọc được đánh dấu
+  Future<void> _speakFromPosition(int charOffset) async {
+    final text = _ttsReadingText;
+    if (text == null || text.isEmpty) return;
+
+    final offset = charOffset.clamp(0, text.length);
+    await _ttsService.stop();
+    _removePdfWordHighlight();
+
+    if (offset >= text.length) return;
+
+    final subText = text.substring(offset);
+    if (subText.trim().isEmpty) return;
+
+    setState(() {
+      _ttsWordStart = offset;
+      _ttsWordEnd = offset;
+      _isReadingContinuous = true;
+    });
+
+    final originalHandler = _ttsService.onSpeechWordProgress;
+    _ttsService.onSpeechWordProgress = (String t, int start, int end, String word) {
+      if (!mounted) return;
+      final realStart = start + offset;
+      final realEnd = end + offset;
+      setState(() {
+        _ttsWordStart = realStart.clamp(0, text.length);
+        _ttsWordEnd = realEnd.clamp(0, text.length);
+      });
+      TtsLockScreenController.instance.updateWordProgress(
+        fullText: text,
+        start: realStart,
+        end: realEnd,
+      );
+      _updatePdfWordHighlight(realStart, realEnd);
+    };
+
+    final originalComplete = _ttsService.onSpeechComplete;
+    _ttsService.onSpeechComplete = (msg) {
+      _ttsService.onSpeechWordProgress = originalHandler;
+      _ttsService.onSpeechComplete = originalComplete;
+      originalComplete?.call(msg);
+    };
+
+    await _ttsService.speak(subText);
+  }
+
   Widget _buildTtsReadingPanel() {
     final text = _ttsReadingText ?? '';
     final len = text.length;
     final start = _ttsWordStart.clamp(0, len);
     final end = _ttsWordEnd.clamp(0, len);
     final hasHighlight = start < end;
+    final progress = len > 0 ? start / len : 0.0;
+    final theme = Theme.of(context);
 
     return Positioned(
       left: 0,
@@ -1466,74 +1535,155 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         child: Container(
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.4,
+            maxHeight: MediaQuery.of(context).size.height * 0.45,
           ),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: theme.colorScheme.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Thanh tiêu đề + nút đóng
+              // Header
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.08),
+                  color: theme.primaryColor.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.record_voice_over,
-                      color: Theme.of(context).primaryColor,
-                      size: 22,
-                    ),
+                    Icon(Icons.record_voice_over, color: theme.primaryColor, size: 20),
                     SizedBox(width: 8),
                     Text(
                       AppLocalizations.current.pdf_reading,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: theme.primaryColor),
                     ),
                     Spacer(),
+                    if (len > 0)
+                      Text(
+                        '${(progress * 100).toInt()}%',
+                        style: TextStyle(fontSize: 12, color: theme.primaryColor.withValues(alpha: 0.7)),
+                      ),
+                    SizedBox(width: 4),
                     IconButton(
-                      icon: Icon(Icons.close, size: 22),
-                      onPressed: () {
-                        setState(() => _showTtsReadingPanel = false);
-                      },
+                      icon: Icon(Icons.close, size: 20),
+                      onPressed: () => setState(() => _showTtsReadingPanel = false),
                       padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(minWidth: 36, minHeight: 36),
+                      constraints: BoxConstraints(minWidth: 32, minHeight: 32),
                     ),
                   ],
                 ),
               ),
-              // Nội dung với từ đang đọc được đánh dấu
+
+              // Progress bar
+              if (len > 0)
+                SliderTheme(
+                  data: SliderThemeData(
+                    trackHeight: 3,
+                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
+                    overlayShape: RoundSliderOverlayShape(overlayRadius: 14),
+                    activeTrackColor: theme.primaryColor,
+                    inactiveTrackColor: theme.primaryColor.withValues(alpha: 0.15),
+                    thumbColor: theme.primaryColor,
+                  ),
+                  child: Slider(
+                    value: start.toDouble(),
+                    min: 0,
+                    max: len.toDouble(),
+                    onChanged: (value) {
+                      final pos = _findWordBoundary(text, value.toInt());
+                      _speakFromPosition(pos);
+                    },
+                  ),
+                ),
+
+              // Control buttons
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildTtsControlButton(
+                      icon: Icons.restart_alt_rounded,
+                      label: 'Từ đầu',
+                      onTap: () => _speakFromPosition(0),
+                    ),
+                    _buildTtsControlButton(
+                      icon: Icons.replay_10_rounded,
+                      label: '-200',
+                      onTap: () {
+                        final pos = (start - 200).clamp(0, len);
+                        _speakFromPosition(_findWordBoundary(text, pos));
+                      },
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: _ttsService.isSpeaking ? Colors.red.withValues(alpha: 0.1) : theme.primaryColor.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          _ttsService.isSpeaking ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                          color: _ttsService.isSpeaking ? Colors.red : theme.primaryColor,
+                          size: 28,
+                        ),
+                        onPressed: () async {
+                          if (_ttsService.isSpeaking) {
+                            await _ttsService.stop();
+                            _removePdfWordHighlight();
+                            setState(() => _isReadingContinuous = false);
+                          } else {
+                            _speakFromPosition(start);
+                          }
+                        },
+                      ),
+                    ),
+                    _buildTtsControlButton(
+                      icon: Icons.forward_10_rounded,
+                      label: '+200',
+                      onTap: () {
+                        final pos = (start + 200).clamp(0, len);
+                        if (pos < len) {
+                          _speakFromPosition(_findWordBoundary(text, pos));
+                        }
+                      },
+                    ),
+                    _buildTtsControlButton(
+                      icon: Icons.skip_next_rounded,
+                      label: 'Trang sau',
+                      onTap: () {
+                        if (_currentPage < _totalPages) _readNextPage();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 4),
+
+              // Text content
               Flexible(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
                   child: RichText(
                     textAlign: TextAlign.left,
                     textDirection: TextDirection.ltr,
                     text: TextSpan(
-                      style: TextStyle(
-                        fontSize: 16,
-                        height: 1.5,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+                      style: TextStyle(fontSize: 15, height: 1.6, color: theme.colorScheme.onSurface),
                       children: [
-                        if (start > 0) TextSpan(text: text.substring(0, start)),
+                        if (start > 0)
+                          TextSpan(
+                            text: text.substring(0, start),
+                            style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
+                          ),
                         if (hasHighlight)
                           TextSpan(
                             text: text.substring(start, end),
                             style: TextStyle(
-                              backgroundColor: Theme.of(
-                                context,
-                              ).primaryColor.withValues(alpha: 0.35),
+                              backgroundColor: theme.primaryColor.withValues(alpha: 0.3),
                               fontWeight: FontWeight.w600,
-                              color: Theme.of(context).primaryColor,
+                              color: theme.primaryColor,
                             ),
                           ),
                         if (end < len) TextSpan(text: text.substring(end)),
@@ -1544,6 +1694,39 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  int _findWordBoundary(String text, int pos) {
+    if (pos <= 0) return 0;
+    if (pos >= text.length) return text.length;
+    var p = pos;
+    while (p > 0 && text[p - 1] != ' ' && text[p - 1] != '\n') {
+      p--;
+    }
+    return p;
+  }
+
+  Widget _buildTtsControlButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 22, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
+            SizedBox(height: 2),
+            Text(label, style: TextStyle(fontSize: 10, color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
+          ],
         ),
       ),
     );
