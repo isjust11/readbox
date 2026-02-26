@@ -12,3 +12,4 @@ export 'package:readbox/domain/data/datasources/remote/category_remote_data_sour
 export 'package:readbox/domain/data/datasources/remote/converter_remote_data_source.dart';
 export 'package:readbox/domain/data/datasources/remote/subscription_remote_data_source.dart';
 export 'package:readbox/domain/data/datasources/remote/payment_remote_data_source.dart';
+export 'package:readbox/domain/data/datasources/remote/user_subscription_remote_data_source.dart';

@@ -70,11 +70,15 @@ void main() async {
       create: (_) => CategoryCubit(repository: di.getIt<CategoryRepository>()),
     ),
     BlocProvider(
+      create: (_) => UserSubscriptionCubit(repository: di.getIt<UserSubscriptionRepository>()),
+    ),
+    BlocProvider(
       create: (_) => LibraryCubit(
         repository: di.getIt<BookRepository>(),
         adminRemoteDataSource: di.getIt<AdminRemoteDataSource>(),
       ),
     ),
+
   ], child: MyApp()));
 
   // Init lock-screen TTS asynchronously to avoid blocking app startup.

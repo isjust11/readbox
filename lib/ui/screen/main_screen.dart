@@ -51,6 +51,7 @@ class MainBodyState extends State<MainBody> {
   void initState() {
     super.initState();
     title = AppLocalizations.current.book_discover;
+      context.read<UserSubscriptionCubit>().loadMe();
     // Load initial data after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NotificationCubit>().getUnreadCount();

@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/assets.gen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readbox/blocs/user_subscription_cubit.dart';
 
 class AppProfile extends StatelessWidget {
   final UserModel? user;
@@ -11,6 +14,7 @@ class AppProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // context.watch<UserSubscriptionCubit>().loadMe();
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -99,6 +103,21 @@ class AppProfile extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
+
+                          // BlocBuilder<UserSubscriptionCubit, BaseState>(
+                          //   builder: (context, state) {
+                          //     if (state is LoadedState) {
+                          //       return Text(
+                          //         state.data?.plan?.name ?? '',
+                          //         style: TextStyle(
+                          //           color: Colors.white.withValues(alpha: 0.9),
+                          //           fontSize: 14,
+                          //         ),
+                          //       );
+                          //     }
+                          //     return SizedBox.shrink();
+                          //   },
+                          // ),
                       ],
                     ),
                   ),
