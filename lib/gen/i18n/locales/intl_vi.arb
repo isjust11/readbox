@@ -651,5 +651,6 @@
   "transactionId": "Mã giao dịch",
   "backToHome": "Về trang chủ",
   "tryAgain": "Thử lại",
-  "selectPaymentMethod": "Chọn phương thức thanh toán"
+  "selectPaymentMethod": "Chọn phương thức thanh toán",
+  "currentPlan": "Gói hiện tại"
 }

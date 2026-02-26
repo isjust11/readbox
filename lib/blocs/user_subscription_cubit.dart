@@ -8,11 +8,12 @@ class UserSubscriptionCubit extends Cubit<BaseState> {
   final UserSubscriptionRepository repository;
 
   UserSubscriptionCubit({required this.repository}) : super(InitState());
-
+  UserSubscriptionModel? userSubscription;
   Future<void> loadMe() async {
     try {
       emit(LoadingState());
       final me = await repository.getMe();
+      userSubscription = me;
       emit(LoadedState<UserSubscriptionModel>(me));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));

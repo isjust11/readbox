@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:readbox/blocs/user_subscription_cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
@@ -216,10 +218,6 @@ class _AppDrawerState extends State<AppDrawer> {
                     iconColor: Colors.blueGrey,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
-                  // Padding(
-                  //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  //   child: Divider(height: 1),
-                  // ),
                 ],
               ),
             ),

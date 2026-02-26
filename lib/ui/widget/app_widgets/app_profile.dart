@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/domain/data/models/models.dart';
@@ -15,6 +14,7 @@ class AppProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // context.watch<UserSubscriptionCubit>().loadMe();
+    final userSubscription = context.watch<UserSubscriptionCubit>().userSubscription;
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -104,20 +104,13 @@ class AppProfile extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
 
-                          // BlocBuilder<UserSubscriptionCubit, BaseState>(
-                          //   builder: (context, state) {
-                          //     if (state is LoadedState) {
-                          //       return Text(
-                          //         state.data?.plan?.name ?? '',
-                          //         style: TextStyle(
-                          //           color: Colors.white.withValues(alpha: 0.9),
-                          //           fontSize: 14,
-                          //         ),
-                          //       );
-                          //     }
-                          //     return SizedBox.shrink();
-                          //   },
-                          // ),
+                          SizedBox(height: 6),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
+                            },
+                            child: _buildSubscriptionBadge(userSubscription),
+                          ),
                       ],
                     ),
                   ),
@@ -131,6 +124,49 @@ class AppProfile extends StatelessWidget {
   }
 
   /// Build avatar widget dựa trên thông tin user
+  Widget _buildSubscriptionBadge(UserSubscriptionModel? userSubscription) {
+    final plan = userSubscription?.plan;
+    final isFree = plan == null || plan.isFree;
+
+    final Color bgColor = isFree
+        ? Colors.white.withValues(alpha: 0.12)
+        : const Color(0x33FFD700);
+    final Color borderColor = isFree
+        ? Colors.white.withValues(alpha: 0.2)
+        : const Color(0x66FFD700);
+    final Color iconColor = isFree ? Colors.white70 : const Color(0xFFFFD700);
+    final IconData icon = isFree ? Icons.workspace_premium_outlined : Icons.star_rounded;
+    final String label = plan?.name ?? 'Free';
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: borderColor, width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: iconColor, size: 15),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: isFree ? Colors.white70 : const Color(0xFFFFD700),
+              fontSize: 12,
+              fontWeight: isFree ? FontWeight.w400 : FontWeight.w600,
+            ),
+          ),
+          if (isFree) ...[
+            const SizedBox(width: 4),
+            Icon(Icons.arrow_forward_ios, color: Colors.white54, size: 10),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _buildAvatar(BuildContext context) {
     if (user == null) {
       return CircleAvatar(

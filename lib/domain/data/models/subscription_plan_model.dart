@@ -87,5 +87,5 @@ class SubscriptionPlanModel {
     return '${formatter.format(price)}$period';
   }
 
-  bool get isFree => price == null || price! <= 0;
+  bool get isFree => price == null || price == 0;
 }

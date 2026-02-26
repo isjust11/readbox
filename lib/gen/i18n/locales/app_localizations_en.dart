@@ -1849,4 +1849,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectPaymentMethod => 'Select Payment Method';
+
+  @override
+  String get currentPlan => 'Current Plan';
 }

@@ -27,4 +27,18 @@ class SubscriptionRemoteDataSource {
     }
     return Future.error(apiResponse.errMessage);
   }
+
+  Future<UserSubscriptionModel> createSubscriptionPlan(String planId) async {
+    final url = '${ApiConstant.apiHost}${ApiConstant.subscriptionPlan}';
+    final ApiResponse apiResponse = await network.post(
+      url: url,
+      body: {
+        'planId': planId,
+      },
+    );
+    if (apiResponse.isSuccess && apiResponse.data != null) {
+      return UserSubscriptionModel.fromJson(apiResponse.data);
+    }
+    return Future.error(apiResponse.errMessage);
+  }
 }

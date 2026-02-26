@@ -5,7 +5,7 @@ import 'package:readbox/domain/data/models/models.dart';
 /// Khớp với entity SubscriptionPlan ở backend.
 class UserSubscriptionModel {
   final String? id;
-  final SubscriptionPlanModel plan;
+  final SubscriptionPlanModel? plan;
   final DateTime startedAt;
   final DateTime expiresAt;
   final int storageUsedBytes;
@@ -31,7 +31,7 @@ class UserSubscriptionModel {
   factory UserSubscriptionModel.fromJson(Map<String, dynamic> json) {
     return UserSubscriptionModel(
       id: json['id'],
-      plan: SubscriptionPlanModel.fromJson(json['plan']),
+      plan: json['plan'] != null ? SubscriptionPlanModel.fromJson(json['plan']) : null,
       startedAt: DateTime.parse(json['startedAt']),
       expiresAt: DateTime.parse(json['expiresAt']),
       storageUsedBytes: _parseBigInt(json['storageUsedBytes']),
@@ -66,11 +66,11 @@ class UserSubscriptionModel {
 
   /// Giá hiển thị (VD: "99.000đ/tháng")
   String get priceDisplay {
-    if (plan.price == null || plan.price! <= 0) return '';
+    if (plan?.price == null || plan?.price == 0) return '';
     final formatter = NumberFormat.currency(locale: 'vi_VN', symbol: 'đ', decimalDigits: 0);
-    final period = plan.periodType == 'year' ? '/năm' : '/tháng';
-    return '${formatter.format(plan.price)}$period';
+    final period = plan?.periodType == 'year' ? '/năm' : '/tháng';
+    return '${formatter.format(plan?.price)}$period';
   }
 
-  bool get isFree => plan.price == null || plan.price! <= 0;
+  bool get isFree => plan?.price == null || plan?.price == 0;
 }

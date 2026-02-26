@@ -101,4 +101,5 @@ class ApiConstant {
   static final subscriptionPlans = "subscription-plans";
   static final subscriptionMe = "subscription/me";
   static final subscriptionHistory = "subscription/history";
+  static final subscriptionPlan = "subscription/subscription-plan";
 }

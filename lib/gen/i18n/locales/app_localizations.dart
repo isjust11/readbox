@@ -3643,6 +3643,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Payment Method'**
   String get selectPaymentMethod;
+
+  /// No description provided for @currentPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Plan'**
+  String get currentPlan;
 }
 
 class _AppLocalizationsDelegate

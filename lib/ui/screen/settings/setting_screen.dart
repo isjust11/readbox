@@ -329,20 +329,6 @@ class _SettingScreenState extends State<SettingScreen> {
       child: Column(
         children: [
           _buildSettingItem(
-            icon: Icons.card_membership_rounded,
-            title: AppLocalizations.current.subscriptionPlans,
-            subtitle: AppLocalizations.current.viewAndManagePlans,
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              size: AppDimens.SIZE_16,
-              color: Theme.of(context).primaryColor,
-            ),
-            onTap: () {
-              Navigator.of(context).pushNamed(Routes.subscriptionPlanScreen);
-            },
-          ),
-          _buildDivider(),
-          _buildSettingItem(
             icon: Icons.help_outline,
             title: AppLocalizations.current.helpCenter,
             subtitle: AppLocalizations.current.getHelpAndSupport,

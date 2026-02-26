@@ -630,5 +630,6 @@
   "transactionId": "Transaction ID",
   "backToHome": "Back to Home",
   "tryAgain": "Try Again",
-  "selectPaymentMethod": "Select Payment Method"
+  "selectPaymentMethod": "Select Payment Method",
+  "currentPlan": "Current Plan"
 }

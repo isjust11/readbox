@@ -13,4 +13,12 @@ class SubscriptionRepository {
       throw Exception('Failed to get subscription plans: $e');
     }
   }
+
+  Future<UserSubscriptionModel> createSubscriptionPlan(String planId) async {
+    try {
+      return await remoteDataSource.createSubscriptionPlan(planId);
+    } catch (e) {
+      throw Exception('Failed to create subscription plan: $e');
+    }
+  }
 }

@@ -18,5 +18,15 @@ class SubscriptionPlanCubit extends Cubit<BaseState> {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
+
+  Future<void> createSubscriptionPlan(String planId) async {
+    try {
+      emit(LoadingState());
+      final subscriptionPlan = await repository.createSubscriptionPlan(planId);
+      emit(LoadedState<UserSubscriptionModel>(subscriptionPlan));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
 }
 

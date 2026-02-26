@@ -1852,4 +1852,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get selectPaymentMethod => 'Chọn phương thức thanh toán';
+
+  @override
+  String get currentPlan => 'Gói hiện tại';
 }
