@@ -165,28 +165,6 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
               }
             },
           ),
-          BlocListener<AuthCubit, BaseState>(
-            listener: (context, state) {
-              if (state is LoadedState) {
-                AppSnackBar.show(
-                  context,
-                  message: AppLocalizations.current.pin_resend_success,
-                  snackBarType: SnackBarType.success,
-                );
-              } else if (state is ErrorState) {
-                AppSnackBar.show(
-                  context,
-                  message: BlocUtils.getMessageError(state.data),
-                  snackBarType: SnackBarType.error,
-                );
-                // Reset timer even on error so user can try again
-                setState(() {
-                  _canResend = true;
-                  _resendCountdown = 0;
-                });
-              }
-            },
-          ),
         ],
         child: Stack(
           children: [

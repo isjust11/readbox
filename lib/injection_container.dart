@@ -87,6 +87,9 @@ void registerCubit(GetIt getIt) {
   getIt.registerFactory(
     () => PaymentCubit(repository: getIt.get<PaymentRepository>()),
   );
+  getIt.registerFactory(
+    () => UserSubscriptionCubit(repository: getIt.get<UserSubscriptionRepository>()),
+  );
 }
 
 void registerRepositories(GetIt getIt) {
@@ -126,6 +129,9 @@ void registerRepositories(GetIt getIt) {
   getIt.registerLazySingleton(
     () => PaymentRepository(remoteDataSource: getIt.get<PaymentRemoteDataSource>()),
   );
+  getIt.registerLazySingleton(
+    () => UserSubscriptionRepository(remoteDataSource: getIt.get<UserSubscriptionRemoteDataSource>()),
+  );
 }
 
 
@@ -144,6 +150,7 @@ void registerDataSource(GetIt getIt) {
   getIt.registerLazySingleton(() => ConverterRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => SubscriptionRemoteDataSource(network: getIt.get()));
   getIt.registerLazySingleton(() => PaymentRemoteDataSource(network: getIt.get()));
+  getIt.registerLazySingleton(() => UserSubscriptionRemoteDataSource(network: getIt.get()));
 }
 
 void registerNetwork(GetIt getIt) {

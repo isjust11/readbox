@@ -14,6 +14,8 @@ class SubscriptionPlanModel {
   final double? price;
   final int sortOrder;
   final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   SubscriptionPlanModel({
     required this.id,
@@ -27,6 +29,8 @@ class SubscriptionPlanModel {
     this.price,
     this.sortOrder = 0,
     this.isActive = true,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory SubscriptionPlanModel.fromJson(Map<String, dynamic> json) {
@@ -42,6 +46,8 @@ class SubscriptionPlanModel {
       price: _parsePrice(json['price']),
       sortOrder: json['sortOrder'],
       isActive: json['isActive'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
 

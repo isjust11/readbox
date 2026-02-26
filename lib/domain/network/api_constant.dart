@@ -99,4 +99,6 @@ class ApiConstant {
 
   // Subscription / Payment
   static final subscriptionPlans = "subscription-plans";
+  static final subscriptionMe = "subscription/me";
+  static final subscriptionHistory = "subscription/history";
 }

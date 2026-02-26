@@ -259,27 +259,27 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
             children: [
               // Full Name Field
               _buildFullNameField(),
-              SizedBox(height: 16),
+              SizedBox(height: 12),
               
               // Username Field
               _buildUsernameField(),
-              SizedBox(height: 16),
+              SizedBox(height: 12),
               
               // Email Field
               _buildEmailField(),
-              SizedBox(height: 16),
+              SizedBox(height: 12),
               
               // Password Field
               _buildPasswordField(),
-              SizedBox(height: 16),
+              SizedBox(height: 12),
               
               // Confirm Password Field
               _buildConfirmPasswordField(),
-              SizedBox(height: 28),
+              SizedBox(height: 24),
               
               // Register Button
               _buildRegisterButton(),
-              SizedBox(height: 20),
+              SizedBox(height: 16),
               
               // Login Link
               _buildLoginLink(),
@@ -539,7 +539,7 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
         backgroundColor: Color(0xFF667eea),
         foregroundColor: Colors.white,
         elevation: 4,
-        padding: EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
