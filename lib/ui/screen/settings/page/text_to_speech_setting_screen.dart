@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
@@ -22,6 +22,10 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
   bool _isLoading = true;
   bool _isTesting = false;
 
+  //timer 
+  Timer? _volumeDebounce;
+  Timer? _pitchDebounce;
+  Timer? _speechRateDebounce;
   // TTS Settings
   double _speechRate = 0.5;
   double _volume = 1.0;
@@ -30,6 +34,40 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
   // Available voices
   List<dynamic> _availableVoices = [];
   Map<String, String>? _selectedVoice;
+
+  void _onVolumeChanged(double value) {
+    setState(() {
+      _volume = value;
+    });
+
+    _volumeDebounce?.cancel();
+
+    _volumeDebounce = Timer(const Duration(milliseconds: 300), () {
+      _updateVolume(value);
+    });
+  }
+
+  void _onPitchChanged(double value) {
+    setState(() {
+      _pitch = value;
+    });
+
+    _pitchDebounce?.cancel();
+    _pitchDebounce = Timer(const Duration(milliseconds: 100), () {
+      _updatePitch(value);
+    });
+  }
+
+  void _onSpeechRateChanged(double value) {
+    setState(() {
+      _speechRate = value;
+    });
+
+    _speechRateDebounce?.cancel();
+    _speechRateDebounce = Timer(const Duration(milliseconds: 300), () {
+      _updateSpeechRate(value);
+    });
+  }
 
   @override
   void initState() {
@@ -70,7 +108,8 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
       _speechRate = prefs.getDouble('tts_speech_rate') ?? 0.5;
       _volume = prefs.getDouble('tts_volume') ?? 1.0;
       _pitch = prefs.getDouble('tts_pitch') ?? 1.0;
-      _selectedVoice = prefs.getString('tts_voice') != null ? jsonDecode(prefs.getString('tts_voice')!) : null;
+      final ttVoice = prefs.getString('tts_voice') != null ? jsonDecode(prefs.getString('tts_voice')!) as Map<String, dynamic> : null;
+      _selectedVoice = ttVoice != null ? Map<String, String>.from(ttVoice) : null;
     });
 
     // Apply loaded settings to TTS service
@@ -208,16 +247,16 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTestSection(),
-          const SizedBox(height: AppDimens.SIZE_24),
+          const SizedBox(height: AppDimens.SIZE_12),
           _buildSpeedSection(),
-          const SizedBox(height: AppDimens.SIZE_24),
+          const SizedBox(height: AppDimens.SIZE_12),
           _buildVolumeSection(),
-          const SizedBox(height: AppDimens.SIZE_24),
+          const SizedBox(height: AppDimens.SIZE_12),
           _buildPitchSection(),
-          const SizedBox(height: AppDimens.SIZE_24),
+          const SizedBox(height: AppDimens.SIZE_12),
           if (_availableVoices.isNotEmpty) ...[
             _buildVoiceSection(),
-            const SizedBox(height: AppDimens.SIZE_24),
+            const SizedBox(height: AppDimens.SIZE_12),
           ],
         ],
       ),
@@ -343,10 +382,10 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               value: _speechRate,
               min: 0.0,
               max: 1.0,
-              divisions: 20,
+              divisions: 10,
               activeColor: Theme.of(context).primaryColor,
               inactiveColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
-              onChanged: _updateSpeechRate,
+              onChanged: _onSpeechRateChanged,
             ),
           ),
         ],
@@ -387,7 +426,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               divisions: 10,
               activeColor: Theme.of(context).primaryColor,
               inactiveColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
-              onChanged: _updateVolume,
+              onChanged: _onVolumeChanged,
             ),
           ),
         ],
@@ -437,10 +476,10 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               value: _pitch,
               min: 0.5,
               max: 2.0,
-              divisions: 15,
+              divisions: 10,
               activeColor: Theme.of(context).primaryColor,
               inactiveColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
-              onChanged: _updatePitch,
+              onChanged: _onPitchChanged,
             ),
           ),
         ],
@@ -487,11 +526,11 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               itemBuilder: (context, index) {
                 final voice = _availableVoices[index];
                 final voiceName = voice['name'];
-
+                final locale = voice['locale'];
                 return ListTile(
                   dense: true,
                   title: CustomTextLabel(
-                    voiceName,
+                    '$voiceName - ($locale)',
                     fontSize: AppDimens.SIZE_14,
                     color:
                         Theme.of(context).textTheme.bodyLarge?.color ??
@@ -507,8 +546,9 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
                   onTap: () async {
                     Map<String, String> voiceMap = {
                       'name': voice['name'] as String,
-                      'latency': voice['latency'] as String,
+                      'gender': voice['gender'] as String,
                       'locale': voice['locale'] as String,
+                      'identifier': voice['identifier'] as String,
                       'quality': voice['quality'] as String,
                     };
                     final prefs = await SharedPreferences.getInstance();
