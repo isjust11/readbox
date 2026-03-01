@@ -3703,6 +3703,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try a different search term'**
   String get try_different_search;
+
+  /// No description provided for @usage_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage Statistics'**
+  String get usage_statistics;
+
+  /// No description provided for @error_loading_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading data'**
+  String get error_loading_data;
+
+  /// No description provided for @usage_in_current_period.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage in Current Period'**
+  String get usage_in_current_period;
+
+  /// No description provided for @storage_usage.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage Usage'**
+  String get storage_usage;
+
+  /// No description provided for @tts_usage.
+  ///
+  /// In en, this message translates to:
+  /// **'Text-to-Speech Usage'**
+  String get tts_usage;
+
+  /// No description provided for @convert_usage.
+  ///
+  /// In en, this message translates to:
+  /// **'Document Conversion'**
+  String get convert_usage;
+
+  /// No description provided for @times.
+  ///
+  /// In en, this message translates to:
+  /// **'times'**
+  String get times;
+
+  /// No description provided for @subscription_period.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription Period'**
+  String get subscription_period;
+
+  /// No description provided for @started_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Started At'**
+  String get started_at;
+
+  /// No description provided for @expires_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires At'**
+  String get expires_at;
+
+  /// No description provided for @days_remaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Days Remaining'**
+  String get days_remaining;
+
+  /// No description provided for @upgrade_to_premium.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to Premium'**
+  String get upgrade_to_premium;
+
+  /// No description provided for @unlock_unlimited_features.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock unlimited storage, TTS, and conversion'**
+  String get unlock_unlimited_features;
+
+  /// No description provided for @view_plans.
+  ///
+  /// In en, this message translates to:
+  /// **'View Plans'**
+  String get view_plans;
+
+  /// No description provided for @used.
+  ///
+  /// In en, this message translates to:
+  /// **'used'**
+  String get used;
+
+  /// No description provided for @unlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited'**
+  String get unlimited;
+
+  /// No description provided for @over_limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Over Limit'**
+  String get over_limit;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// No description provided for @expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expired;
+
+  /// No description provided for @pro.
+  ///
+  /// In en, this message translates to:
+  /// **'PRO'**
+  String get pro;
+
+  /// No description provided for @freePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Free Plan'**
+  String get freePlan;
+
+  /// No description provided for @activity_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity Statistics'**
+  String get activity_statistics;
+
+  /// No description provided for @download_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads'**
+  String get download_count;
+
+  /// No description provided for @reading_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading'**
+  String get reading_count;
+
+  /// No description provided for @bookmark_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookmarks'**
+  String get bookmark_count;
+
+  /// No description provided for @favorite_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favorite_count;
+
+  /// No description provided for @share_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Shares'**
+  String get share_count;
+
+  /// No description provided for @rating_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Ratings'**
+  String get rating_count;
+
+  /// No description provided for @archived_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archived_count;
+
+  /// No description provided for @total_interactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Interactions'**
+  String get total_interactions;
 }
 
 class _AppLocalizationsDelegate

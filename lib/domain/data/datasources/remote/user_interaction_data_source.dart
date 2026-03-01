@@ -7,6 +7,22 @@ class UserInteractionRemoteDataSource {
 
   UserInteractionRemoteDataSource({required this.network});
 
+  // update interaction action for all common type actions
+  Future<UserInteractionModel> updateInteractionAction({
+    required InteractionTarget targetType,
+    required dynamic targetId,
+    required InteractionType actionType,
+  }) async {
+    final ApiResponse apiResponse = await network.post(
+      url:
+          '${ApiConstant.apiHost}${ApiConstant.interactionAction}/${actionType.value}/${targetType.value}/$targetId',
+    );
+    if (apiResponse.isSuccess) {
+      return UserInteractionModel.fromJson(apiResponse.data);
+    }
+    return Future.error(apiResponse.data);
+  }
+
   // like
   Future<UserInteractionModel> toggleFavorite({
     required String targetType,
@@ -274,6 +290,17 @@ class UserInteractionRemoteDataSource {
         return UserInteractionModel.fromJson({});
       }
       return UserInteractionModel.fromJson(apiResponse.data);
+    }
+    return Future.error(apiResponse.data);
+  }
+
+  Future<Map<String, int>> getMyInteractionCounts() async {
+    final ApiResponse apiResponse = await network.get(
+      url: '${ApiConstant.apiHost}${ApiConstant.getMyInteractionCounts}',
+    );
+    if (apiResponse.isSuccess) {
+      final Map<String, dynamic> raw = Map<String, dynamic>.from(apiResponse.data ?? {});
+      return raw.map((key, value) => MapEntry(key, (value as num).toInt()));
     }
     return Future.error(apiResponse.data);
   }

@@ -7,6 +7,12 @@ class UserInteractionRepository {
 
   UserInteractionRepository({required this.remoteDataSource});
 
+  Future<UserInteractionModel> updateInteractionAction({
+    required InteractionTarget targetType,
+    required dynamic targetId,
+    required InteractionType actionType,
+  }) => remoteDataSource.updateInteractionAction(targetType: targetType, targetId: targetId, actionType: actionType);
+
   Future<UserInteractionModel> toggleFavorite({
     required String targetType,
     required dynamic targetId,
@@ -112,4 +118,7 @@ class UserInteractionRepository {
 
   Future<UserInteractionModel> getInteractionAction({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId}) =>
     remoteDataSource.getInteractionAction(targetType: targetType, actionType: actionType, targetId: targetId);
+
+  Future<Map<String, int>> getMyInteractionCounts() =>
+    remoteDataSource.getMyInteractionCounts();
 }

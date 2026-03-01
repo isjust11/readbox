@@ -1879,4 +1879,95 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get try_different_search => 'Try a different search term';
+
+  @override
+  String get usage_statistics => 'Usage Statistics';
+
+  @override
+  String get error_loading_data => 'Error loading data';
+
+  @override
+  String get usage_in_current_period => 'Usage in Current Period';
+
+  @override
+  String get storage_usage => 'Storage Usage';
+
+  @override
+  String get tts_usage => 'Text-to-Speech Usage';
+
+  @override
+  String get convert_usage => 'Document Conversion';
+
+  @override
+  String get times => 'times';
+
+  @override
+  String get subscription_period => 'Subscription Period';
+
+  @override
+  String get started_at => 'Started At';
+
+  @override
+  String get expires_at => 'Expires At';
+
+  @override
+  String get days_remaining => 'Days Remaining';
+
+  @override
+  String get upgrade_to_premium => 'Upgrade to Premium';
+
+  @override
+  String get unlock_unlimited_features =>
+      'Unlock unlimited storage, TTS, and conversion';
+
+  @override
+  String get view_plans => 'View Plans';
+
+  @override
+  String get used => 'used';
+
+  @override
+  String get unlimited => 'Unlimited';
+
+  @override
+  String get over_limit => 'Over Limit';
+
+  @override
+  String get days => 'days';
+
+  @override
+  String get expired => 'Expired';
+
+  @override
+  String get pro => 'PRO';
+
+  @override
+  String get freePlan => 'Free Plan';
+
+  @override
+  String get activity_statistics => 'Activity Statistics';
+
+  @override
+  String get download_count => 'Downloads';
+
+  @override
+  String get reading_count => 'Reading';
+
+  @override
+  String get bookmark_count => 'Bookmarks';
+
+  @override
+  String get favorite_count => 'Favorites';
+
+  @override
+  String get share_count => 'Shares';
+
+  @override
+  String get rating_count => 'Ratings';
+
+  @override
+  String get archived_count => 'Archived';
+
+  @override
+  String get total_interactions => 'Total Interactions';
 }

@@ -199,6 +199,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "convertTextToSpeech": MessageLookupByLibrary.simpleMessage(
       "Chuyển đổi text to speech",
     ),
+    "convert_usage": MessageLookupByLibrary.simpleMessage(
+      "Chuyển Đổi Tài Liệu",
+    ),
     "copyToken": MessageLookupByLibrary.simpleMessage("Sao chép token"),
     "cover_image": MessageLookupByLibrary.simpleMessage("Ảnh Bìa"),
     "cover_image_uploaded_successfully": MessageLookupByLibrary.simpleMessage(
@@ -225,7 +228,9 @@ class MessageLookup extends MessageLookupByLibrary {
           "File ebook hiện tại không thể thay đổi từ màn hình này.",
         ),
     "dark": MessageLookupByLibrary.simpleMessage("Tối"),
+    "days": MessageLookupByLibrary.simpleMessage("ngày"),
     "days_ago": MessageLookupByLibrary.simpleMessage("ngày trước"),
+    "days_remaining": MessageLookupByLibrary.simpleMessage("Số Ngày Còn Lại"),
     "defaultVoice": MessageLookupByLibrary.simpleMessage("Giọng mặc định"),
     "delete": MessageLookupByLibrary.simpleMessage("Xóa"),
     "deleteAll": MessageLookupByLibrary.simpleMessage("Xóa tất cả"),
@@ -318,6 +323,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đã xảy ra lỗi server, vui lòng thử lại sau!",
     ),
     "error_loading_books": MessageLookupByLibrary.simpleMessage("Lỗi tải sách"),
+    "error_loading_data": MessageLookupByLibrary.simpleMessage(
+      "Lỗi tải dữ liệu",
+    ),
     "error_occurred": MessageLookupByLibrary.simpleMessage("Có lỗi xảy ra"),
     "error_request_timeout": MessageLookupByLibrary.simpleMessage(
       "Yêu cầu đã hết thời gian chờ, vui lòng thử lại sau!",
@@ -331,6 +339,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "error_timeout": MessageLookupByLibrary.simpleMessage(
       "Đã hết thời gian kết nối tới máy chủ, vui lòng thử lại sau!",
     ),
+    "expired": MessageLookupByLibrary.simpleMessage("Hết hạn"),
+    "expires_at": MessageLookupByLibrary.simpleMessage("Hết Hạn"),
     "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
     "facebook_access_token_is_null": MessageLookupByLibrary.simpleMessage(
       "Token Facebook là null",
@@ -405,6 +415,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "format": MessageLookupByLibrary.simpleMessage("Định dạng"),
     "found": MessageLookupByLibrary.simpleMessage("Tìm thấy"),
     "free": MessageLookupByLibrary.simpleMessage("Miễn phí"),
+    "freePlan": MessageLookupByLibrary.simpleMessage("Gói Miễn Phí"),
     "from_directory": MessageLookupByLibrary.simpleMessage("từ thư mục"),
     "from_file_picker": MessageLookupByLibrary.simpleMessage("Từ file picker"),
     "full_name": MessageLookupByLibrary.simpleMessage("Họ và tên"),
@@ -700,6 +711,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Hoặc dùng \'Chọn file\' để duyệt thư mục (không cần quyền)",
         ),
+    "over_limit": MessageLookupByLibrary.simpleMessage("Vượt giới hạn"),
     "pages": MessageLookupByLibrary.simpleMessage("Trang"),
     "password": MessageLookupByLibrary.simpleMessage("Mật khẩu"),
     "password_must_be_at_least_6_characters":
@@ -954,6 +966,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "private": MessageLookupByLibrary.simpleMessage("Riêng tư"),
     "private_books": MessageLookupByLibrary.simpleMessage("Sách riêng tư"),
+    "pro": MessageLookupByLibrary.simpleMessage("PRO"),
     "profile": MessageLookupByLibrary.simpleMessage("Hồ sơ"),
     "public": MessageLookupByLibrary.simpleMessage("Công khai"),
     "public_books": MessageLookupByLibrary.simpleMessage("Sách công khai"),
@@ -1083,10 +1096,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "size": MessageLookupByLibrary.simpleMessage("Kích thước"),
     "slow": MessageLookupByLibrary.simpleMessage("Chậm"),
     "start_reading": MessageLookupByLibrary.simpleMessage("Bắt đầu đọc"),
+    "started_at": MessageLookupByLibrary.simpleMessage("Bắt Đầu"),
     "stopTest": MessageLookupByLibrary.simpleMessage("Dừng"),
     "storageLimit": MessageLookupByLibrary.simpleMessage("Dung lượng"),
+    "storage_usage": MessageLookupByLibrary.simpleMessage("Dung Lượng Lưu Trữ"),
     "submit_rating": MessageLookupByLibrary.simpleMessage("Gửi đánh giá"),
     "subscriptionPlans": MessageLookupByLibrary.simpleMessage("Gói dịch vụ"),
+    "subscription_period": MessageLookupByLibrary.simpleMessage(
+      "Chu Kỳ Đăng Ký",
+    ),
     "success": MessageLookupByLibrary.simpleMessage("Thành công"),
     "systemNotifications": MessageLookupByLibrary.simpleMessage(
       "Thông báo hệ thống",
@@ -1105,6 +1123,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "testTTS": MessageLookupByLibrary.simpleMessage("Kiểm tra đọc"),
     "textToSpeech": MessageLookupByLibrary.simpleMessage("Text to speech"),
     "theme": MessageLookupByLibrary.simpleMessage("Giao diện"),
+    "times": MessageLookupByLibrary.simpleMessage("lần"),
     "title": MessageLookupByLibrary.simpleMessage("Tiêu đề"),
     "to_library": MessageLookupByLibrary.simpleMessage("vào thư viện"),
     "tokenCopied": MessageLookupByLibrary.simpleMessage("Đã sao chép token"),
@@ -1196,7 +1215,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "ttsVoice": MessageLookupByLibrary.simpleMessage("Giọng đọc"),
     "ttsVolume": MessageLookupByLibrary.simpleMessage("Âm lượng"),
+    "tts_usage": MessageLookupByLibrary.simpleMessage("Đọc Văn Bản"),
     "twitter_link": MessageLookupByLibrary.simpleMessage("Liên kết Twitter"),
+    "unlimited": MessageLookupByLibrary.simpleMessage("Không giới hạn"),
+    "unlock_unlimited_features": MessageLookupByLibrary.simpleMessage(
+      "Mở khóa lưu trữ, TTS và chuyển đổi không giới hạn",
+    ),
     "unread": MessageLookupByLibrary.simpleMessage("Chưa đọc"),
     "unreadNotifications": MessageLookupByLibrary.simpleMessage(
       "thông báo chưa đọc",
@@ -1234,11 +1258,20 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "updated_at": MessageLookupByLibrary.simpleMessage("Ngày cập nhật"),
     "updating_book": MessageLookupByLibrary.simpleMessage("Đang cập nhật..."),
+    "upgrade_to_premium": MessageLookupByLibrary.simpleMessage(
+      "Nâng Cấp Lên Premium",
+    ),
     "upload_book": MessageLookupByLibrary.simpleMessage("Tải sách lên"),
     "upload_cover_image": MessageLookupByLibrary.simpleMessage("Upload ảnh"),
     "upload_file": MessageLookupByLibrary.simpleMessage("Upload File"),
     "upload_success": MessageLookupByLibrary.simpleMessage("Upload thành công"),
     "uploading": MessageLookupByLibrary.simpleMessage("Đang upload..."),
+    "usage_in_current_period": MessageLookupByLibrary.simpleMessage(
+      "Lượng Sử Dụng Trong Kỳ Hiện Tại",
+    ),
+    "usage_statistics": MessageLookupByLibrary.simpleMessage(
+      "Thống Kê Sử Dụng",
+    ),
     "useFingerprintOrFaceID": MessageLookupByLibrary.simpleMessage(
       "Sử dụng vân tay hoặc Face ID",
     ),
@@ -1246,6 +1279,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "use_select_file_to_browse_directory": MessageLookupByLibrary.simpleMessage(
       "Dùng \'Chọn file\' để duyệt thư mục",
     ),
+    "used": MessageLookupByLibrary.simpleMessage("đã sử dụng"),
     "user_cancelled_apple_sign_in": MessageLookupByLibrary.simpleMessage(
       "Người dùng đã hủy đăng nhập Apple",
     ),
@@ -1293,6 +1327,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Xem lịch sử thông báo",
     ),
     "view_details": MessageLookupByLibrary.simpleMessage("Xem chi tiết"),
+    "view_plans": MessageLookupByLibrary.simpleMessage("Xem Các Gói"),
     "voicePitch": MessageLookupByLibrary.simpleMessage("Cao độ giọng"),
     "warning": MessageLookupByLibrary.simpleMessage("Cảnh báo"),
     "welcome_back": MessageLookupByLibrary.simpleMessage("Chào mừng trở lại!"),
@@ -1310,5 +1345,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "your_rating": MessageLookupByLibrary.simpleMessage("Đánh giá của bạn"),
     "your_review": MessageLookupByLibrary.simpleMessage("Nhận xét của bạn"),
+    "activity_statistics": MessageLookupByLibrary.simpleMessage("Thống Kê Hoạt Động"),
+    "download_count": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
+    "reading_count": MessageLookupByLibrary.simpleMessage("Đang Đọc"),
+    "bookmark_count": MessageLookupByLibrary.simpleMessage("Đánh Dấu"),
+    "favorite_count": MessageLookupByLibrary.simpleMessage("Yêu Thích"),
+    "share_count": MessageLookupByLibrary.simpleMessage("Chia Sẻ"),
+    "rating_count": MessageLookupByLibrary.simpleMessage("Đánh Giá"),
+    "archived_count": MessageLookupByLibrary.simpleMessage("Lưu Trữ"),
+    "total_interactions": MessageLookupByLibrary.simpleMessage("Tổng Tương Tác"),
   };
 }

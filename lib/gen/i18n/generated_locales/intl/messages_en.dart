@@ -193,6 +193,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "convertTextToSpeech": MessageLookupByLibrary.simpleMessage(
       "Convert text to speech",
     ),
+    "convert_usage": MessageLookupByLibrary.simpleMessage(
+      "Document Conversion",
+    ),
     "copyToken": MessageLookupByLibrary.simpleMessage("Copy token"),
     "cover_image": MessageLookupByLibrary.simpleMessage("Cover image"),
     "cover_image_uploaded_successfully": MessageLookupByLibrary.simpleMessage(
@@ -216,7 +219,9 @@ class MessageLookup extends MessageLookupByLibrary {
           "Current ebook file cannot be changed from this screen.",
         ),
     "dark": MessageLookupByLibrary.simpleMessage("Dark"),
+    "days": MessageLookupByLibrary.simpleMessage("days"),
     "days_ago": MessageLookupByLibrary.simpleMessage("days ago"),
+    "days_remaining": MessageLookupByLibrary.simpleMessage("Days Remaining"),
     "defaultVoice": MessageLookupByLibrary.simpleMessage("Default voice"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "deleteAll": MessageLookupByLibrary.simpleMessage("Delete all"),
@@ -308,6 +313,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "error_loading_books": MessageLookupByLibrary.simpleMessage(
       "Error loading books",
     ),
+    "error_loading_data": MessageLookupByLibrary.simpleMessage(
+      "Error loading data",
+    ),
     "error_occurred": MessageLookupByLibrary.simpleMessage("Error occurred"),
     "error_request_timeout": MessageLookupByLibrary.simpleMessage(
       "Request timeout, please try again later!",
@@ -321,6 +329,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "error_timeout": MessageLookupByLibrary.simpleMessage(
       "Connection timeout, please try again later!",
     ),
+    "expired": MessageLookupByLibrary.simpleMessage("Expired"),
+    "expires_at": MessageLookupByLibrary.simpleMessage("Expires At"),
     "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
     "facebook_access_token_is_null": MessageLookupByLibrary.simpleMessage(
       "Facebook access token is null",
@@ -396,6 +406,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "format": MessageLookupByLibrary.simpleMessage("Format"),
     "found": MessageLookupByLibrary.simpleMessage("Found"),
     "free": MessageLookupByLibrary.simpleMessage("Free"),
+    "freePlan": MessageLookupByLibrary.simpleMessage("Free Plan"),
     "from_directory": MessageLookupByLibrary.simpleMessage("from directory"),
     "from_file_picker": MessageLookupByLibrary.simpleMessage(
       "From file picker",
@@ -660,6 +671,7 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Or use \'Select file\' to browse directory (without permission)",
         ),
+    "over_limit": MessageLookupByLibrary.simpleMessage("Over Limit"),
     "pages": MessageLookupByLibrary.simpleMessage("Pages"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
     "password_must_be_at_least_6_characters":
@@ -899,6 +911,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "private": MessageLookupByLibrary.simpleMessage("Private"),
     "private_books": MessageLookupByLibrary.simpleMessage("Private books"),
+    "pro": MessageLookupByLibrary.simpleMessage("PRO"),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
     "public": MessageLookupByLibrary.simpleMessage("Public"),
     "public_books": MessageLookupByLibrary.simpleMessage("Public books"),
@@ -1025,11 +1038,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "size": MessageLookupByLibrary.simpleMessage("Size"),
     "slow": MessageLookupByLibrary.simpleMessage("Slow"),
     "start_reading": MessageLookupByLibrary.simpleMessage("Start reading"),
+    "started_at": MessageLookupByLibrary.simpleMessage("Started At"),
     "stopTest": MessageLookupByLibrary.simpleMessage("Stop"),
     "storageLimit": MessageLookupByLibrary.simpleMessage("Storage"),
+    "storage_usage": MessageLookupByLibrary.simpleMessage("Storage Usage"),
     "submit_rating": MessageLookupByLibrary.simpleMessage("Submit Rating"),
     "subscriptionPlans": MessageLookupByLibrary.simpleMessage(
       "Subscription plans",
+    ),
+    "subscription_period": MessageLookupByLibrary.simpleMessage(
+      "Subscription Period",
     ),
     "success": MessageLookupByLibrary.simpleMessage("Success"),
     "systemNotifications": MessageLookupByLibrary.simpleMessage(
@@ -1049,6 +1067,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "testTTS": MessageLookupByLibrary.simpleMessage("Test reading"),
     "textToSpeech": MessageLookupByLibrary.simpleMessage("Text to speech"),
     "theme": MessageLookupByLibrary.simpleMessage("Theme"),
+    "times": MessageLookupByLibrary.simpleMessage("times"),
     "title": MessageLookupByLibrary.simpleMessage("Title"),
     "to_library": MessageLookupByLibrary.simpleMessage("to library"),
     "tokenCopied": MessageLookupByLibrary.simpleMessage("Token copied"),
@@ -1134,6 +1153,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "ttsVoice": MessageLookupByLibrary.simpleMessage("Voice"),
     "ttsVolume": MessageLookupByLibrary.simpleMessage("Volume"),
+    "tts_usage": MessageLookupByLibrary.simpleMessage("Text-to-Speech Usage"),
+    "unlimited": MessageLookupByLibrary.simpleMessage("Unlimited"),
+    "unlock_unlimited_features": MessageLookupByLibrary.simpleMessage(
+      "Unlock unlimited storage, TTS, and conversion",
+    ),
     "unread": MessageLookupByLibrary.simpleMessage("Unread"),
     "unreadNotifications": MessageLookupByLibrary.simpleMessage(
       "unread notifications",
@@ -1170,6 +1194,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Update profile successfully",
     ),
     "updating_book": MessageLookupByLibrary.simpleMessage("Updating book..."),
+    "upgrade_to_premium": MessageLookupByLibrary.simpleMessage(
+      "Upgrade to Premium",
+    ),
     "upload_book": MessageLookupByLibrary.simpleMessage("Upload book"),
     "upload_cover_image": MessageLookupByLibrary.simpleMessage(
       "Upload cover image",
@@ -1177,6 +1204,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload_file": MessageLookupByLibrary.simpleMessage("Upload File"),
     "upload_success": MessageLookupByLibrary.simpleMessage("Upload success"),
     "uploading": MessageLookupByLibrary.simpleMessage("Uploading..."),
+    "usage_in_current_period": MessageLookupByLibrary.simpleMessage(
+      "Usage in Current Period",
+    ),
+    "usage_statistics": MessageLookupByLibrary.simpleMessage(
+      "Usage Statistics",
+    ),
     "useFingerprintOrFaceID": MessageLookupByLibrary.simpleMessage(
       "Use fingerprint or Face ID",
     ),
@@ -1184,6 +1217,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "use_select_file_to_browse_directory": MessageLookupByLibrary.simpleMessage(
       "Use \'Select file\' to browse directory",
     ),
+    "used": MessageLookupByLibrary.simpleMessage("used"),
     "user_cancelled_apple_sign_in": MessageLookupByLibrary.simpleMessage(
       "User cancelled Apple sign in",
     ),
@@ -1231,6 +1265,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "View notification history",
     ),
     "view_details": MessageLookupByLibrary.simpleMessage("View details"),
+    "view_plans": MessageLookupByLibrary.simpleMessage("View Plans"),
     "voicePitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
     "warning": MessageLookupByLibrary.simpleMessage("Warning"),
     "welcome_back": MessageLookupByLibrary.simpleMessage("Welcome back!"),
@@ -1248,5 +1283,14 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "your_rating": MessageLookupByLibrary.simpleMessage("Your rating"),
     "your_review": MessageLookupByLibrary.simpleMessage("Your review"),
+    "activity_statistics": MessageLookupByLibrary.simpleMessage("Activity Statistics"),
+    "download_count": MessageLookupByLibrary.simpleMessage("Downloads"),
+    "reading_count": MessageLookupByLibrary.simpleMessage("Reading"),
+    "bookmark_count": MessageLookupByLibrary.simpleMessage("Bookmarks"),
+    "favorite_count": MessageLookupByLibrary.simpleMessage("Favorites"),
+    "share_count": MessageLookupByLibrary.simpleMessage("Shares"),
+    "rating_count": MessageLookupByLibrary.simpleMessage("Ratings"),
+    "archived_count": MessageLookupByLibrary.simpleMessage("Archived"),
+    "total_interactions": MessageLookupByLibrary.simpleMessage("Total Interactions"),
   };
 }

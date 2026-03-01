@@ -1882,4 +1882,95 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get try_different_search => 'Thử từ khóa tìm kiếm khác';
+
+  @override
+  String get usage_statistics => 'Thống Kê Sử Dụng';
+
+  @override
+  String get error_loading_data => 'Lỗi tải dữ liệu';
+
+  @override
+  String get usage_in_current_period => 'Lượng Sử Dụng Trong Kỳ Hiện Tại';
+
+  @override
+  String get storage_usage => 'Dung Lượng Lưu Trữ';
+
+  @override
+  String get tts_usage => 'Đọc Văn Bản';
+
+  @override
+  String get convert_usage => 'Chuyển Đổi Tài Liệu';
+
+  @override
+  String get times => 'lần';
+
+  @override
+  String get subscription_period => 'Chu Kỳ Đăng Ký';
+
+  @override
+  String get started_at => 'Bắt Đầu';
+
+  @override
+  String get expires_at => 'Hết Hạn';
+
+  @override
+  String get days_remaining => 'Số Ngày Còn Lại';
+
+  @override
+  String get upgrade_to_premium => 'Nâng Cấp Lên Premium';
+
+  @override
+  String get unlock_unlimited_features =>
+      'Mở khóa lưu trữ, TTS và chuyển đổi không giới hạn';
+
+  @override
+  String get view_plans => 'Xem Các Gói';
+
+  @override
+  String get used => 'đã sử dụng';
+
+  @override
+  String get unlimited => 'Không giới hạn';
+
+  @override
+  String get over_limit => 'Vượt giới hạn';
+
+  @override
+  String get days => 'ngày';
+
+  @override
+  String get expired => 'Hết hạn';
+
+  @override
+  String get pro => 'PRO';
+
+  @override
+  String get freePlan => 'Gói Miễn Phí';
+
+  @override
+  String get activity_statistics => 'Thống Kê Hoạt Động';
+
+  @override
+  String get download_count => 'Tải Xuống';
+
+  @override
+  String get reading_count => 'Đang Đọc';
+
+  @override
+  String get bookmark_count => 'Đánh Dấu';
+
+  @override
+  String get favorite_count => 'Yêu Thích';
+
+  @override
+  String get share_count => 'Chia Sẻ';
+
+  @override
+  String get rating_count => 'Đánh Giá';
+
+  @override
+  String get archived_count => 'Lưu Trữ';
+
+  @override
+  String get total_interactions => 'Tổng Tương Tác';
 }

@@ -20,5 +20,5 @@ export 'settings/page/notification_screen.dart';
 export 'settings/page/notification_detail_screen.dart';
 export 'tools/word_to_pdf_converter_screen.dart';
 export 'admin/pdf_scanner_screen.dart';
-export 'admin/data_storage_screen.dart';
+export 'settings/page/data_storage_screen.dart';
 export 'settings/page/subscription_plan_screen.dart';

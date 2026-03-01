@@ -5463,6 +5463,211 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Thống Kê Sử Dụng`
+  String get usage_statistics {
+    return Intl.message(
+      'Thống Kê Sử Dụng',
+      name: 'usage_statistics',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi tải dữ liệu`
+  String get error_loading_data {
+    return Intl.message(
+      'Lỗi tải dữ liệu',
+      name: 'error_loading_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lượng Sử Dụng Trong Kỳ Hiện Tại`
+  String get usage_in_current_period {
+    return Intl.message(
+      'Lượng Sử Dụng Trong Kỳ Hiện Tại',
+      name: 'usage_in_current_period',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dung Lượng Lưu Trữ`
+  String get storage_usage {
+    return Intl.message(
+      'Dung Lượng Lưu Trữ',
+      name: 'storage_usage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đọc Văn Bản`
+  String get tts_usage {
+    return Intl.message('Đọc Văn Bản', name: 'tts_usage', desc: '', args: []);
+  }
+
+  /// `Chuyển Đổi Tài Liệu`
+  String get convert_usage {
+    return Intl.message(
+      'Chuyển Đổi Tài Liệu',
+      name: 'convert_usage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `lần`
+  String get times {
+    return Intl.message('lần', name: 'times', desc: '', args: []);
+  }
+
+  /// `Chu Kỳ Đăng Ký`
+  String get subscription_period {
+    return Intl.message(
+      'Chu Kỳ Đăng Ký',
+      name: 'subscription_period',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bắt Đầu`
+  String get started_at {
+    return Intl.message('Bắt Đầu', name: 'started_at', desc: '', args: []);
+  }
+
+  /// `Hết Hạn`
+  String get expires_at {
+    return Intl.message('Hết Hạn', name: 'expires_at', desc: '', args: []);
+  }
+
+  /// `Số Ngày Còn Lại`
+  String get days_remaining {
+    return Intl.message(
+      'Số Ngày Còn Lại',
+      name: 'days_remaining',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nâng Cấp Lên Premium`
+  String get upgrade_to_premium {
+    return Intl.message(
+      'Nâng Cấp Lên Premium',
+      name: 'upgrade_to_premium',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mở khóa lưu trữ, TTS và chuyển đổi không giới hạn`
+  String get unlock_unlimited_features {
+    return Intl.message(
+      'Mở khóa lưu trữ, TTS và chuyển đổi không giới hạn',
+      name: 'unlock_unlimited_features',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xem Các Gói`
+  String get view_plans {
+    return Intl.message('Xem Các Gói', name: 'view_plans', desc: '', args: []);
+  }
+
+  /// `đã sử dụng`
+  String get used {
+    return Intl.message('đã sử dụng', name: 'used', desc: '', args: []);
+  }
+
+  /// `Không giới hạn`
+  String get unlimited {
+    return Intl.message(
+      'Không giới hạn',
+      name: 'unlimited',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vượt giới hạn`
+  String get over_limit {
+    return Intl.message(
+      'Vượt giới hạn',
+      name: 'over_limit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ngày`
+  String get days {
+    return Intl.message('ngày', name: 'days', desc: '', args: []);
+  }
+
+  /// `Hết hạn`
+  String get expired {
+    return Intl.message('Hết hạn', name: 'expired', desc: '', args: []);
+  }
+
+  /// `PRO`
+  String get pro {
+    return Intl.message('PRO', name: 'pro', desc: '', args: []);
+  }
+
+  /// `Gói Miễn Phí`
+  String get freePlan {
+    return Intl.message('Gói Miễn Phí', name: 'freePlan', desc: '', args: []);
+  }
+
+  /// `Thống Kê Hoạt Động`
+  String get activity_statistics {
+    return Intl.message('Thống Kê Hoạt Động', name: 'activity_statistics', desc: '', args: []);
+  }
+
+  /// `Tải Xuống`
+  String get download_count {
+    return Intl.message('Tải Xuống', name: 'download_count', desc: '', args: []);
+  }
+
+  /// `Đang Đọc`
+  String get reading_count {
+    return Intl.message('Đang Đọc', name: 'reading_count', desc: '', args: []);
+  }
+
+  /// `Đánh Dấu`
+  String get bookmark_count {
+    return Intl.message('Đánh Dấu', name: 'bookmark_count', desc: '', args: []);
+  }
+
+  /// `Yêu Thích`
+  String get favorite_count {
+    return Intl.message('Yêu Thích', name: 'favorite_count', desc: '', args: []);
+  }
+
+  /// `Chia Sẻ`
+  String get share_count {
+    return Intl.message('Chia Sẻ', name: 'share_count', desc: '', args: []);
+  }
+
+  /// `Đánh Giá`
+  String get rating_count {
+    return Intl.message('Đánh Giá', name: 'rating_count', desc: '', args: []);
+  }
+
+  /// `Lưu Trữ`
+  String get archived_count {
+    return Intl.message('Lưu Trữ', name: 'archived_count', desc: '', args: []);
+  }
+
+  /// `Tổng Tương Tác`
+  String get total_interactions {
+    return Intl.message('Tổng Tương Tác', name: 'total_interactions', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

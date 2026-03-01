@@ -233,6 +233,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         message: '${AppLocalizations.current.tools_saved_successfully} ${file.path}',
         snackBarType: SnackBarType.success,
       );
+      // update interaction action for download
+      context.read<UserInteractionCubit>().updateInteractionAction(
+        targetType: InteractionTarget.book,
+        actionType: InteractionType.download,
+        targetId: widget.bookId,
+      );
     } catch (e) {
       if (!mounted) return;
       AppSnackBar.show(
@@ -470,6 +476,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           message: AppLocalizations.current.pdf_share_success,
           snackBarType: SnackBarType.success,
         );
+        // update interaction action for share
+        context.read<UserInteractionCubit>().updateInteractionAction(
+          targetType: InteractionTarget.book,
+          actionType: InteractionType.share,
+          targetId: widget.bookId,
+        );
       }
     } catch (e) {
       if (!mounted) return;
@@ -534,6 +546,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           text: pageText,
         );
         await _ttsService.speak(pageText);
+        // update tts interaction count
+        if (mounted) {
+         context.read<UserInteractionCubit>().updateInteractionAction(
+            targetType: InteractionTarget.book,
+            actionType: InteractionType.tts,
+            targetId: widget.bookId,
+          );
+        }
       } else {
         // Trang trống → chuyển sang trang tiếp
         if (_currentPage < _totalPages) {

@@ -5,7 +5,9 @@ enum InteractionType {
   reading('reading'),
   download('download'),
   rating('rating'),
-  archived('archived');
+  archived('archived'),
+  share('share'),
+  tts('tts');
 
 
   const InteractionType(this.value);

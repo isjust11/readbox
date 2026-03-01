@@ -22,6 +22,25 @@ class UserInteractionCubit extends Cubit<BaseState> {
   final UserInteractionRepository repository;
   UserInteractionCubit({required this.repository}) : super(InitState());
 
+   // save interaction action
+  Future<dynamic> updateInteractionAction({
+    required InteractionTarget targetType,
+    required dynamic targetId,
+    required InteractionType actionType,
+  }) async {
+    try {
+      emit(LoadingState());
+      final response = await repository.updateInteractionAction(
+        targetType: targetType,
+        targetId: targetId,
+        actionType: actionType,
+      );
+      isFavorite = !isFavorite;
+      emit(LoadedState(response));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
   // toggle favorite
   Future<dynamic> toggleFavorite({
     required String targetType,
@@ -318,7 +337,14 @@ class UserInteractionCubit extends Cubit<BaseState> {
     this.isBookmarked = isBookmarked;
   }
 
-  // Reset state when switching to different target
+  Future<Map<String, int>> getMyInteractionCounts() async {
+    try {
+      return await repository.getMyInteractionCounts();
+    } catch (e) {
+      return {};
+    }
+  }
+
   void resetState() {
     isFavorite = false;
     isBookmarked = false;
