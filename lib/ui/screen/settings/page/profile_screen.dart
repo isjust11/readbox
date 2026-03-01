@@ -308,14 +308,13 @@ class ProfileScreen extends StatelessWidget {
 
     // Nếu có ảnh avatar
     if (user?.picture != null && user!.picture!.isNotEmpty) {
+      final avatarUrl = _getAvatarUrl();
       return CircleAvatar(
         radius: 40,
-        backgroundImage: CachedNetworkImageProvider( 
-          _isSocialPlatform() ? user!.picture! :
-           ApiConstant.storageHost + (user!.picture ?? '')),
+        backgroundImage: CachedNetworkImageProvider(avatarUrl),
         backgroundColor: Colors.white,
         onBackgroundImageError: (_, __) {
-          // Fallback sẽ hiển thị initials bên dưới
+          debugPrint('❌ Failed to load avatar: $avatarUrl');
         },
       );
     }
@@ -360,7 +359,19 @@ class ProfileScreen extends StatelessWidget {
         .toUpperCase();
   }
   
-    bool _isSocialPlatform() {
-    return user?.isGoogleUser == true || user?.isFacebookUser == true || user?.isAppleUser == true;
+  String _getAvatarUrl() {
+    if (user?.picture == null || user!.picture!.isEmpty) {
+      return '';
+    }
+
+    final picture = user!.picture!;
+
+    // Check if already a full URL (from social platforms)
+    if (picture.startsWith('http://') || picture.startsWith('https://')) {
+      return picture;
+    }
+
+    // If it's a relative path, prepend storage host
+    return '${ApiConstant.storageHost}$picture';
   }
 }

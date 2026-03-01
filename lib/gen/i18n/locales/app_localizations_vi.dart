@@ -1855,4 +1855,31 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get currentPlan => 'Gói hiện tại';
+
+  @override
+  String get pin_verification_failed => 'Xác thực mã PIN thất bại';
+
+  @override
+  String get activationFreePlanSuccess => 'Kích hoạt gói miễn phí thành công';
+
+  @override
+  String get select_category => 'Chọn Danh Mục';
+
+  @override
+  String get categories => 'danh mục';
+
+  @override
+  String get search_categories => 'Tìm kiếm danh mục...';
+
+  @override
+  String get all_categories => 'Tất Cả Danh Mục';
+
+  @override
+  String get show_all_books => 'Hiển thị tất cả sách từ mọi danh mục';
+
+  @override
+  String get no_categories_found => 'Không tìm thấy danh mục';
+
+  @override
+  String get try_different_search => 'Thử từ khóa tìm kiếm khác';
 }

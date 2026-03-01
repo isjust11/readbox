@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:readbox/blocs/user_interaction_cubit.dart';
-// import 'package:readbox/domain/data/enums/enums.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/res/resources.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
@@ -123,6 +120,7 @@ class BaseScreen extends StatelessWidget {
   }
 
   baseAppBar(BuildContext context) {
+    final theme = Theme.of(context);
     var widgetTitle;
     if (title is Widget) {
       widgetTitle = title;
@@ -130,17 +128,17 @@ class BaseScreen extends StatelessWidget {
       widgetTitle = CustomTextLabel(
         title?.toString(),
         maxLines: 2,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w600,
         fontSize: AppDimens.SIZE_14,
         textAlign: TextAlign.center,
-        color: AppColors.white,
+        color: theme.colorScheme.onInverseSurface,
       );
     }
     return AppBar(
       elevation: 0,
       toolbarHeight: toolbarHeight,
       title: widgetTitle,
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: theme.primaryColor.withValues(alpha: 0.8),
       leading: hiddenIconBack
           ? Container()
           : InkWell(
@@ -153,7 +151,7 @@ class BaseScreen extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Icon(
                   Icons.arrow_back_ios,
-                  color: AppColors.white,
+                  color: theme.colorScheme.onSecondary,
                   size: AppDimens.SIZE_16,
                 ),
               ),

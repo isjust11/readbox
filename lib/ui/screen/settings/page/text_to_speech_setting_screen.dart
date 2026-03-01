@@ -213,15 +213,16 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BaseScreen(
       hideAppBar: false,
-      colorBg: Theme.of(context).colorScheme.secondaryContainer,
+      colorBg: theme.colorScheme.surface,
       title: AppLocalizations.current.ttsSettings,
-      body: _buildBody(),
+      body: _buildBody(theme),
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(ThemeData theme) {
     if (_isLoading) {
       return Center(
         child: Column(

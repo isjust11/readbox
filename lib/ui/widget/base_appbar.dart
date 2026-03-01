@@ -50,7 +50,7 @@ class _BaseAppBarState extends State<BaseAppBar> {
     return AppBar(
       title: _buildTitle(context, _isSearching),
       centerTitle: widget.centerTitle,
-      backgroundColor: widget.backgroundColor ?? theme.primaryColor,
+      backgroundColor: widget.backgroundColor ?? theme.primaryColor.withValues(alpha: 0.8),
       elevation: 0,
       automaticallyImplyLeading: false,
       leadingWidth: AppDimens.SIZE_40,
@@ -80,9 +80,9 @@ class _BaseAppBarState extends State<BaseAppBar> {
         },
       ) : CustomTextLabel(
         widget.title,
-        color: theme.colorScheme.onPrimary,
-        fontSize: AppDimens.SIZE_16,
-        fontWeight: FontWeight.w700,
+        color: theme.colorScheme.onInverseSurface,
+        fontSize: AppDimens.SIZE_14,
+        fontWeight: FontWeight.w600,
         maxLines: 1,
       ),
     );
@@ -110,8 +110,8 @@ class _BaseAppBarState extends State<BaseAppBar> {
           ),
           child: Icon(
             Icons.arrow_back_ios_new,
-            color: theme.colorScheme.onPrimary,
-            size: AppDimens.SIZE_16,
+            color: theme.colorScheme.onInverseSurface,
+            size: AppDimens.SIZE_14,
           ),
         ),
       );

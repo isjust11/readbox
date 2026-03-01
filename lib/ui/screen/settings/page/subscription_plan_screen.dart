@@ -29,7 +29,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
       child: BlocConsumer<SubscriptionPlanCubit, BaseState>(
         listener: (context, state) {
           if (state is LoadedState<UserSubscriptionModel>) {
-            _showMessage(context, 'Kích hoạt gói miễn phí thành công');
+            _showMessage(context, AppLocalizations.current.activationFreePlanSuccess);
             context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
           }
         },

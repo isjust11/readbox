@@ -5378,6 +5378,91 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Xác thực mã PIN thất bại`
+  String get pin_verification_failed {
+    return Intl.message(
+      'Xác thực mã PIN thất bại',
+      name: 'pin_verification_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kích hoạt gói miễn phí thành công`
+  String get activationFreePlanSuccess {
+    return Intl.message(
+      'Kích hoạt gói miễn phí thành công',
+      name: 'activationFreePlanSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn Danh Mục`
+  String get select_category {
+    return Intl.message(
+      'Chọn Danh Mục',
+      name: 'select_category',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `danh mục`
+  String get categories {
+    return Intl.message('danh mục', name: 'categories', desc: '', args: []);
+  }
+
+  /// `Tìm kiếm danh mục...`
+  String get search_categories {
+    return Intl.message(
+      'Tìm kiếm danh mục...',
+      name: 'search_categories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tất Cả Danh Mục`
+  String get all_categories {
+    return Intl.message(
+      'Tất Cả Danh Mục',
+      name: 'all_categories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hiển thị tất cả sách từ mọi danh mục`
+  String get show_all_books {
+    return Intl.message(
+      'Hiển thị tất cả sách từ mọi danh mục',
+      name: 'show_all_books',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không tìm thấy danh mục`
+  String get no_categories_found {
+    return Intl.message(
+      'Không tìm thấy danh mục',
+      name: 'no_categories_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thử từ khóa tìm kiếm khác`
+  String get try_different_search {
+    return Intl.message(
+      'Thử từ khóa tìm kiếm khác',
+      name: 'try_different_search',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

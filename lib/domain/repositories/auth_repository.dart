@@ -24,12 +24,11 @@ class AuthRepository {
     return userModel;
   }
 
-  Future<bool> verifyPin(Map<String, dynamic> param) async {
-    bool isSuccess = await remoteDataSource.verifyPin(param);
-    return isSuccess;
+  Future<Map<String, dynamic>> verifyPin(Map<String, dynamic> param) async {
+    return await remoteDataSource.verifyPin(param);
   }
 
-  Future<bool> resendPin(Map<String, dynamic> param) async {
+  Future<Map<String, dynamic>> resendPin(Map<String, dynamic> param) async {
     return await remoteDataSource.resendPin(param);
   }
 

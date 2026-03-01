@@ -450,12 +450,29 @@ class FCMService {
   }
 
   /// Toggle notifications
-  Future<void> toggleNotifications(bool enabled) async {
-    _notificationsEnabled = enabled;
-    await _storage.write(_notificationsEnabledKey, enabled);
-
+  Future<bool> toggleNotifications(bool enabled) async {
     if (enabled) {
-      await _requestPermission();
+      // Khi BẬT: Kiểm tra và request permission
+      final settings = await _requestPermission();
+      final isGranted = settings.authorizationStatus == AuthorizationStatus.authorized ||
+                       settings.authorizationStatus == AuthorizationStatus.provisional;
+      
+      if (!isGranted) {
+        debugPrint('❌ System notification permission not granted');
+        // Không cho phép bật nếu system permission bị denied
+        return false;
+      }
+      
+      _notificationsEnabled = true;
+      await _storage.write(_notificationsEnabledKey, true);
+      debugPrint('✅ Notifications enabled');
+      return true;
+    } else {
+      // Khi TẮT: Chỉ tắt in-app notification
+      _notificationsEnabled = false;
+      await _storage.write(_notificationsEnabledKey, false);
+      debugPrint('⚠️ Notifications disabled in app');
+      return true;
     }
   }
 

@@ -164,7 +164,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, Routes.adminUploadScreen);
                     },
-                    iconColor: Theme.of(context).colorScheme.secondary,
+                    iconColor: Theme.of(context).colorScheme.primary,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   _buildDrawerItem(

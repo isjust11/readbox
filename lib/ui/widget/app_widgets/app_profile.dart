@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/routes.dart';
@@ -6,6 +5,7 @@ import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/user_subscription_cubit.dart';
+import 'package:readbox/ui/widget/base_network_image.dart';
 
 class AppProfile extends StatelessWidget {
   final UserModel? user;
@@ -13,13 +13,17 @@ class AppProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     // context.watch<UserSubscriptionCubit>().loadMe();
-    final userSubscription = context.watch<UserSubscriptionCubit>().userSubscription;
+    final userSubscription =
+        context.watch<UserSubscriptionCubit>().userSubscription;
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage(Assets.images.profileBackground.path),
           fit: BoxFit.cover,
+          colorFilter: ColorFilter
+          .mode(Theme.of(context).colorScheme.onInverseSurface, BlendMode.darken),
         ),
       ),
       child: Container(
@@ -30,8 +34,8 @@ class AppProfile extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Theme.of(context).primaryColor.withValues(alpha: 0.9),
-              Theme.of(context).primaryColor.withValues(alpha: 0.8),
+              theme.primaryColor.withValues(alpha: 0.9),
+              theme.primaryColor.withValues(alpha: 0.8),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -58,7 +62,7 @@ class AppProfile extends StatelessWidget {
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3),
+                      border: Border.all(color: theme.colorScheme.onInverseSurface.withValues(alpha: 0.6), width: 3),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.2),
@@ -104,13 +108,16 @@ class AppProfile extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
 
-                          SizedBox(height: 6),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
-                            },
-                            child: _buildSubscriptionBadge(userSubscription),
-                          ),
+                        SizedBox(height: 6),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              Routes.subscriptionPlanScreen,
+                            );
+                          },
+                          child: _buildSubscriptionBadge(userSubscription),
+                        ),
                       ],
                     ),
                   ),
@@ -128,14 +135,13 @@ class AppProfile extends StatelessWidget {
     final plan = userSubscription?.plan;
     final isFree = plan == null || plan.isFree;
 
-    final Color bgColor = isFree
-        ? Colors.white.withValues(alpha: 0.12)
-        : const Color(0x33FFD700);
-    final Color borderColor = isFree
-        ? Colors.white.withValues(alpha: 0.2)
-        : const Color(0x66FFD700);
+    final Color bgColor =
+        isFree ? Colors.white.withValues(alpha: 0.12) : const Color(0x33FFD700);
+    final Color borderColor =
+        isFree ? Colors.white.withValues(alpha: 0.2) : const Color(0x66FFD700);
     final Color iconColor = isFree ? Colors.white70 : const Color(0xFFFFD700);
-    final IconData icon = isFree ? Icons.workspace_premium_outlined : Icons.star_rounded;
+    final IconData icon =
+        isFree ? Icons.workspace_premium_outlined : Icons.star_rounded;
     final String label = plan?.name ?? 'Free';
 
     return Container(
@@ -168,17 +174,18 @@ class AppProfile extends StatelessWidget {
   }
 
   Widget _buildAvatar(BuildContext context) {
+    final theme = Theme.of(context);
     if (user == null) {
       return CircleAvatar(
         radius: 40,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.onInverseSurface,
         child: SizedBox(
           width: 24,
           height: 24,
           child: CircularProgressIndicator(
             strokeWidth: 2,
             valueColor: AlwaysStoppedAnimation<Color>(
-              Theme.of(context).colorScheme.primary,
+              theme.primaryColor,
             ),
           ),
         ),
@@ -187,17 +194,15 @@ class AppProfile extends StatelessWidget {
 
     // Nếu có ảnh avatar
     if (user?.picture != null && user!.picture!.isNotEmpty) {
-      return CircleAvatar(
-        radius: 40,
-        backgroundImage: CachedNetworkImageProvider(
-          _isSocialPlatform()
-              ? user!.picture!
-              : ApiConstant.storageHost + (user!.picture ?? ''),
-        ),
-        backgroundColor: Colors.white,
-        onBackgroundImageError: (_, __) {
-          // Fallback sẽ hiển thị initials bên dưới
-        },
+      final avatarUrl = _getAvatarUrl();
+     
+      return BaseNetworkImage(
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        backgroundColor: theme.colorScheme.onInverseSurface,
+        showShimmer: true,
+        url: avatarUrl,
       );
     }
 
@@ -205,13 +210,13 @@ class AppProfile extends StatelessWidget {
     if (user?.fullName != null && user!.fullName!.isNotEmpty) {
       return CircleAvatar(
         radius: 40,
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.onInverseSurface,
         child: Text(
           _getInitials(user!.fullName!),
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).primaryColor,
+            color: theme.primaryColor,
           ),
         ),
       );
@@ -220,11 +225,11 @@ class AppProfile extends StatelessWidget {
     // Default: icon person
     return CircleAvatar(
       radius: 40,
-      backgroundColor: Colors.white,
+      backgroundColor: theme.primaryColor.withValues(alpha: 0.5),
       child: Icon(
         Icons.person,
         size: 48,
-        color: Theme.of(context).primaryColor,
+        color: theme.primaryColor,
       ),
     );
   }
@@ -241,9 +246,19 @@ class AppProfile extends StatelessWidget {
         .toUpperCase();
   }
 
-  bool _isSocialPlatform() {
-    return user?.isGoogleUser == true ||
-        user?.isFacebookUser == true ||
-        user?.isAppleUser == true;
+  String _getAvatarUrl() {
+    if (user?.picture == null || user!.picture!.isEmpty) {
+      return '';
+    }
+
+    final picture = user!.picture!;
+
+    // Check if already a full URL (from social platforms)
+    if (picture.startsWith('http://') || picture.startsWith('https://')) {
+      return picture;
+    }
+
+    // If it's a relative path, prepend storage host
+    return '${ApiConstant.storageHost}$picture';
   }
 }

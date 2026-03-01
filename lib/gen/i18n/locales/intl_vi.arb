@@ -652,5 +652,14 @@
   "backToHome": "Về trang chủ",
   "tryAgain": "Thử lại",
   "selectPaymentMethod": "Chọn phương thức thanh toán",
-  "currentPlan": "Gói hiện tại"
+  "currentPlan": "Gói hiện tại",
+  "pin_verification_failed": "Xác thực mã PIN thất bại",
+  "activationFreePlanSuccess": "Kích hoạt gói miễn phí thành công",
+  "select_category": "Chọn Danh Mục",
+  "categories": "danh mục",
+  "search_categories": "Tìm kiếm danh mục...",
+  "all_categories": "Tất Cả Danh Mục",
+  "show_all_books": "Hiển thị tất cả sách từ mọi danh mục",
+  "no_categories_found": "Không tìm thấy danh mục",
+  "try_different_search": "Thử từ khóa tìm kiếm khác"
 }

@@ -41,6 +41,9 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "aboutApp": MessageLookupByLibrary.simpleMessage("Về ứng dụng"),
+    "activationFreePlanSuccess": MessageLookupByLibrary.simpleMessage(
+      "Kích hoạt gói miễn phí thành công",
+    ),
     "add_archive": MessageLookupByLibrary.simpleMessage(
       "Thêm lưu vào thư viện",
     ),
@@ -56,6 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "address": MessageLookupByLibrary.simpleMessage("Địa chỉ"),
     "agree": MessageLookupByLibrary.simpleMessage("Đồng ý"),
     "all": MessageLookupByLibrary.simpleMessage("Tất cả"),
+    "all_categories": MessageLookupByLibrary.simpleMessage("Tất Cả Danh Mục"),
     "all_data_loaded": MessageLookupByLibrary.simpleMessage(
       "Đã tải hết dữ liệu",
     ),
@@ -161,6 +165,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cannot_select_image_message": MessageLookupByLibrary.simpleMessage(
       "Không thể chọn ảnh",
     ),
+    "categories": MessageLookupByLibrary.simpleMessage("danh mục"),
     "category": MessageLookupByLibrary.simpleMessage("Thể loại"),
     "changeAppLanguage": MessageLookupByLibrary.simpleMessage(
       "Thay đổi ngôn ngữ ứng dụng",
@@ -623,6 +628,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_books_found": MessageLookupByLibrary.simpleMessage(
       "Không tìm thấy sách",
     ),
+    "no_categories_found": MessageLookupByLibrary.simpleMessage(
+      "Không tìm thấy danh mục",
+    ),
     "no_content_to_display": MessageLookupByLibrary.simpleMessage(
       "Không có nội dung để hiển thị",
     ),
@@ -804,6 +812,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "phone_number": MessageLookupByLibrary.simpleMessage("Số điện thoại"),
     "pin_resend_success": MessageLookupByLibrary.simpleMessage(
       "Mã PIN đã được gửi lại thành công",
+    ),
+    "pin_verification_failed": MessageLookupByLibrary.simpleMessage(
+      "Xác thực mã PIN thất bại",
     ),
     "playTest": MessageLookupByLibrary.simpleMessage("Phát thử"),
     "please_authenticate_to_login": MessageLookupByLibrary.simpleMessage(
@@ -1020,6 +1031,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "search": MessageLookupByLibrary.simpleMessage("Tìm kiếm"),
     "search_book": MessageLookupByLibrary.simpleMessage("Tìm sách"),
     "search_books": MessageLookupByLibrary.simpleMessage("Tìm kiếm sách..."),
+    "search_categories": MessageLookupByLibrary.simpleMessage(
+      "Tìm kiếm danh mục...",
+    ),
     "search_filter": MessageLookupByLibrary.simpleMessage("Bộ lọc tìm kiếm"),
     "seconds": MessageLookupByLibrary.simpleMessage("giây"),
     "security": MessageLookupByLibrary.simpleMessage("Bảo mật"),
@@ -1038,6 +1052,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_all_books": MessageLookupByLibrary.simpleMessage(
       "Chọn tất cả sách",
     ),
+    "select_category": MessageLookupByLibrary.simpleMessage("Chọn Danh Mục"),
     "select_cover_image": MessageLookupByLibrary.simpleMessage("Chọn ảnh bìa"),
     "select_file": MessageLookupByLibrary.simpleMessage("Chọn file"),
     "select_language": MessageLookupByLibrary.simpleMessage(
@@ -1061,6 +1076,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "showPreview": MessageLookupByLibrary.simpleMessage(
       "Hiển thị nội dung trên màn hình khóa",
+    ),
+    "show_all_books": MessageLookupByLibrary.simpleMessage(
+      "Hiển thị tất cả sách từ mọi danh mục",
     ),
     "size": MessageLookupByLibrary.simpleMessage("Kích thước"),
     "slow": MessageLookupByLibrary.simpleMessage("Chậm"),
@@ -1160,6 +1178,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "translate": MessageLookupByLibrary.simpleMessage("Ngôn ngữ dịch"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Thử lại"),
     "try_again": MessageLookupByLibrary.simpleMessage("Thử lại"),
+    "try_different_search": MessageLookupByLibrary.simpleMessage(
+      "Thử từ khóa tìm kiếm khác",
+    ),
     "ttsLanguageSettings": MessageLookupByLibrary.simpleMessage(
       "Cài đặt ngôn ngữ TTS",
     ),

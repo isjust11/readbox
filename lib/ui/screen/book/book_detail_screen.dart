@@ -172,7 +172,9 @@ class BookDetailBodyState extends State<BookDetailBody> {
   }
 
   Widget _buildBody(BuildContext context, BookModel book) {
+    final theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: theme.colorScheme.surface,
       body: CustomScrollView(
         slivers: [
           // App Bar với Cover Image
@@ -464,7 +466,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
         child: Container(
           padding: EdgeInsets.all(AppDimens.SIZE_8),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.colorScheme.surfaceContainerHighest,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.05),
@@ -477,8 +479,8 @@ class BookDetailBodyState extends State<BookDetailBody> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Theme.of(context).primaryColor,
-                  Theme.of(context).primaryColor.withValues(alpha: 0.8),
+                  theme.primaryColor,
+                  theme.primaryColor.withValues(alpha: 0.8),
                 ],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
@@ -486,7 +488,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                  color: theme.primaryColor.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: Offset(0, 6),
                 ),
@@ -508,13 +510,13 @@ class BookDetailBodyState extends State<BookDetailBody> {
                   Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
+                      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.menu_book_rounded,
                       size: 24,
-                      color: Colors.white,
+                      color: theme.colorScheme.onInverseSurface,
                     ),
                   ),
                   SizedBox(width: 12),
@@ -525,7 +527,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: theme.colorScheme.onInverseSurface,
                       letterSpacing: 0.5,
                     ),
                   ),
@@ -537,7 +539,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: theme.colorScheme.onInverseSurface.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -545,7 +547,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: theme.colorScheme.onInverseSurface,
                         ),
                       ),
                     ),

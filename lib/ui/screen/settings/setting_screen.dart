@@ -70,15 +70,16 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BaseScreen(
       hideAppBar: true,
-      colorBg: Theme.of(context).colorScheme.secondaryContainer,
-      body: _buildLayoutSection(context),
+      colorBg: theme.colorScheme.surface,
+      body: _buildLayoutSection(context, theme),
       floatingButton: _buildFloatingButton(),
     );
   }
 
-  Widget _buildLayoutSection(BuildContext context) {
+  Widget _buildLayoutSection(BuildContext context, ThemeData theme) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -288,10 +289,24 @@ class _SettingScreenState extends State<SettingScreen> {
             trailing: Switch(
               value: _notificationsEnabled,
               onChanged: (value) async {
-                setState(() {
-                  _notificationsEnabled = value;
-                });
-                await FCMService().toggleNotifications(value);
+                final fcmService = FCMService();
+                final success = await fcmService.toggleNotifications(value);
+                
+                if (success) {
+                  setState(() {
+                    _notificationsEnabled = value;
+                  });
+                } else {
+                  // Nếu không thành công (system permission bị denied)
+                  setState(() {
+                    _notificationsEnabled = false;
+                  });
+                  
+                  if (mounted) {
+                    // Hiển thị dialog hướng dẫn user vào Settings
+                    _showPermissionDeniedDialog();
+                  }
+                }
               },
               activeColor: Theme.of(context).primaryColor,
             ),
@@ -534,6 +549,30 @@ class _SettingScreenState extends State<SettingScreen> {
       context,
       message: message,
       snackBarType: SnackBarType.error,
+    );
+  }
+
+  void _showPermissionDeniedDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Notification Permission Required'),
+        content: Text('Please enable notifications in your device settings to receive notifications from ReadBox.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(AppLocalizations.current.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // TODO: Mở Settings app (cần package như app_settings)
+              // AppSettings.openAppSettings();
+            },
+            child: Text('Open Settings'),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -41,6 +41,9 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "aboutApp": MessageLookupByLibrary.simpleMessage("About app"),
+    "activationFreePlanSuccess": MessageLookupByLibrary.simpleMessage(
+      "Activation free plan successfully",
+    ),
     "add_archive": MessageLookupByLibrary.simpleMessage("Add archive"),
     "add_book": MessageLookupByLibrary.simpleMessage("Add book"),
     "add_book_to_start_reading": MessageLookupByLibrary.simpleMessage(
@@ -53,6 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "added": MessageLookupByLibrary.simpleMessage("Added"),
     "agree": MessageLookupByLibrary.simpleMessage("Agree"),
     "all": MessageLookupByLibrary.simpleMessage("All"),
+    "all_categories": MessageLookupByLibrary.simpleMessage("All Categories"),
     "all_data_loaded": MessageLookupByLibrary.simpleMessage("All data loaded"),
     "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
     "apply_filters": MessageLookupByLibrary.simpleMessage("Apply filters"),
@@ -153,6 +157,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cannot_select_image_message": MessageLookupByLibrary.simpleMessage(
       "Cannot select image",
     ),
+    "categories": MessageLookupByLibrary.simpleMessage("categories"),
     "category": MessageLookupByLibrary.simpleMessage("Category"),
     "changeAppLanguage": MessageLookupByLibrary.simpleMessage(
       "Change app language",
@@ -591,6 +596,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_book_found": MessageLookupByLibrary.simpleMessage("No book found"),
     "no_books": MessageLookupByLibrary.simpleMessage("No books"),
     "no_books_found": MessageLookupByLibrary.simpleMessage("No books found"),
+    "no_categories_found": MessageLookupByLibrary.simpleMessage(
+      "No categories found",
+    ),
     "no_content_to_display": MessageLookupByLibrary.simpleMessage(
       "No content to display",
     ),
@@ -760,6 +768,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "phone": MessageLookupByLibrary.simpleMessage("Phone number"),
     "pin_resend_success": MessageLookupByLibrary.simpleMessage(
       "PIN resend successfully",
+    ),
+    "pin_verification_failed": MessageLookupByLibrary.simpleMessage(
+      "PIN verification failed",
     ),
     "playTest": MessageLookupByLibrary.simpleMessage("Play test"),
     "please_authenticate_to_login": MessageLookupByLibrary.simpleMessage(
@@ -962,6 +973,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "search_book": MessageLookupByLibrary.simpleMessage("Search book"),
     "search_books": MessageLookupByLibrary.simpleMessage("Search books..."),
+    "search_categories": MessageLookupByLibrary.simpleMessage(
+      "Search categories...",
+    ),
     "search_filter": MessageLookupByLibrary.simpleMessage("Search filter"),
     "seconds": MessageLookupByLibrary.simpleMessage("seconds"),
     "security": MessageLookupByLibrary.simpleMessage("Security"),
@@ -980,6 +994,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_all_books": MessageLookupByLibrary.simpleMessage(
       "Select all books",
     ),
+    "select_category": MessageLookupByLibrary.simpleMessage("Select Category"),
     "select_cover_image": MessageLookupByLibrary.simpleMessage(
       "Select cover image",
     ),
@@ -1003,6 +1018,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "showBadge": MessageLookupByLibrary.simpleMessage("Show badge on app icon"),
     "showPreview": MessageLookupByLibrary.simpleMessage(
       "Show content on lock screen",
+    ),
+    "show_all_books": MessageLookupByLibrary.simpleMessage(
+      "Show all books from all categories",
     ),
     "size": MessageLookupByLibrary.simpleMessage("Size"),
     "slow": MessageLookupByLibrary.simpleMessage("Slow"),
@@ -1098,6 +1116,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "translate": MessageLookupByLibrary.simpleMessage("Language translation"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
     "try_again": MessageLookupByLibrary.simpleMessage("Try again"),
+    "try_different_search": MessageLookupByLibrary.simpleMessage(
+      "Try a different search term",
+    ),
     "ttsLanguageSettings": MessageLookupByLibrary.simpleMessage(
       "TTS Language Settings",
     ),

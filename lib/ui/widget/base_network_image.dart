@@ -33,21 +33,29 @@ class BaseNetworkImage extends StatelessWidget {
 
     Widget errorWidget = _buildErrorWidget(context, isDark);
 
-    return url == null
+    return url == null || url!.isEmpty
         ? errorWidget
         : ClipRRect(
-            borderRadius: BorderRadius.circular(borderRadius),
-            child: CachedNetworkImage(
-              width: width ?? double.infinity,
-              height: height ?? double.infinity,
-              fit: fit,
-              imageUrl: url!,
-              placeholder: (context, url) =>
-                  _buildLoadingWidget(context, isDark),
-              errorWidget: (context, url, error) =>
-                  _buildErrorWidget(context, isDark),
-            ),
-          );
+          borderRadius: BorderRadius.circular(borderRadius),
+          child: CachedNetworkImage(
+            width: width ?? double.infinity,
+            height: height ?? double.infinity,
+            fit: fit,
+            imageUrl: url!,
+            placeholder: (context, url) => _buildLoadingWidget(context, isDark),
+            errorWidget: (context, url, error) {
+              // Log error để debug
+              debugPrint('❌ BaseNetworkImage error for URL: $url');
+              debugPrint('❌ Error: $error');
+              return _buildErrorWidget(context, isDark);
+            },
+            httpHeaders: const {
+              'User-Agent':
+                  'Mozilla/5.0 (Linux; Android 10; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.181 Mobile Safari/537.36',
+              'Accept': 'image/*, */*',
+            },
+          ),
+        );
   }
 
   Widget _buildLoadingWidget(BuildContext context, bool isDark) {
@@ -86,32 +94,34 @@ class BaseNetworkImage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: isDark
-                ? [Colors.grey[100]!, Colors.grey[200]!]
-                : [Colors.grey[100]!, Colors.grey[50]!],
+            colors:
+                isDark
+                    ? [Colors.grey[100]!, Colors.grey[200]!]
+                    : [Colors.grey[100]!, Colors.grey[50]!],
           ),
         ),
-        child: errorAssetImage?.isNotEmpty ?? false
-            ? Image.asset(
-                errorAssetImage!,
-                width: width,
-                height: height,
-                fit: fit,
-              )
-            : Center(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.grey[200] : Colors.grey[300],
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.broken_image_outlined,
-                    color: isDark ? Colors.grey[300] : Colors.grey[400],
-                    size: 28,
+        child:
+            errorAssetImage?.isNotEmpty ?? false
+                ? Image.asset(
+                  errorAssetImage!,
+                  width: width,
+                  height: height,
+                  fit: fit,
+                )
+                : Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.grey[200] : Colors.grey[300],
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.broken_image_outlined,
+                      color: isDark ? Colors.grey[300] : Colors.grey[400],
+                      size: 28,
+                    ),
                   ),
                 ),
-              ),
       ),
     );
   }

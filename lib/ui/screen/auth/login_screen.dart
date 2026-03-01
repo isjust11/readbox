@@ -145,8 +145,7 @@ class LoginScreenState extends State<LoginBody>
                       children: [
                         // Logo/Title Section
                         _buildHeader(),
-                        SizedBox(height: 50),
-
+                        SizedBox(height: AppDimens.SIZE_24),
                         // Login Card
                         _buildLoginCard(theme),
                       ],
@@ -234,7 +233,6 @@ class LoginScreenState extends State<LoginBody>
             letterSpacing: 1.5,
           ),
         ),
-        SizedBox(height: 8),
         Text(
           AppLocalizations.current.login_to_continue,
           style: TextStyle(
@@ -277,8 +275,6 @@ class LoginScreenState extends State<LoginBody>
               // Password Field
               _buildPasswordField(),
               SizedBox(height: 20),
-
-          
 
               // Login Button
               _biometricAvailable && _biometricEnabled
@@ -535,7 +531,7 @@ class LoginScreenState extends State<LoginBody>
           text: AppLocalizations.current.facebook,
           backgroundColor: Color.fromARGB(255, 38, 93, 164), // Facebook blue
           textColor: AppColors.white,
-          borderColor: Color.fromARGB(255, 6, 38, 77),
+          borderColor: AppColors.inputBorderLight,
           iconPath: Assets.icons.icFacebook,
           onPressed: () {
             context.read<AuthCubit>().doFacebookLogin();

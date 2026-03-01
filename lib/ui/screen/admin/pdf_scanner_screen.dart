@@ -419,7 +419,7 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
             icon: Icon(Icons.folder_open, color: colorScheme.onPrimary),
             label: Text(
               AppLocalizations.current.select_file,
-              style: TextStyle(color: colorScheme.onPrimary),
+              style: TextStyle(color: colorScheme.onInverseSurface),
             ),
           ),
           if (_files.isNotEmpty && !widget.multiSelect)

@@ -3649,6 +3649,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Current Plan'**
   String get currentPlan;
+
+  /// No description provided for @pin_verification_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN verification failed'**
+  String get pin_verification_failed;
+
+  /// No description provided for @activationFreePlanSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Activation free plan successfully'**
+  String get activationFreePlanSuccess;
+
+  /// No description provided for @select_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Category'**
+  String get select_category;
+
+  /// No description provided for @categories.
+  ///
+  /// In en, this message translates to:
+  /// **'categories'**
+  String get categories;
+
+  /// No description provided for @search_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'Search categories...'**
+  String get search_categories;
+
+  /// No description provided for @all_categories.
+  ///
+  /// In en, this message translates to:
+  /// **'All Categories'**
+  String get all_categories;
+
+  /// No description provided for @show_all_books.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all books from all categories'**
+  String get show_all_books;
+
+  /// No description provided for @no_categories_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories found'**
+  String get no_categories_found;
+
+  /// No description provided for @try_different_search.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different search term'**
+  String get try_different_search;
 }
 
 class _AppLocalizationsDelegate

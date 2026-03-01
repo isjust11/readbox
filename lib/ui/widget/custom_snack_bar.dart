@@ -74,7 +74,7 @@ class AppSnackBar {
       SnackBar(
         content: _AnimatedSnackBarContent(
           message: message,
-          snackBarType: SnackBarType.success,
+          snackBarType: snackBarType,
           fontSize: fontSize,
           textColor: textColor,
         ),

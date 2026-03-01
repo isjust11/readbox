@@ -631,5 +631,14 @@
   "backToHome": "Back to Home",
   "tryAgain": "Try Again",
   "selectPaymentMethod": "Select Payment Method",
-  "currentPlan": "Current Plan"
+  "currentPlan": "Current Plan",
+  "pin_verification_failed": "PIN verification failed",
+  "activationFreePlanSuccess": "Activation free plan successfully",
+  "select_category": "Select Category",
+  "categories": "categories",
+  "search_categories": "Search categories...",
+  "all_categories": "All Categories",
+  "show_all_books": "Show all books from all categories",
+  "no_categories_found": "No categories found",
+  "try_different_search": "Try a different search term"
 }

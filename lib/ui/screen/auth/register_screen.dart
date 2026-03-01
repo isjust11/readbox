@@ -6,6 +6,7 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/res/dimens.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
@@ -28,7 +29,8 @@ class RegisterBody extends StatefulWidget {
   RegisterScreenState createState() => RegisterScreenState();
 }
 
-class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderStateMixin {
+class RegisterScreenState extends State<RegisterBody>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -85,11 +87,11 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
           if (state is LoadedState) {
             // Navigate to confirm PIN screen with email
             Navigator.pushReplacementNamed(
-              context, 
+              context,
               Routes.confirmPinScreen,
               arguments: _emailController.text.trim(),
             );
-          } 
+          }
         },
         child: Stack(
           children: [
@@ -107,7 +109,7 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
                 ),
               ),
             ),
-            
+
             // Main Content
             SafeArea(
               child: Column(
@@ -123,7 +125,7 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
                       ),
                     ),
                   ),
-                  
+
                   // Scrollable Content
                   Expanded(
                     child: Center(
@@ -136,8 +138,7 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
                             children: [
                               // Header
                               _buildHeader(),
-                              SizedBox(height: 40),
-                              
+                              SizedBox(height: AppDimens.SIZE_24),
                               // Register Card
                               _buildRegisterCard(),
                             ],
@@ -149,7 +150,7 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
                 ],
               ),
             ),
-            
+
             // Loading Overlay
             BlocBuilder<AuthCubit, BaseState>(
               builder: (context, state) {
@@ -219,8 +220,7 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
             color: Color(0xFF667eea),
           ),
         ),
-        SizedBox(height: 20),
-        
+        SizedBox(height: AppDimens.SIZE_16),
         // Title
         Text(
           AppLocalizations.current.create_new_account,
@@ -231,15 +231,6 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
             letterSpacing: 1.0,
           ),
         ),
-        SizedBox(height: 8),
-        Text(
-          AppLocalizations.current.enter_information_to_start,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.white.withValues(alpha: 0.9),
-            fontWeight: FontWeight.w300,
-          ),
-        ),
       ],
     );
   }
@@ -247,44 +238,57 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
   Widget _buildRegisterCard() {
     return Card(
       elevation: 12,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: Container(
-        padding: EdgeInsets.all(32),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Full Name Field
-              _buildFullNameField(),
-              SizedBox(height: 12),
-              
-              // Username Field
-              _buildUsernameField(),
-              SizedBox(height: 12),
-              
-              // Email Field
-              _buildEmailField(),
-              SizedBox(height: 12),
-              
-              // Password Field
-              _buildPasswordField(),
-              SizedBox(height: 12),
-              
-              // Confirm Password Field
-              _buildConfirmPasswordField(),
-              SizedBox(height: 24),
-              
-              // Register Button
-              _buildRegisterButton(),
-              SizedBox(height: 16),
-              
-              // Login Link
-              _buildLoginLink(),
-            ],
-          ),
+        padding: EdgeInsets.all(AppDimens.SIZE_16),
+        child: Column(
+          children: [
+            SizedBox(height: AppDimens.SIZE_8),
+            // Title
+            Text(
+              AppLocalizations.current.enter_information_to_start,
+              style: TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: AppDimens.SIZE_16),
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Full Name Field
+                  _buildFullNameField(),
+                  SizedBox(height: 12),
+
+                  // Username Field
+                  _buildUsernameField(),
+                  SizedBox(height: 12),
+
+                  // Email Field
+                  _buildEmailField(),
+                  SizedBox(height: 12),
+
+                  // Password Field
+                  _buildPasswordField(),
+                  SizedBox(height: 12),
+
+                  // Confirm Password Field
+                  _buildConfirmPasswordField(),
+                  SizedBox(height: 24),
+
+                  // Register Button
+                  _buildRegisterButton(),
+                  SizedBox(height: 16),
+
+                  // Login Link
+                  _buildLoginLink(),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -367,7 +371,9 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
           return AppLocalizations.current.please_enter_username;
         }
         if (value.length < 3) {
-          return AppLocalizations.current.username_must_be_at_least_3_characters;
+          return AppLocalizations
+              .current
+              .username_must_be_at_least_3_characters;
         }
         return null;
       },
@@ -430,7 +436,9 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
         prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
         suffixIcon: IconButton(
           icon: Icon(
-            _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+            _obscurePassword
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
             color: Colors.grey.shade600,
           ),
           onPressed: () {
@@ -468,7 +476,9 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
           return AppLocalizations.current.please_enter_password;
         }
         if (value.length < 6) {
-          return AppLocalizations.current.password_must_be_at_least_6_characters;
+          return AppLocalizations
+              .current
+              .password_must_be_at_least_6_characters;
         }
         return null;
       },
@@ -486,7 +496,9 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
         prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
         suffixIcon: IconButton(
           icon: Icon(
-            _obscureConfirmPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+            _obscureConfirmPassword
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
             color: Colors.grey.shade600,
           ),
           onPressed: () {
@@ -540,9 +552,7 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
         foregroundColor: Colors.white,
         elevation: 4,
         padding: EdgeInsets.symmetric(vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         shadowColor: Color(0xFF667eea).withValues(alpha: 0.5),
       ),
       child: Row(
@@ -569,16 +579,10 @@ class RegisterScreenState extends State<RegisterBody> with SingleTickerProviderS
       children: [
         Text(
           '${AppLocalizations.current.have_account} ',
-          style: TextStyle(
-            color: Colors.grey.shade600,
-            fontSize: 14,
-          ),
+          style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context),
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: 4),
-          ),
           child: Text(
             AppLocalizations.current.login,
             style: TextStyle(

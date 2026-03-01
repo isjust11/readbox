@@ -105,11 +105,11 @@ class _BookCardState extends State<BookCard> {
     final theme = Theme.of(context);
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: theme.colorScheme.surface,
       builder: (context) {
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: theme.colorScheme.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
@@ -426,6 +426,7 @@ class _BookCardState extends State<BookCard> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocListener<UserInteractionCubit, BaseState>(
       bloc: widget.userInteractionCubit,
       listener: (context, state) {
@@ -458,7 +459,7 @@ class _BookCardState extends State<BookCard> {
           ],
         ),
         child: Material(
-          color: Theme.of(context).colorScheme.secondaryContainer,
+          color: theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
           child: InkWell(
             onTap: () => widget.onRead(widget.book),
@@ -499,13 +500,10 @@ class _BookCardState extends State<BookCard> {
                                   borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(AppDimens.SIZE_16),
                                   ),
-                                  child: Image.network(
-                                    _getImageUrl(widget.book.coverImageUrl),
+                                  child: BaseNetworkImage(
+                                    url: _getImageUrl(widget.book.coverImageUrl),
                                     fit: BoxFit.cover,
                                     width: double.infinity,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return _buildErrorCover();
-                                    },
                                   ),
                                 )
                                 : _buildErrorCover(),

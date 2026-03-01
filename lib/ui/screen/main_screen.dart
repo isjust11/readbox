@@ -223,6 +223,7 @@ class MainBodyState extends State<MainBody> {
   }
 
   Widget _buildCategoryBar(ColorScheme colorScheme) {
+    final categoryCount = categories.length;
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
@@ -235,41 +236,77 @@ class MainBodyState extends State<MainBody> {
           bottom: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
         ),
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            _buildCategoryChip(
-              colorScheme: colorScheme,
-              label: AppLocalizations.current.all,
-              isSelected: categoryId.isEmpty,
-              onTap: () {
-                setState(() {
-                  categoryId = '';
-                });
-                page = 1;
-                getBooks(isLoadMore: false);
-              },
+      child: Row(
+        children: [
+          Expanded(
+            flex: categoryCount > 3 ? 10 : categoryCount,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  _buildCategoryChip(
+                    colorScheme: colorScheme,
+                    label: AppLocalizations.current.all,
+                    isSelected: categoryId.isEmpty,
+                    onTap: () {
+                      setState(() {
+                        categoryId = '';
+                      });
+                      page = 1;
+                      getBooks(isLoadMore: false);
+                    },
+                  ),
+                  ...categories.map((category) {
+                    final id = category.id ?? '';
+                    final idStr = id.toString();
+                    final label = category.name ?? AppLocalizations.current.no_name;
+                    return _buildCategoryChip(
+                      colorScheme: colorScheme,
+                      label: label,
+                      isSelected: categoryId == idStr,
+                      onTap: () {
+                        setState(() {
+                          categoryId = idStr;
+                        });
+                        page = 1;
+                        getBooks(isLoadMore: false);
+                      },
+                    );
+                  }),
+                ],
+              ),
             ),
-            ...categories.map((category) {
-              final id = category.id ?? '';
-              final idStr = id.toString();
-              final label = category.name ?? AppLocalizations.current.no_name;
-              return _buildCategoryChip(
-                colorScheme: colorScheme,
-                label: label,
-                isSelected: categoryId == idStr,
+          ),
+          Visibility(
+            visible: categoryCount > 3,
+            child: Expanded(
+              child: GestureDetector(
                 onTap: () {
-                  setState(() {
-                    categoryId = idStr;
-                  });
-                  page = 1;
-                  getBooks(isLoadMore: false);
+                  // mo bottom sheet chon category
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) => CategoryBottomSheet(
+                      categories: categories,
+                      selectedCategoryId: categoryId.isEmpty ? null : categoryId,
+                      onSelected: (category) {
+                        setState(() {
+                          categoryId = category.id.toString();
+                        });
+                        page = 1;
+                        getBooks(isLoadMore: false);
+                      },
+                    ),
+                  );
                 },
-              );
-            }),
-          ],
-        ),
+                child: Icon(
+                  Icons.apps,
+                  color: colorScheme.secondary,
+                  size: AppDimens.SIZE_24,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -546,12 +583,12 @@ class MainBodyState extends State<MainBody> {
                   // Check state từ cubit để hiển thị chính xác trạng thái
                   if (cubit.isLoadingMore) {
                     body = SizedBox(
-                      height: 55,
+                      height: AppDimens.SIZE_48,
                       child: Center(child: CircularProgressIndicator()),
                     );
                   } else if (!cubit.hasMore) {
                     body = SizedBox(
-                      height: 55,
+                      height: AppDimens.SIZE_48,
                       child: Center(
                         child: Text(
                           AppLocalizations.current.all_data_loaded,
@@ -658,16 +695,16 @@ class MainBodyState extends State<MainBody> {
                 onPressed: () => _showContinueReadingBottomSheet(context),
                 icon: Icon(
                   Icons.menu_book_rounded,
-                  color: theme.colorScheme.onPrimary,
+                  color: theme.colorScheme.onInverseSurface,
                 ),
                 label: Text(
                   AppLocalizations.current.continue_reading,
                   style: TextStyle(
-                    color: theme.colorScheme.onPrimary,
+                    color: theme.colorScheme.onInverseSurface,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                backgroundColor: theme.primaryColor,
+                backgroundColor: theme.primaryColor.withValues(alpha: 0.8),
               )
               : SizedBox.shrink();
         }

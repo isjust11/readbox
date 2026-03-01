@@ -11,7 +11,7 @@ class UserSubscriptionModel {
   final int storageUsedBytes;
   final int ttsUsedInPeriod;
   final int convertUsedInPeriod;
-  final String currentPeriodKey;
+  final String? currentPeriodKey;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -23,7 +23,7 @@ class UserSubscriptionModel {
     required this.storageUsedBytes,
     required this.ttsUsedInPeriod,
     required this.convertUsedInPeriod,
-    required this.currentPeriodKey,
+    this.currentPeriodKey,
     required this.createdAt,
     required this.updatedAt,
   });

@@ -96,12 +96,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
               final userModel = state.data as UserModel;
               _fullNameController.text = userModel.fullName ?? '';
               _emailController.text = userModel.email ?? '';
-              _currentAvatarUrl =
-                  userModel.isSocialPlatform
-                      ? userModel.picture
-                      : userModel.picture != null
-                      ? ApiConstant.storageHost + (userModel.picture ?? '')
-                      : null;
+              _currentAvatarUrl = _getAvatarUrl(userModel.picture, userModel.isSocialPlatform);
               _pathRelativeAvatar = userModel.picture ?? '';
               _phoneNumberController.text = userModel.phoneNumber ?? '';
               _addressController.text = userModel.address ?? '';
@@ -414,6 +409,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
   }
 
   void _showImagePicker() {
+    final theme = Theme.of(context);
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -423,6 +419,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
               ListTile(
                 leading: const Icon(Icons.camera_alt),
                 title: CustomTextLabel(AppLocalizations.current.camera),
+                textColor: theme.colorScheme.onSecondary,
                 onTap: () {
                   Navigator.pop(context);
                   _pickImage(ImageSource.camera);
@@ -431,6 +428,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
               ListTile(
                 leading: const Icon(Icons.photo_library),
                 title: CustomTextLabel(AppLocalizations.current.gallery),
+                textColor: theme.colorScheme.onSecondary,
                 onTap: () {
                   Navigator.pop(context);
                   _pickImage(ImageSource.gallery);
@@ -439,6 +437,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
               ListTile(
                 leading: const Icon(Icons.cancel),
                 title: CustomTextLabel(AppLocalizations.current.cancel),
+                textColor: theme.colorScheme.onSecondary,
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -533,5 +532,19 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
     );
     // Listen for success
     // Navigator.of(context).pop();
+  }
+
+  String? _getAvatarUrl(String? picture, bool isSocialPlatform) {
+    if (picture == null || picture.isEmpty) {
+      return null;
+    }
+
+    // Check if already a full URL (from social platforms)
+    if (picture.startsWith('http://') || picture.startsWith('https://')) {
+      return picture;
+    }
+
+    // If it's a relative path, prepend storage host
+    return '${ApiConstant.storageHost}$picture';
   }
 }

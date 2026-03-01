@@ -83,10 +83,7 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
 
         return BaseScreen(
           colorBg: colorScheme.surface,
-          customAppBar: BaseAppBar(
-            title: AppLocalizations.current.tools_word_to_pdf,
-            centerTitle: true,
-          ),
+          title: AppLocalizations.current.tools_word_to_pdf,
           messageNotify: CustomSnackBar<ConverterCubit>(
             fontSize: AppSize.fontSizeMedium,
             textColor: colorScheme.onPrimary,

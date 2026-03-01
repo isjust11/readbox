@@ -1852,4 +1852,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get currentPlan => 'Current Plan';
+
+  @override
+  String get pin_verification_failed => 'PIN verification failed';
+
+  @override
+  String get activationFreePlanSuccess => 'Activation free plan successfully';
+
+  @override
+  String get select_category => 'Select Category';
+
+  @override
+  String get categories => 'categories';
+
+  @override
+  String get search_categories => 'Search categories...';
+
+  @override
+  String get all_categories => 'All Categories';
+
+  @override
+  String get show_all_books => 'Show all books from all categories';
+
+  @override
+  String get no_categories_found => 'No categories found';
+
+  @override
+  String get try_different_search => 'Try a different search term';
 }

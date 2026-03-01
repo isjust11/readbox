@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/res/dimens.dart';
 import 'package:readbox/ui/screen/tools/word_to_pdf_converter_screen.dart';
 import 'package:readbox/ui/screen/tools/document_scanner_screen.dart';
 import 'package:readbox/ui/widget/base_screen.dart';
@@ -16,19 +17,20 @@ class ToolsScreen extends StatelessWidget {
 
     return BaseScreen(
       title: AppLocalizations.current.tools,
+      colorBg: colorScheme.surface,
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(AppDimens.SIZE_12),
         child: GridView.count(
           crossAxisCount: 2,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 12,
+          crossAxisSpacing: AppDimens.SIZE_12,
+          mainAxisSpacing: AppDimens.SIZE_12,
           children: [
             _ToolCard(
               widgetIcon: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(AppDimens.SIZE_12),
                     decoration: BoxDecoration(
                       color: colorScheme.primary.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
@@ -40,16 +42,16 @@ class ToolsScreen extends StatelessWidget {
                     child: Center(
                       child: SvgPicture.asset(
                         Assets.icons.icDoc,
-                        width: 28,
-                        height: 28,
+                        width: AppDimens.SIZE_28,
+                        height: AppDimens.SIZE_28,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 2),
+                  const SizedBox(width: AppDimens.SIZE_2),
                   Icon(Icons.arrow_forward_ios, size: 16),
-                  const SizedBox(width: 2),
+                  const SizedBox(width: AppDimens.SIZE_2),
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(AppDimens.SIZE_12),
                     decoration: BoxDecoration(
                       color: colorScheme.error.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
@@ -82,7 +84,7 @@ class ToolsScreen extends StatelessWidget {
             ),
             _ToolCard(
               widgetIcon: Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppDimens.SIZE_12),
                 decoration: BoxDecoration(
                   color: colorScheme.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
@@ -92,7 +94,7 @@ class ToolsScreen extends StatelessWidget {
                   ),
                 ),
                 child: Icon(Icons.document_scanner,
-                size: 28,
+                size: AppDimens.SIZE_28,
                 color: colorScheme.primary,
                 ),
               ),
@@ -135,12 +137,13 @@ class _ToolCard extends StatelessWidget {
 
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.SIZE_12)),
+      color: colorScheme.surfaceContainerHighest,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(AppDimens.SIZE_12),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -149,13 +152,13 @@ class _ToolCard extends StatelessWidget {
                 alignment: Alignment.center,
                 child: widgetIcon,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppDimens.SIZE_12),
               Flexible(fit: FlexFit.tight,child: Text(title, style: theme.textTheme.titleMedium),),
               const SizedBox(height: 4),
               Flexible(child: Text(
                 description,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: AppDimens.SIZE_12,
                   color: colorScheme.onSurfaceVariant,
                 ),
                 textAlign: TextAlign.center,

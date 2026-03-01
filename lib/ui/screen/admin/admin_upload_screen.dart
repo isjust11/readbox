@@ -10,6 +10,7 @@ import 'package:readbox/domain/data/models/book_model.dart';
 import 'package:readbox/domain/data/models/category_model.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/res/dimens.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/screen/admin/pdf_scanner_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -399,8 +400,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Theme.of(context).primaryColor,
-                Theme.of(context).primaryColor.withValues(alpha: 0.8),
+                theme.primaryColor,
+                theme.primaryColor.withValues(alpha: 0.8),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -410,11 +411,11 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         leading: Container(
           margin: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(12),
+            color: theme.colorScheme.onInverseSurface.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
           ),
           child: IconButton(
-            icon: Icon(Icons.arrow_back_rounded, color: Colors.white),
+            icon: Icon(Icons.arrow_back_rounded, color: theme.colorScheme.onInverseSurface),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -423,7 +424,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
             Container(
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
+                color: theme.colorScheme.onInverseSurface.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -460,7 +461,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           ],
         ),
       ),
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: theme.colorScheme.surface,
       body: BlocListener<LibraryCubit, BaseState>(
         listener: (context, state) {
           if (state is ErrorState) {
@@ -514,14 +515,14 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                     // Ebook File Section
                     Container(
                       decoration: BoxDecoration(
-                        color: theme.cardColor,
+                        color: theme.colorScheme.surfaceContainerHighest,
                         border: Border.all(
                           color: theme.colorScheme.outline.withValues(
                             alpha: 0.3,
                           ),
                           width: 1,
                         ),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
                         boxShadow: [
                           BoxShadow(
                             color: theme.colorScheme.shadow.withValues(
@@ -1015,14 +1016,14 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                     // Cover Image Section
                     Container(
                       decoration: BoxDecoration(
-                        color: theme.cardColor,
+                        color: theme.colorScheme.surfaceContainerHighest,
                         border: Border.all(
                           color: theme.colorScheme.outline.withValues(
                             alpha: 0.3,
                           ),
                           width: 1,
                         ),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
                         boxShadow: [
                           BoxShadow(
                             color: theme.colorScheme.shadow.withValues(
@@ -1103,7 +1104,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.grey[700],
+                                      color: theme.colorScheme.secondary.withValues(alpha: 0.6),
                                     ),
                                   ),
                                 ),
@@ -1291,7 +1292,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                         SizedBox(width: 12),
                                         Container(
                                           decoration: BoxDecoration(
-                                            color: Colors.grey[100],
+                                            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
                                             borderRadius: BorderRadius.circular(
                                               12,
                                             ),
@@ -1351,8 +1352,8 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                     // Book Information
                     Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: theme.cardColor,
+                        borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
+                        color: theme.colorScheme.surfaceContainerHighest,
                         border: Border.all(
                           color: theme.colorScheme.outline.withValues(
                             alpha: 0.3,

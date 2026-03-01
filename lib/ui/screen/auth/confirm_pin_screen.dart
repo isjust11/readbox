@@ -8,6 +8,7 @@ import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/res/dimens.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -39,12 +40,16 @@ class ConfirmPinBody extends StatefulWidget {
   ConfirmPinBodyState createState() => ConfirmPinBodyState();
 }
 
-class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProviderStateMixin {
-  final List<TextEditingController> _pinControllers = List.generate(4, (_) => TextEditingController());
+class ConfirmPinBodyState extends State<ConfirmPinBody>
+    with SingleTickerProviderStateMixin {
+  final List<TextEditingController> _pinControllers = List.generate(
+    4,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   // Resend PIN timer variables
   Timer? _resendTimer;
   int _resendCountdown = 60;
@@ -61,12 +66,12 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.forward();
-    
+
     // Auto focus first field
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNodes[0].requestFocus();
     });
-    
+
     // Start resend timer
     _startResendTimer();
   }
@@ -90,7 +95,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
     } else if (value.isEmpty && index > 0) {
       _focusNodes[index - 1].requestFocus();
     }
-    
+
     // Auto submit when all 4 digits are entered
     if (index == 3 && value.length == 1) {
       _verifyPin();
@@ -100,10 +105,9 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
   void _verifyPin() {
     String pin = _pinControllers.map((c) => c.text).join();
     if (pin.length == 4) {
-      BlocProvider.of<AuthCubit>(context).verifyPin(
-        email: widget.email,
-        pin: pin,
-      );
+      BlocProvider.of<AuthCubit>(
+        context,
+      ).verifyPin(email: widget.email, pin: pin);
     }
   }
 
@@ -119,7 +123,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
       _resendCountdown = 60;
       _canResend = false;
     });
-    
+
     _resendTimer?.cancel();
     _resendTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
@@ -145,16 +149,48 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
     return Scaffold(
       body: MultiBlocListener(
         listeners: [
-          BlocListener<AuthCubit, BaseState>(
+        BlocListener<AuthCubit, BaseState>(
             listener: (context, state) {
               if (state is LoadedState) {
-                getIt.get<UserInfoCubit>().getUserInfo();
-                Navigator.pushReplacementNamed(context, Routes.loginScreen);
-                AppSnackBar.show(
-                  context,
-                  message: AppLocalizations.current.authentication_success,
-                  snackBarType: SnackBarType.success,
-                );
+                // Backend trả về Map với code và message
+                if (state.data is Map<String, dynamic>) {
+                  final result = state.data as Map<String, dynamic>;
+                  final code = result['code'];
+                  
+                  if (code == 'verify') {
+                    // Xác thực thành công
+                    Navigator.pushReplacementNamed(context, Routes.loginScreen);
+                    AppSnackBar.show(
+                      context,
+                      message: result['message'] ?? AppLocalizations.current.authentication_success,
+                      snackBarType: SnackBarType.success,
+                    );
+                  } else if (code == 'resend') {
+                    // Gửi mã PIN mới thành công
+                    _startResendTimer();
+                    AppSnackBar.show(
+                      context,
+                      message: result['message'] ?? AppLocalizations.current.pin_resend_success,
+                      snackBarType: SnackBarType.success,
+                    );
+                  } else {
+                    // Xác thực thất bại
+                    _clearPin();
+                    AppSnackBar.show(
+                      context,
+                      message: result['message'] ?? AppLocalizations.current.pin_verification_failed,
+                      snackBarType: SnackBarType.error,
+                    );
+                  }
+                } else {
+                  // Fallback: nếu data không phải Map (backward compatibility)
+                  _clearPin();
+                  AppSnackBar.show(
+                    context,
+                    message: AppLocalizations.current.pin_verification_failed,
+                    snackBarType: SnackBarType.error,
+                  );
+                }
               } else if (state is ErrorState) {
                 AppSnackBar.show(
                   context,
@@ -182,7 +218,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
                 ),
               ),
             ),
-            
+
             // Main Content
             SafeArea(
               child: Column(
@@ -198,7 +234,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
                       ),
                     ),
                   ),
-                  
+
                   // Scrollable Content
                   Expanded(
                     child: Center(
@@ -211,8 +247,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
                             children: [
                               // Header
                               _buildHeader(),
-                              SizedBox(height: 50),
-                              
+                              SizedBox(height: AppDimens.SIZE_24),
                               // PIN Input Card
                               _buildPinCard(),
                             ],
@@ -224,7 +259,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
                 ],
               ),
             ),
-            
+
             // Loading Overlay
             BlocBuilder<AuthCubit, BaseState>(
               builder: (context, state) {
@@ -288,14 +323,10 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
               ),
             ],
           ),
-          child: Icon(
-            Icons.lock_rounded,
-            size: 50,
-            color: Color(0xFF667eea),
-          ),
+          child: Icon(Icons.pin_rounded, size: 50, color: Color(0xFF667eea)),
         ),
-        SizedBox(height: 20),
-        
+        SizedBox(height: 16),
+
         // Title
         Text(
           AppLocalizations.current.verify_pin,
@@ -332,26 +363,20 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
   Widget _buildPinCard() {
     return Card(
       elevation: 12,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
       child: Container(
-        padding: EdgeInsets.all(32),
+        padding: EdgeInsets.all(AppDimens.SIZE_16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // PIN Input Fields
             _buildPinInputs(),
-            SizedBox(height: 32),
-            
+            SizedBox(height: AppDimens.SIZE_16),
+
             // Verify Button
             _buildVerifyButton(),
-            SizedBox(height: 16),
-            
-            // Clear Button
-            _buildClearButton(),
-            SizedBox(height: 8),
-            
+            SizedBox(height: AppDimens.SIZE_16),
+
             // Resend PIN Button
             _buildResendButton(),
           ],
@@ -381,9 +406,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
               fontWeight: FontWeight.bold,
               color: Color(0xFF667eea),
             ),
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
               counterText: '',
               border: OutlineInputBorder(
@@ -408,7 +431,10 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
               ),
               filled: true,
               fillColor: Colors.grey.shade50,
-              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 10,
+              ),
             ),
             onChanged: (value) => _handlePinChanged(index, value),
           ),
@@ -425,9 +451,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
         foregroundColor: Colors.white,
         elevation: 4,
         padding: EdgeInsets.symmetric(vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         shadowColor: Color(0xFF667eea).withValues(alpha: 0.5),
       ),
       child: Row(
@@ -444,19 +468,6 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
           SizedBox(width: 8),
           Icon(Icons.check_circle_outline, size: 20),
         ],
-      ),
-    );
-  }
-
-  Widget _buildClearButton() {
-    return TextButton(
-      onPressed: _clearPin,
-      child: Text(
-        AppLocalizations.current.clear_and_reenter,
-        style: TextStyle(
-          color: Colors.grey.shade600,
-          fontSize: 14,
-        ),
       ),
     );
   }
@@ -487,11 +498,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody> with SingleTickerProvide
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.refresh,
-                      size: 16,
-                      color: Color(0xFF667eea),
-                    ),
+                    Icon(Icons.refresh, size: 16, color: Color(0xFF667eea)),
                     SizedBox(width: 4),
                     Text(
                       AppLocalizations.current.resend_pin,

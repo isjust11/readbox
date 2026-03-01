@@ -83,7 +83,7 @@ class CustomDropDownState extends State<CustomDropDown> {
             height: widget.heightOfBox ?? 45,
             padding: EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
+              color: theme.colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
               border: widget.border ?? 
               Border.all(width: 1, color: theme.colorScheme.outline.withValues(alpha: 0.3)),
