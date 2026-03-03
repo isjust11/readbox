@@ -194,6 +194,7 @@ class LibraryCubit extends Cubit<BaseState> {
     String language = 'vi',
     bool isPublic = true,
     String? categoryId,
+    int? fileSize,
   }) async {
     _uploadCancelToken = CancelToken();
     _isUploading = true;
@@ -214,6 +215,7 @@ class LibraryCubit extends Cubit<BaseState> {
         language: language,
         isPublic: isPublic,
         categoryId: categoryId,
+        fileSize: fileSize,
       );
     } catch (e) {
       _isUploading = false;
@@ -235,6 +237,7 @@ class LibraryCubit extends Cubit<BaseState> {
     String language = 'vi',
     bool isPublic = true,
     String? categoryId,
+    int? fileSize,
   }) async {
     try {
       if (_ebookFileUrl == null) {
@@ -256,6 +259,7 @@ class LibraryCubit extends Cubit<BaseState> {
         'language': language,
         'isPublic': isPublic,
         if (categoryId != null) 'category': categoryId,
+        if (fileSize != null) 'fileSize': fileSize,
       };
 
       final response = await adminRemoteDataSource.createBook(bookData);
@@ -287,6 +291,7 @@ class LibraryCubit extends Cubit<BaseState> {
     String? categoryId,
     String? existingFileUrl, // File URL từ server (nếu không upload file mới)
     String? existingCoverImageUrl, // Cover URL từ server (nếu không upload cover mới)
+    int? fileSize,
   }) async {
     try {
       emit(LoadingState());
@@ -303,6 +308,7 @@ class LibraryCubit extends Cubit<BaseState> {
         'language': language,
         'isPublic': isPublic,
         if (categoryId != null) 'category': categoryId,
+        if (fileSize != null) 'fileSize': fileSize,
       };
 
       final response = await adminRemoteDataSource.updateBook(bookId, bookData);

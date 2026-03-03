@@ -207,6 +207,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "convert_usage": MessageLookupByLibrary.simpleMessage(
       "Chuyển Đổi Tài Liệu",
     ),
+    "characters": MessageLookupByLibrary.simpleMessage("ký tự"),
     "copyToken": MessageLookupByLibrary.simpleMessage("Sao chép token"),
     "cover_image": MessageLookupByLibrary.simpleMessage("Ảnh Bìa"),
     "cover_image_uploaded_successfully": MessageLookupByLibrary.simpleMessage(

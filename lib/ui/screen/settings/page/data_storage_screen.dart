@@ -335,10 +335,10 @@ class _DataStorageScreenState extends State<DataStorageScreen>
     ColorScheme colorScheme,
   ) {
     final plan = subscription.plan;
-    final used = interactionCounts['tts'] ?? subscription.ttsUsedInPeriod;
+    final used = subscription.ttsUsedInPeriod; // Số ký tự đã đọc
     final limit = plan?.ttsLimitPerPeriod ?? 0;
     final percentage = limit > 0 ? (used / limit * 100).clamp(0.0, 100.0) : 0.0;
-    final isUnlimited = limit == 0 || limit >= 999999;
+    final isUnlimited = limit == 0 || limit >= 999999999; // Số ký tự rất lớn = unlimited
 
     return _buildUsageCard(
       context: context,
@@ -347,11 +347,11 @@ class _DataStorageScreenState extends State<DataStorageScreen>
       icon: Icons.record_voice_over_rounded,
       iconColor: Colors.green,
       title: AppLocalizations.current.tts_usage,
-      used: '$used',
-      limit: isUnlimited ? 'Unlimited' : '$limit',
+      used: _formatCharacters(used),
+      limit: isUnlimited ? AppLocalizations.current.unlimited : _formatCharacters(limit),
       percentage: percentage,
       isUnlimited: isUnlimited,
-      unit: AppLocalizations.current.times,
+      unit: AppLocalizations.current.characters,
     );
   }
 
@@ -840,6 +840,16 @@ class _DataStorageScreenState extends State<DataStorageScreen>
         ],
       ),
     );
+  }
+
+  String _formatCharacters(int chars) {
+    if (chars >= 1000000) {
+      return '${(chars / 1000000).toStringAsFixed(1).replaceAll('.0', '')}M';
+    }
+    if (chars >= 1000) {
+      return '${(chars / 1000).toStringAsFixed(1).replaceAll('.0', '')}K';
+    }
+    return '$chars';
   }
 
   String _formatBytes(int bytes) {

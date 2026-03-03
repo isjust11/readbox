@@ -42,7 +42,6 @@ class _BookCardState extends State<BookCard> {
   @override
   void initState() {
     super.initState();
-    _loadUserInteractionStatus();
   }
 
   Future<void> _loadUserInteractionStatus() async {
@@ -122,13 +121,14 @@ class _BookCardState extends State<BookCard> {
                 child: SizedBox(
                   child: Column(
                     children: [
-
                       // Handle bar
                       Container(
                         width: 40,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.3,
+                          ),
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -145,28 +145,25 @@ class _BookCardState extends State<BookCard> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               color: Colors.grey[200],
-                              border: Border.all(color: theme.colorScheme.onSurface.withValues(alpha: 0.3), width: 1),
+                              border: Border.all(
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.3,
+                                ),
+                                width: 1,
+                              ),
                             ),
                             child:
                                 book.coverImageUrl != null
                                     ? ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
-                                      child: Image.network(
-                                        _getImageUrl(book.coverImageUrl),
+                                      child: BaseNetworkImage(
+                                        url: _getImageUrl(book.coverImageUrl),
+                                        width: 80,
+                                        height: 120,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (
-                                          context,
-                                          error,
-                                          stackTrace,
-                                        ) {
-                                          return Icon(
-                                            Icons.book,
-                                            color: Colors.grey,
-                                          );
-                                        },
                                       ),
                                     )
-                                    : Icon(Icons.book, color: Colors.grey),
+                                    : _buildErrorCover(),
                           ),
                           SizedBox(width: 16),
                           Expanded(
@@ -177,21 +174,19 @@ class _BookCardState extends State<BookCard> {
                                   book.displayTitle,
                                   style: TextStyle(
                                     fontSize: AppSize.fontSizeLarge,
-                                    fontWeight: FontWeight.bold,  
+                                    fontWeight: FontWeight.bold,
                                   ),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 SizedBox(height: 4),
-                                Text(
-                                  book.author ?? '',
-                                  style: TextStyle(
-                                    fontSize: AppSize.fontSizeMedium,
-                                    color: Colors.grey[600],
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                if (book.author != null) ...[
+                                  _authorWidget(book.author!),
+                                ],
+                                if (book.category != null) ...[
+                                  _categoryWidget(book.category?.name ?? ''),
+                                ],
+                                SizedBox(height: 4),
                                 // action delete and edit book
                                 if (book.createById == widget.ownerId) ...[
                                   Row(
@@ -509,6 +504,7 @@ class _BookCardState extends State<BookCard> {
           child: InkWell(
             onTap: () => widget.onRead(widget.book),
             onLongPress: () {
+              _loadUserInteractionStatus();
               // Long press: Hiển thị menu options
               _showBookOptions(context, widget.book);
             },
@@ -609,60 +605,11 @@ class _BookCardState extends State<BookCard> {
                             SizedBox(height: 4),
 
                             if (widget.book.author != null) ...[
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    Assets.icons.icUser,
-                                    width: AppSize.iconSizeMedium,
-                                    height: AppSize.iconSizeMedium,
-                                    colorFilter: ColorFilter.mode(
-                                      Colors.blue[500]!,
-                                      BlendMode.srcIn,
-                                    ),
-                                  ),
-                                  SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      widget.book.author ?? '',
-                                      style: TextStyle(
-                                        fontSize: AppSize.fontSizeMedium,
-                                        color: Colors.grey[600],
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              _authorWidget(widget.book.author!),
                             ],
                             // Category
                             if (widget.book.category != null)
-                              Column(
-                                children: [
-                                  const SizedBox(height: AppDimens.SIZE_6),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        Assets.icons.icCategory,
-                                        width: AppSize.iconSizeMedium,
-                                        height: AppSize.iconSizeMedium,
-                                        colorFilter: ColorFilter.mode(
-                                          Colors.orange[400]!,
-                                          BlendMode.srcIn,
-                                        ),
-                                      ),
-                                      SizedBox(width: AppDimens.SIZE_8),
-                                      Text(
-                                        widget.book.category?.name ?? '',
-                                        style: TextStyle(
-                                          fontSize: AppSize.fontSizeMedium,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                              _categoryWidget(widget.book.category?.name ?? ''),
                           ],
                         ),
                         // Rating
@@ -780,6 +727,60 @@ class _BookCardState extends State<BookCard> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _authorWidget(String author) {
+    return Row(
+      children: [
+        SvgPicture.asset(
+          Assets.icons.icUser,
+          width: AppSize.iconSizeMedium,
+          height: AppSize.iconSizeMedium,
+          colorFilter: ColorFilter.mode(Colors.blue[500]!, BlendMode.srcIn),
+        ),
+        SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            author,
+            style: TextStyle(
+              fontSize: AppSize.fontSizeMedium,
+              color: Colors.grey[600],
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _categoryWidget(String category) {
+    return Column(
+      children: [
+        const SizedBox(height: AppDimens.SIZE_6),
+        Row(
+          children: [
+            SvgPicture.asset(
+              Assets.icons.icCategory,
+              width: AppSize.iconSizeMedium,
+              height: AppSize.iconSizeMedium,
+              colorFilter: ColorFilter.mode(
+                Colors.orange[400]!,
+                BlendMode.srcIn,
+              ),
+            ),
+            SizedBox(width: AppDimens.SIZE_8),
+            Text(
+              category,
+              style: TextStyle(
+                fontSize: AppSize.fontSizeMedium,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

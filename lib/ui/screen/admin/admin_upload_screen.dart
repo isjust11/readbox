@@ -330,6 +330,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         language: _language,
         isPublic: _isPublic,
         categoryId: _selectedCategoryId,
+        fileSize: _ebookFile?.lengthSync() ?? 0,
         existingFileUrl:
             _existingRemoteFileUrl, // File URL từ server nếu không upload mới
         existingCoverImageUrl:
@@ -361,6 +362,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         language: _language,
         isPublic: _isPublic,
         categoryId: _selectedCategoryId,
+        fileSize: _ebookFile?.lengthSync() ?? 0,
       );
     }
   }

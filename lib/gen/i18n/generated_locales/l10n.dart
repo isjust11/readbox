@@ -5698,6 +5698,11 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `ký tự`
+  String get characters {
+    return Intl.message('ký tự', name: 'characters', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

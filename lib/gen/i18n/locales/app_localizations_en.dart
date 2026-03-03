@@ -757,6 +757,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get description => 'Description';
 
   @override
+  String get read_more => 'Read more';
+
+  @override
+  String get show_less => 'Show less';
+
+  @override
   String get publisher => 'Publisher';
 
   @override

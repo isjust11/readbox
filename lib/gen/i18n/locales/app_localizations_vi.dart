@@ -762,6 +762,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get description => 'Mô tả';
 
   @override
+  String get read_more => 'Xem thêm';
+
+  @override
+  String get show_less => 'Thu gọn';
+
+  @override
   String get publisher => 'Nhà xuất bản';
 
   @override

@@ -69,7 +69,7 @@ class BookEntity extends BaseEntity {
             orElse: () => BookType.epub,
           )
         : BookType.epub;
-    fileSize = json['fileSize'];
+    fileSize = json['fileSize'] != null ? int.parse(json['fileSize'].toString()) : null;
     categories = json['categories'] != null
         ? List<String>.from(json['categories'])
         : [];
@@ -80,9 +80,9 @@ class BookEntity extends BaseEntity {
         : null;
     lastRead =
         json['lastRead'] != null ? DateTime.parse(json['lastRead']) : null;
-    totalPages = json['totalPages'];
-    isFavorite = json['isFavorite'] ?? false;
-    isArchived = json['isArchived'] ?? false;
+    totalPages = json['totalPages'] != null ? int.parse(json['totalPages'].toString()) : null;
+    // isFavorite = json['isFavorite'] ?? false;
+    // isArchived = json['isArchived'] ?? false;
     publisher = json['publisher'];
     isbn = json['isbn'];
     language = json['language'];

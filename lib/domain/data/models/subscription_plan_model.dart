@@ -10,6 +10,8 @@ class SubscriptionPlanModel {
   final int storageLimitBytes;
   final int ttsLimitPerPeriod;
   final int convertLimitPerPeriod;
+  final int shareLimitPerPeriod;
+  final int downloadLimitPerPeriod;
   final String periodType;
   final double? price;
   final int sortOrder;
@@ -25,6 +27,8 @@ class SubscriptionPlanModel {
     this.storageLimitBytes = 0,
     this.ttsLimitPerPeriod = 0,
     this.convertLimitPerPeriod = 0,
+    this.shareLimitPerPeriod = 0,
+    this.downloadLimitPerPeriod = 0,
     this.periodType = 'month',
     this.price,
     this.sortOrder = 0,
@@ -40,9 +44,11 @@ class SubscriptionPlanModel {
       name: json['name'],
       description: json['description'],
       storageLimitBytes: _parseBigInt(json['storageLimitBytes']),
-      ttsLimitPerPeriod: json['ttsLimitPerPeriod'],
-      convertLimitPerPeriod: json['convertLimitPerPeriod'],
-      periodType: json['periodType'],
+      ttsLimitPerPeriod: _parseBigInt(json['ttsLimitPerPeriod']),
+      convertLimitPerPeriod: _parseBigInt(json['convertLimitPerPeriod']),
+      shareLimitPerPeriod: _parseBigInt(json['shareLimitPerPeriod']),
+      downloadLimitPerPeriod: _parseBigInt(json['downloadLimitPerPeriod']),
+      periodType: json['periodType'] ?? 'month',
       price: _parsePrice(json['price']),
       sortOrder: json['sortOrder'],
       isActive: json['isActive'],

@@ -201,6 +201,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "convert_usage": MessageLookupByLibrary.simpleMessage(
       "Document Conversion",
     ),
+    "characters": MessageLookupByLibrary.simpleMessage("characters"),
     "copyToken": MessageLookupByLibrary.simpleMessage("Copy token"),
     "cover_image": MessageLookupByLibrary.simpleMessage("Cover image"),
     "cover_image_uploaded_successfully": MessageLookupByLibrary.simpleMessage(

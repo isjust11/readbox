@@ -672,5 +672,6 @@
   "share_count": "Shares",
   "rating_count": "Ratings",
   "archived_count": "Archived",
-  "total_interactions": "Total Interactions"
+  "total_interactions": "Total Interactions",
+  "characters": "characters"
 }

@@ -1550,6 +1550,18 @@ abstract class AppLocalizations {
   /// **'Description'**
   String get description;
 
+  /// No description provided for @read_more.
+  ///
+  /// In en, this message translates to:
+  /// **'Read more'**
+  String get read_more;
+
+  /// No description provided for @show_less.
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get show_less;
+
   /// No description provided for @publisher.
   ///
   /// In en, this message translates to:
