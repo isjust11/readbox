@@ -44,6 +44,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "activationFreePlanSuccess": MessageLookupByLibrary.simpleMessage(
       "Kích hoạt gói miễn phí thành công",
     ),
+    "activity_statistics": MessageLookupByLibrary.simpleMessage(
+      "Thống Kê Hoạt Động",
+    ),
     "add_archive": MessageLookupByLibrary.simpleMessage(
       "Thêm lưu vào thư viện",
     ),
@@ -66,6 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
     "apply_filters": MessageLookupByLibrary.simpleMessage("Áp dụng bộ lọc"),
     "archived_books": MessageLookupByLibrary.simpleMessage("Sách đã lưu"),
+    "archived_count": MessageLookupByLibrary.simpleMessage("Lưu Trữ"),
     "areYouSureYouWantToDeleteAllNotifications":
         MessageLookupByLibrary.simpleMessage(
           "Bạn có chắc chắn muốn xóa tất cả thông báo?",
@@ -150,6 +154,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "book_will_be_displayed_for_everyone": MessageLookupByLibrary.simpleMessage(
       "Sách sẽ hiển thị cho mọi người",
     ),
+    "bookmark_count": MessageLookupByLibrary.simpleMessage("Đánh Dấu"),
     "books": MessageLookupByLibrary.simpleMessage("sách"),
     "books_already_exist": MessageLookupByLibrary.simpleMessage(
       "sách đã tồn tại",
@@ -265,6 +270,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disagree": MessageLookupByLibrary.simpleMessage("Không đồng ý"),
     "done": MessageLookupByLibrary.simpleMessage("Hoàn thành"),
+    "download_count": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
     "edit": MessageLookupByLibrary.simpleMessage("Sửa"),
     "editProfile": MessageLookupByLibrary.simpleMessage("Chỉnh sửa hồ sơ"),
     "edit_book": MessageLookupByLibrary.simpleMessage("Sửa sách"),
@@ -357,6 +363,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "fast": MessageLookupByLibrary.simpleMessage("Nhanh"),
     "favorite_books": MessageLookupByLibrary.simpleMessage("Sách yêu thích"),
+    "favorite_count": MessageLookupByLibrary.simpleMessage("Yêu Thích"),
     "fcmToken": MessageLookupByLibrary.simpleMessage("FCM Token"),
     "feedback": MessageLookupByLibrary.simpleMessage("Phản hồi"),
     "feedbackAnonymous": MessageLookupByLibrary.simpleMessage("Gửi ẩn danh"),
@@ -979,6 +986,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đánh giá & Nhận xét",
     ),
     "rate_this_book": MessageLookupByLibrary.simpleMessage("Đánh giá sách này"),
+    "rating_count": MessageLookupByLibrary.simpleMessage("Đánh Giá"),
     "rating_submission_failed": MessageLookupByLibrary.simpleMessage(
       "Đánh giá thất bại",
     ),
@@ -987,11 +995,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "read": MessageLookupByLibrary.simpleMessage("Đã đọc"),
     "read_book": MessageLookupByLibrary.simpleMessage("Đọc sách"),
+    "read_more": MessageLookupByLibrary.simpleMessage("Xem thêm"),
     "readingReminders": MessageLookupByLibrary.simpleMessage(
       "Nhắc nhở đọc sách",
     ),
     "readingSpeed": MessageLookupByLibrary.simpleMessage("Tốc độ đọc"),
     "reading_books": MessageLookupByLibrary.simpleMessage("Đang đọc"),
+    "reading_count": MessageLookupByLibrary.simpleMessage("Đang Đọc"),
     "reading_progress": MessageLookupByLibrary.simpleMessage("Tiến độ đọc"),
     "reading_time": MessageLookupByLibrary.simpleMessage("Thời gian đọc:"),
     "ready_to_upload": MessageLookupByLibrary.simpleMessage("Sẵn sàng upload"),
@@ -1084,6 +1094,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shareYourThoughts": MessageLookupByLibrary.simpleMessage(
       "Chia sẻ suy nghĩ của bạn",
     ),
+    "share_count": MessageLookupByLibrary.simpleMessage("Chia Sẻ"),
     "showBadge": MessageLookupByLibrary.simpleMessage(
       "Hiển thị badge trên icon",
     ),
@@ -1093,6 +1104,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "show_all_books": MessageLookupByLibrary.simpleMessage(
       "Hiển thị tất cả sách từ mọi danh mục",
     ),
+    "show_less": MessageLookupByLibrary.simpleMessage("Thu gọn"),
     "size": MessageLookupByLibrary.simpleMessage("Kích thước"),
     "slow": MessageLookupByLibrary.simpleMessage("Chậm"),
     "start_reading": MessageLookupByLibrary.simpleMessage("Bắt đầu đọc"),
@@ -1190,6 +1202,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "tools_word_to_pdf": MessageLookupByLibrary.simpleMessage("Word sang PDF"),
     "tools_word_to_pdf_description": MessageLookupByLibrary.simpleMessage(
       "Chuyển đổi tài liệu Word sang PDF",
+    ),
+    "total_interactions": MessageLookupByLibrary.simpleMessage(
+      "Tổng Tương Tác",
     ),
     "total_pages": MessageLookupByLibrary.simpleMessage("Số trang"),
     "total_ratings": m7,
@@ -1345,14 +1360,5 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "your_rating": MessageLookupByLibrary.simpleMessage("Đánh giá của bạn"),
     "your_review": MessageLookupByLibrary.simpleMessage("Nhận xét của bạn"),
-    "activity_statistics": MessageLookupByLibrary.simpleMessage("Thống Kê Hoạt Động"),
-    "download_count": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
-    "reading_count": MessageLookupByLibrary.simpleMessage("Đang Đọc"),
-    "bookmark_count": MessageLookupByLibrary.simpleMessage("Đánh Dấu"),
-    "favorite_count": MessageLookupByLibrary.simpleMessage("Yêu Thích"),
-    "share_count": MessageLookupByLibrary.simpleMessage("Chia Sẻ"),
-    "rating_count": MessageLookupByLibrary.simpleMessage("Đánh Giá"),
-    "archived_count": MessageLookupByLibrary.simpleMessage("Lưu Trữ"),
-    "total_interactions": MessageLookupByLibrary.simpleMessage("Tổng Tương Tác"),
   };
 }

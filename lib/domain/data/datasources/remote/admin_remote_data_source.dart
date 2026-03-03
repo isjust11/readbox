@@ -10,7 +10,11 @@ class AdminRemoteDataSource {
   AdminRemoteDataSource({required this.network});
 
   /// Upload ebook file (PDF, EPUB, MOBI)
-  Future<ApiResponse<dynamic>> uploadEbook(File file) async {
+  Future<ApiResponse<dynamic>> uploadEbook(
+    File file, {
+    CancelToken? cancelToken,
+    void Function(int, int)? onSendProgress,
+  }) async {
     String fileName = file.path.split('/').last;
     FormData formData = FormData.fromMap({
       'file': await MultipartFile.fromFile(file.path, filename: fileName),
@@ -23,6 +27,8 @@ class AdminRemoteDataSource {
         responseType: ResponseType.json,
         contentType: 'multipart/form-data',
       ),
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
     );
 
     if (response.isSuccess) {
@@ -32,25 +38,31 @@ class AdminRemoteDataSource {
   }
 
   /// Upload cover image
-  Future<ApiResponse<dynamic>> uploadCoverImage(File file) async {
-      String fileName = file.path.split('/').last;
-      FormData formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(file.path, filename: fileName),
-      });
+  Future<ApiResponse<dynamic>> uploadCoverImage(
+    File file, {
+    CancelToken? cancelToken,
+    void Function(int, int)? onSendProgress,
+  }) async {
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(file.path, filename: fileName),
+    });
 
-      final response = await network.postWithFormData(
-        url: '${ApiConstant.apiHost}${ApiConstant.uploadMedia}',
-        formData: formData,
-        options: Options(
-          responseType: ResponseType.json,
-          contentType: 'multipart/form-data',
-        ),
-      );
+    final response = await network.postWithFormData(
+      url: '${ApiConstant.apiHost}${ApiConstant.uploadMedia}',
+      formData: formData,
+      options: Options(
+        responseType: ResponseType.json,
+        contentType: 'multipart/form-data',
+      ),
+      cancelToken: cancelToken,
+      onSendProgress: onSendProgress,
+    );
 
-      if (response.isSuccess) {
-        return response;
-      }
-      return ApiResponse.error(response.errMessage);
+    if (response.isSuccess) {
+      return response;
+    }
+    return ApiResponse.error(response.errMessage);
   }
 
   /// Create book with uploaded file URLs

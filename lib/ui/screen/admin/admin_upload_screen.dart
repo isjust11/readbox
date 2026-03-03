@@ -390,10 +390,54 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     Navigator.pop(context);
   }
 
+  Future<bool> _onWillPop() async {
+    final cubit = context.read<LibraryCubit>();
+    if (!cubit.isUploading) return true;
+
+    final shouldLeave = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: Text(AppLocalizations.current.confirm),
+        content: Text(
+          'Đang trong quá trình tải lên. Nếu thoát, quá trình sẽ bị hủy. Bạn có chắc muốn thoát?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(AppLocalizations.current.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(ctx).colorScheme.error,
+            ),
+            child: Text(AppLocalizations.current.confirm),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLeave == true) {
+      cubit.cancelUpload();
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final canPop = await _onWillPop();
+        if (canPop && context.mounted) {
+          Navigator.of(context).pop();
+        }
+      },
+      child: Scaffold(
       appBar: AppBar(
         elevation: 0,
         flexibleSpace: Container(
@@ -416,7 +460,12 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           ),
           child: IconButton(
             icon: Icon(Icons.arrow_back_rounded, color: theme.colorScheme.onInverseSurface),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () async {
+              final canPop = await _onWillPop();
+              if (canPop && context.mounted) {
+                Navigator.of(context).pop();
+              }
+            },
           ),
         ),
         title: Row(
@@ -1740,6 +1789,7 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
           },
         ),
       ),
+    ),
     );
   }
 }

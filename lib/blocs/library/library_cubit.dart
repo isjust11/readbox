@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/utils.dart';
@@ -10,12 +11,14 @@ import 'package:readbox/domain/data/datasources/remote/admin_remote_data_source.
 
 class LibraryCubit extends Cubit<BaseState> {
   final AdminRemoteDataSource adminRemoteDataSource;
-    String? _errorUploadEbook;
+  String? _errorUploadEbook;
   String? _errorUploadCoverImage; 
   String? _ebookFileUrl;
   String? _coverImageUrl;
   bool _uploadEbookSuccess = false;
   List<dynamic> _categories = [];
+  CancelToken? _uploadCancelToken;
+  bool _isUploading = false;
 
   String? get ebookFileUrl => _ebookFileUrl;
   String? get coverImageUrl => _coverImageUrl;
@@ -23,6 +26,7 @@ class LibraryCubit extends Cubit<BaseState> {
   String? get errorUploadEbook => _errorUploadEbook;
   String? get errorUploadCoverImage => _errorUploadCoverImage;
   bool get uploadEbookSuccess => _uploadEbookSuccess;
+  bool get isUploading => _isUploading;
   final BookRepository repository;
 
   LibraryCubit({
@@ -145,8 +149,20 @@ class LibraryCubit extends Cubit<BaseState> {
     emit(LoadedState(_categories));
   }
 
+  void cancelUpload() {
+    _uploadCancelToken?.cancel('User cancelled');
+    _uploadCancelToken = null;
+    _isUploading = false;
+    _ebookFileUrl = null;
+    _coverImageUrl = null;
+    emit(InitState());
+  }
+
   Future<void> _uploadEbookInternal(File file) async {
-    final response = await adminRemoteDataSource.uploadEbook(file);
+    final response = await adminRemoteDataSource.uploadEbook(
+      file,
+      cancelToken: _uploadCancelToken,
+    );
     if (response.isSuccess) {
       _ebookFileUrl = response.data['publicRelativePath'];
       return;
@@ -155,7 +171,10 @@ class LibraryCubit extends Cubit<BaseState> {
   }
 
   Future<void> _uploadCoverImageInternal(File file) async {
-    final response = await adminRemoteDataSource.uploadCoverImage(file);
+    final response = await adminRemoteDataSource.uploadCoverImage(
+      file,
+      cancelToken: _uploadCancelToken,
+    );
     if (response.isSuccess) {
       _coverImageUrl = response.data['publicRelativePath'];
       return;
@@ -163,8 +182,6 @@ class LibraryCubit extends Cubit<BaseState> {
     throw Exception(BlocUtils.getMessageError(response.errMessage));
   }
 
-  /// Thực hiện từng bước: upload file → upload ảnh bìa (nếu có) → tạo sách.
-  /// Không tạo file rác vì chỉ upload khi người dùng bấm Tạo.
   Future<void> createBookWithUpload({
     required File ebookFile,
     File? coverImageFile,
@@ -178,12 +195,15 @@ class LibraryCubit extends Cubit<BaseState> {
     bool isPublic = true,
     String? categoryId,
   }) async {
+    _uploadCancelToken = CancelToken();
+    _isUploading = true;
     emit(LoadingState());
     try {
       await _uploadEbookInternal(ebookFile);
       if (coverImageFile != null) {
         await _uploadCoverImageInternal(coverImageFile);
       }
+      _isUploading = false;
       await createBook(
         title: title,
         author: author,
@@ -196,6 +216,8 @@ class LibraryCubit extends Cubit<BaseState> {
         categoryId: categoryId,
       );
     } catch (e) {
+      _isUploading = false;
+      _uploadCancelToken = null;
       _ebookFileUrl = null;
       _coverImageUrl = null;
       emit(ErrorState(BlocUtils.getMessageError(e)));

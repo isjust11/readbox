@@ -241,6 +241,8 @@
   "title" : "Title",
   "author" : "Author",
   "description" : "Description",
+  "read_more" : "Read more",
+  "show_less" : "Show less",
   "publisher" : "Publisher",
   "isbn" : "ISBN",
   "total_pages" : "Total pages",

@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/res.dart';
+
+/// Opacity levels cho text/icon/background theo vai trò
+class _OpacityLevel {
+  static const double secondary = 0.6;   // Text phụ, icon không chọn
+  static const double muted = 0.4;       // Text ít quan trọng
+  static const double disabled = 0.3;    // Empty state, icon placeholder
+  static const double divider = 0.2;     // Handle bar, viền nhạt
+  static const double selectedBg = 0.1;  // Nền item được chọn
+  static const double searchBg = 0.5;    // Nền ô search
+}
 
 class CategoryBottomSheet extends StatefulWidget {
   final List<CategoryModel> categories;
@@ -93,11 +104,11 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
               // Handle bar
               Container(
                 margin: const EdgeInsets.only(top: AppDimens.SIZE_12),
-                width: 40,
-                height: 4,
+                width: AppDimens.SIZE_40,
+                height: AppDimens.SIZE_4,
                 decoration: BoxDecoration(
-                  color: colorScheme.onSurface.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(2),
+                  color: colorScheme.onSurface.withValues(alpha: _OpacityLevel.divider),
+                  borderRadius: BorderRadius.circular(AppDimens.SIZE_2),
                 ),
               ),
 
@@ -114,13 +125,15 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                             AppLocalizations.current.select_category,
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
+                              fontSize: AppSize.fontSizeXLarge,
                               color: colorScheme.onSurface,
                             ),
                           ),
                           Text(
                             '${widget.categories.length} ${AppLocalizations.current.categories}',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurface.withValues(alpha: 0.6),
+                              fontSize: AppSize.fontSizeMedium,
+                              color: colorScheme.onSurface.withValues(alpha: _OpacityLevel.secondary),
                             ),
                           ),
                         ],
@@ -130,7 +143,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                       onPressed: () => Navigator.pop(context),
                       icon: Icon(
                         Icons.close_rounded,
-                        color: colorScheme.onSurface.withValues(alpha: 0.6),
+                        size: AppSize.iconSizeXLarge,
+                        color: colorScheme.onSurface.withValues(alpha: _OpacityLevel.secondary),
                       ),
                     ),
                   ],
@@ -154,13 +168,15 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                     hintText: AppLocalizations.current.search_categories,
                     prefixIcon: Icon(
                       Icons.search_rounded,
+                      size: AppSize.iconSizeXLarge,
                       color: colorScheme.primary,
                     ),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
                             icon: Icon(
                               Icons.clear_rounded,
-                              color: colorScheme.onSurface.withValues(alpha: 0.6),
+                              size: AppSize.iconSizeXLarge,
+                              color: colorScheme.onSurface.withValues(alpha: _OpacityLevel.secondary),
                             ),
                             onPressed: () {
                               _searchController.clear();
@@ -171,7 +187,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                           )
                         : null,
                     filled: true,
-                    fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                    fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: _OpacityLevel.searchBg),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
                       borderSide: BorderSide.none,
@@ -184,12 +200,12 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                 ),
               ),
 
-              const Divider(height: 1),
+              Divider(height: AppDimens.SIZE_1),
 
               // "All Categories" option
               _buildAllCategoriesOption(theme, colorScheme),
 
-              const Divider(height: 1),
+              Divider(height: AppDimens.SIZE_1),
 
               // Categories list
               Flexible(
@@ -244,14 +260,14 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? colorScheme.primary.withValues(alpha: 0.1)
+              ? colorScheme.primary.withValues(alpha: _OpacityLevel.selectedBg)
               : Colors.transparent,
         ),
         child: Row(
           children: [
             Container(
-              width: 48,
-              height: 48,
+              width: AppDimens.SIZE_48,
+              height: AppDimens.SIZE_48,
               decoration: BoxDecoration(
                 color: isSelected
                     ? colorScheme.primary
@@ -260,10 +276,10 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
               ),
               child: Icon(
                 Icons.apps_rounded,
+                size: AppSize.iconSizeXLarge,
                 color: isSelected
                     ? colorScheme.onPrimary
-                    : colorScheme.onSurface.withValues(alpha: 0.6),
-                size: 24,
+                    : colorScheme.onSurface.withValues(alpha: _OpacityLevel.secondary),
               ),
             ),
             const SizedBox(width: AppDimens.SIZE_16),
@@ -274,17 +290,19 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                   Text(
                     AppLocalizations.current.all_categories,
                     style: theme.textTheme.titleMedium?.copyWith(
+                      fontSize: AppSize.fontSizeLarge,
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                       color: isSelected
                           ? colorScheme.primary
                           : colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  SizedBox(height: AppDimens.SIZE_2),
                   Text(
                     AppLocalizations.current.show_all_books,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                      fontSize: AppSize.fontSizeMedium,
+                      color: colorScheme.onSurface.withValues(alpha: _OpacityLevel.secondary),
                     ),
                   ),
                 ],
@@ -293,8 +311,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
             if (isSelected)
               Icon(
                 Icons.check_circle_rounded,
+                size: AppSize.iconSizeXLarge,
                 color: colorScheme.primary,
-                size: 24,
               ),
           ],
         ),
@@ -324,7 +342,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? colorScheme.primary.withValues(alpha: 0.1)
+              ? colorScheme.primary.withValues(alpha: _OpacityLevel.selectedBg)
               : Colors.transparent,
         ),
         child: Row(
@@ -337,7 +355,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                 color: isSelected
                     ? colorScheme.primary
                     : colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
+                borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
               ),
               child: Center(
                 child: _buildCategoryIcon(category, isSelected, colorScheme),
@@ -353,6 +371,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                   Text(
                     category.name ?? '',
                     style: theme.textTheme.titleMedium?.copyWith(
+                      fontSize: AppSize.fontSizeLarge,
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                       color: isSelected
                           ? colorScheme.primary
@@ -361,11 +380,12 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                   ),
                   if (category.description != null &&
                       category.description!.isNotEmpty) ...[
-                    const SizedBox(height: 2),
+                    SizedBox(height: AppDimens.SIZE_2),
                     Text(
                       category.description!,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurface.withValues(alpha: 0.6),
+                        fontSize: AppSize.fontSizeMedium,
+                        color: colorScheme.onSurface.withValues(alpha: _OpacityLevel.secondary),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -379,14 +399,14 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
             if (isSelected)
               Icon(
                 Icons.check_circle_rounded,
+                size: AppSize.iconSizeXLarge,
                 color: colorScheme.primary,
-                size: 24,
               )
             else
               Icon(
                 Icons.circle_outlined,
-                color: colorScheme.onSurface.withValues(alpha: 0.2),
-                size: 24,
+                size: AppSize.iconSizeXLarge,
+                color: colorScheme.onSurface.withValues(alpha: _OpacityLevel.divider),
               ),
           ],
         ),
@@ -405,10 +425,10 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
       if (iconCode != null) {
         return Icon(
           IconData(iconCode, fontFamily: 'MaterialIcons'),
+          size: AppSize.iconSizeXLarge,
           color: isSelected
-              ? colorScheme.onPrimary
-              : colorScheme.onSurface.withValues(alpha: 0.6),
-          size: 24,
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: _OpacityLevel.secondary),
         );
       }
     }
@@ -441,10 +461,10 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
 
     return Icon(
       defaultIcon,
+      size: AppSize.iconSizeXLarge,
       color: isSelected
           ? colorScheme.onPrimary
-          : colorScheme.onSurface.withValues(alpha: 0.6),
-      size: 24,
+          : colorScheme.onSurface.withValues(alpha: _OpacityLevel.secondary),
     );
   }
 
@@ -457,14 +477,15 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
           children: [
             Icon(
               Icons.search_off_rounded,
-              size: 64,
-              color: colorScheme.onSurface.withValues(alpha: 0.3),
+              size: AppDimens.SIZE_60,
+              color: colorScheme.onSurface.withValues(alpha: _OpacityLevel.disabled),
             ),
             const SizedBox(height: AppDimens.SIZE_16),
             Text(
               AppLocalizations.current.no_categories_found,
               style: theme.textTheme.titleMedium?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.6),
+                fontSize: AppSize.fontSizeLarge,
+                color: colorScheme.onSurface.withValues(alpha: _OpacityLevel.secondary),
               ),
               textAlign: TextAlign.center,
             ),
@@ -472,7 +493,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
             Text(
               AppLocalizations.current.try_different_search,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.4),
+                fontSize: AppSize.fontSizeMedium,
+                color: colorScheme.onSurface.withValues(alpha: _OpacityLevel.muted),
               ),
               textAlign: TextAlign.center,
             ),

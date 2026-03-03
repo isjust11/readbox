@@ -150,15 +150,22 @@ class Network {
       Map<String, dynamic> params = const {},
       String contentType = Headers.jsonContentType,
       Options? options,
+      CancelToken? cancelToken,
+      void Function(int, int)? onSendProgress,
       }) async {
     try {
       Response response = await _dio.post(
         url,
         data: formData,
         options: options ?? Options(responseType: ResponseType.bytes, contentType: contentType),
+        cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
       );
       return getApiResponse(response);
     } catch (e) {
+      if (e is DioError && e.type == DioErrorType.cancel) {
+        return ApiResponse.error('Upload đã bị hủy');
+      }
       return getError(e as DioError);
     }
   }

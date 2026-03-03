@@ -259,6 +259,8 @@
    "title" : "Tiêu đề",
    "author" : "Tác giả",
    "description" : "Mô tả",
+  "read_more" : "Xem thêm",
+  "show_less" : "Thu gọn",
    "publisher" : "Nhà xuất bản",
    "isbn" : "ISBN",
    "total_pages" : "Số trang",

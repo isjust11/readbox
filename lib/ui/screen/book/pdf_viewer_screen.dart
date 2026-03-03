@@ -1787,7 +1787,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     if (_userInteractionCubit == null || widget.bookId == null) return;
     if (newPage == _lastSavedPage) return;
     _saveProgressTimer?.cancel();
-    _saveProgressTimer = Timer(const Duration(seconds: 2), () {
+    _saveProgressTimer = Timer(const Duration(seconds: 5), () {
       _saveReadingProgress(newPage);
     });
   }

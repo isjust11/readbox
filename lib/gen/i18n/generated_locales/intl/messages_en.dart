@@ -44,6 +44,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "activationFreePlanSuccess": MessageLookupByLibrary.simpleMessage(
       "Activation free plan successfully",
     ),
+    "activity_statistics": MessageLookupByLibrary.simpleMessage(
+      "Activity Statistics",
+    ),
     "add_archive": MessageLookupByLibrary.simpleMessage("Add archive"),
     "add_book": MessageLookupByLibrary.simpleMessage("Add book"),
     "add_book_to_start_reading": MessageLookupByLibrary.simpleMessage(
@@ -61,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
     "apply_filters": MessageLookupByLibrary.simpleMessage("Apply filters"),
     "archived_books": MessageLookupByLibrary.simpleMessage("Archived books"),
+    "archived_count": MessageLookupByLibrary.simpleMessage("Archived"),
     "areYouSureYouWantToDeleteAllNotifications":
         MessageLookupByLibrary.simpleMessage(
           "Are you sure you want to delete all notifications?",
@@ -142,6 +146,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "book_will_be_displayed_for_everyone": MessageLookupByLibrary.simpleMessage(
       "Book will be displayed for everyone",
     ),
+    "bookmark_count": MessageLookupByLibrary.simpleMessage("Bookmarks"),
     "books": MessageLookupByLibrary.simpleMessage("books"),
     "books_already_exist": MessageLookupByLibrary.simpleMessage(
       "books already exist",
@@ -258,6 +263,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disagree": MessageLookupByLibrary.simpleMessage("Disagree"),
     "done": MessageLookupByLibrary.simpleMessage("Done"),
+    "download_count": MessageLookupByLibrary.simpleMessage("Downloads"),
     "editProfile": MessageLookupByLibrary.simpleMessage("Edit profile"),
     "edit_book": MessageLookupByLibrary.simpleMessage("Edit book"),
     "edit_book_failed": MessageLookupByLibrary.simpleMessage(
@@ -346,6 +352,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "fast": MessageLookupByLibrary.simpleMessage("Fast"),
     "favorite_books": MessageLookupByLibrary.simpleMessage("Favorite books"),
+    "favorite_count": MessageLookupByLibrary.simpleMessage("Favorites"),
     "fcmToken": MessageLookupByLibrary.simpleMessage("FCM Token"),
     "feedback": MessageLookupByLibrary.simpleMessage("Feedback"),
     "feedbackAnonymous": MessageLookupByLibrary.simpleMessage(
@@ -924,6 +931,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "rate_and_review": MessageLookupByLibrary.simpleMessage("Rate & Review"),
     "rate_this_book": MessageLookupByLibrary.simpleMessage("Rate this book"),
+    "rating_count": MessageLookupByLibrary.simpleMessage("Ratings"),
     "rating_submission_failed": MessageLookupByLibrary.simpleMessage(
       "Rating submission failed",
     ),
@@ -932,11 +940,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "read": MessageLookupByLibrary.simpleMessage("Read"),
     "read_book": MessageLookupByLibrary.simpleMessage("Read book"),
+    "read_more": MessageLookupByLibrary.simpleMessage("Read more"),
     "readingReminders": MessageLookupByLibrary.simpleMessage(
       "Reading Reminders",
     ),
     "readingSpeed": MessageLookupByLibrary.simpleMessage("Reading speed"),
     "reading_books": MessageLookupByLibrary.simpleMessage("Reading books"),
+    "reading_count": MessageLookupByLibrary.simpleMessage("Reading"),
     "reading_progress": MessageLookupByLibrary.simpleMessage(
       "Reading progress",
     ),
@@ -1028,6 +1038,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "shareYourThoughts": MessageLookupByLibrary.simpleMessage(
       "Share your thoughts",
     ),
+    "share_count": MessageLookupByLibrary.simpleMessage("Shares"),
     "showBadge": MessageLookupByLibrary.simpleMessage("Show badge on app icon"),
     "showPreview": MessageLookupByLibrary.simpleMessage(
       "Show content on lock screen",
@@ -1035,6 +1046,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "show_all_books": MessageLookupByLibrary.simpleMessage(
       "Show all books from all categories",
     ),
+    "show_less": MessageLookupByLibrary.simpleMessage("Show less"),
     "size": MessageLookupByLibrary.simpleMessage("Size"),
     "slow": MessageLookupByLibrary.simpleMessage("Slow"),
     "start_reading": MessageLookupByLibrary.simpleMessage("Start reading"),
@@ -1128,6 +1140,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "tools_word_to_pdf": MessageLookupByLibrary.simpleMessage("Word to PDF"),
     "tools_word_to_pdf_description": MessageLookupByLibrary.simpleMessage(
       "Convert Word documents to PDF",
+    ),
+    "total_interactions": MessageLookupByLibrary.simpleMessage(
+      "Total Interactions",
     ),
     "total_pages": MessageLookupByLibrary.simpleMessage("Total pages"),
     "total_ratings": m7,
@@ -1283,14 +1298,5 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "your_rating": MessageLookupByLibrary.simpleMessage("Your rating"),
     "your_review": MessageLookupByLibrary.simpleMessage("Your review"),
-    "activity_statistics": MessageLookupByLibrary.simpleMessage("Activity Statistics"),
-    "download_count": MessageLookupByLibrary.simpleMessage("Downloads"),
-    "reading_count": MessageLookupByLibrary.simpleMessage("Reading"),
-    "bookmark_count": MessageLookupByLibrary.simpleMessage("Bookmarks"),
-    "favorite_count": MessageLookupByLibrary.simpleMessage("Favorites"),
-    "share_count": MessageLookupByLibrary.simpleMessage("Shares"),
-    "rating_count": MessageLookupByLibrary.simpleMessage("Ratings"),
-    "archived_count": MessageLookupByLibrary.simpleMessage("Archived"),
-    "total_interactions": MessageLookupByLibrary.simpleMessage("Total Interactions"),
   };
 }

@@ -2264,6 +2264,16 @@ class AppLocalizations {
     return Intl.message('Mô tả', name: 'description', desc: '', args: []);
   }
 
+  /// `Xem thêm`
+  String get read_more {
+    return Intl.message('Xem thêm', name: 'read_more', desc: '', args: []);
+  }
+
+  /// `Thu gọn`
+  String get show_less {
+    return Intl.message('Thu gọn', name: 'show_less', desc: '', args: []);
+  }
+
   /// `Nhà xuất bản`
   String get publisher {
     return Intl.message('Nhà xuất bản', name: 'publisher', desc: '', args: []);
@@ -5626,12 +5636,22 @@ class AppLocalizations {
 
   /// `Thống Kê Hoạt Động`
   String get activity_statistics {
-    return Intl.message('Thống Kê Hoạt Động', name: 'activity_statistics', desc: '', args: []);
+    return Intl.message(
+      'Thống Kê Hoạt Động',
+      name: 'activity_statistics',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Tải Xuống`
   String get download_count {
-    return Intl.message('Tải Xuống', name: 'download_count', desc: '', args: []);
+    return Intl.message(
+      'Tải Xuống',
+      name: 'download_count',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Đang Đọc`
@@ -5646,7 +5666,12 @@ class AppLocalizations {
 
   /// `Yêu Thích`
   String get favorite_count {
-    return Intl.message('Yêu Thích', name: 'favorite_count', desc: '', args: []);
+    return Intl.message(
+      'Yêu Thích',
+      name: 'favorite_count',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Chia Sẻ`
@@ -5666,7 +5691,12 @@ class AppLocalizations {
 
   /// `Tổng Tương Tác`
   String get total_interactions {
-    return Intl.message('Tổng Tương Tác', name: 'total_interactions', desc: '', args: []);
+    return Intl.message(
+      'Tổng Tương Tác',
+      name: 'total_interactions',
+      desc: '',
+      args: [],
+    );
   }
 }
 

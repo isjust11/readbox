@@ -3,6 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
 class Common {
+
+  static double formatNumberToPercentage(num number) {
+    return double.parse(number.toString()) * 100;
+  }
+
   static DateTime? parserDate(String? date, {String? format}) {
     try {
       if (format == null) {
