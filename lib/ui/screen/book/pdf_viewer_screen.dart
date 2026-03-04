@@ -1060,7 +1060,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                     //   "bookmark",
                                     //   Colors.teal,
                                     // ),
-                                    if (isOwner)
+                                    if (isOwner || _isLocal)
                                       _buildMenuItem(
                                         'share',
                                         Icons.share_rounded,

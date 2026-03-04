@@ -6,11 +6,6 @@ class UserSubscriptionRepository {
 
   UserSubscriptionRepository({required this.remoteDataSource});
 
-  Future<UserSubscriptionModel> getMe() async {
-    try {
-      return await remoteDataSource.getMe();
-    } catch (e) {
-      throw Exception('Failed to get user subscription me: $e');
-    }
-  }
+  Future<UserSubscriptionModel> getMe() async 
+    => await remoteDataSource.getMe();
 }

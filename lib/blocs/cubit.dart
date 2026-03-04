@@ -14,6 +14,6 @@ export 'notification/notification_cubit.dart';
 export 'user_interaction_cubit.dart';
 export 'category_cubit.dart';
 export 'converter/converter_cubit.dart';
-export 'subscription_plan/subscription_plan_cubit.dart';
+export 'subscription/subscription_plan_cubit.dart';
 export 'payment/payment_cubit.dart';
 export 'user_subscription_cubit.dart';

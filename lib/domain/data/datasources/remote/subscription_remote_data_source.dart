@@ -41,4 +41,15 @@ class SubscriptionRemoteDataSource {
     }
     return Future.error(apiResponse.errMessage);
   }
+  /// Kiểm tra quota (TTS / convert / storage) - dùng cho app trước khi gọi TTS/convert
+  Future<Map<String, bool>> checkUsage() async {
+    final url = '${ApiConstant.apiHost}${ApiConstant.subscriptionUsageCheck}';
+    final ApiResponse apiResponse = await network.get(
+      url: url,
+    );
+    if (apiResponse.isSuccess && apiResponse.data != null) {
+      return Map<String, bool>.from(apiResponse.data as Map);
+    }
+    return Future.error(apiResponse.errMessage);
+  }
 }

@@ -7,7 +7,8 @@ enum InteractionType {
   rating('rating'),
   archived('archived'),
   share('share'),
-  tts('tts');
+  tts('tts'),
+  convert('convert');
 
 
   const InteractionType(this.value);

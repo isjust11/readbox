@@ -6,19 +6,13 @@ class SubscriptionRepository {
 
   SubscriptionRepository({required this.remoteDataSource});
 
-  Future<List<SubscriptionPlanModel>> getPlans({bool activeOnly = true}) async {
-    try {
-      return await remoteDataSource.getPlans(activeOnly: activeOnly);
-    } catch (e) {
-      throw Exception('Failed to get subscription plans: $e');
-    }
-  }
+  Future<List<SubscriptionPlanModel>> getPlans({bool activeOnly = true}) async 
+    => await remoteDataSource.getPlans(activeOnly: activeOnly);
 
-  Future<UserSubscriptionModel> createSubscriptionPlan(String planId) async {
-    try {
-      return await remoteDataSource.createSubscriptionPlan(planId);
-    } catch (e) {
-      throw Exception('Failed to create subscription plan: $e');
-    }
-  }
+  Future<UserSubscriptionModel> createSubscriptionPlan(String planId) async 
+    => await remoteDataSource.createSubscriptionPlan(planId);
+  
+
+  Future<Map<String, bool>> checkUsage() async 
+    => await remoteDataSource.checkUsage();
 }

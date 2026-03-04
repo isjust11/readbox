@@ -28,5 +28,15 @@ class SubscriptionPlanCubit extends Cubit<BaseState> {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
+
+  Future<void> checkUsage() async {
+    try {
+      emit(LoadingState());
+      final usage = await repository.checkUsage();
+      emit(LoadedState<Map<String, bool>>(usage));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
 }
 

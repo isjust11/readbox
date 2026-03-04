@@ -694,5 +694,14 @@
   "rating_count": "Đánh Giá",
   "archived_count": "Lưu Trữ",
   "total_interactions": "Tổng Tương Tác",
-  "characters": "ký tự"
+  "characters": "ký tự",
+  "tools_word_to_pdf_not_available": "Bạn đã hết lượt sử dụng chuyển đổi tài liệu Word sang PDF miễn phí",
+  "tools_word_to_pdf_not_available_description": "Vui lòng nâng cấp gói để sử dụng chuyển đổi tài liệu Word sang PDF",
+  "upgrade_now": "Nâng cấp",
+  "upgrade_to_premium_to_use_this_feature": "Nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF",
+  "upgrade_to_premium_to_use_this_feature_description": "Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF",
+  "upgrade_to_premium_to_use_this_feature_button": "Nâng cấp ngay",
+  "upgrade_to_premium_to_use_this_feature_button_description": "Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF",
+  "upgrade_to_premium_to_use_this_feature_button_description_description": "Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF",
+  "upgrade_to_premium_to_use_this_feature_button_description_description_description": "Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF"
 }
