@@ -1979,4 +1979,43 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get total_interactions => 'Tổng Tương Tác';
+
+  @override
+  String get characters => 'ký tự';
+
+  @override
+  String get tools_word_to_pdf_not_available =>
+      'Bạn đã hết lượt sử dụng chuyển đổi tài liệu Word sang PDF miễn phí';
+
+  @override
+  String get tools_word_to_pdf_not_available_description =>
+      'Vui lòng nâng cấp gói để sử dụng chuyển đổi tài liệu Word sang PDF';
+
+  @override
+  String get upgrade_now => 'Nâng cấp';
+
+  @override
+  String get upgrade_to_premium_to_use_this_feature =>
+      'Nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF';
+
+  @override
+  String get upgrade_to_premium_to_use_this_feature_description =>
+      'Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF';
+
+  @override
+  String get upgrade_to_premium_to_use_this_feature_button => 'Nâng cấp ngay';
+
+  @override
+  String get upgrade_to_premium_to_use_this_feature_button_description =>
+      'Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF';
+
+  @override
+  String
+  get upgrade_to_premium_to_use_this_feature_button_description_description =>
+      'Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF';
+
+  @override
+  String
+  get upgrade_to_premium_to_use_this_feature_button_description_description_description =>
+      'Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF';
 }

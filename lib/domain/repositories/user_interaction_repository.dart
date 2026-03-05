@@ -7,11 +7,9 @@ class UserInteractionRepository {
 
   UserInteractionRepository({required this.remoteDataSource});
 
-  Future<UserInteractionModel> updateInteractionAction({
-    required InteractionTarget targetType,
-    required dynamic targetId,
-    required InteractionType actionType,
-  }) => remoteDataSource.updateInteractionAction(targetType: targetType, targetId: targetId, actionType: actionType);
+  Future<void> incrementUsage({
+    required IncrementUsageModel usage,
+  }) => remoteDataSource.incrementUsage(usage: usage);
 
   Future<UserInteractionModel> toggleFavorite({
     required String targetType,

@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -16,7 +17,6 @@ import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-import 'package:readbox/utils/pdf_drawing_service.dart';
 import 'package:readbox/utils/pdf_text_extractor.dart';
 import 'package:readbox/utils/shared_preference.dart';
 import 'package:readbox/utils/tts_lock_screen_controller.dart';
@@ -50,6 +50,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   int _totalPages = 0;
   bool _isLocal = false;
   Uint8List? _pdfBytes;
+  Map<String, bool>? _actionStatus = {};
   bool _isVisibleToolAction = false;
   PdfTextSearchResult? _searchResult;
   VoidCallback? _searchResultListener;
@@ -82,27 +83,22 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   int _accumulatedReadingTime = 0;
   Timer? _readingTimeTimer;
 
-  // Vẽ & Ghi chú
-  bool _isDrawMode = false;
-  List<List<Offset>> _currentPageStrokes = [];
-  Map<int, List<List<Offset>>> _allDrawStrokes = {};
-  List<Offset> _currentStroke = [];
-  Color _drawColor = Colors.red;
-  final double _strokeWidth = 3.0;
-  List<Map<String, dynamic>> _notes = [];
-  Size _drawOverlaySize = Size.zero;
-
   bool get isEnableAction => _error == null;
   UserModel? _currentUser;
-
-  bool get _hasDrawingsForCurrentPage =>
-      (_allDrawStrokes[_currentPage]?.isNotEmpty ?? false) && !_isDrawMode;
 
   @override
   void initState() {
     super.initState();
     _loadCurrentUser();
     _checkInternetConnection();
+    context.read<SubscriptionPlanCubit>().checkUsage();
+    context.read<SubscriptionPlanCubit>().stream.listen((state) {
+      if (state is LoadedState<Map<String, bool>>) {
+        setState(() {
+          _actionStatus = state.data;
+        });
+      }
+    });
     final file = File(widget.fileUrl);
     _isLocal = file.existsSync();
     if (_isLocal) {
@@ -126,8 +122,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     if (_isLocal) {
       _loadLocalBytesForTts();
     }
-    _loadDrawings();
-    _loadNotes();
   }
 
   void _loadCurrentUser() {
@@ -210,10 +204,22 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       // Tải PDF từ server (nếu chưa có bytes trong bộ nhớ)
       final bytes = _pdfBytes ?? await _downloadPdf();
 
-      // Lưu vào thư mục Downloads (Android)
-      final downloadsDir = Directory('/storage/emulated/0/Download');
-      if (!await downloadsDir.exists()) {
-        await downloadsDir.create(recursive: true);
+      // Lưu file: Android dùng Downloads công khai, iOS dùng Documents của app
+      final Directory downloadsDir;
+      if (Platform.isAndroid) {
+        final dir = Directory('/storage/emulated/0/Download');
+        if (!await dir.exists()) {
+          await dir.create(recursive: true);
+        }
+        downloadsDir = dir;
+      } else {
+        // iOS và các nền tảng khác: sandbox Documents (truy cập qua Files app)
+        final appDir = await getApplicationDocumentsDirectory();
+        final dir = Directory(path.join(appDir.path, 'Downloads'));
+        if (!await dir.exists()) {
+          await dir.create(recursive: true);
+        }
+        downloadsDir = dir;
       }
 
       final baseName = path.basename(widget.fileUrl);
@@ -230,14 +236,18 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       if (!mounted) return;
       AppSnackBar.show(
         context,
-        message: '${AppLocalizations.current.tools_saved_successfully} ${file.path}',
+        message:
+            AppLocalizations.current.tools_saved_successfully,
         snackBarType: SnackBarType.success,
       );
+      // save file to local library
+      if (!await SharedPreferenceUtil.isBookAdded(file.path)) {
+        await SharedPreferenceUtil.addLocalBook(file.path);
+      }
+
       // update interaction action for download
-      context.read<UserInteractionCubit>().updateInteractionAction(
-        targetType: InteractionTarget.book,
-        actionType: InteractionType.download,
-        targetId: widget.bookId,
+      context.read<UserInteractionCubit>().incrementUsage(
+        usage: IncrementUsageModel(downloadCount: 1),
       );
     } catch (e) {
       if (!mounted) return;
@@ -285,16 +295,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
   void _onPageChanged(PdfPageChangedDetails details) {
     final page = details.newPageNumber;
-    if (_isDrawMode) {
-      _saveCurrentPageDrawings();
-    }
     setState(() {
       _currentPage = page;
-      if (_isDrawMode) {
-        _currentPageStrokes =
-            _allDrawStrokes[page]?.map((s) => List<Offset>.from(s)).toList() ??
-            [];
-      }
     });
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, page);
     _onServerPageChanged(page);
@@ -326,6 +328,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         });
         break;
       case 'read_continuous_ebook':
+        if (!(_actionStatus?['canUseTts'] ?? false)) {
+          return;
+        }
         setState(() {
           _isVisibleToolAction = !_isVisibleToolAction;
         });
@@ -333,96 +338,22 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         _readContinuousEbook();
         break;
       case 'download':
+        if (!(_actionStatus?['canUseDownload'] ?? false)) {
+          return;
+        }
         _downloadAndSavePdf();
         break;
       case 'share':
+        if (!(_actionStatus?['canUseShare'] ?? false)) {
+          return;
+        }
         _shareEbook();
         break;
       case 'bookmark':
         // show bookmark list
         // _showBookmarkList();
         break;
-      case 'draw':
-        setState(() {
-          _isDrawMode = !_isDrawMode;
-          if (_isDrawMode) {
-            _currentPageStrokes =
-                _allDrawStrokes[_currentPage]
-                    ?.map((s) => List<Offset>.from(s))
-                    .toList() ??
-                [];
-          } else {
-            _saveCurrentPageDrawings();
-            _persistDrawings();
-          }
-        });
-        break;
-      case 'notes':
-        _showNotesList();
-        break;
     }
-  }
-
-  Future<void> _loadDrawings() async {
-    final data = await SharedPreferenceUtil.getPdfDrawings(widget.fileUrl);
-    if (data != null) {
-      final map = <int, List<List<Offset>>>{};
-      for (final e in data.entries) {
-        final page = int.tryParse(e.key.toString());
-        if (page != null && e.value is List) {
-          final strokes = <List<Offset>>[];
-          for (final s in e.value as List) {
-            if (s is List) {
-              strokes.add(
-                s
-                    .map(
-                      (p) => Offset(
-                        (p is Map && p['x'] != null)
-                            ? (p['x'] as num).toDouble()
-                            : 0,
-                        (p is Map && p['y'] != null)
-                            ? (p['y'] as num).toDouble()
-                            : 0,
-                      ),
-                    )
-                    .toList(),
-              );
-            }
-          }
-          map[page] = strokes;
-        }
-      }
-      if (mounted) setState(() => _allDrawStrokes = map);
-    }
-  }
-
-  void _saveCurrentPageDrawings() {
-    if (_currentPageStrokes.isNotEmpty) {
-      _allDrawStrokes[_currentPage] =
-          _currentPageStrokes.map((s) => List<Offset>.from(s)).toList();
-    }
-  }
-
-  Future<void> _persistDrawings() async {
-    final map = <String, dynamic>{};
-    for (final e in _allDrawStrokes.entries) {
-      map['${e.key}'] =
-          e.value
-              .map(
-                (stroke) => stroke.map((p) => {'x': p.dx, 'y': p.dy}).toList(),
-              )
-              .toList();
-    }
-    await SharedPreferenceUtil.savePdfDrawings(widget.fileUrl, map);
-  }
-
-  Future<void> _loadNotes() async {
-    final list = await SharedPreferenceUtil.getPdfNotes(widget.fileUrl);
-    if (mounted) setState(() => _notes = list);
-  }
-
-  Future<void> _saveNotes() async {
-    await SharedPreferenceUtil.savePdfNotes(widget.fileUrl, _notes);
   }
 
   /// Chia sẻ ebook qua mạng xã hội, messaging, email...
@@ -453,9 +384,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         if (!mounted) return;
         AppSnackBar.show(
           context,
-          message: _isLocal
-              ? AppLocalizations.current.pdf_share_file_not_found
-              : AppLocalizations.current.pdf_share_wait_download,
+          message:
+              _isLocal
+                  ? AppLocalizations.current.pdf_share_file_not_found
+                  : AppLocalizations.current.pdf_share_wait_download,
           snackBarType: SnackBarType.warning,
         );
         return;
@@ -477,10 +409,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           snackBarType: SnackBarType.success,
         );
         // update interaction action for share
-        context.read<UserInteractionCubit>().updateInteractionAction(
-          targetType: InteractionTarget.book,
-          actionType: InteractionType.share,
-          targetId: widget.bookId,
+        context.read<UserInteractionCubit>().incrementUsage(
+          usage: IncrementUsageModel(shareCount: 1),
         );
       }
     } catch (e) {
@@ -548,10 +478,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         await _ttsService.speak(pageText);
         // update tts interaction count
         if (mounted) {
-         context.read<UserInteractionCubit>().updateInteractionAction(
-            targetType: InteractionTarget.book,
-            actionType: InteractionType.tts,
-            targetId: widget.bookId,
+          context.read<UserInteractionCubit>().incrementUsage(
+            usage: IncrementUsageModel(ttsCount: pageText.length),
           );
         }
       } else {
@@ -581,8 +509,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     String value,
     IconData icon,
     String text,
-    Color color,
-  ) {
+    Color color, {
+    bool? isEnabled = true,
+  }) {
     return PopupMenuItem(
       value: value,
       child: Row(
@@ -593,10 +522,17 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: color, size: 20),
+            child: Icon(
+              icon,
+              color: isEnabled ?? false ? color : Colors.grey,
+              size: 20,
+            ),
           ),
           SizedBox(width: 12),
-          Text(text),
+          Text(
+            text,
+            style: TextStyle(color: isEnabled ?? false ? color : Colors.grey),
+          ),
         ],
       ),
     );
@@ -604,10 +540,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
   @override
   void dispose() {
-    if (_isDrawMode) {
-      _saveCurrentPageDrawings();
-      _persistDrawings();
-    }
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, _currentPage);
     _ttsService.stop();
     TtsLockScreenController.instance.stop();
@@ -1008,77 +940,86 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                     _visibleAppbarToolAction
                         ? _buildAppBarToolActions()
                         : [
-                         isEnableAction ? Container(
-                            margin: EdgeInsets.only(
-                              right: 8,
-                              top: 8,
-                              bottom: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: PopupMenuButton<String>(
-                              icon: Icon(
-                                Icons.more_vert_rounded,
-                                color: Colors.white,
-                              ),
-                              onSelected: _handleMenuAction,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              itemBuilder:
-                                  (BuildContext context) => [
-                                    _buildMenuItem(
-                                      'search',
-                                      Icons.search_rounded,
-                                      AppLocalizations.current.search,
-                                      Colors.teal,
-                                    ),
-                                    _buildMenuItem(
-                                      'zoom_in_out',
-                                      Icons.zoom_in,
-                                      AppLocalizations.current.pdf_zoom_in_out,
-                                      Colors.blue,
-                                    ),
-                                    _buildMenuItem(
-                                      'toolbar',
-                                      Icons.settings_overscan_rounded,
-                                      AppLocalizations.current.pdf_toolbar,
-                                      Colors.grey,
-                                    ),
-                                    if (_hasInternet)
-                                      _buildMenuItem(
-                                        'read_continuous_ebook',
-                                        Icons.play_circle_outline,
-                                        AppLocalizations.current.pdf_read_ebook,
-                                        Colors.teal,
-                                      ),
-                                    // _buildMenuItem(
-                                    //   'bookmark',
-                                    //   Icons.bookmark_rounded,
-                                    //   "bookmark",
-                                    //   Colors.teal,
-                                    // ),
-                                    if (isOwner || _isLocal)
-                                      _buildMenuItem(
-                                        'share',
-                                        Icons.share_rounded,
-                                        AppLocalizations.current.pdf_share,
-                                        Colors.blue,
-                                      )
-                                    else
-                                      _buildMenuItem(
-                                        'download',
-                                        Icons.download_rounded,
-                                        AppLocalizations
-                                            .current.tools_save_as_pdf,
-                                        Colors.blue,
-                                      ),
-                                   
-                                  ],
-                            ),
-                          ) : SizedBox(),
+                          isEnableAction
+                              ? Container(
+                                margin: EdgeInsets.only(
+                                  right: 8,
+                                  top: 8,
+                                  bottom: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: PopupMenuButton<String>(
+                                  icon: Icon(
+                                    Icons.more_vert_rounded,
+                                    color: Colors.white,
+                                  ),
+                                  onSelected: _handleMenuAction,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  itemBuilder:
+                                      (BuildContext context) => [
+                                        _buildMenuItem(
+                                          'search',
+                                          Icons.search_rounded,
+                                          AppLocalizations.current.search,
+                                          Colors.blue,
+                                        ),
+                                        _buildMenuItem(
+                                          'zoom_in_out',
+                                          Icons.zoom_in,
+                                          AppLocalizations
+                                              .current
+                                              .pdf_zoom_in_out,
+                                          Colors.blue,
+                                        ),
+                                        _buildMenuItem(
+                                          'toolbar',
+                                          Icons.settings_overscan_rounded,
+                                          AppLocalizations.current.pdf_toolbar,
+                                          Colors.blue,
+                                        ),
+                                        if (_hasInternet)
+                                          _buildMenuItem(
+                                            'read_continuous_ebook',
+                                            Icons.play_circle_outline,
+                                            AppLocalizations
+                                                .current
+                                                .pdf_read_ebook,
+                                            Colors.blue,
+                                            isEnabled:
+                                                _actionStatus?['canUseTts'] ??
+                                                false,
+                                          ),
+                                        if (isOwner || _isLocal)
+                                          _buildMenuItem(
+                                            'share',
+                                            Icons.share_rounded,
+                                            AppLocalizations.current.pdf_share,
+                                            Colors.blue,
+                                            isEnabled:
+                                                _actionStatus?['canUseShare'] ??
+                                                false,
+                                          )
+                                        else
+                                          _buildMenuItem(
+                                            'download',
+                                            Icons.download_rounded,
+                                            AppLocalizations
+                                                .current
+                                                .tools_save_as_pdf,
+                                            Colors.blue,
+                                            isEnabled:
+                                                _actionStatus?['canUseDownload'] ??
+                                                false,
+                                          ),
+                                      ],
+                                ),
+                              )
+                              : SizedBox(),
                         ],
               )
               : null,
@@ -1089,7 +1030,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                   SizedBox(height: 16),
                   Text(
                     AppLocalizations.current.pdf_cannot_load,
@@ -1108,22 +1053,17 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   ElevatedButton(
                     onPressed: _isLocal ? null : () => _loadFromNetwork(),
                     child: Text(AppLocalizations.current.retry),
-                  )
+                  ),
                 ],
               ),
             )
           else if (showViewer)
             Stack(
               children: [
-                IgnorePointer(
-                  ignoring: _isDrawMode,
-                  child:
-                      _pdfBytes != null
-                          ? _buildPdfViewerFromMemory()
-                          : _buildPdfViewer(),
-                ),
-                if (_hasDrawingsForCurrentPage || _isDrawMode)
-                  _buildDrawingOverlay(),
+                // Không bọc IgnorePointer vì sẽ chặn scroll và tương tác của PDF
+                _pdfBytes != null
+                    ? _buildPdfViewerFromMemory()
+                    : _buildPdfViewer(),
               ],
             ),
           if (_isLoading)
@@ -1511,7 +1451,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     });
 
     final originalHandler = _ttsService.onSpeechWordProgress;
-    _ttsService.onSpeechWordProgress = (String t, int start, int end, String word) {
+    _ttsService.onSpeechWordProgress = (
+      String t,
+      int start,
+      int end,
+      String word,
+    ) {
       if (!mounted) return;
       final realStart = start + offset;
       final realEnd = end + offset;
@@ -1573,22 +1518,34 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.record_voice_over, color: theme.primaryColor, size: 20),
+                    Icon(
+                      Icons.record_voice_over,
+                      color: theme.primaryColor,
+                      size: 20,
+                    ),
                     SizedBox(width: 8),
                     Text(
                       AppLocalizations.current.pdf_reading,
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: theme.primaryColor),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                        color: theme.primaryColor,
+                      ),
                     ),
                     Spacer(),
                     if (len > 0)
                       Text(
                         '${(progress * 100).toInt()}%',
-                        style: TextStyle(fontSize: 12, color: theme.primaryColor.withValues(alpha: 0.7)),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: theme.primaryColor.withValues(alpha: 0.7),
+                        ),
                       ),
                     SizedBox(width: 4),
                     IconButton(
                       icon: Icon(Icons.close, size: 20),
-                      onPressed: () => setState(() => _showTtsReadingPanel = false),
+                      onPressed:
+                          () => setState(() => _showTtsReadingPanel = false),
                       padding: EdgeInsets.zero,
                       constraints: BoxConstraints(minWidth: 32, minHeight: 32),
                     ),
@@ -1604,7 +1561,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                     thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
                     overlayShape: RoundSliderOverlayShape(overlayRadius: 14),
                     activeTrackColor: theme.primaryColor,
-                    inactiveTrackColor: theme.primaryColor.withValues(alpha: 0.15),
+                    inactiveTrackColor: theme.primaryColor.withValues(
+                      alpha: 0.15,
+                    ),
                     thumbColor: theme.primaryColor,
                   ),
                   child: Slider(
@@ -1639,13 +1598,21 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: _ttsService.isSpeaking ? Colors.red.withValues(alpha: 0.1) : theme.primaryColor.withValues(alpha: 0.1),
+                        color:
+                            _ttsService.isSpeaking
+                                ? Colors.red.withValues(alpha: 0.1)
+                                : theme.primaryColor.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
                         icon: Icon(
-                          _ttsService.isSpeaking ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                          color: _ttsService.isSpeaking ? Colors.red : theme.primaryColor,
+                          _ttsService.isSpeaking
+                              ? Icons.pause_rounded
+                              : Icons.play_arrow_rounded,
+                          color:
+                              _ttsService.isSpeaking
+                                  ? Colors.red
+                                  : theme.primaryColor,
                           size: 28,
                         ),
                         onPressed: () async {
@@ -1690,18 +1657,28 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                     textAlign: TextAlign.left,
                     textDirection: TextDirection.ltr,
                     text: TextSpan(
-                      style: TextStyle(fontSize: 15, height: 1.6, color: theme.colorScheme.onSurface),
+                      style: TextStyle(
+                        fontSize: 15,
+                        height: 1.6,
+                        color: theme.colorScheme.onSurface,
+                      ),
                       children: [
                         if (start > 0)
                           TextSpan(
                             text: text.substring(0, start),
-                            style: TextStyle(color: theme.colorScheme.onSurface.withValues(alpha: 0.4)),
+                            style: TextStyle(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.4,
+                              ),
+                            ),
                           ),
                         if (hasHighlight)
                           TextSpan(
                             text: text.substring(start, end),
                             style: TextStyle(
-                              backgroundColor: theme.primaryColor.withValues(alpha: 0.3),
+                              backgroundColor: theme.primaryColor.withValues(
+                                alpha: 0.3,
+                              ),
                               fontWeight: FontWeight.w600,
                               color: theme.primaryColor,
                             ),
@@ -1743,9 +1720,19 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 22, color: theme.colorScheme.onSurface.withValues(alpha: 0.7)),
+            Icon(
+              icon,
+              size: 22,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
             SizedBox(height: 2),
-            Text(label, style: TextStyle(fontSize: 10, color: theme.colorScheme.onSurface.withValues(alpha: 0.5))),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+            ),
           ],
         ),
       ),
@@ -1850,393 +1837,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         totalReadingTime > _accumulatedReadingTime) {
       await _saveReadingProgress(_currentPage);
     }
-  }
-
-  Future<void> _embedDrawingsIntoPdfAndSave() async {
-    if (_allDrawStrokes.isEmpty) return;
-    if (_drawOverlaySize.width <= 0 || _drawOverlaySize.height <= 0) return;
-
-    Uint8List? pdfBytesToUse = _pdfBytes;
-    if (_isLocal && pdfBytesToUse == null) {
-      final file = File(widget.fileUrl);
-      if (await file.exists()) {
-        pdfBytesToUse = await file.readAsBytes();
-      }
-    }
-    if (pdfBytesToUse == null || pdfBytesToUse.isEmpty) return;
-
-    final newBytes = await PdfDrawingService.embedDrawings(
-      pdfBytes: pdfBytesToUse,
-      strokesByPage: _allDrawStrokes,
-      overlaySize: _drawOverlaySize,
-      strokeColor: _drawColor,
-      strokeWidth: _strokeWidth,
-    );
-
-    if (newBytes == null || !mounted) return;
-
-    setState(() {
-      _pdfBytes = newBytes;
-      _allDrawStrokes = {};
-      _currentPageStrokes = [];
-    });
-    await _persistDrawings();
-
-    if (_isLocal) {
-      try {
-        await File(widget.fileUrl).writeAsBytes(newBytes);
-      } catch (_) {}
-    }
-
-    if (mounted) {
-      AppSnackBar.show(
-        context,
-        message: AppLocalizations.current.pdf_drawings_saved,
-        snackBarType: SnackBarType.success,
-      );
-    }
-  }
-
-  Widget _buildDrawingOverlay() {
-    final strokesToShow =
-        _isDrawMode
-            ? [
-              ..._currentPageStrokes,
-              if (_currentStroke.isNotEmpty) _currentStroke,
-            ]
-            : _allDrawStrokes[_currentPage] ?? [];
-    final colorToShow = _isDrawMode ? _drawColor : Colors.red;
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final overlaySize = constraints.biggest;
-        if (_isDrawMode && overlaySize != Size.zero) {
-          _drawOverlaySize = overlaySize;
-        }
-        return Stack(
-          children: [
-            Positioned.fill(
-              child:
-                  _isDrawMode
-                      ? GestureDetector(
-                        onPanStart: (d) {
-                          setState(() {
-                            _currentStroke = [d.localPosition];
-                          });
-                        },
-                        onPanUpdate: (d) {
-                          setState(() {
-                            _currentStroke.add(d.localPosition);
-                          });
-                        },
-                        onPanEnd: (_) {
-                          if (_currentStroke.length > 1) {
-                            setState(() {
-                              _currentPageStrokes.add(
-                                List<Offset>.from(_currentStroke),
-                              );
-                              _currentStroke = [];
-                            });
-                          } else {
-                            setState(() => _currentStroke = []);
-                          }
-                        },
-                        child: CustomPaint(
-                          painter: _DrawingPainter(
-                            strokes: strokesToShow,
-                            color: colorToShow,
-                            strokeWidth: _strokeWidth,
-                          ),
-                          size: Size.infinite,
-                        ),
-                      )
-                      : IgnorePointer(
-                        child: CustomPaint(
-                          painter: _DrawingPainter(
-                            strokes: strokesToShow,
-                            color: colorToShow,
-                            strokeWidth: _strokeWidth,
-                          ),
-                          size: Size.infinite,
-                        ),
-                      ),
-            ),
-            if (_isDrawMode)
-              Positioned(
-                left: 16,
-                right: 16,
-                bottom: showNavigationBar ? 100 : 24,
-                child: Material(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  elevation: 8,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Wrap(
-                          spacing: 4,
-                          children:
-                              [
-                                Colors.red,
-                                Colors.blue,
-                                Colors.green,
-                                Colors.black,
-                              ].map((c) {
-                                return GestureDetector(
-                                  onTap:
-                                      () => setState(() {
-                                        _drawColor = c;
-                                      }),
-                                  child: Container(
-                                    width: 28,
-                                    height: 28,
-                                    decoration: BoxDecoration(
-                                      color: c,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color:
-                                            _drawColor == c
-                                                ? Theme.of(context).primaryColor
-                                                : Colors.grey[300]!,
-                                        width: 2,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.undo_rounded),
-                          onPressed: () {
-                            if (_currentPageStrokes.isNotEmpty) {
-                              setState(() => _currentPageStrokes.removeLast());
-                            }
-                          },
-                          tooltip: AppLocalizations.current.pdf_undo,
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: () async {
-                            _saveCurrentPageDrawings();
-                            if (_allDrawStrokes.isNotEmpty) {
-                              await _embedDrawingsIntoPdfAndSave();
-                            } else {
-                              await _persistDrawings();
-                            }
-                            if (mounted) setState(() => _isDrawMode = false);
-                          },
-                          icon: Icon(Icons.check_rounded, size: 20),
-                          label: Text(
-                            AppLocalizations.current.pdf_done_drawing,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            foregroundColor: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showNotesList() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.5,
-          minChildSize: 0.3,
-          maxChildSize: 0.9,
-          expand: false,
-          builder: (_, controller) {
-            return Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).primaryColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        AppLocalizations.current.pdf_notes_list,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.add_circle_rounded),
-                            onPressed: () {
-                              Navigator.pop(ctx);
-                              _showAddNoteDialog();
-                            },
-                            tooltip: AppLocalizations.current.pdf_add_note,
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.close_rounded),
-                            onPressed: () => Navigator.pop(ctx),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child:
-                      _notes.isEmpty
-                          ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.note_add_outlined,
-                                  size: 64,
-                                  color: Colors.grey[400],
-                                ),
-                                SizedBox(height: 16),
-                                Text(
-                                  AppLocalizations.current.pdf_no_notes,
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                TextButton.icon(
-                                  onPressed: () {
-                                    Navigator.pop(ctx);
-                                    _showAddNoteDialog();
-                                  },
-                                  icon: Icon(Icons.add),
-                                  label: Text(
-                                    AppLocalizations.current.pdf_add_note,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                          : ListView.builder(
-                            controller: controller,
-                            padding: EdgeInsets.all(16),
-                            itemCount: _notes.length,
-                            itemBuilder: (_, i) {
-                              final n = _notes[i];
-                              final page = n['page'] as int? ?? 0;
-                              final text = n['text'] as String? ?? '';
-                              return Card(
-                                margin: EdgeInsets.only(bottom: 8),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundColor:
-                                        Theme.of(context).primaryColor,
-                                    foregroundColor: Colors.white,
-                                    child: Text(page.toString()),
-                                  ),
-                                  title: Text(
-                                    text,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.delete_outline),
-                                    onPressed: () async {
-                                      setState(() => _notes.removeAt(i));
-                                      await _saveNotes();
-                                      if (ctx.mounted) Navigator.pop(ctx);
-                                      _showNotesList();
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void _showAddNoteDialog() {
-    final controller = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: Row(
-            children: [
-              Icon(Icons.note_add_rounded, color: Colors.orange),
-              SizedBox(width: 12),
-              Text(AppLocalizations.current.pdf_add_note),
-            ],
-          ),
-          content: TextField(
-            controller: controller,
-            maxLines: 4,
-            autofocus: true,
-            decoration: InputDecoration(
-              hintText: AppLocalizations.current.pdf_note_hint,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(AppLocalizations.current.cancel),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final text = controller.text.trim();
-                if (text.isNotEmpty) {
-                  setState(() {
-                    _notes.add({
-                      'page': _currentPage,
-                      'text': text,
-                      'timestamp': DateTime.now().toIso8601String(),
-                    });
-                  });
-                  _saveNotes();
-                  Navigator.pop(ctx);
-                  AppSnackBar.show(
-                    context,
-                    message: AppLocalizations.current.pdf_note_added,
-                    snackBarType: SnackBarType.success,
-                  );
-                }
-              },
-              child: Text(AppLocalizations.current.save),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   void _showJumpToPage() {

@@ -63,7 +63,6 @@ class ApiConstant {
   static final getMyInteractionCounts = "user-interactions/my-interaction-counts";
   static final interactionAction = "user-interactions/action";
   static final loadInteraction = "user-interactions/load-interaction";
-
   // Chapter endpoints
   static final getChapters = "books";
   
@@ -105,5 +104,6 @@ class ApiConstant {
   static final subscriptionUsageCheck = "subscription/me/usage/check";
   static final subscriptionHistory = "subscription/history";
   static final subscriptionPlan = "subscription/subscription-plan";
+  static final incrementUsage = "subscription/me/usage";
 
 }

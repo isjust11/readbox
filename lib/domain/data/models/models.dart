@@ -19,3 +19,4 @@ export 'filter_model.dart';
 export 'subscription_plan_model.dart';
 export 'payment_model.dart';
 export 'user_subscription_model.dart';
+export 'increment_usage_model.dart';

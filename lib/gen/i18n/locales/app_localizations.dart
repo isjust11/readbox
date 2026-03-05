@@ -3895,6 +3895,68 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total Interactions'**
   String get total_interactions;
+
+  /// No description provided for @characters.
+  ///
+  /// In en, this message translates to:
+  /// **'characters'**
+  String get characters;
+
+  /// No description provided for @tools_word_to_pdf_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'You have used up the free Word to PDF conversion limit'**
+  String get tools_word_to_pdf_not_available;
+
+  /// No description provided for @tools_word_to_pdf_not_available_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please upgrade to the PRO plan to use the Word to PDF converter'**
+  String get tools_word_to_pdf_not_available_description;
+
+  /// No description provided for @upgrade_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade'**
+  String get upgrade_now;
+
+  /// No description provided for @upgrade_to_premium_to_use_this_feature.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade to PRO to use the Word to PDF converter'**
+  String get upgrade_to_premium_to_use_this_feature;
+
+  /// No description provided for @upgrade_to_premium_to_use_this_feature_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please upgrade to the PRO plan to use the Word to PDF converter'**
+  String get upgrade_to_premium_to_use_this_feature_description;
+
+  /// No description provided for @upgrade_to_premium_to_use_this_feature_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Upgrade now'**
+  String get upgrade_to_premium_to_use_this_feature_button;
+
+  /// No description provided for @upgrade_to_premium_to_use_this_feature_button_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please upgrade to the PRO plan to use the Word to PDF converter'**
+  String get upgrade_to_premium_to_use_this_feature_button_description;
+
+  /// No description provided for @upgrade_to_premium_to_use_this_feature_button_description_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please upgrade to the PRO plan to use the Word to PDF converter'**
+  String
+  get upgrade_to_premium_to_use_this_feature_button_description_description;
+
+  /// No description provided for @upgrade_to_premium_to_use_this_feature_button_description_description_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Please upgrade to the PRO plan to use the Word to PDF converter'**
+  String
+  get upgrade_to_premium_to_use_this_feature_button_description_description_description;
 }
 
 class _AppLocalizationsDelegate

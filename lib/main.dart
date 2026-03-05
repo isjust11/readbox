@@ -78,6 +78,9 @@ void main() async {
         adminRemoteDataSource: di.getIt<AdminRemoteDataSource>(),
       ),
     ),
+    BlocProvider(
+      create: (_) => SubscriptionPlanCubit(repository: di.getIt<SubscriptionRepository>()),
+    ),
 
   ], child: MyApp()));
 

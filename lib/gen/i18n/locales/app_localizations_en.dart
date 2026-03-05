@@ -1976,4 +1976,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get total_interactions => 'Total Interactions';
+
+  @override
+  String get characters => 'characters';
+
+  @override
+  String get tools_word_to_pdf_not_available =>
+      'You have used up the free Word to PDF conversion limit';
+
+  @override
+  String get tools_word_to_pdf_not_available_description =>
+      'Please upgrade to the PRO plan to use the Word to PDF converter';
+
+  @override
+  String get upgrade_now => 'Upgrade';
+
+  @override
+  String get upgrade_to_premium_to_use_this_feature =>
+      'Upgrade to PRO to use the Word to PDF converter';
+
+  @override
+  String get upgrade_to_premium_to_use_this_feature_description =>
+      'Please upgrade to the PRO plan to use the Word to PDF converter';
+
+  @override
+  String get upgrade_to_premium_to_use_this_feature_button => 'Upgrade now';
+
+  @override
+  String get upgrade_to_premium_to_use_this_feature_button_description =>
+      'Please upgrade to the PRO plan to use the Word to PDF converter';
+
+  @override
+  String
+  get upgrade_to_premium_to_use_this_feature_button_description_description =>
+      'Please upgrade to the PRO plan to use the Word to PDF converter';
+
+  @override
+  String
+  get upgrade_to_premium_to_use_this_feature_button_description_description_description =>
+      'Please upgrade to the PRO plan to use the Word to PDF converter';
 }

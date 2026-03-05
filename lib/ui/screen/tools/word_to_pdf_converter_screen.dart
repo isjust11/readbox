@@ -6,6 +6,7 @@ import 'package:path/path.dart' as path;
 import 'package:flutter_svg/svg.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
@@ -27,7 +28,6 @@ class WordToPdfConverterScreen extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(create: (_) => getIt<ConverterCubit>()),
-            BlocProvider(create: (_) => getIt<SubscriptionPlanCubit>()),
           ],
           child: const WordToPdfConverterBody(),
         );
@@ -87,10 +87,8 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
         await SharedPreferenceUtil.addLocalBook(filePath);
       }
       // update user interaction
-      await context.read<UserInteractionCubit>().updateInteractionAction(
-        targetType: InteractionTarget.book,
-        targetId: filePath,
-        actionType: InteractionType.convert,
+      await context.read<UserInteractionCubit>().incrementUsage(
+        usage: IncrementUsageModel(convertCount: 1),
       );
     }
   }

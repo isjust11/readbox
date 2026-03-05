@@ -23,19 +23,14 @@ class UserInteractionCubit extends Cubit<BaseState> {
   UserInteractionCubit({required this.repository}) : super(InitState());
 
    // save interaction action
-  Future<dynamic> updateInteractionAction({
-    required InteractionTarget targetType,
-    required dynamic targetId,
-    required InteractionType actionType,
+  Future<void> incrementUsage({
+    required IncrementUsageModel usage,
   }) async {
     try {
       emit(LoadingState());
-      final response = await repository.updateInteractionAction(
-        targetType: targetType,
-        targetId: targetId,
-        actionType: actionType,
+      final response = await repository.incrementUsage(
+        usage: usage,
       );
-      isFavorite = !isFavorite;
       emit(LoadedState(response));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));

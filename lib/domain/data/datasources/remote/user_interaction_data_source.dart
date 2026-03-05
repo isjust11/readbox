@@ -8,18 +8,14 @@ class UserInteractionRemoteDataSource {
   UserInteractionRemoteDataSource({required this.network});
 
   // update interaction action for all common type actions
-  Future<UserInteractionModel> updateInteractionAction({
-    required InteractionTarget targetType,
-    required dynamic targetId,
-    required InteractionType actionType,
+  Future<void> incrementUsage({
+    required IncrementUsageModel usage,
   }) async {
     final ApiResponse apiResponse = await network.post(
-      url:
-          '${ApiConstant.apiHost}${ApiConstant.interactionAction}/${actionType.value}/${targetType.value}/$targetId',
+      url: '${ApiConstant.apiHost}${ApiConstant.incrementUsage}',
+      body: usage.toJson(),
     );
-    if (apiResponse.isSuccess) {
-      return UserInteractionModel.fromJson(apiResponse.data);
-    }
+    if (apiResponse.isSuccess) return apiResponse.data;
     return Future.error(apiResponse.data);
   }
 
