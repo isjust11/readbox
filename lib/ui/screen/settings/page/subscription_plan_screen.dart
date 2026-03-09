@@ -327,6 +327,21 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                     AppLocalizations.current.convertLimit,
                     '${plan.convertLimitPerPeriod} ${AppLocalizations.current.perPeriod}',
                   ),
+
+                if (plan.downloadLimitPerPeriod > 0)
+                  _buildFeatureItem(
+                    context,
+                    Icons.download_outlined,
+                    AppLocalizations.current.download_limit,
+                    '${plan.downloadLimitPerPeriod} ${AppLocalizations.current.perPeriod}',
+                  ),
+                if (plan.shareLimitPerPeriod > 0)
+                  _buildFeatureItem(
+                    context,
+                    Icons.share_outlined,
+                    AppLocalizations.current.share_limit,
+                    '${plan.shareLimitPerPeriod} ${AppLocalizations.current.perPeriod}',
+                  ),
               ],
             ),
           ),

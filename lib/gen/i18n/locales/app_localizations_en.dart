@@ -2015,4 +2015,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String
   get upgrade_to_premium_to_use_this_feature_button_description_description_description =>
       'Please upgrade to the PRO plan to use the Word to PDF converter';
+
+  @override
+  String get download_limit => 'Download';
+
+  @override
+  String get share_limit => 'Share';
 }

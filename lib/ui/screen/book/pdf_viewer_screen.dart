@@ -236,8 +236,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       if (!mounted) return;
       AppSnackBar.show(
         context,
-        message:
-            AppLocalizations.current.tools_saved_successfully,
+        message: AppLocalizations.current.tools_saved_successfully,
         snackBarType: SnackBarType.success,
       );
       // save file to local library
@@ -329,6 +328,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         break;
       case 'read_continuous_ebook':
         if (!(_actionStatus?['canUseTts'] ?? false)) {
+          Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
           return;
         }
         setState(() {
@@ -339,12 +339,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         break;
       case 'download':
         if (!(_actionStatus?['canUseDownload'] ?? false)) {
+          Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
           return;
         }
         _downloadAndSavePdf();
         break;
       case 'share':
         if (!(_actionStatus?['canUseShare'] ?? false)) {
+          Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
           return;
         }
         _shareEbook();

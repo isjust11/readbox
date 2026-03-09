@@ -2018,4 +2018,10 @@ class AppLocalizationsVi extends AppLocalizations {
   String
   get upgrade_to_premium_to_use_this_feature_button_description_description_description =>
       'Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF';
+
+  @override
+  String get download_limit => 'Tải Xuống';
+
+  @override
+  String get share_limit => 'Chia Sẻ';
 }

@@ -3957,6 +3957,18 @@ abstract class AppLocalizations {
   /// **'Please upgrade to the PRO plan to use the Word to PDF converter'**
   String
   get upgrade_to_premium_to_use_this_feature_button_description_description_description;
+
+  /// No description provided for @download_limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get download_limit;
+
+  /// No description provided for @share_limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share_limit;
 }
 
 class _AppLocalizationsDelegate
