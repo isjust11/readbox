@@ -684,5 +684,22 @@
   "upgrade_to_premium_to_use_this_feature_button_description_description": "Please upgrade to the PRO plan to use the Word to PDF converter",
   "upgrade_to_premium_to_use_this_feature_button_description_description_description": "Please upgrade to the PRO plan to use the Word to PDF converter",
   "download_limit": "Download",
-  "share_limit": "Share"
+  "share_limit": "Share",
+  "google_drive": "Google Drive",
+  "link_google_drive": "Link Google Drive",
+  "enter_folder_id_or_url": "Enter Folder ID or Drive folder URL",
+  "google_drive_books": "Books from Google Drive",
+  "downloading_from_drive": "Downloading from Drive...",
+  "drive_link_success": "Google Drive folder linked successfully",
+  "drive_link_removed": "Google Drive unlinked",
+  "no_drive_files": "No ebook files in this folder",
+  "invalid_folder_id": "Invalid Folder ID",
+  "drive_error": "Google Drive error",
+  "download_to_read": "Download to read",
+  "file_downloaded": "File downloaded successfully",
+  "unlink_drive": "Unlink Drive",
+  "unlink_drive_confirm": "Are you sure you want to unlink the Google Drive folder?",
+  "folder_id_hint": "E.g.: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms",
+  "paste_drive_folder_url": "Or paste Drive folder URL",
+  "connect": "Connect"
 }

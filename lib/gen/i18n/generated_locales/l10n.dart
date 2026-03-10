@@ -5807,6 +5807,171 @@ class AppLocalizations {
   String get share_limit {
     return Intl.message('Chia Sẻ', name: 'share_limit', desc: '', args: []);
   }
+
+  /// `Google Drive`
+  String get google_drive {
+    return Intl.message(
+      'Google Drive',
+      name: 'google_drive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên kết Google Drive`
+  String get link_google_drive {
+    return Intl.message(
+      'Liên kết Google Drive',
+      name: 'link_google_drive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhập Folder ID hoặc URL thư mục Drive`
+  String get enter_folder_id_or_url {
+    return Intl.message(
+      'Nhập Folder ID hoặc URL thư mục Drive',
+      name: 'enter_folder_id_or_url',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sách từ Google Drive`
+  String get google_drive_books {
+    return Intl.message(
+      'Sách từ Google Drive',
+      name: 'google_drive_books',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đang tải từ Drive...`
+  String get downloading_from_drive {
+    return Intl.message(
+      'Đang tải từ Drive...',
+      name: 'downloading_from_drive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã liên kết thư mục Google Drive`
+  String get drive_link_success {
+    return Intl.message(
+      'Đã liên kết thư mục Google Drive',
+      name: 'drive_link_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã hủy liên kết Google Drive`
+  String get drive_link_removed {
+    return Intl.message(
+      'Đã hủy liên kết Google Drive',
+      name: 'drive_link_removed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không có file ebook trong thư mục này`
+  String get no_drive_files {
+    return Intl.message(
+      'Không có file ebook trong thư mục này',
+      name: 'no_drive_files',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Folder ID không hợp lệ`
+  String get invalid_folder_id {
+    return Intl.message(
+      'Folder ID không hợp lệ',
+      name: 'invalid_folder_id',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi Google Drive`
+  String get drive_error {
+    return Intl.message(
+      'Lỗi Google Drive',
+      name: 'drive_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tải về để đọc`
+  String get download_to_read {
+    return Intl.message(
+      'Tải về để đọc',
+      name: 'download_to_read',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đã tải file thành công`
+  String get file_downloaded {
+    return Intl.message(
+      'Đã tải file thành công',
+      name: 'file_downloaded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hủy liên kết Drive`
+  String get unlink_drive {
+    return Intl.message(
+      'Hủy liên kết Drive',
+      name: 'unlink_drive',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn có chắc muốn hủy liên kết thư mục Google Drive?`
+  String get unlink_drive_confirm {
+    return Intl.message(
+      'Bạn có chắc muốn hủy liên kết thư mục Google Drive?',
+      name: 'unlink_drive_confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `VD: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms`
+  String get folder_id_hint {
+    return Intl.message(
+      'VD: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms',
+      name: 'folder_id_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hoặc dán URL thư mục Drive`
+  String get paste_drive_folder_url {
+    return Intl.message(
+      'Hoặc dán URL thư mục Drive',
+      name: 'paste_drive_folder_url',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kết nối`
+  String get connect {
+    return Intl.message('Kết nối', name: 'connect', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1,5 +1,3 @@
-
-
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleSignInConfig {
@@ -18,7 +16,11 @@ class GoogleSignInConfig {
 
   // Cấu hình GoogleSignIn instance
   static GoogleSignIn get googleSignIn => GoogleSignIn(
-    scopes: ['email', 'profile'],
+    scopes: [
+      'email',
+      'profile',
+      'https://www.googleapis.com/auth/drive.readonly',
+    ],
     // Android: Client ID sẽ được đọc từ google-services.json
     // Web: Sử dụng webClientId cho web platform
     serverClientId: webClientId, // Cần thiết cho server-side verification

@@ -2024,4 +2024,57 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get share_limit => 'Chia Sẻ';
+
+  @override
+  String get google_drive => 'Google Drive';
+
+  @override
+  String get link_google_drive => 'Liên kết Google Drive';
+
+  @override
+  String get enter_folder_id_or_url => 'Nhập Folder ID hoặc URL thư mục Drive';
+
+  @override
+  String get google_drive_books => 'Sách từ Google Drive';
+
+  @override
+  String get downloading_from_drive => 'Đang tải từ Drive...';
+
+  @override
+  String get drive_link_success => 'Đã liên kết thư mục Google Drive';
+
+  @override
+  String get drive_link_removed => 'Đã hủy liên kết Google Drive';
+
+  @override
+  String get no_drive_files => 'Không có file ebook trong thư mục này';
+
+  @override
+  String get invalid_folder_id => 'Folder ID không hợp lệ';
+
+  @override
+  String get drive_error => 'Lỗi Google Drive';
+
+  @override
+  String get download_to_read => 'Tải về để đọc';
+
+  @override
+  String get file_downloaded => 'Đã tải file thành công';
+
+  @override
+  String get unlink_drive => 'Hủy liên kết Drive';
+
+  @override
+  String get unlink_drive_confirm =>
+      'Bạn có chắc muốn hủy liên kết thư mục Google Drive?';
+
+  @override
+  String get folder_id_hint =>
+      'VD: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms';
+
+  @override
+  String get paste_drive_folder_url => 'Hoặc dán URL thư mục Drive';
+
+  @override
+  String get connect => 'Kết nối';
 }

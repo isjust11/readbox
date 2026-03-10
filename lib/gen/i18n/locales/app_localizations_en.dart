@@ -2021,4 +2021,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get share_limit => 'Share';
+
+  @override
+  String get google_drive => 'Google Drive';
+
+  @override
+  String get link_google_drive => 'Link Google Drive';
+
+  @override
+  String get enter_folder_id_or_url => 'Enter Folder ID or Drive folder URL';
+
+  @override
+  String get google_drive_books => 'Books from Google Drive';
+
+  @override
+  String get downloading_from_drive => 'Downloading from Drive...';
+
+  @override
+  String get drive_link_success => 'Google Drive folder linked successfully';
+
+  @override
+  String get drive_link_removed => 'Google Drive unlinked';
+
+  @override
+  String get no_drive_files => 'No ebook files in this folder';
+
+  @override
+  String get invalid_folder_id => 'Invalid Folder ID';
+
+  @override
+  String get drive_error => 'Google Drive error';
+
+  @override
+  String get download_to_read => 'Download to read';
+
+  @override
+  String get file_downloaded => 'File downloaded successfully';
+
+  @override
+  String get unlink_drive => 'Unlink Drive';
+
+  @override
+  String get unlink_drive_confirm =>
+      'Are you sure you want to unlink the Google Drive folder?';
+
+  @override
+  String get folder_id_hint =>
+      'E.g.: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms';
+
+  @override
+  String get paste_drive_folder_url => 'Or paste Drive folder URL';
+
+  @override
+  String get connect => 'Connect';
 }

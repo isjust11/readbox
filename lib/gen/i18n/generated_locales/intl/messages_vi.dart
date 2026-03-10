@@ -194,6 +194,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm_password": MessageLookupByLibrary.simpleMessage(
       "Xác nhận mật khẩu",
     ),
+    "connect": MessageLookupByLibrary.simpleMessage("Kết nối"),
     "continue_reading": MessageLookupByLibrary.simpleMessage("Đọc tiếp"),
     "continue_reading_books": MessageLookupByLibrary.simpleMessage("Đọc tiếp"),
     "continue_reading_books_description": MessageLookupByLibrary.simpleMessage(
@@ -273,6 +274,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "done": MessageLookupByLibrary.simpleMessage("Hoàn thành"),
     "download_count": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
     "download_limit": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
+    "download_to_read": MessageLookupByLibrary.simpleMessage("Tải về để đọc"),
+    "downloading_from_drive": MessageLookupByLibrary.simpleMessage(
+      "Đang tải từ Drive...",
+    ),
+    "drive_error": MessageLookupByLibrary.simpleMessage("Lỗi Google Drive"),
+    "drive_link_removed": MessageLookupByLibrary.simpleMessage(
+      "Đã hủy liên kết Google Drive",
+    ),
+    "drive_link_success": MessageLookupByLibrary.simpleMessage(
+      "Đã liên kết thư mục Google Drive",
+    ),
     "edit": MessageLookupByLibrary.simpleMessage("Sửa"),
     "editProfile": MessageLookupByLibrary.simpleMessage("Chỉnh sửa hồ sơ"),
     "edit_book": MessageLookupByLibrary.simpleMessage("Sửa sách"),
@@ -295,6 +307,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Nhập lại mật khẩu",
     ),
     "enter_email": MessageLookupByLibrary.simpleMessage("Nhập email"),
+    "enter_folder_id_or_url": MessageLookupByLibrary.simpleMessage(
+      "Nhập Folder ID hoặc URL thư mục Drive",
+    ),
     "enter_full_name": MessageLookupByLibrary.simpleMessage("Nhập họ và tên"),
     "enter_information_to_start": MessageLookupByLibrary.simpleMessage(
       "Điền thông tin để bắt đầu",
@@ -408,6 +423,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "feedbackType": MessageLookupByLibrary.simpleMessage("Loại phản hồi"),
     "fileEbook": MessageLookupByLibrary.simpleMessage("File Ebook"),
+    "file_downloaded": MessageLookupByLibrary.simpleMessage(
+      "Đã tải file thành công",
+    ),
     "file_ebook_not_found": MessageLookupByLibrary.simpleMessage(
       "File ebook không tồn tại",
     ),
@@ -420,6 +438,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "find_book": MessageLookupByLibrary.simpleMessage("Tìm sách"),
     "find_image": MessageLookupByLibrary.simpleMessage("Tìm file ảnh"),
     "find_word": MessageLookupByLibrary.simpleMessage("Tìm file word"),
+    "folder_id_hint": MessageLookupByLibrary.simpleMessage(
+      "VD: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms",
+    ),
     "forgot_password": MessageLookupByLibrary.simpleMessage("Quên mật khẩu"),
     "format": MessageLookupByLibrary.simpleMessage("Định dạng"),
     "found": MessageLookupByLibrary.simpleMessage("Tìm thấy"),
@@ -436,6 +457,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "google": MessageLookupByLibrary.simpleMessage("Google"),
     "google_developer_error": MessageLookupByLibrary.simpleMessage(
       "Lỗi phát triển Google",
+    ),
+    "google_drive": MessageLookupByLibrary.simpleMessage("Google Drive"),
+    "google_drive_books": MessageLookupByLibrary.simpleMessage(
+      "Sách từ Google Drive",
     ),
     "google_invalid_client": MessageLookupByLibrary.simpleMessage(
       "Client Google không hợp lệ",
@@ -471,6 +496,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Liên kết Instagram",
     ),
     "invalid_email": MessageLookupByLibrary.simpleMessage("Email không hợp lệ"),
+    "invalid_folder_id": MessageLookupByLibrary.simpleMessage(
+      "Folder ID không hợp lệ",
+    ),
     "isbn": MessageLookupByLibrary.simpleMessage("ISBN"),
     "jpgPngWebp": MessageLookupByLibrary.simpleMessage("JPG, PNG, WEBP"),
     "just_now": MessageLookupByLibrary.simpleMessage("vừa xong"),
@@ -482,6 +510,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "last_read": MessageLookupByLibrary.simpleMessage("Đọc lần cuối"),
     "library": MessageLookupByLibrary.simpleMessage("Thư viện Ebook"),
     "light": MessageLookupByLibrary.simpleMessage("Sáng"),
+    "link_google_drive": MessageLookupByLibrary.simpleMessage(
+      "Liên kết Google Drive",
+    ),
     "linkedin_link": MessageLookupByLibrary.simpleMessage("Liên kết LinkedIn"),
     "loading": MessageLookupByLibrary.simpleMessage("Đang tải..."),
     "loading_books": MessageLookupByLibrary.simpleMessage("Đang tải sách"),
@@ -654,6 +685,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_content_to_display": MessageLookupByLibrary.simpleMessage(
       "Không có nội dung để hiển thị",
     ),
+    "no_drive_files": MessageLookupByLibrary.simpleMessage(
+      "Không có file ebook trong thư mục này",
+    ),
     "no_file_found": MessageLookupByLibrary.simpleMessage(
       "Không tìm thấy file",
     ),
@@ -729,6 +763,9 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "passwords_do_not_match": MessageLookupByLibrary.simpleMessage(
       "Mật khẩu không khớp",
+    ),
+    "paste_drive_folder_url": MessageLookupByLibrary.simpleMessage(
+      "Hoặc dán URL thư mục Drive",
     ),
     "payment": MessageLookupByLibrary.simpleMessage("Thanh toán"),
     "paymentFailed": MessageLookupByLibrary.simpleMessage(
@@ -1243,6 +1280,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "tts_usage": MessageLookupByLibrary.simpleMessage("Đọc Văn Bản"),
     "twitter_link": MessageLookupByLibrary.simpleMessage("Liên kết Twitter"),
     "unlimited": MessageLookupByLibrary.simpleMessage("Không giới hạn"),
+    "unlink_drive": MessageLookupByLibrary.simpleMessage("Hủy liên kết Drive"),
+    "unlink_drive_confirm": MessageLookupByLibrary.simpleMessage(
+      "Bạn có chắc muốn hủy liên kết thư mục Google Drive?",
+    ),
     "unlock_unlimited_features": MessageLookupByLibrary.simpleMessage(
       "Mở khóa lưu trữ, TTS và chuyển đổi không giới hạn",
     ),

@@ -705,5 +705,22 @@
   "upgrade_to_premium_to_use_this_feature_button_description_description": "Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF",
   "upgrade_to_premium_to_use_this_feature_button_description_description_description": "Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF",
   "download_limit": "Tải Xuống",
-  "share_limit": "Chia Sẻ"
+  "share_limit": "Chia Sẻ",
+  "google_drive": "Google Drive",
+  "link_google_drive": "Liên kết Google Drive",
+  "enter_folder_id_or_url": "Nhập Folder ID hoặc URL thư mục Drive",
+  "google_drive_books": "Sách từ Google Drive",
+  "downloading_from_drive": "Đang tải từ Drive...",
+  "drive_link_success": "Đã liên kết thư mục Google Drive",
+  "drive_link_removed": "Đã hủy liên kết Google Drive",
+  "no_drive_files": "Không có file ebook trong thư mục này",
+  "invalid_folder_id": "Folder ID không hợp lệ",
+  "drive_error": "Lỗi Google Drive",
+  "download_to_read": "Tải về để đọc",
+  "file_downloaded": "Đã tải file thành công",
+  "unlink_drive": "Hủy liên kết Drive",
+  "unlink_drive_confirm": "Bạn có chắc muốn hủy liên kết thư mục Google Drive?",
+  "folder_id_hint": "VD: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms",
+  "paste_drive_folder_url": "Hoặc dán URL thư mục Drive",
+  "connect": "Kết nối"
 }

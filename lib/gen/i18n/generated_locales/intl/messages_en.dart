@@ -186,6 +186,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm_password": MessageLookupByLibrary.simpleMessage(
       "Confirm password",
     ),
+    "connect": MessageLookupByLibrary.simpleMessage("Connect"),
     "continue_reading": MessageLookupByLibrary.simpleMessage(
       "Continue reading",
     ),
@@ -266,6 +267,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "done": MessageLookupByLibrary.simpleMessage("Done"),
     "download_count": MessageLookupByLibrary.simpleMessage("Downloads"),
     "download_limit": MessageLookupByLibrary.simpleMessage("Download"),
+    "download_to_read": MessageLookupByLibrary.simpleMessage(
+      "Download to read",
+    ),
+    "downloading_from_drive": MessageLookupByLibrary.simpleMessage(
+      "Downloading from Drive...",
+    ),
+    "drive_error": MessageLookupByLibrary.simpleMessage("Google Drive error"),
+    "drive_link_removed": MessageLookupByLibrary.simpleMessage(
+      "Google Drive unlinked",
+    ),
+    "drive_link_success": MessageLookupByLibrary.simpleMessage(
+      "Google Drive folder linked successfully",
+    ),
     "editProfile": MessageLookupByLibrary.simpleMessage("Edit profile"),
     "edit_book": MessageLookupByLibrary.simpleMessage("Edit book"),
     "edit_book_failed": MessageLookupByLibrary.simpleMessage(
@@ -287,6 +301,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Enter confirm password",
     ),
     "enter_email": MessageLookupByLibrary.simpleMessage("Enter email"),
+    "enter_folder_id_or_url": MessageLookupByLibrary.simpleMessage(
+      "Enter Folder ID or Drive folder URL",
+    ),
     "enter_full_name": MessageLookupByLibrary.simpleMessage("Enter full name"),
     "enter_information_to_start": MessageLookupByLibrary.simpleMessage(
       "Enter information to start",
@@ -399,6 +416,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "feedbackType": MessageLookupByLibrary.simpleMessage("Feedback type"),
     "fileEbook": MessageLookupByLibrary.simpleMessage("File Ebook"),
+    "file_downloaded": MessageLookupByLibrary.simpleMessage(
+      "File downloaded successfully",
+    ),
     "file_ebook_not_found": MessageLookupByLibrary.simpleMessage(
       "File ebook not found",
     ),
@@ -411,6 +431,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "find_book": MessageLookupByLibrary.simpleMessage("Find book"),
     "find_image": MessageLookupByLibrary.simpleMessage("Find image file"),
     "find_word": MessageLookupByLibrary.simpleMessage("Find word file"),
+    "folder_id_hint": MessageLookupByLibrary.simpleMessage(
+      "E.g.: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms",
+    ),
     "forgot_password": MessageLookupByLibrary.simpleMessage("Forgot password"),
     "format": MessageLookupByLibrary.simpleMessage("Format"),
     "found": MessageLookupByLibrary.simpleMessage("Found"),
@@ -429,6 +452,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "google": MessageLookupByLibrary.simpleMessage("Google"),
     "google_developer_error": MessageLookupByLibrary.simpleMessage(
       "Google developer error",
+    ),
+    "google_drive": MessageLookupByLibrary.simpleMessage("Google Drive"),
+    "google_drive_books": MessageLookupByLibrary.simpleMessage(
+      "Books from Google Drive",
     ),
     "google_invalid_client": MessageLookupByLibrary.simpleMessage(
       "Google invalid client",
@@ -459,6 +486,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "input_username": MessageLookupByLibrary.simpleMessage("Enter username"),
     "invalid_email": MessageLookupByLibrary.simpleMessage("Invalid email"),
+    "invalid_folder_id": MessageLookupByLibrary.simpleMessage(
+      "Invalid Folder ID",
+    ),
     "isbn": MessageLookupByLibrary.simpleMessage("ISBN"),
     "jpgPngWebp": MessageLookupByLibrary.simpleMessage("JPG, PNG, WEBP"),
     "just_now": MessageLookupByLibrary.simpleMessage("just now"),
@@ -467,6 +497,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "last_read": MessageLookupByLibrary.simpleMessage("Last read"),
     "library": MessageLookupByLibrary.simpleMessage("Ebook library"),
     "light": MessageLookupByLibrary.simpleMessage("Light"),
+    "link_google_drive": MessageLookupByLibrary.simpleMessage(
+      "Link Google Drive",
+    ),
     "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
     "loading_books": MessageLookupByLibrary.simpleMessage("Loading books"),
     "loading_more_books": MessageLookupByLibrary.simpleMessage(
@@ -622,6 +655,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_content_to_display": MessageLookupByLibrary.simpleMessage(
       "No content to display",
     ),
+    "no_drive_files": MessageLookupByLibrary.simpleMessage(
+      "No ebook files in this folder",
+    ),
     "no_file_found": MessageLookupByLibrary.simpleMessage("No file found"),
     "no_image_file_found": MessageLookupByLibrary.simpleMessage(
       "No file .jpg, .jpeg, .png found",
@@ -689,6 +725,9 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "passwords_do_not_match": MessageLookupByLibrary.simpleMessage(
       "Passwords do not match",
+    ),
+    "paste_drive_folder_url": MessageLookupByLibrary.simpleMessage(
+      "Or paste Drive folder URL",
     ),
     "payment": MessageLookupByLibrary.simpleMessage("Payment"),
     "paymentFailed": MessageLookupByLibrary.simpleMessage("Payment Failed"),
@@ -1180,6 +1219,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "ttsVolume": MessageLookupByLibrary.simpleMessage("Volume"),
     "tts_usage": MessageLookupByLibrary.simpleMessage("Text-to-Speech Usage"),
     "unlimited": MessageLookupByLibrary.simpleMessage("Unlimited"),
+    "unlink_drive": MessageLookupByLibrary.simpleMessage("Unlink Drive"),
+    "unlink_drive_confirm": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to unlink the Google Drive folder?",
+    ),
     "unlock_unlimited_features": MessageLookupByLibrary.simpleMessage(
       "Unlock unlimited storage, TTS, and conversion",
     ),

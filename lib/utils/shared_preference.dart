@@ -23,6 +23,7 @@ class SPrefCache {
   static const String PREF_KEY_PDF_READING_POSITIONS = "pref_key_pdf_reading_positions";
   static const String PREF_KEY_PDF_DRAWINGS = "pref_key_pdf_drawings";
   static const String PREF_KEY_PDF_NOTES = "pref_key_pdf_notes";
+  static const String PREF_KEY_DRIVE_FOLDER_ID = "pref_key_drive_folder_id";
 }
 
 class SharedPreferenceUtil {
@@ -205,6 +206,26 @@ class SharedPreferenceUtil {
   static Future<bool> isBookAdded(String filePath) async {
     final books = await getLocalBooks();
     return books.contains(filePath);
+  }
+
+  // ==================== GOOGLE DRIVE SETTINGS ====================
+
+  /// Lưu Google Drive Folder ID
+  static Future<bool> saveDriveFolderId(String folderId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString(SPrefCache.PREF_KEY_DRIVE_FOLDER_ID, folderId);
+  }
+
+  /// Lấy Google Drive Folder ID đã lưu
+  static Future<String?> getDriveFolderId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(SPrefCache.PREF_KEY_DRIVE_FOLDER_ID);
+  }
+
+  /// Xóa Google Drive Folder ID
+  static Future<bool> removeDriveFolderId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.remove(SPrefCache.PREF_KEY_DRIVE_FOLDER_ID);
   }
 
   // ==================== THEME SETTINGS ====================

@@ -3969,6 +3969,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share'**
   String get share_limit;
+
+  /// No description provided for @google_drive.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Drive'**
+  String get google_drive;
+
+  /// No description provided for @link_google_drive.
+  ///
+  /// In en, this message translates to:
+  /// **'Link Google Drive'**
+  String get link_google_drive;
+
+  /// No description provided for @enter_folder_id_or_url.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Folder ID or Drive folder URL'**
+  String get enter_folder_id_or_url;
+
+  /// No description provided for @google_drive_books.
+  ///
+  /// In en, this message translates to:
+  /// **'Books from Google Drive'**
+  String get google_drive_books;
+
+  /// No description provided for @downloading_from_drive.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading from Drive...'**
+  String get downloading_from_drive;
+
+  /// No description provided for @drive_link_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Drive folder linked successfully'**
+  String get drive_link_success;
+
+  /// No description provided for @drive_link_removed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Drive unlinked'**
+  String get drive_link_removed;
+
+  /// No description provided for @no_drive_files.
+  ///
+  /// In en, this message translates to:
+  /// **'No ebook files in this folder'**
+  String get no_drive_files;
+
+  /// No description provided for @invalid_folder_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Folder ID'**
+  String get invalid_folder_id;
+
+  /// No description provided for @drive_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Drive error'**
+  String get drive_error;
+
+  /// No description provided for @download_to_read.
+  ///
+  /// In en, this message translates to:
+  /// **'Download to read'**
+  String get download_to_read;
+
+  /// No description provided for @file_downloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'File downloaded successfully'**
+  String get file_downloaded;
+
+  /// No description provided for @unlink_drive.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink Drive'**
+  String get unlink_drive;
+
+  /// No description provided for @unlink_drive_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to unlink the Google Drive folder?'**
+  String get unlink_drive_confirm;
+
+  /// No description provided for @folder_id_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'E.g.: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms'**
+  String get folder_id_hint;
+
+  /// No description provided for @paste_drive_folder_url.
+  ///
+  /// In en, this message translates to:
+  /// **'Or paste Drive folder URL'**
+  String get paste_drive_folder_url;
+
+  /// No description provided for @connect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get connect;
 }
 
 class _AppLocalizationsDelegate
