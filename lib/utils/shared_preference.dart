@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Utility class để quản lý SharedPreferences
 /// CHỈ LƯU DỮ LIỆU KHÔNG NHẠY CẢM (non-sensitive data)
-/// 
+///
 /// Dữ liệu nhạy cảm (token, password, user info) được lưu trong SecureStorageService
 class SPrefCache {
   // SharedPreferences keys - CHỈ cho dữ liệu không nhạy cảm
@@ -19,8 +19,10 @@ class SPrefCache {
   static const String KEY_TOKEN = "auth_token";
   @Deprecated('Use SecureStorageService.saveUserInfo() instead')
   static const String PREF_KEY_USER_INFO = "pref_key_user_info";
-    static const String PREF_KEY_HIDE_NAVIGATION_BAR = "pref_key_hide_navigation_bar";
-  static const String PREF_KEY_PDF_READING_POSITIONS = "pref_key_pdf_reading_positions";
+  static const String PREF_KEY_HIDE_NAVIGATION_BAR =
+      "pref_key_hide_navigation_bar";
+  static const String PREF_KEY_PDF_READING_POSITIONS =
+      "pref_key_pdf_reading_positions";
   static const String PREF_KEY_PDF_DRAWINGS = "pref_key_pdf_drawings";
   static const String PREF_KEY_PDF_NOTES = "pref_key_pdf_notes";
   static const String PREF_KEY_DRIVE_FOLDER_ID = "pref_key_drive_folder_id";
@@ -28,7 +30,7 @@ class SPrefCache {
 
 class SharedPreferenceUtil {
   // ==================== APP PREFERENCES ====================
-  
+
   /// Lưu trạng thái "Keep me logged in"
   static Future saveKeepLogin(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -42,7 +44,7 @@ class SharedPreferenceUtil {
   }
 
   // ==================== LANGUAGE SETTINGS ====================
-  
+
   /// Lưu ngôn ngữ hiện tại
   static Future setCurrentLanguage(String languageCode) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -63,7 +65,7 @@ class SharedPreferenceUtil {
   }
 
   // ==================== PASSWORD SETTINGS ====================
-  
+
   /// Lưu trạng thái "Remember password"
   static Future setRememberPassword(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -77,7 +79,7 @@ class SharedPreferenceUtil {
   }
 
   // ==================== LOCAL BOOKS MANAGEMENT ====================
-  
+
   /// Lưu danh sách file paths của sách local
   static Future<bool> saveLocalBooks(List<String> filePaths) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -111,6 +113,12 @@ class SharedPreferenceUtil {
     return prefs.getBool(SPrefCache.PREF_KEY_HIDE_NAVIGATION_BAR) ?? true;
   }
 
+  // kiểm tra sách đã tồn tại dưới local chưa
+  static Future<bool> isBookExists(String fileName) async {
+    final books = await getLocalBooks();
+    return books.any((book) => book.contains(fileName));
+  }
+
   // ==================== PDF READING POSITION ====================
 
   /// Lưu trang đang đọc của PDF (key thường là fileUrl hoặc đường dẫn file)
@@ -118,11 +126,13 @@ class SharedPreferenceUtil {
     if (key.isEmpty || page < 1) return false;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final json = prefs.getString(SPrefCache.PREF_KEY_PDF_READING_POSITIONS);
-    final Map<String, dynamic> map = json != null
-        ? Map<String, dynamic>.from(jsonDecode(json) as Map)
-        : {};
+    final Map<String, dynamic> map =
+        json != null ? Map<String, dynamic>.from(jsonDecode(json) as Map) : {};
     map[key] = page;
-    return prefs.setString(SPrefCache.PREF_KEY_PDF_READING_POSITIONS, jsonEncode(map));
+    return prefs.setString(
+      SPrefCache.PREF_KEY_PDF_READING_POSITIONS,
+      jsonEncode(map),
+    );
   }
 
   /// Lưu nét vẽ trên PDF (key: fileUrl, value: Map<page, List<List<{x,y}>>>)
@@ -133,14 +143,12 @@ class SharedPreferenceUtil {
     if (key.isEmpty) return false;
     final prefs = await SharedPreferences.getInstance();
     final json = prefs.getString(SPrefCache.PREF_KEY_PDF_DRAWINGS);
-    final map = json != null
-        ? Map<String, dynamic>.from(jsonDecode(json) as Map)
-        : <String, dynamic>{};
+    final map =
+        json != null
+            ? Map<String, dynamic>.from(jsonDecode(json) as Map)
+            : <String, dynamic>{};
     map[key] = drawings;
-    return prefs.setString(
-      SPrefCache.PREF_KEY_PDF_DRAWINGS,
-      jsonEncode(map),
-    );
+    return prefs.setString(SPrefCache.PREF_KEY_PDF_DRAWINGS, jsonEncode(map));
   }
 
   /// Lấy nét vẽ đã lưu
@@ -154,18 +162,19 @@ class SharedPreferenceUtil {
   }
 
   /// Lưu ghi chú PDF (key: fileUrl, value: List<{page, text, timestamp}>)
-  static Future<bool> savePdfNotes(String key, List<Map<String, dynamic>> notes) async {
+  static Future<bool> savePdfNotes(
+    String key,
+    List<Map<String, dynamic>> notes,
+  ) async {
     if (key.isEmpty) return false;
     final prefs = await SharedPreferences.getInstance();
     final json = prefs.getString(SPrefCache.PREF_KEY_PDF_NOTES);
-    final map = json != null
-        ? Map<String, dynamic>.from(jsonDecode(json) as Map)
-        : <String, dynamic>{};
+    final map =
+        json != null
+            ? Map<String, dynamic>.from(jsonDecode(json) as Map)
+            : <String, dynamic>{};
     map[key] = notes;
-    return prefs.setString(
-      SPrefCache.PREF_KEY_PDF_NOTES,
-      jsonEncode(map),
-    );
+    return prefs.setString(SPrefCache.PREF_KEY_PDF_NOTES, jsonEncode(map));
   }
 
   /// Lấy ghi chú đã lưu
@@ -233,15 +242,16 @@ class SharedPreferenceUtil {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(SPrefCache.PREF_KEY_THEME) ?? 'light';
   }
+
   static Future<void> setTheme(String theme) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(SPrefCache.PREF_KEY_THEME, theme);
   }
 
   // ==================== CLEAR DATA ====================
-  
+
   /// Xóa tất cả dữ liệu trong SharedPreferences
-  /// 
+  ///
   /// LƯU Ý: Method này CHỈ xóa dữ liệu không nhạy cảm trong SharedPreferences
   /// Để xóa dữ liệu nhạy cảm (token, password, user info), sử dụng:
   /// ```dart
