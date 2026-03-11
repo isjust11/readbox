@@ -13,6 +13,7 @@ class DriveFileInfo {
   final String mimeType;
   final int size;
   final DateTime? modifiedTime;
+  final String? thumbnailLink;
 
   DriveFileInfo({
     required this.id,
@@ -20,12 +21,15 @@ class DriveFileInfo {
     required this.mimeType,
     required this.size,
     this.modifiedTime,
+    this.thumbnailLink,
   });
 
   /// Kiểm tra file có phải ebook không
   bool get isEbook {
     final ext = name.toLowerCase();
-    return ext.endsWith('.pdf') || ext.endsWith('.epub') || ext.endsWith('.mobi');
+    return ext.endsWith('.pdf') ||
+        ext.endsWith('.epub') ||
+        ext.endsWith('.mobi');
   }
 
   /// Lấy extension
@@ -51,9 +55,7 @@ class GoogleDriveService {
     try {
       // Kiểm tra đã đăng nhập chưa
       GoogleSignInAccount? account = _googleSignIn.currentUser;
-      if (account == null) {
-        account = await _googleSignIn.signInSilently();
-      }
+      account ??= await _googleSignIn.signInSilently();
       if (account == null) {
         account = await _googleSignIn.signIn();
       }
@@ -85,7 +87,8 @@ class GoogleDriveService {
 
       do {
         final fileList = await driveApi.files.list(
-          q: "'$folderId' in parents and trashed = false and ("
+          q:
+              "'$folderId' in parents and trashed = false and ("
               "mimeType = 'application/pdf' or "
               "mimeType = 'application/epub+zip' or "
               "name contains '.mobi' or "
@@ -93,7 +96,8 @@ class GoogleDriveService {
               "name contains '.epub'"
               ")",
           spaces: 'drive',
-          $fields: 'nextPageToken, files(id, name, mimeType, size, modifiedTime)',
+          $fields:
+              'nextPageToken, files(id, name, mimeType, size, modifiedTime, thumbnailLink)',
           pageSize: 100,
           pageToken: pageToken,
         );
@@ -101,13 +105,16 @@ class GoogleDriveService {
         if (fileList.files != null) {
           for (final file in fileList.files!) {
             if (file.id != null && file.name != null) {
-              files.add(DriveFileInfo(
-                id: file.id!,
-                name: file.name!,
-                mimeType: file.mimeType ?? '',
-                size: int.tryParse(file.size ?? '0') ?? 0,
-                modifiedTime: file.modifiedTime,
-              ));
+              files.add(
+                DriveFileInfo(
+                  id: file.id!,
+                  name: file.name!,
+                  mimeType: file.mimeType ?? '',
+                  size: int.tryParse(file.size ?? '0') ?? 0,
+                  modifiedTime: file.modifiedTime,
+                  thumbnailLink: file.thumbnailLink,
+                ),
+              );
             }
           }
         }
@@ -147,10 +154,12 @@ class GoogleDriveService {
       }
 
       // Tải file từ Drive
-      final media = await driveApi.files.get(
-        fileId,
-        downloadOptions: drive.DownloadOptions.fullMedia,
-      ) as drive.Media;
+      final media =
+          await driveApi.files.get(
+                fileId,
+                downloadOptions: drive.DownloadOptions.fullMedia,
+              )
+              as drive.Media;
 
       final List<int> dataStore = [];
       await for (final data in media.stream) {
@@ -171,10 +180,9 @@ class GoogleDriveService {
       final driveApi = await _getDriveApi();
       if (driveApi == null) return false;
 
-      final folder = await driveApi.files.get(
-        folderId,
-        $fields: 'id, name, mimeType',
-      ) as drive.File;
+      final folder =
+          await driveApi.files.get(folderId, $fields: 'id, name, mimeType')
+              as drive.File;
 
       return folder.mimeType == 'application/vnd.google-apps.folder';
     } catch (e) {

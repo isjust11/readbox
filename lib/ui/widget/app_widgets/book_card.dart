@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -156,12 +158,24 @@ class _BookCardState extends State<BookCard> {
                                 book.coverImageUrl != null
                                     ? ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
-                                      child: BaseNetworkImage(
-                                        url: _getImageUrl(book.coverImageUrl),
-                                        width: 80,
-                                        height: 120,
-                                        fit: BoxFit.cover,
-                                      ),
+                                      child:
+                                          Platform.isAndroid
+                                              ? Image.network(
+                                                _getImageUrl(
+                                                  book.coverImageUrl,
+                                                ),
+                                                width: 80,
+                                                height: 120,
+                                                fit: BoxFit.cover,
+                                              )
+                                              : BaseNetworkImage(
+                                                url: _getImageUrl(
+                                                  book.coverImageUrl,
+                                                ),
+                                                width: 80,
+                                                height: 120,
+                                                fit: BoxFit.cover,
+                                              ),
                                     )
                                     : _buildErrorCover(),
                           ),
@@ -541,13 +555,22 @@ class _BookCardState extends State<BookCard> {
                                   borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(AppDimens.SIZE_16),
                                   ),
-                                  child: BaseNetworkImage(
-                                    url: _getImageUrl(
-                                      widget.book.coverImageUrl,
-                                    ),
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                  ),
+                                  child:
+                                      Platform.isAndroid
+                                          ? Image.network(
+                                            _getImageUrl(
+                                              widget.book.coverImageUrl,
+                                            ),
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                          )
+                                          : BaseNetworkImage(
+                                            url: _getImageUrl(
+                                              widget.book.coverImageUrl,
+                                            ),
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                          ),
                                 )
                                 : _buildErrorCover(),
                       ),
