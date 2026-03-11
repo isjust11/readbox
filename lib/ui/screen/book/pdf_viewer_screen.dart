@@ -104,7 +104,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     if (_isLocal) {
       setState(() => _isLoading = false);
     } else {
-      _loadFromNetwork();
+      // Network: dùng SfPdfViewer.network() stream, không tải full trước
+      setState(() => _isLoading = false);
     }
     _loadUserDataSettings();
     _initializeTTS();
@@ -154,26 +155,18 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
   }
 
-  Future<void> _loadFromNetwork() async {
+  /// URL đầy đủ cho PDF từ mạng
+  String get _networkPdfUrl => '${ApiConstant.apiHostStorage}${widget.fileUrl}';
+
+  /// Tải bytes PDF khi cần (TTS, Share, Download) — chỉ gọi cho file network
+  Future<Uint8List?> _ensurePdfBytesForNetwork() async {
+    if (_isLocal || _pdfBytes != null) return _pdfBytes;
     try {
-      setState(() {
-        _isLoading = true;
-        _error = null;
-      });
       final bytes = await _downloadPdf();
-      if (mounted) {
-        setState(() {
-          _pdfBytes = bytes;
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _error = e.toString();
-          _isLoading = false;
-        });
-      }
+      if (mounted) setState(() => _pdfBytes = bytes);
+      return bytes;
+    } catch (_) {
+      return null;
     }
   }
 
@@ -369,7 +362,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         if (await file.exists()) {
           filePath = widget.fileUrl;
         }
-      } else if (_pdfBytes != null && _pdfBytes!.isNotEmpty) {
+      } else {
+        final bytes = await _ensurePdfBytesForNetwork();
+        if (bytes != null && bytes.isNotEmpty) {
         // File từ mạng: lưu tạm để chia sẻ
         final dir = await getTemporaryDirectory();
         final baseName = path.basename(widget.fileUrl);
@@ -378,8 +373,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 ? baseName
                 : '${widget.title.replaceAll(RegExp(r'[^\w\s-]'), '_')}.pdf';
         final tempFile = File(path.join(dir.path, fileName));
-        await tempFile.writeAsBytes(_pdfBytes!);
+        await tempFile.writeAsBytes(bytes);
         filePath = tempFile.path;
+        }
       }
 
       if (filePath == null) {
@@ -443,14 +439,19 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       if (!mounted || !_isReadingContinuous) return;
     }
     if (_pdfBytes == null && !_isLocal) {
-      if (!mounted) return;
-      setState(() => _isReadingContinuous = false);
-      AppSnackBar.show(
-        context,
-        message: AppLocalizations.current.pdf_load_failed_retry,
-        snackBarType: SnackBarType.warning,
-      );
-      return;
+      // Network: tải bytes on-demand cho TTS
+      final bytes = await _ensurePdfBytesForNetwork();
+      if (bytes == null || !mounted || !_isReadingContinuous) {
+        if (mounted) {
+          setState(() => _isReadingContinuous = false);
+          AppSnackBar.show(
+            context,
+            message: AppLocalizations.current.pdf_load_failed_retry,
+            snackBarType: SnackBarType.warning,
+          );
+        }
+        return;
+      }
     }
     try {
       final pageText = await _extractPageText(_currentPage);
@@ -609,9 +610,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     );
   }
 
-  Widget _buildPdfViewerFromMemory() {
-    return SfPdfViewer.memory(
-      _pdfBytes!,
+  /// Hiển thị PDF từ URL — stream/on-demand, không cần tải full trước
+  Widget _buildPdfViewerFromNetwork() {
+    return SfPdfViewer.network(
+      _networkPdfUrl,
       controller: _pdfController,
       onDocumentLoaded: _onDocumentLoaded,
       onPageChanged: _onPageChanged,
@@ -876,7 +878,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   @override
   Widget build(BuildContext context) {
     final showViewer =
-        !_isLoading && _error == null && (_isLocal || _pdfBytes != null);
+        !_isLoading && _error == null && (_isLocal || _pdfBytes != null || !_isLocal);
 
     return Scaffold(
       appBar:
@@ -1053,7 +1055,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   ),
                   SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: _isLocal ? null : () => _loadFromNetwork(),
+                    onPressed: _isLocal ? null : () => setState(() => _error = null),
                     child: Text(AppLocalizations.current.retry),
                   ),
                 ],
@@ -1062,10 +1064,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           else if (showViewer)
             Stack(
               children: [
-                // Không bọc IgnorePointer vì sẽ chặn scroll và tương tác của PDF
-                _pdfBytes != null
-                    ? _buildPdfViewerFromMemory()
-                    : _buildPdfViewer(),
+                _isLocal
+                    ? _buildPdfViewer()
+                    : _buildPdfViewerFromNetwork(),
               ],
             ),
           if (_isLoading)
