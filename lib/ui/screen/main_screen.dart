@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -259,7 +260,8 @@ class MainBodyState extends State<MainBody> {
                   ...categories.map((category) {
                     final id = category.id ?? '';
                     final idStr = id.toString();
-                    final label = category.name ?? AppLocalizations.current.no_name;
+                    final label =
+                        category.name ?? AppLocalizations.current.no_name;
                     return _buildCategoryChip(
                       colorScheme: colorScheme,
                       label: label,
@@ -285,17 +287,19 @@ class MainBodyState extends State<MainBody> {
                   // mo bottom sheet chon category
                   showModalBottomSheet(
                     context: context,
-                    builder: (context) => CategoryBottomSheet(
-                      categories: categories,
-                      selectedCategoryId: categoryId.isEmpty ? null : categoryId,
-                      onSelected: (category) {
-                        setState(() {
-                          categoryId = category.id.toString();
-                        });
-                        page = 1;
-                        getBooks(isLoadMore: false);
-                      },
-                    ),
+                    builder:
+                        (context) => CategoryBottomSheet(
+                          categories: categories,
+                          selectedCategoryId:
+                              categoryId.isEmpty ? null : categoryId,
+                          onSelected: (category) {
+                            setState(() {
+                              categoryId = category.id.toString();
+                            });
+                            page = 1;
+                            getBooks(isLoadMore: false);
+                          },
+                        ),
                   );
                 },
                 child: Icon(
@@ -830,13 +834,20 @@ class MainBodyState extends State<MainBody> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BaseNetworkImage(
-                borderRadius: 8,
-                height: 160.sh,
-                width: 120.sw,
-                url: '${ApiConstant.apiHostStorage}${book.coverImageUrl}',
-                fit: BoxFit.cover,
-              ),
+              Platform.isAndroid
+                  ? Image.network(
+                    '${ApiConstant.apiHostStorage}${book.coverImageUrl}',
+                    width: 80,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  )
+                  : BaseNetworkImage(
+                    borderRadius: 8,
+                    height: 160.sh,
+                    width: 120.sw,
+                    url: '${ApiConstant.apiHostStorage}${book.coverImageUrl}',
+                    fit: BoxFit.cover,
+                  ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
