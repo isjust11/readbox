@@ -31,7 +31,7 @@ class _PaymentResultScreenState extends State<PaymentResultScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.status == 'success') {
+    if (widget.status == 'PAID') {
       _verifyPaymentStatus();
     } else {
       setState(() {
@@ -44,7 +44,7 @@ class _PaymentResultScreenState extends State<PaymentResultScreen> {
     try {
       final paymentRepo = getIt.get<PaymentRepository>();
       final result = await paymentRepo.getPaymentStatus(widget.transactionId);
-      
+
       setState(() {
         _verifiedStatus = result.status;
         _isVerifying = false;
@@ -63,15 +63,17 @@ class _PaymentResultScreenState extends State<PaymentResultScreen> {
       title: AppLocalizations.current.paymentResult,
       hideAppBar: true,
       colorBg: Theme.of(context).colorScheme.surface,
-      body: _isVerifying
-          ? const Center(child: CircularProgressIndicator())
-          : _buildResultContent(),
+      body:
+          _isVerifying
+              ? const Center(child: CircularProgressIndicator())
+              : _buildResultContent(),
     );
   }
 
   Widget _buildResultContent() {
-    final bool isSuccess = widget.status == 'success' && 
-                          (_verifiedStatus == 'completed' || _verifiedStatus == null);
+    final bool isSuccess =
+        widget.status == 'PAID' &&
+        (_verifiedStatus == 'completed' || _verifiedStatus == null);
 
     return Center(
       child: Padding(
@@ -84,9 +86,10 @@ class _PaymentResultScreenState extends State<PaymentResultScreen> {
               width: AppDimens.SIZE_100,
               height: AppDimens.SIZE_100,
               decoration: BoxDecoration(
-                color: isSuccess
-                    ? AppColors.successGreen.withValues(alpha: 0.1)
-                    : AppColors.errorRed.withValues(alpha: 0.1),
+                color:
+                    isSuccess
+                        ? AppColors.successGreen.withValues(alpha: 0.1)
+                        : AppColors.errorRed.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -104,7 +107,9 @@ class _PaymentResultScreenState extends State<PaymentResultScreen> {
                   : AppLocalizations.current.paymentFailed,
               fontSize: AppDimens.SIZE_24,
               fontWeight: FontWeight.w700,
-              color: Theme.of(context).textTheme.bodyLarge?.color ?? AppColors.colorTitle,
+              color:
+                  Theme.of(context).textTheme.bodyLarge?.color ??
+                  AppColors.colorTitle,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppDimens.SIZE_12),
@@ -114,7 +119,9 @@ class _PaymentResultScreenState extends State<PaymentResultScreen> {
               CustomTextLabel(
                 widget.message ?? _errorMessage ?? '',
                 fontSize: AppDimens.SIZE_14,
-                color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.textMediumGrey,
+                color:
+                    Theme.of(context).textTheme.bodyMedium?.color ??
+                    AppColors.textMediumGrey,
                 textAlign: TextAlign.center,
                 maxLines: 5,
               ),
@@ -124,7 +131,9 @@ class _PaymentResultScreenState extends State<PaymentResultScreen> {
             CustomTextLabel(
               '${AppLocalizations.current.transactionId}: ${widget.transactionId}',
               fontSize: AppDimens.SIZE_12,
-              color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.textMediumGrey,
+              color:
+                  Theme.of(context).textTheme.bodyMedium?.color ??
+                  AppColors.textMediumGrey,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppDimens.SIZE_40),

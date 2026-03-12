@@ -330,6 +330,8 @@ class _GoogleDriveTabState extends State<GoogleDriveTab>
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // File thumbnail / icon
               Container(
@@ -360,6 +362,7 @@ class _GoogleDriveTabState extends State<GoogleDriveTab>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 4),
                     Text(
                       driveFile.name,
                       style: TextStyle(

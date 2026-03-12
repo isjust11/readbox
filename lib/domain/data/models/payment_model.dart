@@ -55,7 +55,7 @@ class PaymentStatusModel {
     return PaymentStatusModel(
       transactionId: json['transactionId'] as String? ?? '',
       status: json['status'] as String? ?? 'pending',
-      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
+      amount: double.parse(json['amount'].toString()),
       createdAt: DateTime.tryParse(json['createdAt'] as String? ?? '') ?? DateTime.now(),
       paidAt: json['paidAt'] != null ? DateTime.tryParse(json['paidAt'] as String) : null,
     );
