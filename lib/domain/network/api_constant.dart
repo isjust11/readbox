@@ -31,6 +31,7 @@ class ApiConstant {
   static String get apiHost => "http://$_baseHost:$apiPort/";
   static String get apiHostStorage => "http://$_baseHost:$storagePort";
   static String get storageHost => "http://$_baseHost:$storagePort";
+  static final verifyToken = "auth/verify-token";
   static final login = "auth/login";
   static final register = "auth/register";
   static final verifyPin = "auth/verify-pin";

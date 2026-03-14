@@ -6,6 +6,17 @@ class AuthRemoteDataSource {
 
   AuthRemoteDataSource({required this.network});
 
+  // verify token is valid
+  Future<bool> verifyToken(String token) async {
+    ApiResponse apiResponse = await network.get(
+      url: '${ApiConstant.apiHost}${ApiConstant.verifyToken}?token=$token',
+    );
+    if (apiResponse.isSuccess) {
+      return true;
+    }
+    return false;
+  }
+
   Future<AuthenModel> login(Map<String, dynamic> param) async {
     ApiResponse apiResponse = await network.post(
       url: '${ApiConstant.apiHost}${ApiConstant.login}',

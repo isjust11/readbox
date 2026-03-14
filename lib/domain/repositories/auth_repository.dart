@@ -24,6 +24,10 @@ class AuthRepository {
     return userModel;
   }
 
+  Future<bool> verifyToken(String token) async {
+    return await remoteDataSource.verifyToken(token);
+  }
+
   Future<Map<String, dynamic>> verifyPin(Map<String, dynamic> param) async {
     return await remoteDataSource.verifyPin(param);
   }

@@ -22,7 +22,12 @@ class SubscriptionPlanScreen extends StatefulWidget {
 
 class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   int _selectedIndex = 0;
+  bool _didInitSelectedIndex = false; // đã set index theo current plan chưa
 
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -150,7 +155,14 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   ) {
     final userSub = context.watch<UserSubscriptionCubit>().userSubscription;
     final theme = Theme.of(context);
-
+    // Set tab đang chọn = current plan lần đầu tiên
+    if (!_didInitSelectedIndex && userSub?.plan?.id != null) {
+      final idx = plans.indexWhere((p) => p.id == userSub!.plan!.id);
+      if (idx != -1) {
+        _selectedIndex = idx;
+      }
+      _didInitSelectedIndex = true;
+    }
     if (_selectedIndex >= plans.length) _selectedIndex = 0;
     final selectedPlan = plans[_selectedIndex];
     final isCurrent = userSub?.plan?.id == selectedPlan.id;
@@ -222,77 +234,72 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
           return Expanded(
             child: GestureDetector(
               onTap: () => setState(() => _selectedIndex = i),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 decoration: BoxDecoration(
                   color:
                       isSelected
                           ? theme.colorScheme.surface
                           : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow:
-                      isSelected
-                          ? [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.06),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ]
-                          : null,
                 ),
-                child: Column(
+                child: Stack(
                   children: [
-                    Text(
-                      plan.name,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight:
-                            isSelected ? FontWeight.w700 : FontWeight.w500,
-                        color:
-                            isSelected
-                                ? theme.colorScheme.primary
-                                : theme.textTheme.bodyMedium?.color,
+                    SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        children: [
+                          Text(
+                            plan.name,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight:
+                                  isSelected
+                                      ? FontWeight.w700
+                                      : FontWeight.w500,
+                              color:
+                                  isSelected
+                                      ? theme.colorScheme.primary
+                                      : theme.textTheme.bodyMedium?.color,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            plan.isFree
+                                ? AppLocalizations.current.free
+                                : plan.priceDisplay,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color:
+                                  isSelected
+                                      ? theme.colorScheme.primary.withValues(
+                                        alpha: 0.7,
+                                      )
+                                      : (theme.textTheme.bodySmall?.color ??
+                                          AppColors.textLightGrey),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      plan.isFree
-                          ? AppLocalizations.current.free
-                          : plan.priceDisplay,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color:
-                            isSelected
-                                ? theme.colorScheme.primary.withValues(
-                                  alpha: 0.7,
-                                )
-                                : (theme.textTheme.bodySmall?.color ??
-                                    AppColors.textLightGrey),
-                      ),
-                    ),
-                    if (isCurrent) ...[
-                      const SizedBox(height: 4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 1,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.successGreen.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          AppLocalizations.current.currentPlan,
-                          style: const TextStyle(
-                            fontSize: 9,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.successGreen,
+                    if (isCurrent)
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 4),
+                          child: isCurrent && plan.isFree ? Icon(
+                            Icons.workspace_premium_rounded,
+                            color: theme.colorScheme.primary,
+                            size: 20,
+                          ) : Icon(
+                            Icons.star,
+                            color: Colors.orange,
+                            size: 20,
                           ),
                         ),
                       ),
-                    ],
                   ],
                 ),
               ),
@@ -496,12 +503,16 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     bool isCurrent,
   ) {
     final theme = Theme.of(context);
+    final userSub = context.watch<UserSubscriptionCubit>().userSubscription;
+    final hasPaidPlan = userSub?.plan != null && !(userSub!.plan!.isFree);
+    final isFreePlan = plan.isFree;
+    final isFreePlanVisible = isFreePlan && hasPaidPlan;
     return Container(
       padding: EdgeInsets.fromLTRB(
         20,
         12,
         20,
-        MediaQuery.of(context).padding.bottom + 12,
+        MediaQuery.of(context).padding.bottom ,
       ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -518,17 +529,19 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   height: 50,
                   child: OutlinedButton.icon(
                     onPressed: null,
-                    icon: const Icon(Icons.check_circle, size: 20),
+                    icon: plan.isFree ? const Icon(Icons.workspace_premium_rounded, size: 20, color: AppColors.successGreen) 
+                    : const Icon(Icons.star, size: 20, color: Colors.orange),
                     label: Text(
                       AppLocalizations.current.currentPlan,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
+                        color: theme.primaryColor,
                       ),
                     ),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.successGreen,
-                      side: const BorderSide(color: AppColors.successGreen),
+                      foregroundColor: theme.primaryColor,
+                      side: BorderSide(color: theme.primaryColor),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
                       ),
@@ -539,10 +552,11 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   width: double.infinity,
                   height: 50,
                   child: FilledButton(
-                    onPressed: () => _onSelectPlan(context, plan),
+                    onPressed:
+                        isFreePlanVisible ? null : () => _onSelectPlan(context, plan),
                     style: FilledButton.styleFrom(
                       backgroundColor:
-                          plan.isFree
+                          isFreePlan
                               ? AppColors.successGreen
                               : theme.colorScheme.primary,
                       foregroundColor: Colors.white,

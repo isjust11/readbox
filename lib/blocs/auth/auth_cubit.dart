@@ -111,6 +111,13 @@ class AuthCubit extends Cubit<BaseState> {
     }
   }
 
+  Future<bool> verifyToken() async {
+    final token = await _secureStorage.getToken();
+    if (token == null) {
+      return false;
+    }
+    return await repository.verifyToken(token);
+  }
   Future resendPin({required String email}) async {
     try {
       emit(LoadingState());

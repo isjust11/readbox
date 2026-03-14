@@ -55,6 +55,9 @@ void main() async {
       create: (_) => AppCubit(language),
     ),
     BlocProvider(
+      create: (_) => AuthCubit(repository: di.getIt<AuthRepository>()),
+    ),
+    BlocProvider(
       create: (_) => BookRefreshCubit(),
     ),
     BlocProvider(

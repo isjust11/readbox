@@ -1,6 +1,8 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/secure_storage_service.dart';
@@ -266,7 +268,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
       print('⚠️ Migration failed, but app will continue: $e');
     }
 
-    await Future.delayed(Duration(milliseconds: 2500));
+    // await Future.delayed(Duration(milliseconds: 2500));
 
     // Khi không có internet: xem ebook chế độ local, không cần đăng nhập
     try {
@@ -286,10 +288,12 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
     }
 
     // Có internet: kiểm tra token để quyết định đăng nhập hay vào app
-    final hasToken = await _secureStorage.hasToken();
     if (!context.mounted) return;
-    if (!hasToken) {
+    // kiểm tra xem token có còn hiệu lực không
+    final isTokenValid = await context.read<AuthCubit>().verifyToken();
+    if (!isTokenValid) {
       Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
+      return;
     } else {
       Navigator.pushNamedAndRemoveUntil(context, Routes.mainScreen, (route) => false);
     }
