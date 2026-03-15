@@ -67,6 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đã tải hết dữ liệu",
     ),
     "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
+    "app_version": MessageLookupByLibrary.simpleMessage("Phiên bản ứng dụng"),
     "apply_filters": MessageLookupByLibrary.simpleMessage("Áp dụng bộ lọc"),
     "archived_books": MessageLookupByLibrary.simpleMessage("Sách đã lưu"),
     "archived_count": MessageLookupByLibrary.simpleMessage("Lưu Trữ"),
@@ -267,6 +268,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "delete_review": MessageLookupByLibrary.simpleMessage("Xóa nhận xét"),
     "description": MessageLookupByLibrary.simpleMessage("Mô tả"),
+    "device_id": MessageLookupByLibrary.simpleMessage("Mã thiết bị"),
+    "device_info": MessageLookupByLibrary.simpleMessage("Thông tin thiết bị"),
     "disableNotifications": MessageLookupByLibrary.simpleMessage(
       "Tắt thông báo",
     ),
@@ -699,6 +702,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Chưa có thông tin đăng nhập được lưu",
     ),
     "no_name": MessageLookupByLibrary.simpleMessage("Không tên"),
+    "no_payment_history": MessageLookupByLibrary.simpleMessage(
+      "Chưa có dữ liệu thanh toán",
+    ),
     "no_pdf_epub_mobi_found": MessageLookupByLibrary.simpleMessage(
       "Không tìm thấy file PDF, EPUB, hoặc MOBI",
     ),
@@ -1129,6 +1135,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sendTestNotification": MessageLookupByLibrary.simpleMessage(
       "Gửi thông báo thử nghiệm",
     ),
+    "service_package": MessageLookupByLibrary.simpleMessage("Gói dịch vụ"),
     "setReadingReminders": MessageLookupByLibrary.simpleMessage(
       "Đặt nhắc nhở đọc sách hàng ngày",
     ),
@@ -1151,6 +1158,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "show_less": MessageLookupByLibrary.simpleMessage("Thu gọn"),
     "size": MessageLookupByLibrary.simpleMessage("Kích thước"),
     "slow": MessageLookupByLibrary.simpleMessage("Chậm"),
+    "social_networks": MessageLookupByLibrary.simpleMessage("Mạng xã hội"),
     "start_reading": MessageLookupByLibrary.simpleMessage("Bắt đầu đọc"),
     "started_at": MessageLookupByLibrary.simpleMessage("Bắt Đầu"),
     "stopTest": MessageLookupByLibrary.simpleMessage("Dừng"),
@@ -1165,6 +1173,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "systemNotifications": MessageLookupByLibrary.simpleMessage(
       "Thông báo hệ thống",
     ),
+    "system_info": MessageLookupByLibrary.simpleMessage("Thông tin hệ thống"),
     "tap_or_long_press_to_select_file": MessageLookupByLibrary.simpleMessage(
       "Nhấn vào file để chọn hoặc long press để chọn file",
     ),
@@ -1260,6 +1269,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "total_pages": MessageLookupByLibrary.simpleMessage("Số trang"),
     "total_ratings": m7,
     "transactionId": MessageLookupByLibrary.simpleMessage("Mã giao dịch"),
+    "transaction_id": MessageLookupByLibrary.simpleMessage("Mã giao dịch"),
     "translate": MessageLookupByLibrary.simpleMessage("Ngôn ngữ dịch"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Thử lại"),
     "try_again": MessageLookupByLibrary.simpleMessage("Thử lại"),
@@ -1403,6 +1413,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "user_cancelled_twitter_sign_in": MessageLookupByLibrary.simpleMessage(
       "Người dùng đã hủy đăng nhập Twitter",
     ),
+    "user_info": MessageLookupByLibrary.simpleMessage("Thông tin người dùng"),
     "username": MessageLookupByLibrary.simpleMessage("Tên đăng nhập"),
     "username_must_be_at_least_3_characters":
         MessageLookupByLibrary.simpleMessage(

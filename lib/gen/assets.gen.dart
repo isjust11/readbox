@@ -266,9 +266,22 @@ class $AssetsImagesGen {
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
+  /// File path: assets/images/logo_thumbnail.png
+  AssetGenImage get logoThumbnail =>
+      const AssetGenImage('assets/images/logo_thumbnail.png');
+
+  /// File path: assets/images/momo.png
+  AssetGenImage get momo => const AssetGenImage('assets/images/momo.png');
+
+  /// File path: assets/images/payos.png
+  AssetGenImage get payos => const AssetGenImage('assets/images/payos.png');
+
   /// File path: assets/images/profile_background.png
   AssetGenImage get profileBackground =>
       const AssetGenImage('assets/images/profile_background.png');
+
+  /// File path: assets/images/vnpay.png
+  AssetGenImage get vnpay => const AssetGenImage('assets/images/vnpay.png');
 
   /// List of all assets
   List<dynamic> get values => [
@@ -284,7 +297,11 @@ class $AssetsImagesGen {
     icSearch,
     icSplash,
     logo,
+    logoThumbnail,
+    momo,
+    payos,
     profileBackground,
+    vnpay,
   ];
 }
 

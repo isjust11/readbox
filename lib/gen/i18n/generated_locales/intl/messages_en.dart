@@ -62,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "all_categories": MessageLookupByLibrary.simpleMessage("All Categories"),
     "all_data_loaded": MessageLookupByLibrary.simpleMessage("All data loaded"),
     "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
+    "app_version": MessageLookupByLibrary.simpleMessage("App Version"),
     "apply_filters": MessageLookupByLibrary.simpleMessage("Apply filters"),
     "archived_books": MessageLookupByLibrary.simpleMessage("Archived books"),
     "archived_count": MessageLookupByLibrary.simpleMessage("Archived"),
@@ -260,6 +261,8 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "delete_review": MessageLookupByLibrary.simpleMessage("Delete review"),
     "description": MessageLookupByLibrary.simpleMessage("Description"),
+    "device_id": MessageLookupByLibrary.simpleMessage("Device ID"),
+    "device_info": MessageLookupByLibrary.simpleMessage("Device Information"),
     "disableNotifications": MessageLookupByLibrary.simpleMessage(
       "Disable notifications",
     ),
@@ -666,6 +669,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "No login info saved",
     ),
     "no_name": MessageLookupByLibrary.simpleMessage("No name"),
+    "no_payment_history": MessageLookupByLibrary.simpleMessage(
+      "No payment history",
+    ),
     "no_pdf_epub_mobi_found": MessageLookupByLibrary.simpleMessage(
       "No PDF, EPUB, or MOBI found",
     ),
@@ -1073,6 +1079,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sendTestNotification": MessageLookupByLibrary.simpleMessage(
       "Send test notification",
     ),
+    "service_package": MessageLookupByLibrary.simpleMessage("Service package"),
     "setReadingReminders": MessageLookupByLibrary.simpleMessage(
       "Set daily reading reminders",
     ),
@@ -1109,6 +1116,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "systemNotifications": MessageLookupByLibrary.simpleMessage(
       "System Notifications",
     ),
+    "system_info": MessageLookupByLibrary.simpleMessage("System Information"),
     "tap_or_long_press_to_select_file": MessageLookupByLibrary.simpleMessage(
       "Tap on file to select or long press to select file",
     ),
@@ -1198,6 +1206,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "total_pages": MessageLookupByLibrary.simpleMessage("Total pages"),
     "total_ratings": m7,
     "transactionId": MessageLookupByLibrary.simpleMessage("Transaction ID"),
+    "transaction_id": MessageLookupByLibrary.simpleMessage("Transaction ID"),
     "translate": MessageLookupByLibrary.simpleMessage("Language translation"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
     "try_again": MessageLookupByLibrary.simpleMessage("Try again"),

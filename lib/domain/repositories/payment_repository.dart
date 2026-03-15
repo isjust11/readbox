@@ -29,4 +29,12 @@ class PaymentRepository {
       throw Exception('Failed to get payment status: $e');
     }
   }
+
+  Future<List<PaymentHistoryModel>> getPaymentHistory() async {
+    try {
+      return await remoteDataSource.getPaymentHistory();
+    } catch (e) {
+      throw Exception('Failed to get payment history: $e');
+    }
+  }
 }

@@ -6002,6 +6002,91 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Chưa có dữ liệu thanh toán`
+  String get no_payment_history {
+    return Intl.message(
+      'Chưa có dữ liệu thanh toán',
+      name: 'no_payment_history',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gói dịch vụ`
+  String get service_package {
+    return Intl.message(
+      'Gói dịch vụ',
+      name: 'service_package',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mã giao dịch`
+  String get transaction_id {
+    return Intl.message(
+      'Mã giao dịch',
+      name: 'transaction_id',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông tin hệ thống`
+  String get system_info {
+    return Intl.message(
+      'Thông tin hệ thống',
+      name: 'system_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phiên bản ứng dụng`
+  String get app_version {
+    return Intl.message(
+      'Phiên bản ứng dụng',
+      name: 'app_version',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mã thiết bị`
+  String get device_id {
+    return Intl.message('Mã thiết bị', name: 'device_id', desc: '', args: []);
+  }
+
+  /// `Thông tin thiết bị`
+  String get device_info {
+    return Intl.message(
+      'Thông tin thiết bị',
+      name: 'device_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông tin người dùng`
+  String get user_info {
+    return Intl.message(
+      'Thông tin người dùng',
+      name: 'user_info',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mạng xã hội`
+  String get social_networks {
+    return Intl.message(
+      'Mạng xã hội',
+      name: 'social_networks',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

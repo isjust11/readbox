@@ -232,7 +232,7 @@ class _SettingScreenState extends State<SettingScreen> {
             title: AppLocalizations.current.payment,
             subtitle: AppLocalizations.current.payment_history,
             onTap: () {
-              Navigator.of(context).pushNamed(Routes.textToSpeechSettingScreen);
+              Navigator.of(context).pushNamed(Routes.paymentHistoryScreen);
             },
             trailing: Icon(
               Icons.arrow_forward_ios,

@@ -4,7 +4,7 @@ import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-// import 'package:readbox/gen/i18n/generated_locales/l10n.dart'; 
+// import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -65,14 +65,11 @@ class _DataStorageScreenState extends State<DataStorageScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: Colors.red[300],
-                  ),
+                  Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
                   const SizedBox(height: 16),
                   Text(
-                    state.message ?? AppLocalizations.current.error_loading_data,
+                    state.message ??
+                        AppLocalizations.current.error_loading_data,
                     style: Theme.of(context).textTheme.bodyLarge,
                     textAlign: TextAlign.center,
                   ),
@@ -103,14 +100,18 @@ class _DataStorageScreenState extends State<DataStorageScreen>
     );
   }
 
-  Widget _buildContent(BuildContext context, UserSubscriptionModel subscription) {
+  Widget _buildContent(
+    BuildContext context,
+    UserSubscriptionModel subscription,
+  ) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
     return RefreshIndicator(
       onRefresh: () async {
         await context.read<UserSubscriptionCubit>().loadMe();
-        final counts = await context.read<UserInteractionCubit>().getMyInteractionCounts();
+        final counts =
+            await context.read<UserInteractionCubit>().getMyInteractionCounts();
         if (mounted) {
           setState(() {
             interactionCounts = counts;
@@ -163,10 +164,6 @@ class _DataStorageScreenState extends State<DataStorageScreen>
               const SizedBox(height: AppDimens.SIZE_24),
             ],
 
-            // Period Info
-            _buildPeriodInfo(context, subscription, theme, colorScheme),
-            const SizedBox(height: AppDimens.SIZE_24),
-
             // Upgrade Button (if free plan)
             if (subscription.isFree) ...[
               _buildUpgradeButton(context, theme, colorScheme),
@@ -193,15 +190,16 @@ class _DataStorageScreenState extends State<DataStorageScreen>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: isFree
-              ? [
-                  colorScheme.surfaceContainerHighest,
-                  colorScheme.surfaceContainer,
-                ]
-              : [
-                  colorScheme.primary,
-                  colorScheme.primary.withValues(alpha: 0.8),
-                ],
+          colors:
+              isFree
+                  ? [
+                    colorScheme.surfaceContainerHighest,
+                    colorScheme.surfaceContainer,
+                  ]
+                  : [
+                    colorScheme.primary,
+                    colorScheme.primary.withValues(alpha: 0.8),
+                  ],
         ),
         borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
         boxShadow: [
@@ -221,13 +219,16 @@ class _DataStorageScreenState extends State<DataStorageScreen>
               Container(
                 padding: const EdgeInsets.all(AppDimens.SIZE_12),
                 decoration: BoxDecoration(
-                  color: isFree
-                      ? colorScheme.surface
-                      : Colors.white.withValues(alpha: 0.2),
+                  color:
+                      isFree
+                          ? colorScheme.surface
+                          : Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
                 ),
                 child: Icon(
-                  isFree ? Icons.workspace_premium_outlined : Icons.star_rounded,
+                  isFree
+                      ? Icons.workspace_premium_outlined
+                      : Icons.star_rounded,
                   color: isFree ? colorScheme.primary : Colors.white,
                   size: 28,
                 ),
@@ -237,12 +238,13 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  Text(
-                    AppLocalizations.current.currentPlan,
+                    Text(
+                      AppLocalizations.current.currentPlan,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: isFree
-                            ? colorScheme.onSurface.withValues(alpha: 0.6)
-                            : Colors.white.withValues(alpha: 0.9),
+                        color:
+                            isFree
+                                ? colorScheme.onSurface.withValues(alpha: 0.6)
+                                : Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -276,27 +278,61 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                 ),
             ],
           ),
-          if (plan?.description != null) ...[
-            const SizedBox(height: AppDimens.SIZE_12),
-            Text(
-              plan!.description!,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: isFree
-                    ? colorScheme.onSurface.withValues(alpha: 0.7)
-                    : Colors.white.withValues(alpha: 0.9),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (plan?.description != null) ...[
+                    const SizedBox(height: AppDimens.SIZE_12),
+                    Text(
+                      plan!.description!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color:
+                            isFree
+                                ? colorScheme.onSurface.withValues(alpha: 0.7)
+                                : Colors.white.withValues(alpha: 0.9),
+                      ),
+                    ),
+                  ],
+                  if (!isFree && subscription.priceDisplay.isNotEmpty) ...[
+                    const SizedBox(height: AppDimens.SIZE_12),
+                    Text(
+                      subscription.priceDisplay,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ],
               ),
-            ),
-          ],
-          if (!isFree && subscription.priceDisplay.isNotEmpty) ...[
-            const SizedBox(height: AppDimens.SIZE_12),
-            Text(
-              subscription.priceDisplay,
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+              const SizedBox(width: AppDimens.SIZE_16),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: AppDimens.SIZE_12),
+                  _buildPeriodRow(
+                    context,
+                    '${AppLocalizations.current.started_at}: ',
+                    _formatDate(subscription.startedAt),
+                    theme,
+                    colorScheme,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildPeriodRow(
+                    context,
+                    '${AppLocalizations.current.expires_at}: ',
+                    _formatDate(subscription.expiresAt),
+                    theme,
+                    colorScheme,
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ],
       ),
     );
@@ -338,7 +374,8 @@ class _DataStorageScreenState extends State<DataStorageScreen>
     final used = subscription.ttsUsedInPeriod; // Số ký tự đã đọc
     final limit = plan?.ttsLimitPerPeriod ?? 0;
     final percentage = limit > 0 ? (used / limit * 100).clamp(0.0, 100.0) : 0.0;
-    final isUnlimited = limit == 0 || limit >= 999999999; // Số ký tự rất lớn = unlimited
+    final isUnlimited =
+        limit == 0 || limit >= 999999999; // Số ký tự rất lớn = unlimited
 
     return _buildUsageCard(
       context: context,
@@ -348,7 +385,10 @@ class _DataStorageScreenState extends State<DataStorageScreen>
       iconColor: Colors.green,
       title: AppLocalizations.current.tts_usage,
       used: _formatCharacters(used),
-      limit: isUnlimited ? AppLocalizations.current.unlimited : _formatCharacters(limit),
+      limit:
+          isUnlimited
+              ? AppLocalizations.current.unlimited
+              : _formatCharacters(limit),
       percentage: percentage,
       isUnlimited: isUnlimited,
       unit: AppLocalizations.current.characters,
@@ -362,7 +402,8 @@ class _DataStorageScreenState extends State<DataStorageScreen>
     ColorScheme colorScheme,
   ) {
     final plan = subscription.plan;
-    final used = interactionCounts['convert'] ?? subscription.convertUsedInPeriod;
+    final used =
+        interactionCounts['convert'] ?? subscription.convertUsedInPeriod;
     final limit = plan?.convertLimitPerPeriod ?? 0;
     final percentage = limit > 0 ? (used / limit * 100).clamp(0.0, 100.0) : 0.0;
     final isUnlimited = limit == 0 || limit >= 999999;
@@ -464,7 +505,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
             ],
           ),
           const SizedBox(height: AppDimens.SIZE_16),
-          
+
           // Usage text
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -485,7 +526,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
             ],
           ),
           const SizedBox(height: AppDimens.SIZE_12),
-          
+
           // Progress bar
           if (!isUnlimited) ...[
             ClipRRect(
@@ -517,11 +558,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.all_inclusive,
-                    size: 16,
-                    color: iconColor,
-                  ),
+                  Icon(Icons.all_inclusive, size: 16, color: iconColor),
                   const SizedBox(width: 4),
                   Text(
                     AppLocalizations.current.unlimited,
@@ -534,76 +571,6 @@ class _DataStorageScreenState extends State<DataStorageScreen>
               ),
             ),
           ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPeriodInfo(
-    BuildContext context,
-    UserSubscriptionModel subscription,
-    ThemeData theme,
-    ColorScheme colorScheme,
-  ) {
-    final daysRemaining = subscription.expiresAt.difference(DateTime.now()).inDays;
-    final isExpiringSoon = daysRemaining <= 7 && daysRemaining > 0;
-
-    return Container(
-      padding: const EdgeInsets.all(AppDimens.SIZE_16),
-      decoration: BoxDecoration(
-        color: isExpiringSoon
-            ? Colors.orange.withValues(alpha: 0.1)
-            : colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
-        border: isExpiringSoon
-            ? Border.all(color: Colors.orange.withValues(alpha: 0.3))
-            : null,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                isExpiringSoon ? Icons.warning_amber_rounded : Icons.calendar_today_rounded,
-                color: isExpiringSoon ? Colors.orange : colorScheme.primary,
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                AppLocalizations.current.subscription_period,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onSurface,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppDimens.SIZE_12),
-          _buildPeriodRow(
-            context,
-            AppLocalizations.current.started_at,
-            _formatDate(subscription.startedAt),
-            theme,
-            colorScheme,
-          ),
-          const SizedBox(height: 8),
-          _buildPeriodRow(
-            context,
-            AppLocalizations.current.expires_at,
-            _formatDate(subscription.expiresAt),
-            theme,
-            colorScheme,
-          ),
-          const SizedBox(height: 8),
-          _buildPeriodRow(
-            context,
-            AppLocalizations.current.days_remaining,
-            daysRemaining > 0 ? '$daysRemaining ${AppLocalizations.current.days}' : AppLocalizations.current.expired,
-            theme,
-            colorScheme,
-            isHighlight: isExpiringSoon,
-          ),
         ],
       ),
     );
@@ -623,14 +590,14 @@ class _DataStorageScreenState extends State<DataStorageScreen>
         Text(
           label,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurface.withValues(alpha: 0.7),
+            color: colorScheme.onSecondary.withValues(alpha: 0.7),
           ),
         ),
         Text(
           value,
           style: theme.textTheme.bodyMedium?.copyWith(
             fontWeight: isHighlight ? FontWeight.bold : FontWeight.w500,
-            color: isHighlight ? Colors.orange : colorScheme.onSurface,
+            color: isHighlight ? Colors.orange : colorScheme.onSecondary,
           ),
         ),
       ],
@@ -644,13 +611,48 @@ class _DataStorageScreenState extends State<DataStorageScreen>
   ) {
     final l10n = AppLocalizations.current;
     final items = <_StatItem>[
-      _StatItem(l10n.reading_count, interactionCounts['reading'] ?? 0, Icons.auto_stories_rounded, Colors.indigo),
-      _StatItem(l10n.download_count, interactionCounts['download'] ?? 0, Icons.download_rounded, Colors.teal),
-      _StatItem(l10n.bookmark_count, interactionCounts['bookmark'] ?? 0, Icons.bookmark_rounded, Colors.amber.shade700),
-      _StatItem(l10n.favorite_count, interactionCounts['favorite'] ?? 0, Icons.favorite_rounded, Colors.red),
-      _StatItem(l10n.share_count, interactionCounts['share'] ?? 0, Icons.share_rounded, Colors.blue),
-      _StatItem(l10n.rating_count, interactionCounts['rating'] ?? 0, Icons.star_rounded, Colors.orange),
-      _StatItem(l10n.archived_count, interactionCounts['archived'] ?? 0, Icons.archive_rounded, Colors.brown),
+      _StatItem(
+        l10n.reading_count,
+        interactionCounts['reading'] ?? 0,
+        Icons.auto_stories_rounded,
+        Colors.indigo,
+      ),
+      _StatItem(
+        l10n.download_count,
+        interactionCounts['download'] ?? 0,
+        Icons.download_rounded,
+        Colors.teal,
+      ),
+      _StatItem(
+        l10n.bookmark_count,
+        interactionCounts['bookmark'] ?? 0,
+        Icons.bookmark_rounded,
+        Colors.amber.shade700,
+      ),
+      _StatItem(
+        l10n.favorite_count,
+        interactionCounts['favorite'] ?? 0,
+        Icons.favorite_rounded,
+        Colors.red,
+      ),
+      _StatItem(
+        l10n.share_count,
+        interactionCounts['share'] ?? 0,
+        Icons.share_rounded,
+        Colors.blue,
+      ),
+      _StatItem(
+        l10n.rating_count,
+        interactionCounts['rating'] ?? 0,
+        Icons.star_rounded,
+        Colors.orange,
+      ),
+      _StatItem(
+        l10n.archived_count,
+        interactionCounts['archived'] ?? 0,
+        Icons.archive_rounded,
+        Colors.brown,
+      ),
     ];
 
     final total = interactionCounts.values.fold<int>(0, (sum, v) => sum + v);
@@ -715,7 +717,11 @@ class _DataStorageScreenState extends State<DataStorageScreen>
     );
   }
 
-  Widget _buildStatTile(ThemeData theme, ColorScheme colorScheme, _StatItem item) {
+  Widget _buildStatTile(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    _StatItem item,
+  ) {
     return Container(
       padding: const EdgeInsets.all(AppDimens.SIZE_12),
       decoration: BoxDecoration(
@@ -791,11 +797,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
       ),
       child: Column(
         children: [
-          Icon(
-            Icons.rocket_launch_rounded,
-            color: Colors.white,
-            size: 48,
-          ),
+          Icon(Icons.rocket_launch_rounded, color: Colors.white, size: 48),
           const SizedBox(height: AppDimens.SIZE_12),
           Text(
             AppLocalizations.current.upgrade_to_premium,
@@ -831,10 +833,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
             ),
             child: Text(
               AppLocalizations.current.view_plans,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
         ],
