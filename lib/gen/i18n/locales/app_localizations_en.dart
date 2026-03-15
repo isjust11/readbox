@@ -2092,6 +2092,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get transaction_id => 'Transaction ID';
+<<<<<<< HEAD
 
   @override
   String get system_info => 'System Information';
@@ -2104,4 +2105,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get device_info => 'Device Information';
+=======
+>>>>>>> 8978f48f13b636b883bf5a2ec9b2341565c2d8f0
 }

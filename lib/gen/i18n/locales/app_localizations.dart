@@ -4107,6 +4107,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Transaction ID'**
   String get transaction_id;
+<<<<<<< HEAD
 
   /// No description provided for @system_info.
   ///
@@ -4131,6 +4132,8 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Device Information'**
   String get device_info;
+=======
+>>>>>>> 8978f48f13b636b883bf5a2ec9b2341565c2d8f0
 }
 
 class _AppLocalizationsDelegate

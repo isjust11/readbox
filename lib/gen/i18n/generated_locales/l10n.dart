@@ -6032,6 +6032,7 @@ class AppLocalizations {
       args: [],
     );
   }
+<<<<<<< HEAD
 
   /// `Thông tin hệ thống`
   String get system_info {
@@ -6087,6 +6088,8 @@ class AppLocalizations {
       args: [],
     );
   }
+=======
+>>>>>>> 8978f48f13b636b883bf5a2ec9b2341565c2d8f0
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

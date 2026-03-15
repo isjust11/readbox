@@ -2095,6 +2095,7 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get transaction_id => 'Mã giao dịch';
+<<<<<<< HEAD
 
   @override
   String get system_info => 'Thông tin hệ thống';
@@ -2107,4 +2108,6 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get device_info => 'Thông tin thiết bị';
+=======
+>>>>>>> 8978f48f13b636b883bf5a2ec9b2341565c2d8f0
 }
