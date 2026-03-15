@@ -746,7 +746,6 @@
   "payment_history": "Lịch sử thanh toán",
   "no_payment_history": "Chưa có dữ liệu thanh toán",
   "service_package": "Gói dịch vụ",
-<<<<<<< HEAD
   "transaction_id": "Mã giao dịch",
   "system_info": "Thông tin hệ thống",
   "app_version": "Phiên bản ứng dụng",
@@ -754,7 +753,4 @@
   "device_info": "Thông tin thiết bị",
   "user_info": "Thông tin người dùng",
   "social_networks": "Mạng xã hội"
-=======
-  "transaction_id": "Mã giao dịch"
->>>>>>> 8978f48f13b636b883bf5a2ec9b2341565c2d8f0
 }

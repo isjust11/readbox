@@ -725,13 +725,9 @@
   "payment_history": "Payment history",
   "no_payment_history": "No payment history",
   "service_package": "Service package",
-<<<<<<< HEAD
   "transaction_id": "Transaction ID",
   "system_info": "System Information",
   "app_version": "App Version",
   "device_id": "Device ID",
   "device_info": "Device Information"
-=======
-  "transaction_id": "Transaction ID"
->>>>>>> 8978f48f13b636b883bf5a2ec9b2341565c2d8f0
 }
