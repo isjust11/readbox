@@ -9,3 +9,4 @@ export 'notification_entity.dart';
 export 'user_interaction_entity.dart';
 export 'base_entity.dart';
 export 'category_entity.dart';
+export 'payment-history.entity.dart';

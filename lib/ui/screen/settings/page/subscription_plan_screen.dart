@@ -28,6 +28,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -289,15 +290,18 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                         right: 0,
                         child: Padding(
                           padding: const EdgeInsets.only(right: 4),
-                          child: isCurrent && plan.isFree ? Icon(
-                            Icons.workspace_premium_rounded,
-                            color: theme.colorScheme.primary,
-                            size: 20,
-                          ) : Icon(
-                            Icons.star,
-                            color: Colors.orange,
-                            size: 20,
-                          ),
+                          child:
+                              isCurrent && plan.isFree
+                                  ? Icon(
+                                    Icons.workspace_premium_rounded,
+                                    color: theme.colorScheme.primary,
+                                    size: 20,
+                                  )
+                                  : Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 20,
+                                  ),
                         ),
                       ),
                   ],
@@ -512,7 +516,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         20,
         12,
         20,
-        MediaQuery.of(context).padding.bottom ,
+        MediaQuery.of(context).padding.bottom,
       ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -529,8 +533,18 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   height: 50,
                   child: OutlinedButton.icon(
                     onPressed: null,
-                    icon: plan.isFree ? const Icon(Icons.workspace_premium_rounded, size: 20, color: AppColors.successGreen) 
-                    : const Icon(Icons.star, size: 20, color: Colors.orange),
+                    icon:
+                        plan.isFree
+                            ? const Icon(
+                              Icons.workspace_premium_rounded,
+                              size: 20,
+                              color: AppColors.successGreen,
+                            )
+                            : const Icon(
+                              Icons.star,
+                              size: 20,
+                              color: Colors.orange,
+                            ),
                     label: Text(
                       AppLocalizations.current.currentPlan,
                       style: TextStyle(
@@ -553,7 +567,9 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   height: 50,
                   child: FilledButton(
                     onPressed:
-                        isFreePlanVisible ? null : () => _onSelectPlan(context, plan),
+                        isFreePlanVisible
+                            ? null
+                            : () => _onSelectPlan(context, plan),
                     style: FilledButton.styleFrom(
                       backgroundColor:
                           isFreePlan

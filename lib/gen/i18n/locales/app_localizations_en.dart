@@ -2083,4 +2083,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get payment_history => 'Payment history';
+
+  @override
+  String get no_payment_history => 'No payment history';
+
+  @override
+  String get service_package => 'Service package';
+
+  @override
+  String get transaction_id => 'Transaction ID';
 }

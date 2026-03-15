@@ -666,6 +666,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "No login info saved",
     ),
     "no_name": MessageLookupByLibrary.simpleMessage("No name"),
+    "no_payment_history": MessageLookupByLibrary.simpleMessage(
+      "No payment history",
+    ),
     "no_pdf_epub_mobi_found": MessageLookupByLibrary.simpleMessage(
       "No PDF, EPUB, or MOBI found",
     ),
@@ -1073,6 +1076,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sendTestNotification": MessageLookupByLibrary.simpleMessage(
       "Send test notification",
     ),
+    "service_package": MessageLookupByLibrary.simpleMessage("Service package"),
     "setReadingReminders": MessageLookupByLibrary.simpleMessage(
       "Set daily reading reminders",
     ),
@@ -1198,6 +1202,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "total_pages": MessageLookupByLibrary.simpleMessage("Total pages"),
     "total_ratings": m7,
     "transactionId": MessageLookupByLibrary.simpleMessage("Transaction ID"),
+    "transaction_id": MessageLookupByLibrary.simpleMessage("Transaction ID"),
     "translate": MessageLookupByLibrary.simpleMessage("Language translation"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
     "try_again": MessageLookupByLibrary.simpleMessage("Try again"),

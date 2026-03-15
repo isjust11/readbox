@@ -699,6 +699,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Chưa có thông tin đăng nhập được lưu",
     ),
     "no_name": MessageLookupByLibrary.simpleMessage("Không tên"),
+    "no_payment_history": MessageLookupByLibrary.simpleMessage(
+      "Chưa có dữ liệu thanh toán",
+    ),
     "no_pdf_epub_mobi_found": MessageLookupByLibrary.simpleMessage(
       "Không tìm thấy file PDF, EPUB, hoặc MOBI",
     ),
@@ -1129,6 +1132,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "sendTestNotification": MessageLookupByLibrary.simpleMessage(
       "Gửi thông báo thử nghiệm",
     ),
+    "service_package": MessageLookupByLibrary.simpleMessage("Gói dịch vụ"),
     "setReadingReminders": MessageLookupByLibrary.simpleMessage(
       "Đặt nhắc nhở đọc sách hàng ngày",
     ),
@@ -1260,6 +1264,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "total_pages": MessageLookupByLibrary.simpleMessage("Số trang"),
     "total_ratings": m7,
     "transactionId": MessageLookupByLibrary.simpleMessage("Mã giao dịch"),
+    "transaction_id": MessageLookupByLibrary.simpleMessage("Mã giao dịch"),
     "translate": MessageLookupByLibrary.simpleMessage("Ngôn ngữ dịch"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Thử lại"),
     "try_again": MessageLookupByLibrary.simpleMessage("Thử lại"),

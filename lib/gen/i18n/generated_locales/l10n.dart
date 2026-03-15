@@ -6002,6 +6002,36 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Chưa có dữ liệu thanh toán`
+  String get no_payment_history {
+    return Intl.message(
+      'Chưa có dữ liệu thanh toán',
+      name: 'no_payment_history',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gói dịch vụ`
+  String get service_package {
+    return Intl.message(
+      'Gói dịch vụ',
+      name: 'service_package',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mã giao dịch`
+  String get transaction_id {
+    return Intl.message(
+      'Mã giao dịch',
+      name: 'transaction_id',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -2086,4 +2086,13 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get payment_history => 'Lịch sử thanh toán';
+
+  @override
+  String get no_payment_history => 'Chưa có dữ liệu thanh toán';
+
+  @override
+  String get service_package => 'Gói dịch vụ';
+
+  @override
+  String get transaction_id => 'Mã giao dịch';
 }

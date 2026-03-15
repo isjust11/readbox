@@ -38,5 +38,15 @@ class PaymentCubit extends Cubit<BaseState> {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
-}
 
+  // Lấy danh sách lịch sử thanh toán
+  Future<void> getPaymentHistory() async {
+    try {
+      emit(LoadingState());
+      final history = await repository.getPaymentHistory();
+      emit(LoadedState<List<PaymentHistoryModel>>(history));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
+}

@@ -4089,6 +4089,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Payment history'**
   String get payment_history;
+
+  /// No description provided for @no_payment_history.
+  ///
+  /// In en, this message translates to:
+  /// **'No payment history'**
+  String get no_payment_history;
+
+  /// No description provided for @service_package.
+  ///
+  /// In en, this message translates to:
+  /// **'Service package'**
+  String get service_package;
+
+  /// No description provided for @transaction_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID'**
+  String get transaction_id;
 }
 
 class _AppLocalizationsDelegate
