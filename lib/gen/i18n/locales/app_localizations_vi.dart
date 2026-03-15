@@ -1893,6 +1893,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get usage_statistics => 'Thống Kê Sử Dụng';
 
   @override
+  String get usage_statistics_detail => 'Chi tiết tài nguyên đã dùng';
+
+  @override
   String get error_loading_data => 'Lỗi tải dữ liệu';
 
   @override
@@ -2077,4 +2080,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get connect => 'Kết nối';
+
+  @override
+  String get payment_title => 'Thanh toán';
+
+  @override
+  String get payment_history => 'Lịch sử thanh toán';
 }

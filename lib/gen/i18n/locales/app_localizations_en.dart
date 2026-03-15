@@ -1890,6 +1890,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get usage_statistics => 'Usage Statistics';
 
   @override
+  String get usage_statistics_detail => 'Detail usage';
+
+  @override
   String get error_loading_data => 'Error loading data';
 
   @override
@@ -2074,4 +2077,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get connect => 'Connect';
+
+  @override
+  String get payment_title => 'Payment';
+
+  @override
+  String get payment_history => 'Payment history';
 }

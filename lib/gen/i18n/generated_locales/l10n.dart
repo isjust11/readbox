@@ -5484,6 +5484,16 @@ class AppLocalizations {
     );
   }
 
+  /// `Chi tiết tài nguyên đã dùng`
+  String get usage_statistics_detail {
+    return Intl.message(
+      'Chi tiết tài nguyên đã dùng',
+      name: 'usage_statistics_detail',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Lỗi tải dữ liệu`
   String get error_loading_data {
     return Intl.message(
@@ -5971,6 +5981,26 @@ class AppLocalizations {
   /// `Kết nối`
   String get connect {
     return Intl.message('Kết nối', name: 'connect', desc: '', args: []);
+  }
+
+  /// `Thanh toán`
+  String get payment_title {
+    return Intl.message(
+      'Thanh toán',
+      name: 'payment_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lịch sử thanh toán`
+  String get payment_history {
+    return Intl.message(
+      'Lịch sử thanh toán',
+      name: 'payment_history',
+      desc: '',
+      args: [],
+    );
   }
 }
 

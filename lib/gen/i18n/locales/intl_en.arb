@@ -644,6 +644,7 @@
   "no_categories_found": "No categories found",
   "try_different_search": "Try a different search term",
   "usage_statistics": "Usage Statistics",
+  "usage_statistics_detail": "Detail usage",
   "error_loading_data": "Error loading data",
   "usage_in_current_period": "Usage in Current Period",
   "storage_usage": "Storage Usage",
@@ -701,5 +702,7 @@
   "unlink_drive_confirm": "Are you sure you want to unlink the Google Drive folder?",
   "folder_id_hint": "E.g.: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms",
   "paste_drive_folder_url": "Or paste Drive folder URL",
-  "connect": "Connect"
+  "connect": "Connect",
+  "payment_title": "Payment",
+  "payment_history": "Payment history"
 }

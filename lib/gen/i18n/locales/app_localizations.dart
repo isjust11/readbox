@@ -3722,6 +3722,12 @@ abstract class AppLocalizations {
   /// **'Usage Statistics'**
   String get usage_statistics;
 
+  /// No description provided for @usage_statistics_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Detail usage'**
+  String get usage_statistics_detail;
+
   /// No description provided for @error_loading_data.
   ///
   /// In en, this message translates to:
@@ -4071,6 +4077,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connect'**
   String get connect;
+
+  /// No description provided for @payment_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get payment_title;
+
+  /// No description provided for @payment_history.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment history'**
+  String get payment_history;
 }
 
 class _AppLocalizationsDelegate

@@ -775,6 +775,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentSuccess": MessageLookupByLibrary.simpleMessage(
       "Thanh toán thành công",
     ),
+    "payment_history": MessageLookupByLibrary.simpleMessage(
+      "Lịch sử thanh toán",
+    ),
+    "payment_title": MessageLookupByLibrary.simpleMessage("Thanh toán"),
     "pdf": MessageLookupByLibrary.simpleMessage("PDF"),
     "pdfEpubMobi": MessageLookupByLibrary.simpleMessage("PDF, EPUB, MOBI"),
     "pdf_add_note": MessageLookupByLibrary.simpleMessage("Thêm ghi chú"),
@@ -1360,6 +1364,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "usage_statistics": MessageLookupByLibrary.simpleMessage(
       "Thống Kê Sử Dụng",
+    ),
+    "usage_statistics_detail": MessageLookupByLibrary.simpleMessage(
+      "Chi tiết tài nguyên đã dùng",
     ),
     "useFingerprintOrFaceID": MessageLookupByLibrary.simpleMessage(
       "Sử dụng vân tay hoặc Face ID",

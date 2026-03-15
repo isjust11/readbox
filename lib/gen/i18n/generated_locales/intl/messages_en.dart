@@ -735,6 +735,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "paymentSuccess": MessageLookupByLibrary.simpleMessage(
       "Payment Successful",
     ),
+    "payment_history": MessageLookupByLibrary.simpleMessage("Payment history"),
+    "payment_title": MessageLookupByLibrary.simpleMessage("Payment"),
     "pdf": MessageLookupByLibrary.simpleMessage("PDF"),
     "pdfEpubMobi": MessageLookupByLibrary.simpleMessage("PDF, EPUB, MOBI"),
     "pdf_add_note": MessageLookupByLibrary.simpleMessage("Add note"),
@@ -1300,6 +1302,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "usage_statistics": MessageLookupByLibrary.simpleMessage(
       "Usage Statistics",
+    ),
+    "usage_statistics_detail": MessageLookupByLibrary.simpleMessage(
+      "Detail usage",
     ),
     "useFingerprintOrFaceID": MessageLookupByLibrary.simpleMessage(
       "Use fingerprint or Face ID",

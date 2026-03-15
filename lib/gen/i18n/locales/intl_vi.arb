@@ -665,6 +665,7 @@
   "no_categories_found": "Không tìm thấy danh mục",
   "try_different_search": "Thử từ khóa tìm kiếm khác",
   "usage_statistics": "Thống Kê Sử Dụng",
+  "usage_statistics_detail": "Chi tiết tài nguyên đã dùng",
   "error_loading_data": "Lỗi tải dữ liệu",
   "usage_in_current_period": "Lượng Sử Dụng Trong Kỳ Hiện Tại",
   "storage_usage": "Dung Lượng Lưu Trữ",
@@ -722,5 +723,7 @@
   "unlink_drive_confirm": "Bạn có chắc muốn hủy liên kết thư mục Google Drive?",
   "folder_id_hint": "VD: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms",
   "paste_drive_folder_url": "Hoặc dán URL thư mục Drive",
-  "connect": "Kết nối"
+  "connect": "Kết nối",
+  "payment_title": "Thanh toán",
+  "payment_history": "Lịch sử thanh toán"
 }

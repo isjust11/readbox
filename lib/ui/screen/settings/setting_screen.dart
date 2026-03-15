@@ -88,6 +88,8 @@ class _SettingScreenState extends State<SettingScreen> {
           const SizedBox(height: AppDimens.SIZE_12),
           _buildQuickActions(),
           const SizedBox(height: AppDimens.SIZE_12),
+          _buildUsageAndPayment(context),
+          const SizedBox(height: AppDimens.SIZE_12),
           _buildReadBookSection(context),
           const SizedBox(height: AppDimens.SIZE_12),
           _buildSettingsSection(context),
@@ -197,6 +199,48 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+   // Build setting readbook section
+  Widget _buildUsageAndPayment(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
+      ),
+      child: Column(
+        children: [
+          _buildSettingItem(
+            icon: Icons.pie_chart,
+            title: AppLocalizations.current.usage_statistics,
+            subtitle: AppLocalizations.current.usage_statistics_detail,
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.dataStorageScreen);
+            },
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: AppDimens.SIZE_16,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+          _buildDivider(),
+          _buildSettingItem(
+            icon: Icons.history,
+            title: AppLocalizations.current.payment,
+            subtitle: AppLocalizations.current.payment_history,
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.textToSpeechSettingScreen);
+            },
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: AppDimens.SIZE_16,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
       ),
     );
   }
