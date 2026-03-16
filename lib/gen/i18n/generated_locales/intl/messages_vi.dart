@@ -288,6 +288,19 @@ class MessageLookup extends MessageLookupByLibrary {
     "drive_link_success": MessageLookupByLibrary.simpleMessage(
       "Đã liên kết thư mục Google Drive",
     ),
+    "duration_selector": MessageLookupByLibrary.simpleMessage(
+      "Thời gian đăng ký",
+    ),
+    "duration_selector_12_month": MessageLookupByLibrary.simpleMessage("1 Năm"),
+    "duration_selector_1_month": MessageLookupByLibrary.simpleMessage(
+      "1 Tháng",
+    ),
+    "duration_selector_3_month": MessageLookupByLibrary.simpleMessage(
+      "3 Tháng",
+    ),
+    "duration_selector_6_month": MessageLookupByLibrary.simpleMessage(
+      "6 Tháng",
+    ),
     "edit": MessageLookupByLibrary.simpleMessage("Sửa"),
     "editProfile": MessageLookupByLibrary.simpleMessage("Chỉnh sửa hồ sơ"),
     "edit_book": MessageLookupByLibrary.simpleMessage("Sửa sách"),
@@ -776,6 +789,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "payment": MessageLookupByLibrary.simpleMessage("Thanh toán"),
     "paymentFailed": MessageLookupByLibrary.simpleMessage(
       "Thanh toán thất bại",
+    ),
+    "paymentMethodMomo": MessageLookupByLibrary.simpleMessage("Momo"),
+    "paymentMethodMomoDescription": MessageLookupByLibrary.simpleMessage(
+      "Thanh toán qua Momo",
+    ),
+    "paymentMethodPayos": MessageLookupByLibrary.simpleMessage("PayOS"),
+    "paymentMethodPayosDescription": MessageLookupByLibrary.simpleMessage(
+      "Thanh toán qua PayOS",
+    ),
+    "paymentMethodVnpay": MessageLookupByLibrary.simpleMessage("VNPAY"),
+    "paymentMethodVnpayDescription": MessageLookupByLibrary.simpleMessage(
+      "Thanh toán qua VNPAY",
+    ),
+    "paymentMethodZalopay": MessageLookupByLibrary.simpleMessage("ZaloPay"),
+    "paymentMethodZalopayDescription": MessageLookupByLibrary.simpleMessage(
+      "Thanh toán qua ZaloPay",
     ),
     "paymentResult": MessageLookupByLibrary.simpleMessage("Kết quả thanh toán"),
     "paymentSuccess": MessageLookupByLibrary.simpleMessage(

@@ -6087,6 +6087,131 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Thời gian đăng ký`
+  String get duration_selector {
+    return Intl.message(
+      'Thời gian đăng ký',
+      name: 'duration_selector',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 Tháng`
+  String get duration_selector_1_month {
+    return Intl.message(
+      '1 Tháng',
+      name: 'duration_selector_1_month',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3 Tháng`
+  String get duration_selector_3_month {
+    return Intl.message(
+      '3 Tháng',
+      name: 'duration_selector_3_month',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `6 Tháng`
+  String get duration_selector_6_month {
+    return Intl.message(
+      '6 Tháng',
+      name: 'duration_selector_6_month',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 Năm`
+  String get duration_selector_12_month {
+    return Intl.message(
+      '1 Năm',
+      name: 'duration_selector_12_month',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `VNPAY`
+  String get paymentMethodVnpay {
+    return Intl.message(
+      'VNPAY',
+      name: 'paymentMethodVnpay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thanh toán qua VNPAY`
+  String get paymentMethodVnpayDescription {
+    return Intl.message(
+      'Thanh toán qua VNPAY',
+      name: 'paymentMethodVnpayDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Momo`
+  String get paymentMethodMomo {
+    return Intl.message('Momo', name: 'paymentMethodMomo', desc: '', args: []);
+  }
+
+  /// `Thanh toán qua Momo`
+  String get paymentMethodMomoDescription {
+    return Intl.message(
+      'Thanh toán qua Momo',
+      name: 'paymentMethodMomoDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ZaloPay`
+  String get paymentMethodZalopay {
+    return Intl.message(
+      'ZaloPay',
+      name: 'paymentMethodZalopay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thanh toán qua ZaloPay`
+  String get paymentMethodZalopayDescription {
+    return Intl.message(
+      'Thanh toán qua ZaloPay',
+      name: 'paymentMethodZalopayDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PayOS`
+  String get paymentMethodPayos {
+    return Intl.message(
+      'PayOS',
+      name: 'paymentMethodPayos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thanh toán qua PayOS`
+  String get paymentMethodPayosDescription {
+    return Intl.message(
+      'Thanh toán qua PayOS',
+      name: 'paymentMethodPayosDescription',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

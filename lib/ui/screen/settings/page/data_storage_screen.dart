@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 // import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/res.dart';
@@ -187,20 +188,28 @@ class _DataStorageScreenState extends State<DataStorageScreen>
     return Container(
       padding: const EdgeInsets.all(AppDimens.SIZE_20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors:
-              isFree
-                  ? [
-                    colorScheme.surfaceContainerHighest,
-                    colorScheme.surfaceContainer,
-                  ]
-                  : [
-                    colorScheme.primary,
-                    colorScheme.primary.withValues(alpha: 0.8),
-                  ],
+        image: DecorationImage(
+          image: AssetImage(Assets.images.appBarBackground.path),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            theme.colorScheme.onInverseSurface,
+            BlendMode.darken,
+          ),
         ),
+        // gradient: LinearGradient(
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,
+        //   colors:
+        //       isFree
+        //           ? [
+        //             colorScheme.surfaceContainerHighest,
+        //             colorScheme.surfaceContainer,
+        //           ]
+        //           : [
+        //             colorScheme.primary,
+        //             colorScheme.primary.withValues(alpha: 0.8),
+        //           ],
+        // ),
         borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
         boxShadow: [
           BoxShadow(

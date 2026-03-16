@@ -2104,4 +2104,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get device_info => 'Device Information';
+
+  @override
+  String get duration_selector => 'Duration Selector';
+
+  @override
+  String get duration_selector_1_month => '1 Month';
+
+  @override
+  String get duration_selector_3_month => '3 Month';
+
+  @override
+  String get duration_selector_6_month => '6 Month';
+
+  @override
+  String get duration_selector_12_month => '1 Year';
+
+  @override
+  String get paymentMethodVnpay => 'VNPAY';
+
+  @override
+  String get paymentMethodVnpayDescription => 'Pay via VNPAY';
+
+  @override
+  String get paymentMethodMomo => 'Momo';
+
+  @override
+  String get paymentMethodMomoDescription => 'Pay via Momo';
+
+  @override
+  String get paymentMethodZalopay => 'ZaloPay';
+
+  @override
+  String get paymentMethodZalopayDescription => 'Pay via ZaloPay';
+
+  @override
+  String get paymentMethodPayos => 'PayOS';
+
+  @override
+  String get paymentMethodPayosDescription => 'Pay via PayOS';
 }

@@ -283,6 +283,21 @@ class MessageLookup extends MessageLookupByLibrary {
     "drive_link_success": MessageLookupByLibrary.simpleMessage(
       "Google Drive folder linked successfully",
     ),
+    "duration_selector": MessageLookupByLibrary.simpleMessage(
+      "Duration Selector",
+    ),
+    "duration_selector_12_month": MessageLookupByLibrary.simpleMessage(
+      "1 Year",
+    ),
+    "duration_selector_1_month": MessageLookupByLibrary.simpleMessage(
+      "1 Month",
+    ),
+    "duration_selector_3_month": MessageLookupByLibrary.simpleMessage(
+      "3 Month",
+    ),
+    "duration_selector_6_month": MessageLookupByLibrary.simpleMessage(
+      "6 Month",
+    ),
     "editProfile": MessageLookupByLibrary.simpleMessage("Edit profile"),
     "edit_book": MessageLookupByLibrary.simpleMessage("Edit book"),
     "edit_book_failed": MessageLookupByLibrary.simpleMessage(
@@ -737,6 +752,22 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "payment": MessageLookupByLibrary.simpleMessage("Payment"),
     "paymentFailed": MessageLookupByLibrary.simpleMessage("Payment Failed"),
+    "paymentMethodMomo": MessageLookupByLibrary.simpleMessage("Momo"),
+    "paymentMethodMomoDescription": MessageLookupByLibrary.simpleMessage(
+      "Pay via Momo",
+    ),
+    "paymentMethodPayos": MessageLookupByLibrary.simpleMessage("PayOS"),
+    "paymentMethodPayosDescription": MessageLookupByLibrary.simpleMessage(
+      "Pay via PayOS",
+    ),
+    "paymentMethodVnpay": MessageLookupByLibrary.simpleMessage("VNPAY"),
+    "paymentMethodVnpayDescription": MessageLookupByLibrary.simpleMessage(
+      "Pay via VNPAY",
+    ),
+    "paymentMethodZalopay": MessageLookupByLibrary.simpleMessage("ZaloPay"),
+    "paymentMethodZalopayDescription": MessageLookupByLibrary.simpleMessage(
+      "Pay via ZaloPay",
+    ),
     "paymentResult": MessageLookupByLibrary.simpleMessage("Payment Result"),
     "paymentSuccess": MessageLookupByLibrary.simpleMessage(
       "Payment Successful",

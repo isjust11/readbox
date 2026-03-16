@@ -752,5 +752,18 @@
   "device_id": "Mã thiết bị",
   "device_info": "Thông tin thiết bị",
   "user_info": "Thông tin người dùng",
-  "social_networks": "Mạng xã hội"
+  "social_networks": "Mạng xã hội",
+  "duration_selector": "Thời gian đăng ký",
+  "duration_selector_1_month": "1 Tháng",
+  "duration_selector_3_month": "3 Tháng",
+  "duration_selector_6_month": "6 Tháng",
+  "duration_selector_12_month": "1 Năm",
+  "paymentMethodVnpay": "VNPAY",
+  "paymentMethodVnpayDescription": "Thanh toán qua VNPAY",
+  "paymentMethodMomo": "Momo",
+  "paymentMethodMomoDescription": "Thanh toán qua Momo",
+  "paymentMethodZalopay": "ZaloPay",
+  "paymentMethodZalopayDescription": "Thanh toán qua ZaloPay",
+  "paymentMethodPayos": "PayOS",
+  "paymentMethodPayosDescription": "Thanh toán qua PayOS"
 }

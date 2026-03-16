@@ -2107,4 +2107,43 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get device_info => 'Thông tin thiết bị';
+
+  @override
+  String get duration_selector => 'Thời gian đăng ký';
+
+  @override
+  String get duration_selector_1_month => '1 Tháng';
+
+  @override
+  String get duration_selector_3_month => '3 Tháng';
+
+  @override
+  String get duration_selector_6_month => '6 Tháng';
+
+  @override
+  String get duration_selector_12_month => '1 Năm';
+
+  @override
+  String get paymentMethodVnpay => 'VNPAY';
+
+  @override
+  String get paymentMethodVnpayDescription => 'Thanh toán qua VNPAY';
+
+  @override
+  String get paymentMethodMomo => 'Momo';
+
+  @override
+  String get paymentMethodMomoDescription => 'Thanh toán qua Momo';
+
+  @override
+  String get paymentMethodZalopay => 'ZaloPay';
+
+  @override
+  String get paymentMethodZalopayDescription => 'Thanh toán qua ZaloPay';
+
+  @override
+  String get paymentMethodPayos => 'PayOS';
+
+  @override
+  String get paymentMethodPayosDescription => 'Thanh toán qua PayOS';
 }

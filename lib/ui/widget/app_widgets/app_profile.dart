@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/routes.dart';
@@ -22,8 +24,10 @@ class AppProfile extends StatelessWidget {
         image: DecorationImage(
           image: AssetImage(Assets.images.profileBackground.path),
           fit: BoxFit.cover,
-          colorFilter: ColorFilter
-          .mode(Theme.of(context).colorScheme.onInverseSurface, BlendMode.darken),
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).colorScheme.onInverseSurface,
+            BlendMode.darken,
+          ),
         ),
       ),
       child: Container(
@@ -62,7 +66,12 @@ class AppProfile extends StatelessWidget {
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: theme.colorScheme.onInverseSurface.withValues(alpha: 0.6), width: 3),
+                      border: Border.all(
+                        color: theme.colorScheme.onInverseSurface.withValues(
+                          alpha: 0.6,
+                        ),
+                        width: 3,
+                      ),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withValues(alpha: 0.2),
@@ -184,9 +193,7 @@ class AppProfile extends StatelessWidget {
           height: 24,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              theme.primaryColor,
-            ),
+            valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
           ),
         ),
       );
@@ -195,15 +202,27 @@ class AppProfile extends StatelessWidget {
     // Nếu có ảnh avatar
     if (user?.picture != null && user!.picture!.isNotEmpty) {
       final avatarUrl = _getAvatarUrl();
-     
-      return BaseNetworkImage(
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        backgroundColor: theme.colorScheme.onInverseSurface,
-        showShimmer: true,
-        url: avatarUrl,
-      );
+
+      return Platform.isAndroid
+          ? Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: NetworkImage(avatarUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+          : BaseNetworkImage(
+            width: 80,
+            height: 80,
+            borderRadius: 40,
+            backgroundColor: theme.colorScheme.onInverseSurface,
+            showShimmer: true,
+            url: avatarUrl,
+          );
     }
 
     // Nếu có tên, hiển thị chữ cái đầu
@@ -226,11 +245,7 @@ class AppProfile extends StatelessWidget {
     return CircleAvatar(
       radius: 40,
       backgroundColor: theme.primaryColor.withValues(alpha: 0.5),
-      child: Icon(
-        Icons.person,
-        size: 48,
-        color: theme.primaryColor,
-      ),
+      child: Icon(Icons.person, size: 48, color: theme.primaryColor),
     );
   }
 

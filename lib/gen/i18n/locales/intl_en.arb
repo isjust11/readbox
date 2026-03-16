@@ -729,5 +729,18 @@
   "system_info": "System Information",
   "app_version": "App Version",
   "device_id": "Device ID",
-  "device_info": "Device Information"
+  "device_info": "Device Information",
+  "duration_selector": "Duration Selector",
+  "duration_selector_1_month": "1 Month",
+  "duration_selector_3_month": "3 Month",
+  "duration_selector_6_month": "6 Month",
+  "duration_selector_12_month": "1 Year",
+  "paymentMethodVnpay": "VNPAY",
+  "paymentMethodVnpayDescription": "Pay via VNPAY",
+  "paymentMethodMomo": "Momo",
+  "paymentMethodMomoDescription": "Pay via Momo",
+  "paymentMethodZalopay": "ZaloPay",
+  "paymentMethodZalopayDescription": "Pay via ZaloPay",
+  "paymentMethodPayos": "PayOS",
+  "paymentMethodPayosDescription": "Pay via PayOS"
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
@@ -23,6 +24,7 @@ class SubscriptionPlanScreen extends StatefulWidget {
 class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   int _selectedIndex = 0;
   bool _didInitSelectedIndex = false; // đã set index theo current plan chưa
+  int _selectedDurationMonths = 1; // 1, 3, 6, 12
 
   @override
   void initState() {
@@ -203,6 +205,11 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 // Selected plan detail card
                 _buildPlanDetail(context, selectedPlan, isCurrent),
                 const SizedBox(height: 24),
+
+                if (!selectedPlan.isFree) ...[
+                  _buildDurationSelector(context, selectedPlan),
+                  const SizedBox(height: 24),
+                ],
               ],
             ),
           ),
@@ -234,7 +241,11 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
 
           return Expanded(
             child: GestureDetector(
-              onTap: () => setState(() => _selectedIndex = i),
+              onTap:
+                  () => setState(() {
+                    _selectedIndex = i;
+                    _selectedDurationMonths = 1;
+                  }),
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
@@ -382,7 +393,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        plan.priceDisplay,
+                        _getFormattedPrice(plan),
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.w800,
@@ -516,7 +527,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         20,
         12,
         20,
-        MediaQuery.of(context).padding.bottom,
+        MediaQuery.of(context).padding.bottom + 10,
       ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -593,6 +604,139 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   ),
                 ),
       ),
+    );
+  }
+
+  String _getFormattedPrice(SubscriptionPlanModel plan) {
+    if (plan.price == null || plan.price! <= 0) return '';
+    double basePrice = plan.price!;
+    double totalPrice = basePrice * _selectedDurationMonths;
+
+    if (_selectedDurationMonths == 3) {
+      totalPrice *= 0.90;
+    } else if (_selectedDurationMonths == 6) {
+      totalPrice *= 0.85;
+    } else if (_selectedDurationMonths == 12) {
+      totalPrice *= 0.80; // 20% discount
+    }
+
+    final formatter = NumberFormat.currency(
+      locale: 'vi_VN',
+      symbol: 'đ',
+      decimalDigits: 0,
+    );
+    String periodInfo =
+        _selectedDurationMonths == 12
+            ? '/năm'
+            : '/$_selectedDurationMonths tháng';
+    if (_selectedDurationMonths == 1) {
+      periodInfo = '/tháng';
+    }
+    return '${formatter.format(totalPrice)}$periodInfo';
+  }
+
+  Widget _buildDurationSelector(
+    BuildContext context,
+    SubscriptionPlanModel plan,
+  ) {
+    final theme = Theme.of(context);
+    final durations = [1, 3, 6, 12];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Thời gian đăng ký',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: theme.textTheme.bodyLarge?.color,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children:
+              durations.map((months) {
+                final isSelected = _selectedDurationMonths == months;
+                String label = months == 12 ? '1 Năm' : '$months Tháng';
+                String discountText = '';
+                if (months == 3) discountText = 'Giảm 10%';
+                if (months == 6) discountText = 'Giảm 15%';
+                if (months == 12) discountText = 'Tiết kiệm 20%';
+
+                return GestureDetector(
+                  onTap: () => setState(() => _selectedDurationMonths = months),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: (MediaQuery.of(context).size.width - 40 - 12) / 2,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          isSelected
+                              ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                              : theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color:
+                            isSelected
+                                ? theme.colorScheme.primary
+                                : theme.dividerColor.withValues(alpha: 0.3),
+                        width: isSelected ? 1.5 : 1,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight:
+                                isSelected ? FontWeight.w700 : FontWeight.w600,
+                            color:
+                                isSelected
+                                    ? theme.colorScheme.primary
+                                    : theme.textTheme.bodyLarge?.color,
+                          ),
+                        ),
+                        if (discountText.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  isSelected
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.surfaceContainerHigh,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              discountText,
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color:
+                                    isSelected
+                                        ? theme.colorScheme.onPrimary
+                                        : theme.textTheme.bodyMedium?.color,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+        ),
+      ],
     );
   }
 
@@ -679,29 +823,35 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   _buildPaymentOption(
                     context,
                     icon: Icons.account_balance_rounded,
-                    title: 'VNPay',
-                    subtitle: 'Thanh toán qua ngân hàng',
+                    title: AppLocalizations.current.paymentMethodVnpay,
+                    subtitle:
+                        AppLocalizations.current.paymentMethodVnpayDescription,
                     value: 'vnpay',
                   ),
                   _buildPaymentOption(
                     context,
                     icon: Icons.wallet_rounded,
-                    title: 'MoMo',
-                    subtitle: 'Ví điện tử MoMo',
+                    title: AppLocalizations.current.paymentMethodMomo,
+                    subtitle:
+                        AppLocalizations.current.paymentMethodMomoDescription,
                     value: 'momo',
                   ),
                   _buildPaymentOption(
                     context,
                     icon: Icons.payment_rounded,
-                    title: 'ZaloPay',
-                    subtitle: 'Ví điện tử ZaloPay',
+                    title: AppLocalizations.current.paymentMethodZalopay,
+                    subtitle:
+                        AppLocalizations
+                            .current
+                            .paymentMethodZalopayDescription,
                     value: 'zalopay',
                   ),
                   _buildPaymentOption(
                     context,
                     icon: Icons.account_balance_wallet_rounded,
-                    title: 'PayOS',
-                    subtitle: 'Cổng thanh toán PayOS',
+                    title: AppLocalizations.current.paymentMethodPayos,
+                    subtitle:
+                        AppLocalizations.current.paymentMethodPayosDescription,
                     value: 'payos',
                   ),
                 ],

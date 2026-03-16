@@ -4131,6 +4131,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Device Information'**
   String get device_info;
+
+  /// No description provided for @duration_selector.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration Selector'**
+  String get duration_selector;
+
+  /// No description provided for @duration_selector_1_month.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Month'**
+  String get duration_selector_1_month;
+
+  /// No description provided for @duration_selector_3_month.
+  ///
+  /// In en, this message translates to:
+  /// **'3 Month'**
+  String get duration_selector_3_month;
+
+  /// No description provided for @duration_selector_6_month.
+  ///
+  /// In en, this message translates to:
+  /// **'6 Month'**
+  String get duration_selector_6_month;
+
+  /// No description provided for @duration_selector_12_month.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Year'**
+  String get duration_selector_12_month;
+
+  /// No description provided for @paymentMethodVnpay.
+  ///
+  /// In en, this message translates to:
+  /// **'VNPAY'**
+  String get paymentMethodVnpay;
+
+  /// No description provided for @paymentMethodVnpayDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay via VNPAY'**
+  String get paymentMethodVnpayDescription;
+
+  /// No description provided for @paymentMethodMomo.
+  ///
+  /// In en, this message translates to:
+  /// **'Momo'**
+  String get paymentMethodMomo;
+
+  /// No description provided for @paymentMethodMomoDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay via Momo'**
+  String get paymentMethodMomoDescription;
+
+  /// No description provided for @paymentMethodZalopay.
+  ///
+  /// In en, this message translates to:
+  /// **'ZaloPay'**
+  String get paymentMethodZalopay;
+
+  /// No description provided for @paymentMethodZalopayDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay via ZaloPay'**
+  String get paymentMethodZalopayDescription;
+
+  /// No description provided for @paymentMethodPayos.
+  ///
+  /// In en, this message translates to:
+  /// **'PayOS'**
+  String get paymentMethodPayos;
+
+  /// No description provided for @paymentMethodPayosDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay via PayOS'**
+  String get paymentMethodPayosDescription;
 }
 
 class _AppLocalizationsDelegate
