@@ -51,6 +51,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search => 'Search';
 
   @override
+  String get start => 'Start';
+
+  @override
+  String get next => 'Next';
+
+  @override
   String get input_username => 'Enter username';
 
   @override

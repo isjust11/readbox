@@ -7,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
-import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
@@ -26,9 +25,7 @@ class WordToPdfConverterScreen extends StatelessWidget {
     return Builder(
       builder: (context) {
         return MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (_) => getIt<ConverterCubit>()),
-          ],
+          providers: [BlocProvider(create: (_) => getIt<ConverterCubit>())],
           child: const WordToPdfConverterBody(),
         );
       },
@@ -44,7 +41,7 @@ class WordToPdfConverterBody extends StatefulWidget {
 }
 
 class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
-  bool canUseConvert = false;
+  bool canUseConvert = true;
   @override
   void initState() {
     super.initState();
@@ -120,7 +117,10 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
               children: [
                 if (!canUseConvert) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     margin: const EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
                       color: colorScheme.error.withValues(alpha: 0.1),
@@ -130,7 +130,7 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
                         width: 1,
                       ),
                     ),
-                    child: Row( 
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Icon(Icons.error, color: colorScheme.error),
@@ -140,32 +140,43 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Flexible(
-                                child: Text(AppLocalizations.current.tools_word_to_pdf_not_available, style: TextStyle(
-                                  fontSize: AppSize.fontSizeMedium,
-                                  color: colorScheme.error,
-                                ),),
+                                child: Text(
+                                  AppLocalizations
+                                      .current
+                                      .tools_word_to_pdf_not_available,
+                                  style: TextStyle(
+                                    fontSize: AppSize.fontSizeMedium,
+                                    color: colorScheme.error,
+                                  ),
+                                ),
                               ),
                               const SizedBox(width: 8),
                               InkWell(
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const SubscriptionPlanScreen(
-                                    )),
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) =>
+                                              const SubscriptionPlanScreen(),
+                                    ),
                                   );
                                 },
-                                child: Text(AppLocalizations.current.upgrade_now, style: TextStyle(
-                                  fontSize: AppSize.fontSizeMedium,
-                                  fontWeight: FontWeight.w600,
-                                  color: colorScheme.primary,
-                                ),),
+                                child: Text(
+                                  AppLocalizations.current.upgrade_now,
+                                  style: TextStyle(
+                                    fontSize: AppSize.fontSizeMedium,
+                                    fontWeight: FontWeight.w600,
+                                    color: colorScheme.primary,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
                 // Icon and description
                 Container(
@@ -298,7 +309,10 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
                       Text(
                         AppLocalizations.current.tools_select_word_file,
                         style: TextStyle(
-                          color: canUseConvert ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
+                          color:
+                              canUseConvert
+                                  ? colorScheme.onPrimary
+                                  : colorScheme.onSurfaceVariant,
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                         ),

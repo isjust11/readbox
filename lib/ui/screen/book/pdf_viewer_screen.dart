@@ -7,6 +7,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:share_plus/share_plus.dart';
@@ -94,13 +95,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
   bool get isEnableAction => _error == null;
   UserModel? _currentUser;
-
+  late UserSubscriptionModel? _userSubscription;
   @override
   void initState() {
     super.initState();
     _loadCurrentUser();
     _checkInternetConnection();
     context.read<SubscriptionPlanCubit>().checkUsage();
+    _userSubscription = context.watch<UserSubscriptionCubit>().userSubscription;
     _subscriptionPlanStream = context
         .read<SubscriptionPlanCubit>()
         .stream
@@ -525,6 +527,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     String text,
     Color color, {
     bool? isEnabled = true,
+    bool? isPro = false,
   }) {
     return PopupMenuItem(
       value: value,
@@ -547,6 +550,25 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             text,
             style: TextStyle(color: isEnabled ?? false ? color : Colors.grey),
           ),
+          if (isPro ?? false) ...[
+            Container(
+              margin: EdgeInsets.only(left: 8),
+              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              decoration: BoxDecoration(
+                color: Theme.of(
+                  context,
+                ).colorScheme.error.withValues(alpha: 0.825),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                AppLocalizations.current.pro,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSecondary,
+                  fontSize: AppSize.fontSizeSmall,
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -707,7 +729,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               color: _isReadingContinuous ? Colors.red : Colors.white,
             ),
             onPressed: () async {
-              if (_isReadingContinuous) {
+              if (_isReadingContinuous && _userSubscription?.isFree == false) {
                 await _ttsService.stop();
                 await TtsLockScreenController.instance.stop();
                 _removePdfWordHighlight();
@@ -1012,6 +1034,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                             isEnabled:
                                                 _actionStatus?['canUseTts'] ??
                                                 false,
+                                            isPro: true,
                                           ),
                                         if (isOwner || _isLocal)
                                           _buildMenuItem(

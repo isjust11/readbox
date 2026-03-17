@@ -51,6 +51,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get search => 'Tìm kiếm';
 
   @override
+  String get start => 'Từ đầu';
+
+  @override
+  String get next => 'Tiếp theo';
+
+  @override
   String get input_username => 'Nhập tên đăng nhập';
 
   @override
