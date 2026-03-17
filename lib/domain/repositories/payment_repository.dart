@@ -10,12 +10,16 @@ class PaymentRepository {
     required String planId,
     required String paymentMethod,
     String? bankCode,
+    int? periodMonths,
+    int? discountPercentage,
   }) async {
     try {
       return await remoteDataSource.createPayment(
         planId: planId,
         paymentMethod: paymentMethod,
         bankCode: bankCode,
+        periodMonths: periodMonths,
+        discountPercentage: discountPercentage,
       );
     } catch (e) {
       throw Exception('Failed to create payment: $e');

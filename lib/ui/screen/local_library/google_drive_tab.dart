@@ -97,7 +97,10 @@ class _GoogleDriveTabState extends State<GoogleDriveTab>
             children: [
               Icon(Icons.add_to_drive, color: colorScheme.primary),
               const SizedBox(width: 8),
-              Text(AppLocalizations.current.link_google_drive),
+              Text(
+                AppLocalizations.current.link_google_drive,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              ),
             ],
           ),
           content: Column(

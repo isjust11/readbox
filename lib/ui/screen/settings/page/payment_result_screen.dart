@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
@@ -6,6 +7,7 @@ import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
+import 'package:readbox/blocs/cubit.dart';
 
 class PaymentResultScreen extends StatefulWidget {
   final String status; // success, failed, error
@@ -142,6 +144,7 @@ class _PaymentResultScreenState extends State<PaymentResultScreen> {
             if (isSuccess) ...[
               FilledButton(
                 onPressed: () {
+                  context.read<UserSubscriptionCubit>().loadMe();
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 },
                 style: FilledButton.styleFrom(
@@ -177,6 +180,7 @@ class _PaymentResultScreenState extends State<PaymentResultScreen> {
               const SizedBox(height: AppDimens.SIZE_12),
               TextButton(
                 onPressed: () {
+                  context.read<UserSubscriptionCubit>().loadMe();
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 },
                 child: Text(AppLocalizations.current.backToHome),

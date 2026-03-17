@@ -13,6 +13,8 @@
   "retry": "Retry",
   "refresh": "Refresh",
   "search": "Search",
+  "start": "Start",
+  "next": "Next",
   "input_username": "Enter username",
   "username": "Username",
   "pls_input_username": "Please enter username",

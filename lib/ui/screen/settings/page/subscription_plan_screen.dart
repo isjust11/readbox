@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/domain/enums/payment_method.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
@@ -206,10 +207,10 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 _buildPlanDetail(context, selectedPlan, isCurrent),
                 const SizedBox(height: 24),
 
-                if (!selectedPlan.isFree) ...[
-                  _buildDurationSelector(context, selectedPlan),
-                  const SizedBox(height: 24),
-                ],
+                // if (!selectedPlan.isFree) ...[
+                //   _buildDurationSelector(context, selectedPlan),
+                //   const SizedBox(height: 24),
+                // ],
               ],
             ),
           ),
@@ -374,7 +375,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
             ),
 
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(12),
             child: Column(
               children: [
                 // Price
@@ -382,30 +383,60 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   Text(
                     AppLocalizations.current.free,
                     style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
                       color: AppColors.successGreen,
                     ),
                   )
                 else
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        _getFormattedPrice(plan),
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w800,
-                          color: theme.colorScheme.primary,
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            _getFormattedPrice(plan),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
                         ),
                       ),
+                      // badge discount by selected duration months
+                      if (_selectedDurationMonths !=1) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.red.withValues(alpha: 0.8),
+                                Colors.red,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          child: Text(
+                            _selectedDurationMonths == 3 ? '-10%' : _selectedDurationMonths == 6 ? '-15%' : _selectedDurationMonths == 12 ? '-20%' : '',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
 
                 if (plan.description != null &&
                     plan.description!.isNotEmpty) ...[
-                  const SizedBox(height: 8),
                   Text(
                     plan.description!,
                     textAlign: TextAlign.center,
@@ -417,33 +448,124 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   ),
                 ],
 
-                const SizedBox(height: 20),
-                Divider(
-                  height: 1,
-                  color: theme.dividerColor.withValues(alpha: 0.3),
-                ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
+                if (!plan.isFree) ...[
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    margin: const EdgeInsets.only(bottom: 4),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      children:
+                          [1, 3, 6, 12].map((months) {
+                            final isSelected =
+                                _selectedDurationMonths == months;
+                            String label =
+                                months == 12 ? '1 Năm' : '$months Tháng';
+                            String discountText = '';
+                            // if (months == 3) discountText = 'Giảm 10%';
+                            // if (months == 6) discountText = 'Giảm 15%';
+                            // if (months == 12) discountText = 'Tiết kiệm 20%';
+
+                            return Expanded(
+                              child: GestureDetector(
+                                onTap:
+                                    () => setState(
+                                      () => _selectedDurationMonths = months,
+                                    ),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                    horizontal: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        isSelected
+                                            ? theme.colorScheme.primary
+                                                .withValues(alpha: 0.8)
+                                            : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        label,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight:
+                                              isSelected
+                                                  ? FontWeight.w600
+                                                  : FontWeight.w500,
+                                          color:
+                                              isSelected
+                                                  ? theme
+                                                      .colorScheme
+                                                      .onSecondary
+                                                  : theme
+                                                      .colorScheme
+                                                      .onSecondary
+                                                      .withValues(alpha: 0.7),
+                                        ),
+                                      ),
+                                      if (discountText.isNotEmpty) ...[
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          discountText,
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color:
+                                                isSelected
+                                                    ? theme.colorScheme.primary
+                                                        .withValues(alpha: 0.7)
+                                                    : (theme
+                                                            .textTheme
+                                                            .bodySmall
+                                                            ?.color ??
+                                                        AppColors
+                                                            .textLightGrey),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                    ),
+                  ),
+                ],
+                if (plan.isFree) ...[
+                  Divider(
+                    height: 1,
+                    color: theme.dividerColor.withValues(alpha: 0.3),
+                  ),
+                  const SizedBox(height: 16),
+                ],
 
                 // Features
                 _buildFeatureItem(
                   context,
                   Icons.cloud_outlined,
                   AppLocalizations.current.storageLimit,
-                  plan.storageDisplay,
+                  _getStorageDisplayForDuration(plan),
                 ),
                 if (plan.ttsLimitPerPeriod > 0)
                   _buildFeatureItem(
                     context,
                     Icons.record_voice_over_outlined,
                     AppLocalizations.current.ttsLimit,
-                    '${plan.ttsLimitPerPeriod} ${AppLocalizations.current.perPeriod}',
+                    '${_getLimitForDuration(plan.ttsLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
                   ),
                 if (plan.convertLimitPerPeriod > 0)
                   _buildFeatureItem(
                     context,
                     Icons.picture_as_pdf_outlined,
                     AppLocalizations.current.convertLimit,
-                    '${plan.convertLimitPerPeriod} ${AppLocalizations.current.perPeriod}',
+                    '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
                   ),
 
                 if (plan.downloadLimitPerPeriod > 0)
@@ -451,14 +573,14 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                     context,
                     Icons.download_outlined,
                     AppLocalizations.current.download_limit,
-                    '${plan.downloadLimitPerPeriod} ${AppLocalizations.current.perPeriod}',
+                    '${_getLimitForDuration(plan.downloadLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
                   ),
                 if (plan.shareLimitPerPeriod > 0)
                   _buildFeatureItem(
                     context,
                     Icons.share_outlined,
                     AppLocalizations.current.share_limit,
-                    '${plan.shareLimitPerPeriod} ${AppLocalizations.current.perPeriod}',
+                    '${_getLimitForDuration(plan.shareLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
                   ),
               ],
             ),
@@ -524,10 +646,10 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     final isFreePlanVisible = isFreePlan && hasPaidPlan;
     return Container(
       padding: EdgeInsets.fromLTRB(
-        20,
+        8,
         12,
-        20,
-        MediaQuery.of(context).padding.bottom + 10,
+        8,
+        MediaQuery.of(context).padding.bottom + 8,
       ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -575,7 +697,6 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 )
                 : SizedBox(
                   width: double.infinity,
-                  height: 50,
                   child: FilledButton(
                     onPressed:
                         isFreePlanVisible
@@ -585,10 +706,10 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                       backgroundColor:
                           isFreePlan
                               ? AppColors.successGreen
-                              : theme.colorScheme.primary,
+                              : theme.primaryColor,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       elevation: 0,
                     ),
@@ -605,6 +726,32 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 ),
       ),
     );
+  }
+
+  double _getDurationMultiplier(SubscriptionPlanModel plan) {
+    final baseMonths = plan.periodType == 'year' ? 12 : 1;
+    return _selectedDurationMonths / baseMonths;
+  }
+
+  String _getStorageDisplayForDuration(SubscriptionPlanModel plan) {
+    final multiplier = _getDurationMultiplier(plan);
+    final totalBytes = (plan.storageLimitBytes * multiplier).round();
+
+    const int mb = 1024 * 1024;
+    const int gb = 1024 * mb;
+
+    if (totalBytes >= gb) {
+      return '${(totalBytes / gb).toStringAsFixed(1)} GB';
+    }
+    if (totalBytes >= mb) {
+      return '${(totalBytes / mb).round()} MB';
+    }
+    return '$totalBytes B';
+  }
+
+  int _getLimitForDuration(int baseLimit, SubscriptionPlanModel plan) {
+    final multiplier = _getDurationMultiplier(plan);
+    return (baseLimit * multiplier).round();
   }
 
   String _getFormattedPrice(SubscriptionPlanModel plan) {
@@ -635,111 +782,6 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     return '${formatter.format(totalPrice)}$periodInfo';
   }
 
-  Widget _buildDurationSelector(
-    BuildContext context,
-    SubscriptionPlanModel plan,
-  ) {
-    final theme = Theme.of(context);
-    final durations = [1, 3, 6, 12];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Thời gian đăng ký',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: theme.textTheme.bodyLarge?.color,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          children:
-              durations.map((months) {
-                final isSelected = _selectedDurationMonths == months;
-                String label = months == 12 ? '1 Năm' : '$months Tháng';
-                String discountText = '';
-                if (months == 3) discountText = 'Giảm 10%';
-                if (months == 6) discountText = 'Giảm 15%';
-                if (months == 12) discountText = 'Tiết kiệm 20%';
-
-                return GestureDetector(
-                  onTap: () => setState(() => _selectedDurationMonths = months),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: (MediaQuery.of(context).size.width - 40 - 12) / 2,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color:
-                          isSelected
-                              ? theme.colorScheme.primary.withValues(alpha: 0.1)
-                              : theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color:
-                            isSelected
-                                ? theme.colorScheme.primary
-                                : theme.dividerColor.withValues(alpha: 0.3),
-                        width: isSelected ? 1.5 : 1,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          label,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight:
-                                isSelected ? FontWeight.w700 : FontWeight.w600,
-                            color:
-                                isSelected
-                                    ? theme.colorScheme.primary
-                                    : theme.textTheme.bodyLarge?.color,
-                          ),
-                        ),
-                        if (discountText.isNotEmpty) ...[
-                          const SizedBox(height: 4),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color:
-                                  isSelected
-                                      ? theme.colorScheme.primary
-                                      : theme.colorScheme.surfaceContainerHigh,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              discountText,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color:
-                                    isSelected
-                                        ? theme.colorScheme.onPrimary
-                                        : theme.textTheme.bodyMedium?.color,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-        ),
-      ],
-    );
-  }
-
   void _onSelectPlan(BuildContext context, SubscriptionPlanModel plan) async {
     if (plan.isFree) {
       await context.read<SubscriptionPlanCubit>().createSubscriptionPlan(
@@ -762,6 +804,8 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
       final payment = await paymentRepo.createPayment(
         planId: plan.id!,
         paymentMethod: paymentMethod,
+        periodMonths: _selectedDurationMonths,
+        discountPercentage: _selectedDurationMonths == 3 ? 10 : _selectedDurationMonths == 6 ? 15 : _selectedDurationMonths == 12 ? 20 : 0,
       );
 
       if (context.mounted) Navigator.of(context).pop();
@@ -822,37 +866,30 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   const SizedBox(height: 16),
                   _buildPaymentOption(
                     context,
-                    icon: Icons.account_balance_rounded,
+                    paymentIcon: PaymentIconWidget(paymentMethod: PaymentMethod.vnpay),
                     title: AppLocalizations.current.paymentMethodVnpay,
                     subtitle:
                         AppLocalizations.current.paymentMethodVnpayDescription,
                     value: 'vnpay',
+                    visible: false,
                   ),
                   _buildPaymentOption(
                     context,
-                    icon: Icons.wallet_rounded,
+                    paymentIcon: PaymentIconWidget(paymentMethod: PaymentMethod.momo),
                     title: AppLocalizations.current.paymentMethodMomo,
                     subtitle:
                         AppLocalizations.current.paymentMethodMomoDescription,
                     value: 'momo',
+                    visible: false,
                   ),
                   _buildPaymentOption(
                     context,
-                    icon: Icons.payment_rounded,
-                    title: AppLocalizations.current.paymentMethodZalopay,
-                    subtitle:
-                        AppLocalizations
-                            .current
-                            .paymentMethodZalopayDescription,
-                    value: 'zalopay',
-                  ),
-                  _buildPaymentOption(
-                    context,
-                    icon: Icons.account_balance_wallet_rounded,
+                    paymentIcon: PaymentIconWidget(paymentMethod: PaymentMethod.payos),
                     title: AppLocalizations.current.paymentMethodPayos,
                     subtitle:
                         AppLocalizations.current.paymentMethodPayosDescription,
                     value: 'payos',
+                    visible: true,
                   ),
                 ],
               ),
@@ -863,10 +900,11 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
 
   Widget _buildPaymentOption(
     BuildContext context, {
-    required IconData icon,
+    required Widget paymentIcon,
     required String title,
     required String subtitle,
     required String value,
+    required bool? visible,
   }) {
     final theme = Theme.of(context);
     return Container(
@@ -882,7 +920,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
             color: theme.colorScheme.primary.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(icon, color: theme.colorScheme.primary, size: 22),
+          child: paymentIcon,
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: Text(
@@ -892,13 +930,13 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
             color: theme.textTheme.bodySmall?.color,
           ),
         ),
-        trailing: Icon(
-          Icons.arrow_forward_ios,
-          size: 14,
-          color: theme.textTheme.bodySmall?.color,
-        ),
+        trailing: visible == true ? Icon(
+            Icons.arrow_forward_ios,
+            size: 14,
+            color: theme.textTheme.bodySmall?.color,
+          ) : null,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        onTap: () => Navigator.of(context).pop(value),
+        onTap: () => visible == true ? Navigator.of(context).pop(value) : null,
       ),
     );
   }

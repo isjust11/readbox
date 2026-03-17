@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
@@ -547,9 +548,9 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
                   onTap: () async {
                     Map<String, String> voiceMap = {
                       'name': voice['name'] as String,
-                      'gender': voice['gender'] as String,
+                      // 'gender': voice['gender'] as String,
                       'locale': voice['locale'] as String,
-                      'identifier': voice['identifier'] as String,
+                      'identifier': Platform.isIOS ? (voice['identifier'] as String) : '',
                       'quality': voice['quality'] as String,
                     };
                     final prefs = await SharedPreferences.getInstance();

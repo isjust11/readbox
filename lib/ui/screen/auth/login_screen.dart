@@ -62,7 +62,7 @@ class LoginScreenState extends State<LoginBody>
     _checkBiometricAvailability();
   }
 
- Future<void> _getRememberPassword() async {
+  Future<void> _getRememberPassword() async {
     _rememberMe = await SharedPreferenceUtil.getRememberPassword();
     if (_rememberMe) {
       final credentials = await BiometricAuthService.getStoredCredentials();
@@ -168,7 +168,7 @@ class LoginScreenState extends State<LoginBody>
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(32),
+                          padding: EdgeInsets.all(18),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -177,14 +177,14 @@ class LoginScreenState extends State<LoginBody>
                                   Color(0xFF667eea),
                                 ),
                               ),
-                              SizedBox(height: 16),
-                              Text(
-                                AppLocalizations.current.logging_in,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                              // SizedBox(height: 16),
+                              // Text(
+                              //   AppLocalizations.current.logging_in,
+                              //   style: TextStyle(
+                              //     fontSize: 16,
+                              //     fontWeight: FontWeight.w500,
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -218,8 +218,7 @@ class LoginScreenState extends State<LoginBody>
               ),
             ],
           ),
-            child: 
-            Image.asset(Assets.images.appLogo.path, width: 60, height: 60),
+          child: Image.asset(Assets.images.appLogo.path, width: 60, height: 60),
         ),
         SizedBox(height: 12),
 
@@ -286,7 +285,7 @@ class LoginScreenState extends State<LoginBody>
                     ],
                   )
                   : _buildLoginButton(),
-                      // Remember and Forgot Password
+              // Remember and Forgot Password
               _buildRememberAndForgotPassword(),
               SizedBox(height: 12),
 

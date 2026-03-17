@@ -287,6 +287,9 @@ class MainBodyState extends State<MainBody> {
                   // mo bottom sheet chon category
                   showModalBottomSheet(
                     context: context,
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height * 0.8,
+                    ),
                     builder:
                         (context) => CategoryBottomSheet(
                           categories: categories,

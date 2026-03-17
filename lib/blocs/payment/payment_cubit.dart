@@ -14,6 +14,7 @@ class PaymentCubit extends Cubit<BaseState> {
     required String planId,
     required String paymentMethod,
     String? bankCode,
+    int? periodMonths,
   }) async {
     try {
       emit(LoadingState());
@@ -21,6 +22,7 @@ class PaymentCubit extends Cubit<BaseState> {
         planId: planId,
         paymentMethod: paymentMethod,
         bankCode: bankCode,
+        periodMonths: periodMonths,
       );
       emit(LoadedState<PaymentModel>(payment));
     } catch (e) {

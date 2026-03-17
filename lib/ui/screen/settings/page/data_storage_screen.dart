@@ -165,11 +165,6 @@ class _DataStorageScreenState extends State<DataStorageScreen>
               const SizedBox(height: AppDimens.SIZE_24),
             ],
 
-            // Upgrade Button (if free plan)
-            if (subscription.isFree) ...[
-              _buildUpgradeButton(context, theme, colorScheme),
-              const SizedBox(height: AppDimens.SIZE_16),
-            ],
           ],
         ),
       ),
@@ -196,20 +191,6 @@ class _DataStorageScreenState extends State<DataStorageScreen>
             BlendMode.darken,
           ),
         ),
-        // gradient: LinearGradient(
-        //   begin: Alignment.topLeft,
-        //   end: Alignment.bottomRight,
-        //   colors:
-        //       isFree
-        //           ? [
-        //             colorScheme.surfaceContainerHighest,
-        //             colorScheme.surfaceContainer,
-        //           ]
-        //           : [
-        //             colorScheme.primary,
-        //             colorScheme.primary.withValues(alpha: 0.8),
-        //           ],
-        // ),
         borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
         boxShadow: [
           BoxShadow(
@@ -230,7 +211,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                 decoration: BoxDecoration(
                   color:
                       isFree
-                          ? colorScheme.surface
+                          ? colorScheme.onSecondary
                           : Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
                 ),
@@ -243,7 +224,10 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                 ),
               ),
               const SizedBox(width: AppDimens.SIZE_16),
-              Expanded(
+              Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.3,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -252,7 +236,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                       style: theme.textTheme.bodySmall?.copyWith(
                         color:
                             isFree
-                                ? colorScheme.onSurface.withValues(alpha: 0.6)
+                                ? colorScheme.onSecondary.withValues(alpha: 0.6)
                                 : Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
@@ -261,12 +245,42 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                       plan?.name ?? AppLocalizations.current.freePlan,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: isFree ? colorScheme.onSurface : Colors.white,
+                        color: isFree ? colorScheme.onSecondary : Colors.white,
                       ),
                     ),
                   ],
                 ),
               ),
+              if (isFree) ...[
+                const SizedBox(width: AppDimens.SIZE_16),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppDimens.SIZE_12,
+                        vertical: AppDimens.SIZE_6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.star_rounded, color: Colors.white, size: 20),
+                          const SizedBox(width: AppDimens.SIZE_4),
+                          Text(
+                            AppLocalizations.current.upgrade_now,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               if (!isFree)
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -290,55 +304,60 @@ class _DataStorageScreenState extends State<DataStorageScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (plan?.description != null) ...[
-                    const SizedBox(height: AppDimens.SIZE_12),
-                    Text(
-                      plan!.description!,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color:
-                            isFree
-                                ? colorScheme.onSurface.withValues(alpha: 0.7)
-                                : Colors.white.withValues(alpha: 0.9),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (plan?.description != null) ...[
+                      const SizedBox(height: AppDimens.SIZE_12),
+                      Text(
+                        plan!.description!,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color:
+                              isFree
+                                  ? colorScheme.onSecondary.withValues(alpha: 0.7)
+                                  : Colors.white.withValues(alpha: 0.9),
+                        ),
+                        textAlign: TextAlign.left,
                       ),
-                    ),
-                  ],
-                  if (!isFree && subscription.priceDisplay.isNotEmpty) ...[
-                    const SizedBox(height: AppDimens.SIZE_12),
-                    Text(
-                      subscription.priceDisplay,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                    ],
+                    if (!isFree && subscription.priceDisplay.isNotEmpty) ...[
+                      const SizedBox(height: AppDimens.SIZE_12),
+                      Text(
+                        subscription.priceDisplay,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                    ],
                   ],
-                ],
+                ),
               ),
-              const SizedBox(width: AppDimens.SIZE_16),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: AppDimens.SIZE_12),
-                  _buildPeriodRow(
-                    context,
-                    '${AppLocalizations.current.started_at}: ',
-                    _formatDate(subscription.startedAt),
-                    theme,
-                    colorScheme,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildPeriodRow(
-                    context,
-                    '${AppLocalizations.current.expires_at}: ',
-                    _formatDate(subscription.expiresAt),
-                    theme,
-                    colorScheme,
-                  ),
-                ],
+              const SizedBox(width: AppDimens.SIZE_8),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: AppDimens.SIZE_12),
+                    _buildPeriodRow(
+                      context,
+                      '${AppLocalizations.current.started_at}: ',
+                      _formatDate(subscription.startedAt),
+                      theme,
+                      colorScheme,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildPeriodRow(
+                      context,
+                      '${AppLocalizations.current.expires_at}: ',
+                      _formatDate(subscription.expiresAt),
+                      theme,
+                      colorScheme,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -357,7 +376,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
     final used = subscription.storageUsedBytes;
     final limit = plan?.storageLimitBytes ?? 0;
     final percentage = limit > 0 ? (used / limit * 100).clamp(0.0, 100.0) : 0.0;
-    final isUnlimited = limit == 0 || limit >= 1099511627776; // 1TB
+    final isUnlimited = limit == 9999 || limit >= 1099511627776; // 1TB
 
     return _buildUsageCard(
       context: context,
@@ -771,78 +790,6 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUpgradeButton(
-    BuildContext context,
-    ThemeData theme,
-    ColorScheme colorScheme,
-  ) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppDimens.SIZE_20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            colorScheme.primary,
-            colorScheme.primary.withValues(alpha: 0.8),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.primary.withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Icon(Icons.rocket_launch_rounded, color: Colors.white, size: 48),
-          const SizedBox(height: AppDimens.SIZE_12),
-          Text(
-            AppLocalizations.current.upgrade_to_premium,
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            AppLocalizations.current.unlock_unlimited_features,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: Colors.white.withValues(alpha: 0.9),
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppDimens.SIZE_16),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: colorScheme.primary,
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimens.SIZE_32,
-                vertical: AppDimens.SIZE_12,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
-              ),
-            ),
-            child: Text(
-              AppLocalizations.current.view_plans,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
         ],

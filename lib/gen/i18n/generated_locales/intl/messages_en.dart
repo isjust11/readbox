@@ -651,6 +651,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "new_book": MessageLookupByLibrary.simpleMessage("New"),
     "news": MessageLookupByLibrary.simpleMessage("News"),
+    "next": MessageLookupByLibrary.simpleMessage("Next"),
     "noLanguagesAvailable": MessageLookupByLibrary.simpleMessage(
       "No languages available",
     ),
@@ -1131,6 +1132,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "show_less": MessageLookupByLibrary.simpleMessage("Show less"),
     "size": MessageLookupByLibrary.simpleMessage("Size"),
     "slow": MessageLookupByLibrary.simpleMessage("Slow"),
+    "start": MessageLookupByLibrary.simpleMessage("Start"),
     "start_reading": MessageLookupByLibrary.simpleMessage("Start reading"),
     "started_at": MessageLookupByLibrary.simpleMessage("Started At"),
     "stopTest": MessageLookupByLibrary.simpleMessage("Stop"),

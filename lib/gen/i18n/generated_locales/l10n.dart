@@ -124,6 +124,16 @@ class AppLocalizations {
     return Intl.message('Tìm kiếm', name: 'search', desc: '', args: []);
   }
 
+  /// `Từ đầu`
+  String get start {
+    return Intl.message('Từ đầu', name: 'start', desc: '', args: []);
+  }
+
+  /// `Tiếp theo`
+  String get next {
+    return Intl.message('Tiếp theo', name: 'next', desc: '', args: []);
+  }
+
   /// `Nhập tên đăng nhập`
   String get input_username {
     return Intl.message(

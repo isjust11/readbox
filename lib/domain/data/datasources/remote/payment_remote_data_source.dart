@@ -11,10 +11,14 @@ class PaymentRemoteDataSource {
     required String planId,
     required String paymentMethod, // 'vnpay', 'momo', 'zalopay'
     String? bankCode,
+    int? periodMonths,
+    int? discountPercentage,
   }) async {
     final url = '${ApiConstant.apiHost}payment/create';
     final body = {
       'planId': planId,
+      if (periodMonths != null) 'periodMonths': periodMonths,
+      if (discountPercentage != null) 'discountPercentage': discountPercentage,
       'paymentMethod': paymentMethod,
       if (bankCode != null) 'bankCode': bankCode,
     };

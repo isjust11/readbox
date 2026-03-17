@@ -671,6 +671,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "new_book": MessageLookupByLibrary.simpleMessage("Mới"),
     "news": MessageLookupByLibrary.simpleMessage("Tin tức"),
+    "next": MessageLookupByLibrary.simpleMessage("Tiếp theo"),
     "noLanguagesAvailable": MessageLookupByLibrary.simpleMessage(
       "Không có ngôn ngữ khả dụng",
     ),
@@ -1188,6 +1189,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "size": MessageLookupByLibrary.simpleMessage("Kích thước"),
     "slow": MessageLookupByLibrary.simpleMessage("Chậm"),
     "social_networks": MessageLookupByLibrary.simpleMessage("Mạng xã hội"),
+    "start": MessageLookupByLibrary.simpleMessage("Từ đầu"),
     "start_reading": MessageLookupByLibrary.simpleMessage("Bắt đầu đọc"),
     "started_at": MessageLookupByLibrary.simpleMessage("Bắt Đầu"),
     "stopTest": MessageLookupByLibrary.simpleMessage("Dừng"),

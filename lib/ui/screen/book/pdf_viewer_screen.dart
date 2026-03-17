@@ -60,13 +60,22 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   // Text selection & TTS
   String? _selectedText;
   final TextToSpeechService _ttsService = TextToSpeechService();
+  final Dio _dio = Dio(); // Singleton Dio, tránh tạo mới mỗi lần download
   bool _isReadingContinuous = false;
   Timer? _ttsProgressTimer;
   bool _hasInternet = false;
+  StreamSubscription?
+  _subscriptionPlanStream; // Cancel trong dispose() tránh memory leak
   // Đánh dấu từ đang đọc (TTS word progress)
   String? _ttsReadingText;
   int _ttsWordStart = 0;
   int _ttsWordEnd = 0;
+  // ValueNotifier cho TTS word progress → chỉ rebuild TTS panel, không rebuild toàn màn hình
+  final ValueNotifier<(int, int)> _ttsWordProgressNotifier = ValueNotifier((
+    0,
+    0,
+  ));
+  final ScrollController _ttsScrollController = ScrollController();
   bool _showTtsReadingPanel = false;
   // Đánh dấu trực tiếp lên trang PDF (word bounds + annotation)
   PageTextWithBounds? _currentPageWordBounds;
@@ -92,13 +101,16 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     _loadCurrentUser();
     _checkInternetConnection();
     context.read<SubscriptionPlanCubit>().checkUsage();
-    context.read<SubscriptionPlanCubit>().stream.listen((state) {
-      if (state is LoadedState<Map<String, bool>>) {
-        setState(() {
-          _actionStatus = state.data;
+    _subscriptionPlanStream = context
+        .read<SubscriptionPlanCubit>()
+        .stream
+        .listen((state) {
+          if (state is LoadedState<Map<String, bool>>) {
+            setState(() {
+              _actionStatus = state.data;
+            });
+          }
         });
-      }
-    });
     final file = File(widget.fileUrl);
     _isLocal = file.existsSync();
     if (_isLocal) {
@@ -173,8 +185,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   bool get isOwner => _currentUser?.id == widget.userIdCreate;
 
   Future<Uint8List> _downloadPdf() async {
-    final dio = Dio();
-    final response = await dio.get<List<int>>(
+    final response = await _dio.get<List<int>>(
       '${ApiConstant.apiHostStorage}${widget.fileUrl}',
       options: Options(responseType: ResponseType.bytes),
     );
@@ -365,16 +376,16 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       } else {
         final bytes = await _ensurePdfBytesForNetwork();
         if (bytes != null && bytes.isNotEmpty) {
-        // File từ mạng: lưu tạm để chia sẻ
-        final dir = await getTemporaryDirectory();
-        final baseName = path.basename(widget.fileUrl);
-        final fileName =
-            (baseName.isNotEmpty && baseName.toLowerCase().endsWith('.pdf'))
-                ? baseName
-                : '${widget.title.replaceAll(RegExp(r'[^\w\s-]'), '_')}.pdf';
-        final tempFile = File(path.join(dir.path, fileName));
-        await tempFile.writeAsBytes(bytes);
-        filePath = tempFile.path;
+          // File từ mạng: lưu tạm để chia sẻ
+          final dir = await getTemporaryDirectory();
+          final baseName = path.basename(widget.fileUrl);
+          final fileName =
+              (baseName.isNotEmpty && baseName.toLowerCase().endsWith('.pdf'))
+                  ? baseName
+                  : '${widget.title.replaceAll(RegExp(r'[^\w\s-]'), '_')}.pdf';
+          final tempFile = File(path.join(dir.path, fileName));
+          await tempFile.writeAsBytes(bytes);
+          filePath = tempFile.path;
         }
       }
 
@@ -550,6 +561,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     _ttsProgressTimer?.cancel();
     _saveProgressTimer?.cancel();
     _readingTimeTimer?.cancel();
+    _subscriptionPlanStream?.cancel(); // Tránh memory leak
+    _ttsWordProgressNotifier.dispose();
+    _ttsScrollController.dispose();
     _saveReadingProgressNow();
     if (_searchResult != null && _searchResultListener != null) {
       _searchResult!.removeListener(_searchResultListener!);
@@ -878,8 +892,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   @override
   Widget build(BuildContext context) {
     final showViewer =
-        !_isLoading && _error == null && (_isLocal || _pdfBytes != null || !_isLocal);
-
+        !_isLoading &&
+        _error == null &&
+        (_isLocal || _pdfBytes != null || !_isLocal);
     return Scaffold(
       appBar:
           showToolbar
@@ -1055,7 +1070,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   ),
                   SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: _isLocal ? null : () => setState(() => _error = null),
+                    onPressed:
+                        _isLocal ? null : () => setState(() => _error = null),
                     child: Text(AppLocalizations.current.retry),
                   ),
                 ],
@@ -1064,9 +1080,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           else if (showViewer)
             Stack(
               children: [
-                _isLocal
-                    ? _buildPdfViewer()
-                    : _buildPdfViewerFromNetwork(),
+                _isLocal ? _buildPdfViewer() : _buildPdfViewerFromNetwork(),
               ],
             ),
           if (_isLoading)
@@ -1230,10 +1244,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       String word,
     ) {
       if (!mounted) return;
-      setState(() {
-        _ttsWordStart = start.clamp(0, text.length);
-        _ttsWordEnd = end.clamp(0, text.length);
-      });
+      // Cập nhật ValueNotifier thay vì setState → chỉ rebuild TTS panel, không rebuild toàn Scaffold
+      _ttsWordStart = start.clamp(0, text.length);
+      _ttsWordEnd = end.clamp(0, text.length);
+      _ttsWordProgressNotifier.value = (_ttsWordStart, _ttsWordEnd);
       TtsLockScreenController.instance.updateWordProgress(
         fullText: text,
         start: start,
@@ -1447,11 +1461,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     final subText = text.substring(offset);
     if (subText.trim().isEmpty) return;
 
-    setState(() {
-      _ttsWordStart = offset;
-      _ttsWordEnd = offset;
-      _isReadingContinuous = true;
-    });
+    _ttsWordStart = offset;
+    _ttsWordEnd = offset;
+    _ttsWordProgressNotifier.value = (offset, offset);
+    setState(() => _isReadingContinuous = true);
 
     final originalHandler = _ttsService.onSpeechWordProgress;
     _ttsService.onSpeechWordProgress = (
@@ -1463,10 +1476,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       if (!mounted) return;
       final realStart = start + offset;
       final realEnd = end + offset;
-      setState(() {
-        _ttsWordStart = realStart.clamp(0, text.length);
-        _ttsWordEnd = realEnd.clamp(0, text.length);
-      });
+      _ttsWordStart = realStart.clamp(0, text.length);
+      _ttsWordEnd = realEnd.clamp(0, text.length);
+      _ttsWordProgressNotifier.value = (_ttsWordStart, _ttsWordEnd);
       TtsLockScreenController.instance.updateWordProgress(
         fullText: text,
         start: realStart,
@@ -1485,13 +1497,48 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     await _ttsService.speak(subText);
   }
 
+  void _handleAutoScroll(int start, String text, BoxConstraints constraints) {
+    if (!_ttsScrollController.hasClients) return;
+
+    final textStyle = TextStyle(
+      fontSize: 15,
+      height: 1.6,
+      color: Colors.black, // Color doesn't matter for layout
+    );
+
+    final textPainter = TextPainter(
+      text: TextSpan(text: text, style: textStyle),
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.left,
+    )..layout(maxWidth: constraints.maxWidth - 32); // 16*2 padding
+
+    final offset = textPainter.getOffsetForCaret(
+      TextPosition(offset: start),
+      Rect.zero,
+    );
+
+    final currentScroll = _ttsScrollController.offset;
+    final viewportHeight = constraints.maxHeight;
+
+    // Nếu vị trí từ đang đọc nằm ngoài vùng nhìn thấy (có padding)
+    if (offset.dy < currentScroll + 20 ||
+        offset.dy > currentScroll + viewportHeight - 60) {
+      final targetScroll = (offset.dy - 40).clamp(
+        0.0,
+        _ttsScrollController.position.maxScrollExtent,
+      );
+
+      _ttsScrollController.animateTo(
+        targetScroll,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
   Widget _buildTtsReadingPanel() {
     final text = _ttsReadingText ?? '';
     final len = text.length;
-    final start = _ttsWordStart.clamp(0, len);
-    final end = _ttsWordEnd.clamp(0, len);
-    final hasHighlight = start < end;
-    final progress = len > 0 ? start / len : 0.0;
     final theme = Theme.of(context);
 
     return Positioned(
@@ -1509,190 +1556,217 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             color: theme.colorScheme.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                decoration: BoxDecoration(
-                  color: theme.primaryColor.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.record_voice_over,
-                      color: theme.primaryColor,
-                      size: 20,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      AppLocalizations.current.pdf_reading,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                        color: theme.primaryColor,
-                      ),
-                    ),
-                    Spacer(),
-                    if (len > 0)
-                      Text(
-                        '${(progress * 100).toInt()}%',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: theme.primaryColor.withValues(alpha: 0.7),
-                        ),
-                      ),
-                    SizedBox(width: 4),
-                    IconButton(
-                      icon: Icon(Icons.close, size: 20),
-                      onPressed:
-                          () => setState(() => _showTtsReadingPanel = false),
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(minWidth: 32, minHeight: 32),
-                    ),
-                  ],
-                ),
-              ),
+          child: ValueListenableBuilder<(int, int)>(
+            valueListenable: _ttsWordProgressNotifier,
+            builder: (context, progressValue, child) {
+              final start = progressValue.$1.clamp(0, len);
+              final end = progressValue.$2.clamp(0, len);
+              final hasHighlight = start < end;
+              final progress = len > 0 ? start / len : 0.0;
 
-              // Progress bar
-              if (len > 0)
-                SliderTheme(
-                  data: SliderThemeData(
-                    trackHeight: 3,
-                    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
-                    overlayShape: RoundSliderOverlayShape(overlayRadius: 14),
-                    activeTrackColor: theme.primaryColor,
-                    inactiveTrackColor: theme.primaryColor.withValues(
-                      alpha: 0.15,
-                    ),
-                    thumbColor: theme.primaryColor,
-                  ),
-                  child: Slider(
-                    value: start.toDouble(),
-                    min: 0,
-                    max: len.toDouble(),
-                    onChanged: (value) {
-                      final pos = _findWordBoundary(text, value.toInt());
-                      _speakFromPosition(pos);
-                    },
-                  ),
-                ),
-
-              // Control buttons
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildTtsControlButton(
-                      icon: Icons.restart_alt_rounded,
-                      label: 'Từ đầu',
-                      onTap: () => _speakFromPosition(0),
-                    ),
-                    _buildTtsControlButton(
-                      icon: Icons.replay_10_rounded,
-                      label: '-200',
-                      onTap: () {
-                        final pos = (start - 200).clamp(0, len);
-                        _speakFromPosition(_findWordBoundary(text, pos));
-                      },
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color:
-                            _ttsService.isSpeaking
-                                ? Colors.red.withValues(alpha: 0.1)
-                                : theme.primaryColor.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          _ttsService.isSpeaking
-                              ? Icons.pause_rounded
-                              : Icons.play_arrow_rounded,
-                          color:
-                              _ttsService.isSpeaking
-                                  ? Colors.red
-                                  : theme.primaryColor,
-                          size: 28,
-                        ),
-                        onPressed: () async {
-                          if (_ttsService.isSpeaking) {
-                            await _ttsService.stop();
-                            _removePdfWordHighlight();
-                            setState(() => _isReadingContinuous = false);
-                          } else {
-                            _speakFromPosition(start);
-                          }
-                        },
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Header
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: theme.primaryColor.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16),
                       ),
                     ),
-                    _buildTtsControlButton(
-                      icon: Icons.forward_10_rounded,
-                      label: '+200',
-                      onTap: () {
-                        final pos = (start + 200).clamp(0, len);
-                        if (pos < len) {
-                          _speakFromPosition(_findWordBoundary(text, pos));
-                        }
-                      },
-                    ),
-                    _buildTtsControlButton(
-                      icon: Icons.skip_next_rounded,
-                      label: 'Trang sau',
-                      onTap: () {
-                        if (_currentPage < _totalPages) _readNextPage();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 4),
-
-              // Text content
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
-                  child: RichText(
-                    textAlign: TextAlign.left,
-                    textDirection: TextDirection.ltr,
-                    text: TextSpan(
-                      style: TextStyle(
-                        fontSize: 15,
-                        height: 1.6,
-                        color: theme.colorScheme.onSurface,
-                      ),
+                    child: Row(
                       children: [
-                        if (start > 0)
-                          TextSpan(
-                            text: text.substring(0, start),
+                        Icon(
+                          Icons.record_voice_over,
+                          color: theme.primaryColor,
+                          size: 20,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          AppLocalizations.current.pdf_reading,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                            color: theme.primaryColor,
+                          ),
+                        ),
+                        Spacer(),
+                        if (len > 0)
+                          Text(
+                            '${(progress * 100).toInt()}%',
                             style: TextStyle(
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.4,
-                              ),
+                              fontSize: 12,
+                              color: theme.primaryColor.withValues(alpha: 0.7),
                             ),
                           ),
-                        if (hasHighlight)
-                          TextSpan(
-                            text: text.substring(start, end),
-                            style: TextStyle(
-                              backgroundColor: theme.primaryColor.withValues(
-                                alpha: 0.3,
-                              ),
-                              fontWeight: FontWeight.w600,
-                              color: theme.primaryColor,
-                            ),
+                        SizedBox(width: 4),
+                        IconButton(
+                          icon: Icon(Icons.close, size: 20),
+                          onPressed:
+                              () =>
+                                  setState(() => _showTtsReadingPanel = false),
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(
+                            minWidth: 32,
+                            minHeight: 32,
                           ),
-                        if (end < len) TextSpan(text: text.substring(end)),
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ),
-            ],
+
+                  // Progress bar
+                  if (len > 0)
+                    SliderTheme(
+                      data: SliderThemeData(
+                        trackHeight: 3,
+                        thumbShape: RoundSliderThumbShape(
+                          enabledThumbRadius: 6,
+                        ),
+                        overlayShape: RoundSliderOverlayShape(
+                          overlayRadius: 14,
+                        ),
+                        activeTrackColor: theme.primaryColor,
+                        inactiveTrackColor: theme.primaryColor.withValues(
+                          alpha: 0.15,
+                        ),
+                        thumbColor: theme.primaryColor,
+                      ),
+                      child: Slider(
+                        value: start.toDouble(),
+                        min: 0,
+                        max: len.toDouble(),
+                        onChanged: (value) {
+                          final pos = _findWordBoundary(text, value.toInt());
+                          _speakFromPosition(pos);
+                        },
+                      ),
+                    ),
+                  // Control buttons
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildTtsControlButton(
+                          icon: Icons.restart_alt_rounded,
+                          label: AppLocalizations.current.start,
+                          onTap: () => _speakFromPosition(0),
+                        ),
+                        _buildTtsControlButton(
+                          icon: Icons.replay_10_rounded,
+                          label: '-200',
+                          onTap: () {
+                            final pos = (start - 200).clamp(0, len);
+                            _speakFromPosition(_findWordBoundary(text, pos));
+                          },
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color:
+                                _ttsService.isSpeaking
+                                    ? Colors.red.withValues(alpha: 0.1)
+                                    : theme.primaryColor.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            icon: Icon(
+                              _ttsService.isSpeaking
+                                  ? Icons.pause_rounded
+                                  : Icons.play_arrow_rounded,
+                              color:
+                                  _ttsService.isSpeaking
+                                      ? Colors.red
+                                      : theme.primaryColor,
+                              size: 28,
+                            ),
+                            onPressed: () async {
+                              if (_ttsService.isSpeaking) {
+                                await _ttsService.stop();
+                                _removePdfWordHighlight();
+                                setState(() => _isReadingContinuous = false);
+                              } else {
+                                _speakFromPosition(start);
+                              }
+                            },
+                          ),
+                        ),
+                        _buildTtsControlButton(
+                          icon: Icons.forward_10_rounded,
+                          label: '+200',
+                          onTap: () {
+                            final pos = (start + 200).clamp(0, len);
+                            if (pos < len) {
+                              _speakFromPosition(_findWordBoundary(text, pos));
+                            }
+                          },
+                        ),
+                        _buildTtsControlButton(
+                          icon: Icons.skip_next_rounded,
+                          label: AppLocalizations.current.next,
+                          onTap: () {
+                            if (_currentPage < _totalPages) _readNextPage();
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 4),
+
+                  // Text content
+                  Flexible(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        // Tự động cuộn theo từ đang đọc
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          _handleAutoScroll(start, text, constraints);
+                        });
+
+                        return SingleChildScrollView(
+                          controller: _ttsScrollController,
+                          padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
+                          child: RichText(
+                            textAlign: TextAlign.left,
+                            textDirection: TextDirection.ltr,
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontSize: 15,
+                                height: 1.6,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                              children: [
+                                if (start > 0)
+                                  TextSpan(
+                                    text: text.substring(0, start),
+                                    style: TextStyle(
+                                      color: theme.colorScheme.onSurface
+                                          .withValues(alpha: 0.4),
+                                    ),
+                                  ),
+                                if (hasHighlight)
+                                  TextSpan(
+                                    text: text.substring(start, end),
+                                    style: TextStyle(
+                                      backgroundColor: theme.primaryColor
+                                          .withValues(alpha: 0.3),
+                                      fontWeight: FontWeight.w600,
+                                      color: theme.primaryColor,
+                                    ),
+                                  ),
+                                if (end < len)
+                                  TextSpan(text: text.substring(end)),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -1820,10 +1894,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         final savedTime = savedProgress?.totalReadingTime ?? totalReadingTime;
         _accumulatedReadingTime = savedTime;
         _readingStartTime = DateTime.now();
-        setState(() {
-          _currentProgress = savedProgress;
-          _lastSavedPage = page;
-        });
+        // Không cần setState: _currentProgress và _lastSavedPage là internal state, không có widget nào dùng trực tiếp
+        _currentProgress = savedProgress;
+        _lastSavedPage = page;
       }
     } catch (_) {
       // Bỏ qua lỗi, không ảnh hưởng trải nghiệm đọc
@@ -1954,71 +2027,5 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         );
       },
     );
-  }
-
-  void _showPdfInfo() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.current.pdf_file_info),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(AppLocalizations.current.pdf_path_label),
-              SizedBox(height: 8),
-              Text(
-                widget.fileUrl,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(AppLocalizations.current.close),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _DrawingPainter extends CustomPainter {
-  final List<List<Offset>> strokes;
-  final Color color;
-  final double strokeWidth;
-
-  _DrawingPainter({
-    required this.strokes,
-    required this.color,
-    required this.strokeWidth,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint =
-        Paint()
-          ..color = color
-          ..strokeWidth = strokeWidth
-          ..strokeCap = StrokeCap.round
-          ..strokeJoin = StrokeJoin.round
-          ..style = PaintingStyle.stroke
-          ..isAntiAlias = true;
-
-    for (final stroke in strokes) {
-      if (stroke.length > 1) {
-        for (var i = 0; i < stroke.length - 1; i++) {
-          canvas.drawLine(stroke[i], stroke[i + 1], paint);
-        }
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _DrawingPainter oldDelegate) {
-    return oldDelegate.strokes != strokes || oldDelegate.color != color;
   }
 }

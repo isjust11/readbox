@@ -114,7 +114,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
 
               // Header
               Padding(
-                padding: const EdgeInsets.all(AppDimens.SIZE_16),
+                padding: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_16, vertical: AppDimens.SIZE_12),
                 child: Row(
                   children: [
                     Expanded(
@@ -425,7 +425,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
       if (iconCode != null) {
         return Icon(
           IconData(iconCode, fontFamily: 'MaterialIcons'),
-          size: AppSize.iconSizeXLarge,
+          size: AppSize.iconSizeLarge,
           color: isSelected
               ? Theme.of(context).primaryColor
               : Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: _OpacityLevel.secondary),
