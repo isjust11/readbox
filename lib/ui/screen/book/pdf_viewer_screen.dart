@@ -22,6 +22,7 @@ import 'package:readbox/utils/pdf_text_extractor.dart';
 import 'package:readbox/utils/shared_preference.dart';
 import 'package:readbox/utils/tts_lock_screen_controller.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
+import 'package:readbox/ui/widget/ai_assistant_sheet.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class PdfViewerScreen extends StatefulWidget {
@@ -1142,6 +1143,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           // Panel đánh dấu từ đang đọc (TTS)
           if (_showTtsReadingPanel && _ttsReadingText != null)
             _buildTtsReadingPanel(),
+          // Nút AI Assistant - hiện khi user bôi đen văn bản
+          if (_selectedText != null && _selectedText!.isNotEmpty)
+            Positioned(
+              bottom: 24,
+              right: 16,
+              child: _buildAiFloatingButton(),
+            ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -2049,6 +2057,73 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           ],
         );
       },
+    );
+  }
+
+  /// Nút AI nổi xuất hiện khi user bôi đen văn bản trong PDF
+  Widget _buildAiFloatingButton() {
+    final theme = Theme.of(context);
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeOutBack,
+      builder: (context, value, child) => Transform.scale(
+        scale: value,
+        child: child,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              theme.primaryColor,
+              theme.primaryColor.withValues(alpha: 0.8),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: theme.primaryColor.withValues(alpha: 0.4),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(28),
+            onTap: () {
+              final text = _selectedText;
+              setState(() => _selectedText = null);
+              AiAssistantSheet.show(context, selectedText: text);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.auto_awesome_rounded,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'AI',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

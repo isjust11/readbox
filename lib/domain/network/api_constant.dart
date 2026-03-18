@@ -107,4 +107,8 @@ class ApiConstant {
   static final subscriptionPlan = "subscription/subscription-plan";
   static final incrementUsage = "subscription/me/usage";
 
+  // AI endpoints (Gemini)
+  static final aiLookup = "ai/lookup";
+  static final aiTranslate = "ai/translate";
+
 }
