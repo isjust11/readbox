@@ -12,6 +12,7 @@ import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/enums/enums.dart';
@@ -320,6 +321,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
   void _handleMenuAction(String value) {
     switch (value) {
+      case 'ai_assistant':
+        AiAssistantSheet.show(context);
+        break;
       case 'search':
         actionToolbar = 'search';
         setState(() {
@@ -709,6 +713,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   List<Widget> _buildAppBarToolActions() {
     List<Widget> actions = [];
     switch (actionToolbar) {
+      case 'ai_assistant':
+        
       case 'search':
         actions = [..._buildSearchActions()];
       case 'zoom_in_out':
@@ -1010,6 +1016,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                   ),
                                   itemBuilder:
                                       (BuildContext context) => [
+                                        _buildMenuItem(
+                                          'ai_assistant',
+                                          Icons.auto_awesome_rounded,
+                                          AppLocalizations.current.ai_assistant,
+                                          Colors.blue,
+                                          isPro: true,
+                                        ),
                                         _buildMenuItem(
                                           'search',
                                           Icons.search_rounded,
@@ -2100,8 +2113,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(28),
-            onTap: () {
+            onTap: () async {
               final text = _selectedText;
+              if (text == null || text.trim().isEmpty) return;
+
+              // Theo logic mong muốn: Copy trước, rồi mới mở AI Assistant
+              await Clipboard.setData(ClipboardData(text: text));
+              if (!mounted) return;
               setState(() => _selectedText = null);
               AiAssistantSheet.show(context, selectedText: text);
             },

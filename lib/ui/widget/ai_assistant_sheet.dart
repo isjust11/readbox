@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:readbox/domain/repositories/ai_repository.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 
 /// Ngôn ngữ hỗ trợ dịch thuật
 const _supportedLanguages = [
@@ -235,11 +236,11 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
         unselectedLabelColor: Colors.grey[600],
         labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         dividerColor: Colors.transparent,
-        tabs: const [
-          Tab(icon: Icon(Icons.search_rounded, size: 16), text: 'Tra cứu'),
+        tabs: [
+          Tab(icon: Icon(Icons.search_rounded, size: 16), text: AppLocalizations.current.lookup),
           Tab(
             icon: Icon(Icons.translate_rounded, size: 16),
-            text: 'Dịch thuật',
+            text: AppLocalizations.current.translate,
           ),
         ],
       ),
@@ -260,8 +261,8 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
             maxLines: 3,
             minLines: 1,
             decoration: InputDecoration(
-              labelText: 'Từ hoặc khái niệm cần tra cứu',
-              hintText: 'Nhập từ, câu hoặc câu hỏi...',
+              labelText: AppLocalizations.current.lookup_text,
+              hintText: AppLocalizations.current.lookup_hint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide(color: Colors.grey[300]!),
@@ -300,7 +301,7 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
           Row(
             children: [
               Text(
-                'Ngôn ngữ trả lời:',
+                AppLocalizations.current.lookup_language,
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.grey[600],
@@ -334,7 +335,7 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
                       )
                       : const Icon(Icons.auto_awesome_rounded, size: 18),
               label: Text(
-                _lookupLoading ? 'Đang tra cứu...' : 'Tra cứu với AI',
+                _lookupLoading ? AppLocalizations.current.loading : AppLocalizations.current.lookup_button,
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.primaryColor,
@@ -370,8 +371,8 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
             maxLines: 5,
             minLines: 2,
             decoration: InputDecoration(
-              labelText: 'Văn bản cần dịch',
-              hintText: 'Nhập hoặc dán văn bản...',
+              labelText: AppLocalizations.current.translate_text,
+              hintText: AppLocalizations.current.translate_hint,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide: BorderSide(color: Colors.grey[300]!),
@@ -413,7 +414,7 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
           const SizedBox(height: 12),
           // Target language
           Text(
-            'Dịch sang:',
+            AppLocalizations.current.translate_language,
             style: TextStyle(
               fontSize: 13,
               color: Colors.grey[600],
@@ -476,7 +477,7 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
                         ),
                       )
                       : const Icon(Icons.translate_rounded, size: 18),
-              label: Text(_translateLoading ? 'Đang dịch...' : 'Dịch với AI'),
+              label: Text(_translateLoading ? AppLocalizations.current.loading : AppLocalizations.current.translate_button),
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.primaryColor,
                 foregroundColor: Colors.white,
@@ -559,7 +560,7 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Có lỗi xảy ra: $error',
+              '${AppLocalizations.current.error}: $error',
               style: TextStyle(color: Colors.red[700], fontSize: 13),
             ),
           ),
@@ -589,7 +590,7 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
               ),
               const SizedBox(width: 6),
               Text(
-                'Kết quả từ Gemini AI',
+                AppLocalizations.current.result_from_gemini,
                 style: TextStyle(
                   color: theme.primaryColor,
                   fontWeight: FontWeight.w600,
@@ -601,8 +602,8 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: result));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Đã sao chép kết quả'),
+                    SnackBar(
+                      content: Text(AppLocalizations.current.copy_result),
                       duration: Duration(seconds: 2),
                       behavior: SnackBarBehavior.floating,
                     ),
@@ -613,7 +614,7 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
                   size: 16,
                   color: theme.primaryColor,
                 ),
-                tooltip: 'Sao chép',
+                tooltip: AppLocalizations.current.copy,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
               ),

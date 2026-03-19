@@ -744,5 +744,19 @@
   "paymentMethodZalopay": "ZaloPay",
   "paymentMethodZalopayDescription": "Pay via ZaloPay",
   "paymentMethodPayos": "PayOS",
-  "paymentMethodPayosDescription": "Pay via PayOS"
+  "paymentMethodPayosDescription": "Pay via PayOS",
+  "ai_assistant": "AI Assistant",
+  "lookup": "Lookup",
+  "lookup_text": "Text to lookup",
+  "lookup_hint": "Enter text to lookup...",
+  "lookup_language": "Language to reply:",
+  "lookup_button": "Lookup with AI",
+  "translate_text": "Text to translate",
+  "translate_hint": "Enter text to translate...",
+  "translate_language": "Translate to:",
+  "translate_button": "Translate with AI",
+  "result_from_gemini": "Result from Gemini AI",
+  "copy_result": "Result copied",
+  "copy": "Copy",
+  "result": "Result"
 }

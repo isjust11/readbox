@@ -767,5 +767,19 @@
   "paymentMethodZalopay": "ZaloPay",
   "paymentMethodZalopayDescription": "Thanh toán qua ZaloPay",
   "paymentMethodPayos": "PayOS",
-  "paymentMethodPayosDescription": "Thanh toán qua PayOS"
+  "paymentMethodPayosDescription": "Thanh toán qua PayOS",
+  "ai_assistant": "Trợ lý AI",
+  "lookup": "Tra cứu",
+  "lookup_text": "Từ hoặc khái niệm cần tra cứu",
+  "lookup_hint": "Nhập từ, câu hoặc câu hỏi...",
+  "lookup_language": "Ngôn ngữ trả lời:",
+  "lookup_button": "Tra cứu với AI",
+  "translate_text": "Văn bản cần dịch",
+  "translate_hint": "Nhập hoặc dán văn bản...",
+  "translate_language": "Dịch sang:",
+  "translate_button": "Dịch với AI",
+  "result_from_gemini": "Kết quả từ Gemini AI",
+  "copy_result": "Đã sao chép kết quả",
+  "copy": "Sao chép",
+  "result": "Kết quả"
 }
