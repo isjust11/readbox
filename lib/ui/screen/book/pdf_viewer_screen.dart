@@ -102,7 +102,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     _loadCurrentUser();
     _checkInternetConnection();
     context.read<SubscriptionPlanCubit>().checkUsage();
-    _userSubscription = context.watch<UserSubscriptionCubit>().userSubscription;
     _subscriptionPlanStream = context
         .read<SubscriptionPlanCubit>()
         .stream
@@ -137,6 +136,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     if (_isLocal) {
       _loadLocalBytesForTts();
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _userSubscription =
+        context.watch<UserSubscriptionCubit>().userSubscription;
   }
 
   void _loadCurrentUser() {
