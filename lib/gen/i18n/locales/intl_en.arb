@@ -638,7 +638,7 @@
   "noSubscriptionPlans": "No plans available at the moment.",
   "selectPlan": "Select plan",
   "popular": "Popular",
-  "storageLimit": "Storage",
+  "storageLimit": "Storage space",
   "ttsLimit": "Text-to-speech",
   "convertLimit": "Word to PDF",
   "perPeriod": "per period",
@@ -755,8 +755,14 @@
   "translate_hint": "Enter text to translate...",
   "translate_language": "Translate to:",
   "translate_button": "Translate with AI",
+  "translation": "Translation",
   "result_from_gemini": "Result from Gemini AI",
   "copy_result": "Result copied",
   "copy": "Copy",
-  "result": "Result"
+  "result": "Result",
+  "new_password": "New password",
+  "enter_new_password": "Enter new password",
+  "confirm_new_password": "Confirm new password",
+  "enter_confirm_new_password": "Enter confirm new password",
+  "reset_password_success": "Reset password success"
 }

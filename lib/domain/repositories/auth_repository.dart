@@ -14,7 +14,9 @@ class AuthRepository {
     AuthenModel authenModel = await remoteDataSource.login(param);
     await localDataSource.saveToken(authenModel.accessToken ?? '');
     await localDataSource.saveRefreshToken(authenModel.refreshToken ?? '');
-    await localDataSource.saveUserInfo(authenModel.user ?? UserModel.fromJson({}));
+    await localDataSource.saveUserInfo(
+      authenModel.user ?? UserModel.fromJson({}),
+    );
     return authenModel;
   }
 
@@ -40,10 +42,13 @@ class AuthRepository {
     return await remoteDataSource.forgotPassword(param);
   }
 
-   Future<UserModel?> getProfile() async {
-    return await localDataSource.getUserInfo();
+  Future<dynamic> resetPassword(Map<String, dynamic> param) async {
+    return await remoteDataSource.resetPassword(param);
   }
 
+  Future<UserModel?> getProfile() async {
+    return await localDataSource.getUserInfo();
+  }
 
   Future<AuthenModel> mobileSocialLogin(Map<String, dynamic> param) async {
     AuthenModel authModel = await remoteDataSource.mobileSocialLogin(param);

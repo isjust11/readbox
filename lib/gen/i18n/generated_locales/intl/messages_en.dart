@@ -185,6 +185,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "close": MessageLookupByLibrary.simpleMessage("Close"),
     "completed": MessageLookupByLibrary.simpleMessage("Completed"),
     "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
+    "confirm_new_password": MessageLookupByLibrary.simpleMessage(
+      "Confirm new password",
+    ),
     "confirm_password": MessageLookupByLibrary.simpleMessage(
       "Confirm password",
     ),
@@ -318,6 +321,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "enableSound": MessageLookupByLibrary.simpleMessage("Enable sound"),
     "enableVibration": MessageLookupByLibrary.simpleMessage("Enable vibration"),
+    "enter_confirm_new_password": MessageLookupByLibrary.simpleMessage(
+      "Enter confirm new password",
+    ),
     "enter_confirm_password": MessageLookupByLibrary.simpleMessage(
       "Enter confirm password",
     ),
@@ -328,6 +334,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_full_name": MessageLookupByLibrary.simpleMessage("Enter full name"),
     "enter_information_to_start": MessageLookupByLibrary.simpleMessage(
       "Enter information to start",
+    ),
+    "enter_new_password": MessageLookupByLibrary.simpleMessage(
+      "Enter new password",
     ),
     "enter_password": MessageLookupByLibrary.simpleMessage("Enter password"),
     "enter_phone": MessageLookupByLibrary.simpleMessage("Enter phone number"),
@@ -662,6 +671,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Need permission to access memory",
     ),
     "new_book": MessageLookupByLibrary.simpleMessage("New"),
+    "new_password": MessageLookupByLibrary.simpleMessage("New password"),
     "news": MessageLookupByLibrary.simpleMessage("News"),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
     "noLanguagesAvailable": MessageLookupByLibrary.simpleMessage(
@@ -1077,6 +1087,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "resend_pin_in": MessageLookupByLibrary.simpleMessage("Resend pin in"),
     "reset": MessageLookupByLibrary.simpleMessage("Reset"),
     "reset_password": MessageLookupByLibrary.simpleMessage("Reset password"),
+    "reset_password_success": MessageLookupByLibrary.simpleMessage(
+      "Reset password success",
+    ),
     "result": MessageLookupByLibrary.simpleMessage("Result"),
     "result_from_gemini": MessageLookupByLibrary.simpleMessage(
       "Result from Gemini AI",
@@ -1152,7 +1165,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_reading": MessageLookupByLibrary.simpleMessage("Start reading"),
     "started_at": MessageLookupByLibrary.simpleMessage("Started At"),
     "stopTest": MessageLookupByLibrary.simpleMessage("Stop"),
-    "storageLimit": MessageLookupByLibrary.simpleMessage("Storage"),
+    "storageLimit": MessageLookupByLibrary.simpleMessage("Storage space"),
     "storage_usage": MessageLookupByLibrary.simpleMessage("Storage Usage"),
     "submit_rating": MessageLookupByLibrary.simpleMessage("Submit Rating"),
     "subscriptionPlans": MessageLookupByLibrary.simpleMessage(
@@ -1265,6 +1278,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "translate_language": MessageLookupByLibrary.simpleMessage("Translate to:"),
     "translate_text": MessageLookupByLibrary.simpleMessage("Text to translate"),
+    "translation": MessageLookupByLibrary.simpleMessage("Translation"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
     "try_again": MessageLookupByLibrary.simpleMessage("Try again"),
     "try_different_search": MessageLookupByLibrary.simpleMessage(

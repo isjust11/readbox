@@ -3581,7 +3581,7 @@ abstract class AppLocalizations {
   /// No description provided for @storageLimit.
   ///
   /// In en, this message translates to:
-  /// **'Storage'**
+  /// **'Storage space'**
   String get storageLimit;
 
   /// No description provided for @ttsLimit.
@@ -4221,6 +4221,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pay via PayOS'**
   String get paymentMethodPayosDescription;
+
+  /// No description provided for @ai_assistant.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Assistant'**
+  String get ai_assistant;
+
+  /// No description provided for @lookup.
+  ///
+  /// In en, this message translates to:
+  /// **'Lookup'**
+  String get lookup;
+
+  /// No description provided for @lookup_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Text to lookup'**
+  String get lookup_text;
+
+  /// No description provided for @lookup_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter text to lookup...'**
+  String get lookup_hint;
+
+  /// No description provided for @lookup_language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language to reply:'**
+  String get lookup_language;
+
+  /// No description provided for @lookup_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Lookup with AI'**
+  String get lookup_button;
+
+  /// No description provided for @translate_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Text to translate'**
+  String get translate_text;
+
+  /// No description provided for @translate_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter text to translate...'**
+  String get translate_hint;
+
+  /// No description provided for @translate_language.
+  ///
+  /// In en, this message translates to:
+  /// **'Translate to:'**
+  String get translate_language;
+
+  /// No description provided for @translate_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Translate with AI'**
+  String get translate_button;
+
+  /// No description provided for @translation.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get translation;
+
+  /// No description provided for @result_from_gemini.
+  ///
+  /// In en, this message translates to:
+  /// **'Result from Gemini AI'**
+  String get result_from_gemini;
+
+  /// No description provided for @copy_result.
+  ///
+  /// In en, this message translates to:
+  /// **'Result copied'**
+  String get copy_result;
+
+  /// No description provided for @copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copy;
+
+  /// No description provided for @result.
+  ///
+  /// In en, this message translates to:
+  /// **'Result'**
+  String get result;
+
+  /// No description provided for @new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get new_password;
+
+  /// No description provided for @enter_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter new password'**
+  String get enter_new_password;
+
+  /// No description provided for @confirm_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get confirm_new_password;
+
+  /// No description provided for @enter_confirm_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter confirm new password'**
+  String get enter_confirm_new_password;
+
+  /// No description provided for @reset_password_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password success'**
+  String get reset_password_success;
 }
 
 class _AppLocalizationsDelegate

@@ -406,11 +406,9 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                         ),
                       ),
                       // badge discount by selected duration months
-                      if (_selectedDurationMonths !=1) ...[
+                      if (_selectedDurationMonths != 1) ...[
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
                             gradient: LinearGradient(
@@ -423,7 +421,13 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                             ),
                           ),
                           child: Text(
-                            _selectedDurationMonths == 3 ? '-10%' : _selectedDurationMonths == 6 ? '-15%' : _selectedDurationMonths == 12 ? '-20%' : '',
+                            _selectedDurationMonths == 3
+                                ? '-10%'
+                                : _selectedDurationMonths == 6
+                                ? '-15%'
+                                : _selectedDurationMonths == 12
+                                ? '-20%'
+                                : '',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -552,36 +556,57 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   Icons.cloud_outlined,
                   AppLocalizations.current.storageLimit,
                   _getStorageDisplayForDuration(plan),
+                  false,
+                  true,
+                  !plan.isFree,
                 ),
-                if (plan.ttsLimitPerPeriod > 0)
-                  _buildFeatureItem(
-                    context,
-                    Icons.record_voice_over_outlined,
-                    AppLocalizations.current.ttsLimit,
-                    '${_getLimitForDuration(plan.ttsLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
-                  ),
-                if (plan.convertLimitPerPeriod > 0)
-                  _buildFeatureItem(
-                    context,
-                    Icons.picture_as_pdf_outlined,
-                    AppLocalizations.current.convertLimit,
-                    '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
-                  ),
+                _buildFeatureItem(
+                  context,
+                  Icons.auto_awesome_rounded,
+                  AppLocalizations.current.ai_assistant,
+                  '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
+                  plan.isFree,
+                  false,
+                  !plan.isFree,
+                ),
 
-                if (plan.downloadLimitPerPeriod > 0)
-                  _buildFeatureItem(
-                    context,
-                    Icons.download_outlined,
-                    AppLocalizations.current.download_limit,
-                    '${_getLimitForDuration(plan.downloadLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
-                  ),
-                if (plan.shareLimitPerPeriod > 0)
-                  _buildFeatureItem(
-                    context,
-                    Icons.share_outlined,
-                    AppLocalizations.current.share_limit,
-                    '${_getLimitForDuration(plan.shareLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
-                  ),
+                _buildFeatureItem(
+                  context,
+                  Icons.record_voice_over_outlined,
+                  AppLocalizations.current.ttsLimit,
+                  '${_getLimitForDuration(plan.ttsLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
+                  plan.isFree,
+                  false,
+                  !plan.isFree,
+                ),
+                _buildFeatureItem(
+                  context,
+                  Icons.picture_as_pdf_outlined,
+                  AppLocalizations.current.convertLimit,
+                  '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
+                  plan.isFree,
+                  false,
+                  !plan.isFree,
+                ),
+
+                _buildFeatureItem(
+                  context,
+                  Icons.download_outlined,
+                  AppLocalizations.current.download_limit,
+                  '${_getLimitForDuration(plan.downloadLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
+                  false,
+                  plan.isFree ? true : false,
+                  !plan.isFree,
+                ),
+                _buildFeatureItem(
+                  context,
+                  Icons.share_outlined,
+                  AppLocalizations.current.share_limit,
+                  '${_getLimitForDuration(plan.shareLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
+                  false,
+                  false,
+                  !plan.isFree,
+                ),
               ],
             ),
           ),
@@ -595,6 +620,9 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     IconData icon,
     String label,
     String value,
+    bool? requiredProPlan,
+    bool? showValue,
+    bool? isPro,
   ) {
     final theme = Theme.of(context);
     return Padding(
@@ -618,17 +646,31 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 color:
                     theme.textTheme.bodyMedium?.color ??
                     AppColors.textMediumGrey,
+                decoration:
+                    requiredProPlan == true ? TextDecoration.lineThrough : null,
               ),
             ),
           ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: theme.textTheme.bodyLarge?.color ?? AppColors.colorTitle,
+          if (showValue == true) ...[
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: theme.textTheme.bodyLarge?.color ?? AppColors.colorTitle,
+              ),
             ),
-          ),
+          ],
+          if (isPro == true && showValue == false) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.orange.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(Icons.all_inclusive, size: 16, color: Colors.orange),
+            ),
+          ],
         ],
       ),
     );
@@ -805,7 +847,14 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         planId: plan.id!,
         paymentMethod: paymentMethod,
         periodMonths: _selectedDurationMonths,
-        discountPercentage: _selectedDurationMonths == 3 ? 10 : _selectedDurationMonths == 6 ? 15 : _selectedDurationMonths == 12 ? 20 : 0,
+        discountPercentage:
+            _selectedDurationMonths == 3
+                ? 10
+                : _selectedDurationMonths == 6
+                ? 15
+                : _selectedDurationMonths == 12
+                ? 20
+                : 0,
       );
 
       if (context.mounted) Navigator.of(context).pop();
@@ -866,7 +915,9 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   const SizedBox(height: 16),
                   _buildPaymentOption(
                     context,
-                    paymentIcon: PaymentIconWidget(paymentMethod: PaymentMethod.vnpay),
+                    paymentIcon: PaymentIconWidget(
+                      paymentMethod: PaymentMethod.vnpay,
+                    ),
                     title: AppLocalizations.current.paymentMethodVnpay,
                     subtitle:
                         AppLocalizations.current.paymentMethodVnpayDescription,
@@ -875,7 +926,9 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   ),
                   _buildPaymentOption(
                     context,
-                    paymentIcon: PaymentIconWidget(paymentMethod: PaymentMethod.momo),
+                    paymentIcon: PaymentIconWidget(
+                      paymentMethod: PaymentMethod.momo,
+                    ),
                     title: AppLocalizations.current.paymentMethodMomo,
                     subtitle:
                         AppLocalizations.current.paymentMethodMomoDescription,
@@ -884,7 +937,9 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   ),
                   _buildPaymentOption(
                     context,
-                    paymentIcon: PaymentIconWidget(paymentMethod: PaymentMethod.payos),
+                    paymentIcon: PaymentIconWidget(
+                      paymentMethod: PaymentMethod.payos,
+                    ),
                     title: AppLocalizations.current.paymentMethodPayos,
                     subtitle:
                         AppLocalizations.current.paymentMethodPayosDescription,
@@ -930,11 +985,14 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
             color: theme.textTheme.bodySmall?.color,
           ),
         ),
-        trailing: visible == true ? Icon(
-            Icons.arrow_forward_ios,
-            size: 14,
-            color: theme.textTheme.bodySmall?.color,
-          ) : null,
+        trailing:
+            visible == true
+                ? Icon(
+                  Icons.arrow_forward_ios,
+                  size: 14,
+                  color: theme.textTheme.bodySmall?.color,
+                )
+                : null,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         onTap: () => visible == true ? Navigator.of(context).pop(value) : null,
       ),

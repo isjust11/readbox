@@ -76,6 +76,17 @@ class AuthRemoteDataSource {
     return Future.error(apiResponse.errMessage);
   }
 
+  Future<dynamic> resetPassword(Map<String, dynamic> param) async {
+    ApiResponse apiResponse = await network.post(
+      url: '${ApiConstant.apiHost}${ApiConstant.resetPassword}',
+      body: param,
+    );
+    if (apiResponse.isSuccess) {
+      return apiResponse.data;
+    }
+    return Future.error(apiResponse.errMessage);
+  }
+
   Future<AuthenModel> mobileSocialLogin(Map<String, dynamic> param) async {
     ApiResponse apiResponse = await network.post(
       url: ApiConstant.mobileSocialLogin,

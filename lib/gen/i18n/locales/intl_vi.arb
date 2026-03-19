@@ -659,7 +659,7 @@
   "noSubscriptionPlans": "Hiện chưa có gói dịch vụ.",
   "selectPlan": "Chọn gói",
   "popular": "Phổ biến",
-  "storageLimit": "Dung lượng",
+  "storageLimit": "Dung lượng lưu trữ",
   "ttsLimit": "Đọc văn bản (TTS)",
   "convertLimit": "Chuyển Word sang PDF",
   "perPeriod": "/kỳ",
@@ -778,8 +778,14 @@
   "translate_hint": "Nhập hoặc dán văn bản...",
   "translate_language": "Dịch sang:",
   "translate_button": "Dịch với AI",
+  "translation": "Dịch thuật",
   "result_from_gemini": "Kết quả từ Gemini AI",
   "copy_result": "Đã sao chép kết quả",
   "copy": "Sao chép",
-  "result": "Kết quả"
+  "result": "Kết quả",
+  "new_password": "Mật khẩu mới",
+  "enter_new_password": "Nhập mật khẩu mới",
+  "confirm_new_password": "Xác nhận mật khẩu mới",
+  "enter_confirm_new_password": "Nhập lại mật khẩu mới",
+  "reset_password_success": "Đặt lại mật khẩu thành công"
 }

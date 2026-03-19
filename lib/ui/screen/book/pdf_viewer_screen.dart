@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:path/path.dart' as path;
@@ -98,6 +97,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   bool get isEnableAction => _error == null;
   UserModel? _currentUser;
   late UserSubscriptionModel? _userSubscription;
+  bool get isProPlan => !(_userSubscription?.isFree ?? true);
   @override
   void initState() {
     super.initState();
@@ -143,8 +143,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _userSubscription =
-        context.watch<UserSubscriptionCubit>().userSubscription;
+    _userSubscription = context.watch<UserSubscriptionCubit>().userSubscription;
   }
 
   void _loadCurrentUser() {
@@ -322,6 +321,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   void _handleMenuAction(String value) {
     switch (value) {
       case 'ai_assistant':
+        if (!isProPlan) {
+          Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
+          return;
+        }
         AiAssistantSheet.show(context);
         break;
       case 'search':
@@ -344,7 +347,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         });
         break;
       case 'read_continuous_ebook':
-        if (!(_actionStatus?['canUseTts'] ?? false)) {
+        if (!isProPlan) {
           Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
           return;
         }
@@ -559,7 +562,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           SizedBox(width: 12),
           Text(
             text,
-            style: TextStyle(color: isEnabled ?? false ? color : Colors.grey),
+            style: TextStyle(
+              color:
+                  isEnabled ?? false
+                      ? Theme.of(context).colorScheme.primary
+                      : Colors.grey,
+            ),
           ),
           if (isPro ?? false) ...[
             Container(
@@ -665,7 +673,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       onDocumentLoaded: _onDocumentLoaded,
       onPageChanged: _onPageChanged,
       onDocumentLoadFailed: _onDocumentLoadFailed,
-      enableTextSelection: true,
+      enableTextSelection: false,
       onTextSelectionChanged: (details) {
         if (details.selectedText != null && details.selectedText!.isNotEmpty) {
           setState(() {
@@ -714,7 +722,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     List<Widget> actions = [];
     switch (actionToolbar) {
       case 'ai_assistant':
-        
       case 'search':
         actions = [..._buildSearchActions()];
       case 'zoom_in_out':
@@ -926,6 +933,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   bool get _visibleAppbarToolAction => _isVisibleToolAction;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final showViewer =
         !_isLoading &&
         _error == null &&
@@ -1020,14 +1028,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                           'ai_assistant',
                                           Icons.auto_awesome_rounded,
                                           AppLocalizations.current.ai_assistant,
-                                          Colors.blue,
+                                          theme.primaryColor,
                                           isPro: true,
                                         ),
                                         _buildMenuItem(
                                           'search',
                                           Icons.search_rounded,
                                           AppLocalizations.current.search,
-                                          Colors.blue,
+                                          theme.primaryColor,
                                         ),
                                         _buildMenuItem(
                                           'zoom_in_out',
@@ -1035,13 +1043,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                           AppLocalizations
                                               .current
                                               .pdf_zoom_in_out,
-                                          Colors.blue,
+                                          theme.primaryColor,
                                         ),
                                         _buildMenuItem(
                                           'toolbar',
                                           Icons.settings_overscan_rounded,
                                           AppLocalizations.current.pdf_toolbar,
-                                          Colors.blue,
+                                          theme.primaryColor,
                                         ),
                                         if (_hasInternet)
                                           _buildMenuItem(
@@ -1050,7 +1058,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                             AppLocalizations
                                                 .current
                                                 .pdf_read_ebook,
-                                            Colors.blue,
+                                            theme.primaryColor,
                                             isEnabled:
                                                 _actionStatus?['canUseTts'] ??
                                                 false,
@@ -1061,7 +1069,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                             'share',
                                             Icons.share_rounded,
                                             AppLocalizations.current.pdf_share,
-                                            Colors.blue,
+                                            theme.primaryColor,
                                             isEnabled:
                                                 _actionStatus?['canUseShare'] ??
                                                 false,
@@ -1163,12 +1171,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           if (_showTtsReadingPanel && _ttsReadingText != null)
             _buildTtsReadingPanel(),
           // Nút AI Assistant - hiện khi user bôi đen văn bản
-          if (_selectedText != null && _selectedText!.isNotEmpty)
-            Positioned(
-              bottom: 24,
-              right: 16,
-              child: _buildAiFloatingButton(),
-            ),
+          if (isProPlan && _selectedText != null && _selectedText!.isNotEmpty)
+            Positioned(bottom: 24, right: 16, child: _buildAiFloatingButton()),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -2086,10 +2090,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       tween: Tween(begin: 0.0, end: 1.0),
       duration: const Duration(milliseconds: 250),
       curve: Curves.easeOutBack,
-      builder: (context, value, child) => Transform.scale(
-        scale: value,
-        child: child,
-      ),
+      builder:
+          (context, value, child) =>
+              Transform.scale(scale: value, child: child),
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

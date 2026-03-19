@@ -8,6 +8,7 @@ import 'package:readbox/routes.dart';
 import 'package:readbox/services/secure_storage_service.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
   @override
@@ -42,9 +43,10 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
       vsync: this,
       duration: Duration(milliseconds: 800),
     );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeIn));
 
     // Rotate animation for icon
     _rotateController = AnimationController(
@@ -61,7 +63,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
 
     SchedulerBinding.instance.addPostFrameCallback((_) => openScreen(context));
   }
-  
+
   Future<void> _initDeviceInfo() async {
     final deviceInfo = await DeviceInfoPlugin().deviceInfo;
     if (deviceInfo is AndroidDeviceInfo) {
@@ -81,17 +83,14 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF667eea),
-              Color(0xFF764ba2),
-              Color(0xFFf093fb),
-            ],
+            colors: [theme.primaryColor, Color(0xFF764ba2), Color(0xFFf093fb)],
           ),
         ),
         child: SafeArea(
@@ -99,7 +98,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
             children: [
               // Animated circles background
               _buildAnimatedBackground(),
-              
+
               // Main content
               Center(
                 child: Column(
@@ -121,12 +120,16 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                        child: Image.asset(Assets.images.appLogo.path, width: 80, height: 80),
+                        child: Image.asset(
+                          Assets.images.appLogo.path,
+                          width: 80,
+                          height: 80,
+                        ),
                       ),
                     ),
-                    
+
                     SizedBox(height: 40),
-                    
+
                     // App Name with fade animation
                     FadeTransition(
                       opacity: _fadeAnimation,
@@ -141,7 +144,9 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                               letterSpacing: 2.0,
                               shadows: [
                                 Shadow(
-                                  color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+                                  color: Theme.of(
+                                    context,
+                                  ).primaryColor.withValues(alpha: 0.2),
                                   offset: Offset(0, 4),
                                   blurRadius: 8,
                                 ),
@@ -153,7 +158,9 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                             AppLocalizations.current.library,
                             style: TextStyle(
                               fontSize: 16,
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.9),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withValues(alpha: 0.9),
                               fontWeight: FontWeight.w300,
                               letterSpacing: 1.0,
                             ),
@@ -161,9 +168,9 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                    
+
                     SizedBox(height: 60),
-                    
+
                     // Loading indicator
                     FadeTransition(
                       opacity: _fadeAnimation,
@@ -172,7 +179,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              
+
               // Version at bottom
               Positioned(
                 bottom: 30,
@@ -204,17 +211,26 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
         Positioned(
           top: -100,
           right: -100,
-          child: _buildFloatingCircle(250, Colors.white.withValues(alpha: 0.05)),
+          child: _buildFloatingCircle(
+            250,
+            Colors.white.withValues(alpha: 0.05),
+          ),
         ),
         Positioned(
           bottom: -150,
           left: -150,
-          child: _buildFloatingCircle(300, Colors.white.withValues(alpha: 0.05)),
+          child: _buildFloatingCircle(
+            300,
+            Colors.white.withValues(alpha: 0.05),
+          ),
         ),
         Positioned(
           top: 100,
           left: -50,
-          child: _buildFloatingCircle(150, Colors.white.withValues(alpha: 0.03)),
+          child: _buildFloatingCircle(
+            150,
+            Colors.white.withValues(alpha: 0.03),
+          ),
         ),
       ],
     );
@@ -224,10 +240,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color,
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
     );
   }
 
@@ -273,7 +286,8 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
     // Khi không có internet: xem ebook chế độ local, không cần đăng nhập
     try {
       final results = await Connectivity().checkConnectivity();
-      final hasInternet = results.isNotEmpty &&
+      final hasInternet =
+          results.isNotEmpty &&
           !(results.length == 1 && results.first == ConnectivityResult.none);
       if (!hasInternet && context.mounted) {
         Navigator.pushNamedAndRemoveUntil(
@@ -292,10 +306,18 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
     // kiểm tra xem token có còn hiệu lực không
     final isTokenValid = await context.read<AuthCubit>().verifyToken();
     if (!isTokenValid) {
-      Navigator.pushNamedAndRemoveUntil(context, Routes.loginScreen, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.loginScreen,
+        (route) => false,
+      );
       return;
     } else {
-      Navigator.pushNamedAndRemoveUntil(context, Routes.mainScreen, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.mainScreen,
+        (route) => false,
+      );
     }
   }
 }

@@ -4,24 +4,29 @@ import 'package:readbox/blocs/auth/auth_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/res/resources.dart';
+import 'package:readbox/routes.dart';
+import 'package:readbox/ui/screen/auth/confirm_pin_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-  const ForgotPasswordScreen({super.key});
+  final String? username;
+  const ForgotPasswordScreen({super.key, this.username});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthCubit>(
       create: (_) => AuthCubit(repository: getIt.get<AuthRepository>()),
-      child: const _ForgotPasswordBody(),
+      child: _ForgotPasswordBody(username: username),
     );
   }
 }
 
 class _ForgotPasswordBody extends StatefulWidget {
-  const _ForgotPasswordBody();
+  final String? username;
+  const _ForgotPasswordBody({this.username});
 
   @override
   State<_ForgotPasswordBody> createState() => _ForgotPasswordBodyState();
@@ -29,20 +34,27 @@ class _ForgotPasswordBody extends StatefulWidget {
 
 class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
     with TickerProviderStateMixin {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmNewPasswordController =
+      TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  final verifyPinStatus = ValueNotifier<bool>(false);
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameController.dispose();
     _animationController.dispose();
+    _newPasswordController.dispose();
+    _confirmNewPasswordController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
+    _usernameController.text = widget.username ?? '';
     _animationController = AnimationController(
       duration: Duration(milliseconds: 300),
       vsync: this,
@@ -58,22 +70,74 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    final email = _emailController.text.trim();
-    BlocProvider.of<AuthCubit>(context).forgotPassword(email: email);
+    final username = _usernameController.text.trim();
+    BlocProvider.of<AuthCubit>(context).forgotPassword(username: username);
+  }
+
+  void _resetPassword() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    final username = BlocProvider.of<AuthCubit>(context).resetPasswordUsername;
+    final newPassword = _newPasswordController.text.trim();
+    final confirmNewPassword = _confirmNewPasswordController.text.trim();
+    if (newPassword != confirmNewPassword) {
+      AppSnackBar.show(
+        context,
+        message: AppLocalizations.current.passwords_do_not_match,
+        snackBarType: SnackBarType.error,
+      );
+      return;
+    }
+    BlocProvider.of<AuthCubit>(
+      context,
+    ).resetPassword(username: username, newPassword: newPassword);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, BaseState>(
-      listener: (context, state) {
+      listener: (context, state) async {
+        if (state is LoadedState) {
+          final code = state.data['code'];
+          if (code == 'verify-pin') {
+            BlocProvider.of<AuthCubit>(context).resetPasswordUsername =
+                _usernameController.text.trim();
+            final email = state.data['email'];
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => ConfirmPinScreen(
+                      email: email,
+                      type: ConfirmPinType.forgotPassword,
+                    ),
+              ),
+            );
+            if (result == true) {
+              verifyPinStatus.value = true;
+            }
+          } else if (code == 'reset-password') {
+            final status = state.data['status'];
+            if (status == 'success') {
+              Navigator.pushReplacementNamed(context, Routes.loginScreen);
+              AppSnackBar.show(
+                context,
+                message: AppLocalizations.current.reset_password_success,
+                snackBarType: SnackBarType.success,
+              );
+            } else {
+              final message = state.data['message'];
+              AppSnackBar.show(
+                context,
+                message: message,
+                snackBarType: SnackBarType.error,
+              );
+            }
+          }
+        }
       },
       child: BaseScreen(
-        stateWidget: CustomLoading<AuthCubit>(
-          size: AppDimens.SIZE_32,
-          message: AppLocalizations.current.loading,
-          backgroundColor: Colors.black.withValues(alpha: 0.4),
-          indicatorColor: AppColors.baseColor,
-        ),
         messageNotify: CustomSnackBar<AuthCubit>(),
         hideAppBar: true,
         body: Stack(
@@ -84,7 +148,7 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF667eea),
+                    Theme.of(context).primaryColor,
                     Color(0xFF764ba2),
                     Color(0xFFf093fb),
                   ],
@@ -121,6 +185,32 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
                 ],
               ),
             ),
+            BlocBuilder<AuthCubit, BaseState>(
+              builder: (context, state) {
+                if (state is LoadingState) {
+                  return Container(
+                    color: Colors.black45,
+                    child: Center(
+                      child: Card(
+                        elevation: 8,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(18),
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.primaryBlue,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return SizedBox.shrink();
+              },
+            ),
           ],
         ),
       ),
@@ -145,11 +235,18 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Center(
-                  child: CustomTextLabel(
-                    AppLocalizations.current.forgot_password,
-                    fontSize: AppDimens.SIZE_24,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textDark,
+                  child: ValueListenableBuilder(
+                    valueListenable: verifyPinStatus,
+                    builder: (context, value, child) {
+                      return CustomTextLabel(
+                        value
+                            ? AppLocalizations.current.reset_password
+                            : AppLocalizations.current.forgot_password,
+                        fontSize: AppDimens.SIZE_24,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textDark,
+                      );
+                    },
                   ),
                 ),
                 SizedBox(height: AppDimens.SIZE_32),
@@ -194,23 +291,40 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
   Widget _buildForm() {
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildEmailField(),
-        ],
+      child: ValueListenableBuilder(
+        valueListenable: verifyPinStatus,
+        builder: (context, value, child) {
+          if (value) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildNewPasswordField(),
+                SizedBox(height: AppDimens.SIZE_16),
+                _buildConfirmNewPasswordField(),
+              ],
+            );
+          } else {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [_buildEmailField()],
+            );
+          }
+        },
       ),
     );
   }
 
-   Widget _buildEmailField() {
+  Widget _buildNewPasswordField() {
     return TextFormField(
-      controller: _emailController,
-      keyboardType: TextInputType.emailAddress,
+      controller: _newPasswordController,
+      obscureText: true,
       decoration: InputDecoration(
-        labelText: AppLocalizations.current.email,
-        hintText: AppLocalizations.current.enter_email,
-        prefixIcon: Icon(Icons.email_outlined, color: Color(0xFF667eea)),
+        labelText: AppLocalizations.current.new_password,
+        hintText: AppLocalizations.current.enter_new_password,
+        prefixIcon: Icon(
+          Icons.lock_outline,
+          color: Theme.of(context).primaryColor,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -221,7 +335,114 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.red.shade300),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.red, width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.grey.shade50,
+        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return AppLocalizations.current.please_enter_password;
+        }
+        if (value.length < 6) {
+          return AppLocalizations
+              .current
+              .password_must_be_at_least_6_characters;
+        }
+        return null;
+      },
+      textInputAction: TextInputAction.next,
+    );
+  }
+
+  Widget _buildConfirmNewPasswordField() {
+    return TextFormField(
+      controller: _confirmNewPasswordController,
+      obscureText: true,
+      decoration: InputDecoration(
+        labelText: AppLocalizations.current.confirm_new_password,
+        hintText: AppLocalizations.current.enter_confirm_new_password,
+        prefixIcon: Icon(
+          Icons.lock_outline,
+          color: Theme.of(context).primaryColor,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.red.shade300),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.red, width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.grey.shade50,
+        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return AppLocalizations.current.please_enter_confirm_password;
+        }
+        if (value != _newPasswordController.text) {
+          return AppLocalizations.current.passwords_do_not_match;
+        }
+        return null;
+      },
+      textInputAction: TextInputAction.done,
+    );
+  }
+
+  Widget _buildEmailField() {
+    return TextFormField(
+      controller: _usernameController,
+      keyboardType: TextInputType.text,
+      decoration: InputDecoration(
+        labelText: AppLocalizations.current.username,
+        hintText: AppLocalizations.current.enter_username,
+        prefixIcon: Icon(
+          Icons.person_outline,
+          color: Theme.of(context).primaryColor,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -239,9 +460,6 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
         if (value == null || value.trim().isEmpty) {
           return AppLocalizations.current.please_enter_email;
         }
-        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-          return AppLocalizations.current.invalid_email;
-        }
         return null;
       },
       textInputAction: TextInputAction.next,
@@ -249,22 +467,29 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
   }
 
   Widget _buildSendButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF667eea),
-        foregroundColor: AppColors.white,
-        padding: EdgeInsets.symmetric(vertical: AppDimens.SIZE_16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
-        ),
-      ),
-      onPressed: _sendCode,
-      child: CustomTextLabel(
-        AppLocalizations.current.resend_code,
-        fontSize: AppDimens.SIZE_16,
-        fontWeight: FontWeight.w600,
-        color: AppColors.white,
-      ),
+    return ValueListenableBuilder(
+      valueListenable: verifyPinStatus,
+      builder: (context, value, child) {
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).primaryColor,
+            foregroundColor: AppColors.white,
+            padding: EdgeInsets.symmetric(vertical: AppDimens.SIZE_16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
+            ),
+          ),
+          onPressed: !value ? _sendCode : _resetPassword,
+          child: CustomTextLabel(
+            value
+                ? AppLocalizations.current.reset_password
+                : AppLocalizations.current.verify,
+            fontSize: AppDimens.SIZE_16,
+            fontWeight: FontWeight.w600,
+            color: AppColors.white,
+          ),
+        );
+      },
     );
   }
 

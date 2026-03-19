@@ -8,15 +8,24 @@ import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
+enum ConfirmPinType { verify, forgotPassword }
+
 class ConfirmPinScreen extends StatelessWidget {
   final String email;
   final String? phone;
-  const ConfirmPinScreen({super.key, required this.email, this.phone});
+  final ConfirmPinType? type;
+  const ConfirmPinScreen({
+    super.key,
+    required this.email,
+    this.phone,
+    this.type,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +35,7 @@ class ConfirmPinScreen extends StatelessWidget {
           create: (_) => AuthCubit(repository: getIt.get<AuthRepository>()),
         ),
       ],
-      child: ConfirmPinBody(email: email, phone: phone),
+      child: ConfirmPinBody(email: email, phone: phone, type: type),
     );
   }
 }
@@ -34,7 +43,8 @@ class ConfirmPinScreen extends StatelessWidget {
 class ConfirmPinBody extends StatefulWidget {
   final String email;
   final String? phone;
-  const ConfirmPinBody({super.key, required this.email, this.phone});
+  final ConfirmPinType? type;
+  const ConfirmPinBody({super.key, required this.email, this.phone, this.type});
 
   @override
   ConfirmPinBodyState createState() => ConfirmPinBodyState();
@@ -54,6 +64,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
   Timer? _resendTimer;
   int _resendCountdown = 60;
   bool _canResend = false;
+  ValueNotifier<bool> _canSubmit = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -98,7 +109,9 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
 
     // Auto submit when all 4 digits are entered
     if (index == 3 && value.length == 1) {
-      _verifyPin();
+      _canSubmit.value = true;
+    } else {
+      _canSubmit.value = false;
     }
   }
 
@@ -146,23 +159,33 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: MultiBlocListener(
         listeners: [
-        BlocListener<AuthCubit, BaseState>(
+          BlocListener<AuthCubit, BaseState>(
             listener: (context, state) {
               if (state is LoadedState) {
                 // Backend trả về Map với code và message
                 if (state.data is Map<String, dynamic>) {
                   final result = state.data as Map<String, dynamic>;
                   final code = result['code'];
-                  
+
                   if (code == 'verify') {
                     // Xác thực thành công
-                    Navigator.pushReplacementNamed(context, Routes.loginScreen);
+                    if (widget.type == ConfirmPinType.forgotPassword) {
+                      Navigator.pop(context, true);
+                    } else {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        Routes.loginScreen,
+                      );
+                    }
                     AppSnackBar.show(
                       context,
-                      message: result['message'] ?? AppLocalizations.current.authentication_success,
+                      message:
+                          result['message'] ??
+                          AppLocalizations.current.authentication_success,
                       snackBarType: SnackBarType.success,
                     );
                   } else if (code == 'resend') {
@@ -170,7 +193,9 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
                     _startResendTimer();
                     AppSnackBar.show(
                       context,
-                      message: result['message'] ?? AppLocalizations.current.pin_resend_success,
+                      message:
+                          result['message'] ??
+                          AppLocalizations.current.pin_resend_success,
                       snackBarType: SnackBarType.success,
                     );
                   } else {
@@ -178,7 +203,9 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
                     _clearPin();
                     AppSnackBar.show(
                       context,
-                      message: result['message'] ?? AppLocalizations.current.pin_verification_failed,
+                      message:
+                          result['message'] ??
+                          AppLocalizations.current.pin_verification_failed,
                       snackBarType: SnackBarType.error,
                     );
                   }
@@ -211,7 +238,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF667eea),
+                    theme.primaryColor,
                     Color(0xFF764ba2),
                     Color(0xFFf093fb),
                   ],
@@ -273,24 +300,11 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(32),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Color(0xFF667eea),
-                                ),
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                AppLocalizations.current.verifying_pin,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          padding: EdgeInsets.all(18),
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.primaryBlue,
+                            ),
                           ),
                         ),
                       ),
@@ -307,6 +321,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
   }
 
   Widget _buildHeader() {
+    final theme = Theme.of(context);
     return Column(
       children: [
         // Icon
@@ -323,7 +338,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
               ),
             ],
           ),
-          child: Icon(Icons.pin_rounded, size: 50, color: Color(0xFF667eea)),
+          child: Icon(Icons.pin_rounded, size: 50, color: theme.primaryColor),
         ),
         SizedBox(height: 16),
 
@@ -386,6 +401,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
   }
 
   Widget _buildPinInputs() {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(4, (index) {
@@ -399,12 +415,12 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             maxLength: 1,
-            cursorColor: Color(0xFF667eea),
+            cursorColor: theme.primaryColor,
             textAlignVertical: TextAlignVertical.center,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF667eea),
+              color: theme.primaryColor,
             ),
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
@@ -419,7 +435,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: Color(0xFF667eea), width: 1),
+                borderSide: BorderSide(color: theme.primaryColor, width: 1),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -444,35 +460,44 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
   }
 
   Widget _buildVerifyButton() {
-    return ElevatedButton(
-      onPressed: _verifyPin,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF667eea),
-        foregroundColor: Colors.white,
-        elevation: 4,
-        padding: EdgeInsets.symmetric(vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        shadowColor: Color(0xFF667eea).withValues(alpha: 0.5),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            AppLocalizations.current.verify,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
+    final theme = Theme.of(context);
+    return ValueListenableBuilder(
+      valueListenable: _canSubmit,
+      builder: (context, value, child) {
+        return ElevatedButton(
+          onPressed: value ? _verifyPin : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: value ? theme.primaryColor : Colors.grey,
+            foregroundColor: Colors.white,
+            elevation: 4,
+            padding: EdgeInsets.symmetric(vertical: 8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
+            shadowColor: theme.primaryColor.withValues(alpha: 0.5),
           ),
-          SizedBox(width: 8),
-          Icon(Icons.check_circle_outline, size: 20),
-        ],
-      ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                AppLocalizations.current.verify,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
+              ),
+              SizedBox(width: 8),
+              Icon(Icons.check_circle_outline, size: 20),
+            ],
+          ),
+        );
+      },
     );
   }
 
   Widget _buildResendButton() {
+    final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -493,17 +518,17 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Color(0xFF667eea).withValues(alpha: 0.1),
+                  color: theme.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.refresh, size: 16, color: Color(0xFF667eea)),
+                    Icon(Icons.refresh, size: 16, color: theme.primaryColor),
                     SizedBox(width: 4),
                     Text(
                       AppLocalizations.current.resend_pin,
                       style: TextStyle(
-                        color: Color(0xFF667eea),
+                        color: theme.primaryColor,
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),

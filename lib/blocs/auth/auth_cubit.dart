@@ -9,19 +9,20 @@ import 'package:readbox/utils/shared_preference.dart';
 
 class AuthCubit extends Cubit<BaseState> {
   final AuthRepository repository;
+  String? resetPasswordUsername;
   final SecureStorageService _secureStorage = SecureStorageService();
   final FCMService fcmService = FCMService();
-  AuthCubit({required this.repository}) : super(InitState()){
-     fcmService.initialize();
+  AuthCubit({required this.repository}) : super(InitState()) {
+    fcmService.initialize();
   }
 
   Future doLogin({String? username, String? password}) async {
     try {
       emit(LoadingState());
-      
+
       // Lấy FCM token để gửi kèm theo request
       final fcmToken = fcmService.fcmToken;
-      
+
       AuthenModel userModel = await repository.login({
         "username": username,
         "password": password,
@@ -31,7 +32,7 @@ class AuthCubit extends Cubit<BaseState> {
         if (fcmService.platform == 'ios') "platform": 'ios',
         if (fcmService.platform == 'android') "platform": 'android',
       });
-      
+
       //save secure storage
       await BiometricAuthService.storeCredentials(username!, password!);
 
@@ -44,13 +45,13 @@ class AuthCubit extends Cubit<BaseState> {
   Future doLogout() async {
     try {
       emit(LoadingState());
-      
+
       // Xóa tất cả dữ liệu nhạy cảm từ secure storage
       await _secureStorage.clearAllSecureData();
-      
+
       // Xóa preferences (non-sensitive data)
       await SharedPreferenceUtil.clearData();
-      
+
       emit(LoadedState(null));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -72,6 +73,20 @@ class AuthCubit extends Cubit<BaseState> {
       emit(LoadingState());
       // await repository.forgotPassword(userName);
       emit(LoadedState(null));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
+
+  // reset password
+  Future resetPassword({String? username, String? newPassword}) async {
+    try {
+      emit(LoadingState());
+      var result = await repository.resetPassword({
+        "username": username,
+        "newPassword": newPassword,
+      });
+      emit(LoadedState(result));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
@@ -118,6 +133,7 @@ class AuthCubit extends Cubit<BaseState> {
     }
     return await repository.verifyToken(token);
   }
+
   Future resendPin({required String email}) async {
     try {
       emit(LoadingState());
@@ -129,10 +145,11 @@ class AuthCubit extends Cubit<BaseState> {
     }
   }
 
-  Future forgotPassword({required String email}) async {
+  Future forgotPassword({required String username}) async {
     try {
       emit(LoadingState());
-      var result = await repository.forgotPassword({"email": email});
+      final params = {"username": username};
+      var result = await repository.forgotPassword(params);
       emit(LoadedState(result));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -149,7 +166,9 @@ class AuthCubit extends Cubit<BaseState> {
 
       if (!isGooglePlayServicesAvailable) {
         emit(
-          ErrorState(AppLocalizations.current.google_play_services_not_available),
+          ErrorState(
+            AppLocalizations.current.google_play_services_not_available,
+          ),
         );
         return;
       }
@@ -174,7 +193,7 @@ class AuthCubit extends Cubit<BaseState> {
 
       // Lưu thông tin social login cho sinh trắc học
       await BiometricAuthService.storeSocialLoginInfo(socialData);
-      
+
       emit(LoadedState(authModel));
     } catch (e) {
       String errorMessage = BlocUtils.getMessageError(e);
@@ -194,7 +213,7 @@ class AuthCubit extends Cubit<BaseState> {
 
       // Lấy FCM token để gửi kèm theo request
       final fcmToken = fcmService.fcmToken;
-      
+
       // Thêm fcmToken vào socialData
       final loginData = Map<String, dynamic>.from(socialData);
       if (fcmToken != null) {
@@ -223,10 +242,10 @@ class AuthCubit extends Cubit<BaseState> {
   }) async {
     try {
       emit(LoadingState());
-      
+
       // Lấy FCM token để gửi kèm theo request
       final fcmToken = fcmService.fcmToken;
-      
+
       AuthenModel authModel = await repository.mobileSocialLogin({
         "platformId": platformId,
         "email": email,
@@ -254,16 +273,16 @@ class AuthCubit extends Cubit<BaseState> {
         if (result.isSocialLogin) {
           // Đăng nhập lại bằng social
           final socialData = result.data!;
-          
+
           // Lấy FCM token để gửi kèm theo request
           final fcmToken = fcmService.fcmToken;
-          
+
           // Thêm fcmToken vào socialData
           final loginData = Map<String, dynamic>.from(socialData);
           if (fcmToken != null) {
             loginData['fcmToken'] = fcmToken;
           }
-          
+
           AuthenModel authModel = await repository.mobileSocialLogin(loginData);
 
           emit(LoadedState(authModel));

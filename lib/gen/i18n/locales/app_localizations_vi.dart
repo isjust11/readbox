@@ -1821,7 +1821,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get popular => 'Phổ biến';
 
   @override
-  String get storageLimit => 'Dung lượng';
+  String get storageLimit => 'Dung lượng lưu trữ';
 
   @override
   String get ttsLimit => 'Đọc văn bản (TTS)';
@@ -2152,4 +2152,64 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get paymentMethodPayosDescription => 'Thanh toán qua PayOS';
+
+  @override
+  String get ai_assistant => 'Trợ lý AI';
+
+  @override
+  String get lookup => 'Tra cứu';
+
+  @override
+  String get lookup_text => 'Từ hoặc khái niệm cần tra cứu';
+
+  @override
+  String get lookup_hint => 'Nhập từ, câu hoặc câu hỏi...';
+
+  @override
+  String get lookup_language => 'Ngôn ngữ trả lời:';
+
+  @override
+  String get lookup_button => 'Tra cứu với AI';
+
+  @override
+  String get translate_text => 'Văn bản cần dịch';
+
+  @override
+  String get translate_hint => 'Nhập hoặc dán văn bản...';
+
+  @override
+  String get translate_language => 'Dịch sang:';
+
+  @override
+  String get translate_button => 'Dịch với AI';
+
+  @override
+  String get translation => 'Dịch thuật';
+
+  @override
+  String get result_from_gemini => 'Kết quả từ Gemini AI';
+
+  @override
+  String get copy_result => 'Đã sao chép kết quả';
+
+  @override
+  String get copy => 'Sao chép';
+
+  @override
+  String get result => 'Kết quả';
+
+  @override
+  String get new_password => 'Mật khẩu mới';
+
+  @override
+  String get enter_new_password => 'Nhập mật khẩu mới';
+
+  @override
+  String get confirm_new_password => 'Xác nhận mật khẩu mới';
+
+  @override
+  String get enter_confirm_new_password => 'Nhập lại mật khẩu mới';
+
+  @override
+  String get reset_password_success => 'Đặt lại mật khẩu thành công';
 }

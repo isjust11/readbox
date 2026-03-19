@@ -1818,7 +1818,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get popular => 'Popular';
 
   @override
-  String get storageLimit => 'Storage';
+  String get storageLimit => 'Storage space';
 
   @override
   String get ttsLimit => 'Text-to-speech';
@@ -2149,4 +2149,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paymentMethodPayosDescription => 'Pay via PayOS';
+
+  @override
+  String get ai_assistant => 'AI Assistant';
+
+  @override
+  String get lookup => 'Lookup';
+
+  @override
+  String get lookup_text => 'Text to lookup';
+
+  @override
+  String get lookup_hint => 'Enter text to lookup...';
+
+  @override
+  String get lookup_language => 'Language to reply:';
+
+  @override
+  String get lookup_button => 'Lookup with AI';
+
+  @override
+  String get translate_text => 'Text to translate';
+
+  @override
+  String get translate_hint => 'Enter text to translate...';
+
+  @override
+  String get translate_language => 'Translate to:';
+
+  @override
+  String get translate_button => 'Translate with AI';
+
+  @override
+  String get translation => 'Translation';
+
+  @override
+  String get result_from_gemini => 'Result from Gemini AI';
+
+  @override
+  String get copy_result => 'Result copied';
+
+  @override
+  String get copy => 'Copy';
+
+  @override
+  String get result => 'Result';
+
+  @override
+  String get new_password => 'New password';
+
+  @override
+  String get enter_new_password => 'Enter new password';
+
+  @override
+  String get confirm_new_password => 'Confirm new password';
+
+  @override
+  String get enter_confirm_new_password => 'Enter confirm new password';
+
+  @override
+  String get reset_password_success => 'Reset password success';
 }

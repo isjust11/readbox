@@ -42,10 +42,11 @@ class ApiConstant {
   static final updateProfile = "auth/update-profile";
   static final refreshToken = "auth/refresh-token";
   static final forgotPassword = "auth/forgot-password";
+  static final resetPassword = "auth/reset-password";
   static final getMedia = "media";
   static final getPage = "pages";
   // Book endpoints
-  static final getBooksPublic =  "books/public";
+  static final getBooksPublic = "books/public";
   static final books = "books";
   static final toggleFavorite = "user-interactions/toggle-favorite";
   static final getFavorite = "books/favorite";
@@ -61,17 +62,18 @@ class ApiConstant {
   static final getInteractionStats = "user-interactions/stats";
 
   static final getMyInteractions = "user-interactions/my-interactions";
-  static final getMyInteractionCounts = "user-interactions/my-interaction-counts";
+  static final getMyInteractionCounts =
+      "user-interactions/my-interaction-counts";
   static final interactionAction = "user-interactions/action";
   static final loadInteraction = "user-interactions/load-interaction";
   // Chapter endpoints
   static final getChapters = "books";
-  
+
   // Bookmark endpoints
   static final getBookmarks = "bookmarks";
   static final addBookmark = "bookmarks";
   static final deleteBookmark = "bookmarks";
-  
+
   // Reading progress endpoints
   static final saveReadingProgress = "reading-progress";
   static final getReadingProgress = "reading-progress";
@@ -80,17 +82,18 @@ class ApiConstant {
   static final uploadEbook = "upload/ebook";
   static final uploadCover = "upload/image";
   static final getCategories = "categories";
-  
+
   // Converter endpoints
   static final converterWordToPdf = "converter/word-to-pdf";
   static final converterWordToPdfPublic = "converter/word-to-pdf-public";
-  
+
   //upload medial
   static final uploadMedia = "media/upload";
   static final createFeedback = "feedback";
 
-  static final getCategoriesByCategoryTypeCode = "categories/get-by-category-type";
-  
+  static final getCategoriesByCategoryTypeCode =
+      "categories/get-by-category-type";
+
   // Notification endpoints
   static final getNotifications = "notifications";
   static final markNotificationRead = "notifications/mark-read";
@@ -110,5 +113,4 @@ class ApiConstant {
   // AI endpoints (Gemini)
   static final aiLookup = "ai/lookup";
   static final aiTranslate = "ai/translate";
-
 }

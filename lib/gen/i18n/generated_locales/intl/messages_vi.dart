@@ -193,6 +193,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "close": MessageLookupByLibrary.simpleMessage("Đóng"),
     "completed": MessageLookupByLibrary.simpleMessage("Hoàn thành"),
     "confirm": MessageLookupByLibrary.simpleMessage("Xác nhận"),
+    "confirm_new_password": MessageLookupByLibrary.simpleMessage(
+      "Xác nhận mật khẩu mới",
+    ),
     "confirm_password": MessageLookupByLibrary.simpleMessage(
       "Xác nhận mật khẩu",
     ),
@@ -322,6 +325,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "enableSound": MessageLookupByLibrary.simpleMessage("Bật âm thanh"),
     "enableVibration": MessageLookupByLibrary.simpleMessage("Bật rung"),
+    "enter_confirm_new_password": MessageLookupByLibrary.simpleMessage(
+      "Nhập lại mật khẩu mới",
+    ),
     "enter_confirm_password": MessageLookupByLibrary.simpleMessage(
       "Nhập lại mật khẩu",
     ),
@@ -332,6 +338,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "enter_full_name": MessageLookupByLibrary.simpleMessage("Nhập họ và tên"),
     "enter_information_to_start": MessageLookupByLibrary.simpleMessage(
       "Điền thông tin để bắt đầu",
+    ),
+    "enter_new_password": MessageLookupByLibrary.simpleMessage(
+      "Nhập mật khẩu mới",
     ),
     "enter_password": MessageLookupByLibrary.simpleMessage("Nhập mật khẩu"),
     "enter_phone": MessageLookupByLibrary.simpleMessage("Nhập số điện thoại"),
@@ -684,6 +693,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cần quyền truy cập bộ nhớ",
     ),
     "new_book": MessageLookupByLibrary.simpleMessage("Mới"),
+    "new_password": MessageLookupByLibrary.simpleMessage("Mật khẩu mới"),
     "news": MessageLookupByLibrary.simpleMessage("Tin tức"),
     "next": MessageLookupByLibrary.simpleMessage("Tiếp theo"),
     "noLanguagesAvailable": MessageLookupByLibrary.simpleMessage(
@@ -1132,6 +1142,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "resend_pin_in": MessageLookupByLibrary.simpleMessage("Gửi lại sau"),
     "reset": MessageLookupByLibrary.simpleMessage("Đặt lại"),
     "reset_password": MessageLookupByLibrary.simpleMessage("Đặt lại mật khẩu"),
+    "reset_password_success": MessageLookupByLibrary.simpleMessage(
+      "Đặt lại mật khẩu thành công",
+    ),
     "result": MessageLookupByLibrary.simpleMessage("Kết quả"),
     "result_from_gemini": MessageLookupByLibrary.simpleMessage(
       "Kết quả từ Gemini AI",
@@ -1211,7 +1224,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "start_reading": MessageLookupByLibrary.simpleMessage("Bắt đầu đọc"),
     "started_at": MessageLookupByLibrary.simpleMessage("Bắt Đầu"),
     "stopTest": MessageLookupByLibrary.simpleMessage("Dừng"),
-    "storageLimit": MessageLookupByLibrary.simpleMessage("Dung lượng"),
+    "storageLimit": MessageLookupByLibrary.simpleMessage("Dung lượng lưu trữ"),
     "storage_usage": MessageLookupByLibrary.simpleMessage("Dung Lượng Lưu Trữ"),
     "submit_rating": MessageLookupByLibrary.simpleMessage("Gửi đánh giá"),
     "subscriptionPlans": MessageLookupByLibrary.simpleMessage("Gói dịch vụ"),
@@ -1326,6 +1339,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "translate_language": MessageLookupByLibrary.simpleMessage("Dịch sang:"),
     "translate_text": MessageLookupByLibrary.simpleMessage("Văn bản cần dịch"),
+    "translation": MessageLookupByLibrary.simpleMessage("Dịch thuật"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Thử lại"),
     "try_again": MessageLookupByLibrary.simpleMessage("Thử lại"),
     "try_different_search": MessageLookupByLibrary.simpleMessage(

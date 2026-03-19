@@ -125,7 +125,7 @@ class LoginScreenState extends State<LoginBody>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF667eea),
+                    theme.primaryColor,
                     Color(0xFF764ba2),
                     Color(0xFFf093fb),
                   ],
@@ -248,7 +248,7 @@ class LoginScreenState extends State<LoginBody>
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF667eea),
+                  color: theme.primaryColor,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -325,7 +325,11 @@ class LoginScreenState extends State<LoginBody>
         Flexible(
           child: InkWell(
             onTap: () {
-              Navigator.pushNamed(context, Routes.forgotPassword);
+              Navigator.pushNamed(
+                context,
+                Routes.forgotPassword,
+                arguments: _usernameController.text.trim(),
+              );
             },
             child: CustomTextLabel(
               AppLocalizations.current.forgot_password,
@@ -341,12 +345,13 @@ class LoginScreenState extends State<LoginBody>
   }
 
   Widget _buildUsernameField() {
+    final theme = Theme.of(context);
     return TextFormField(
       controller: _usernameController,
       decoration: InputDecoration(
         labelText: AppLocalizations.current.username,
         hintText: AppLocalizations.current.enter_username,
-        prefixIcon: Icon(Icons.person_outline, color: Color(0xFF667eea)),
+        prefixIcon: Icon(Icons.person_outline, color: theme.primaryColor),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -357,7 +362,7 @@ class LoginScreenState extends State<LoginBody>
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(color: theme.primaryColor, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -382,13 +387,14 @@ class LoginScreenState extends State<LoginBody>
   }
 
   Widget _buildPasswordField() {
+    final theme = Theme.of(context);
     return TextFormField(
       controller: _passwordController,
       obscureText: _obscurePassword,
       decoration: InputDecoration(
         labelText: AppLocalizations.current.password,
         hintText: AppLocalizations.current.enter_password,
-        prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
+        prefixIcon: Icon(Icons.lock_outline, color: theme.primaryColor),
         suffixIcon: IconButton(
           icon: Icon(
             _obscurePassword
@@ -412,7 +418,7 @@ class LoginScreenState extends State<LoginBody>
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(color: theme.primaryColor, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -442,15 +448,16 @@ class LoginScreenState extends State<LoginBody>
   }
 
   Widget _buildLoginButton() {
+    final theme = Theme.of(context);
     return ElevatedButton(
       onPressed: _handleLogin,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF667eea),
+        backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
         elevation: 4,
         padding: EdgeInsets.symmetric(vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        shadowColor: Color(0xFF667eea).withValues(alpha: 0.5),
+        shadowColor: theme.primaryColor.withValues(alpha: 0.5),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -471,6 +478,7 @@ class LoginScreenState extends State<LoginBody>
   }
 
   Widget _buildRegisterLink() {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -486,7 +494,7 @@ class LoginScreenState extends State<LoginBody>
           child: Text(
             AppLocalizations.current.register_now,
             style: TextStyle(
-              color: Color(0xFF667eea),
+              color: theme.primaryColor,
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),

@@ -164,7 +164,6 @@ class _DataStorageScreenState extends State<DataStorageScreen>
               _buildActivityGrid(context, theme, colorScheme),
               const SizedBox(height: AppDimens.SIZE_24),
             ],
-
           ],
         ),
       ),
@@ -256,32 +255,35 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimens.SIZE_12,
-                        vertical: AppDimens.SIZE_6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withValues(alpha: 0.8),
-                        borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.star_rounded, color: Colors.white, size: 20),
-                          const SizedBox(width: AppDimens.SIZE_4),
-                          Text(
-                            AppLocalizations.current.upgrade_now,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: Colors.white,
-                            ),
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimens.SIZE_12,
+                      vertical: AppDimens.SIZE_6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Theme.of(
+                        context,
+                      ).primaryColor.withValues(alpha: 0.8),
+                      borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.star_rounded, color: Colors.white, size: 20),
+                        const SizedBox(width: AppDimens.SIZE_4),
+                        Text(
+                          AppLocalizations.current.upgrade_now,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              if (!isFree)
+                ),
+              ],
+              if (!isFree) ...[
+                const SizedBox(width: AppDimens.SIZE_16),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppDimens.SIZE_12,
@@ -299,6 +301,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                     ),
                   ),
                 ),
+              ],
             ],
           ),
           Row(
@@ -316,7 +319,9 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color:
                               isFree
-                                  ? colorScheme.onSecondary.withValues(alpha: 0.7)
+                                  ? colorScheme.onSecondary.withValues(
+                                    alpha: 0.7,
+                                  )
                                   : Colors.white.withValues(alpha: 0.9),
                         ),
                         textAlign: TextAlign.left,

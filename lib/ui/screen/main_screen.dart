@@ -461,30 +461,30 @@ class MainBodyState extends State<MainBody> {
                 )
                 : Text(title, style: TextStyle(color: colorScheme.onSurface)),
         actions: [
-          if (_isSearching)
-            IconButton(
-              icon: Stack(
-                children: [
-                  Icon(Icons.tune, color: colorScheme.onSurface),
-                  if (_filterModel?.categoryId != null ||
-                      (_filterModel?.isMyUpload ?? false) ||
-                      _filterModel?.format != null)
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              onPressed: _showFilterBottomSheet,
-            ),
+          // if (_isSearching)
+          //   IconButton(
+          //     icon: Stack(
+          //       children: [
+          //         Icon(Icons.tune, color: colorScheme.onSurface),
+          //         if (_filterModel?.categoryId != null ||
+          //             (_filterModel?.isMyUpload ?? false) ||
+          //             _filterModel?.format != null)
+          //           Positioned(
+          //             top: 0,
+          //             right: 0,
+          //             child: Container(
+          //               width: 8,
+          //               height: 8,
+          //               decoration: BoxDecoration(
+          //                 color: colorScheme.primary,
+          //                 shape: BoxShape.circle,
+          //               ),
+          //             ),
+          //           ),
+          //       ],
+          //     ),
+          //     onPressed: _showFilterBottomSheet,
+          //   ),
           IconButton(
             icon: Icon(
               _isSearching ? Icons.close : Icons.search,

@@ -5274,9 +5274,14 @@ class AppLocalizations {
     return Intl.message('Phổ biến', name: 'popular', desc: '', args: []);
   }
 
-  /// `Dung lượng`
+  /// `Dung lượng lưu trữ`
   String get storageLimit {
-    return Intl.message('Dung lượng', name: 'storageLimit', desc: '', args: []);
+    return Intl.message(
+      'Dung lượng lưu trữ',
+      name: 'storageLimit',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Đọc văn bản (TTS)`
@@ -6313,6 +6318,11 @@ class AppLocalizations {
     );
   }
 
+  /// `Dịch thuật`
+  String get translation {
+    return Intl.message('Dịch thuật', name: 'translation', desc: '', args: []);
+  }
+
   /// `Kết quả từ Gemini AI`
   String get result_from_gemini {
     return Intl.message(
@@ -6341,6 +6351,56 @@ class AppLocalizations {
   /// `Kết quả`
   String get result {
     return Intl.message('Kết quả', name: 'result', desc: '', args: []);
+  }
+
+  /// `Mật khẩu mới`
+  String get new_password {
+    return Intl.message(
+      'Mật khẩu mới',
+      name: 'new_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhập mật khẩu mới`
+  String get enter_new_password {
+    return Intl.message(
+      'Nhập mật khẩu mới',
+      name: 'enter_new_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xác nhận mật khẩu mới`
+  String get confirm_new_password {
+    return Intl.message(
+      'Xác nhận mật khẩu mới',
+      name: 'confirm_new_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhập lại mật khẩu mới`
+  String get enter_confirm_new_password {
+    return Intl.message(
+      'Nhập lại mật khẩu mới',
+      name: 'enter_confirm_new_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đặt lại mật khẩu thành công`
+  String get reset_password_success {
+    return Intl.message(
+      'Đặt lại mật khẩu thành công',
+      name: 'reset_password_success',
+      desc: '',
+      args: [],
+    );
   }
 }
 

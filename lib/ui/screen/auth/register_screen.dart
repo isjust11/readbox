@@ -102,7 +102,7 @@ class RegisterScreenState extends State<RegisterBody>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF667eea),
+                    Theme.of(context).primaryColor,
                     Color(0xFF764ba2),
                     Color(0xFFf093fb),
                   ],
@@ -170,7 +170,7 @@ class RegisterScreenState extends State<RegisterBody>
                             children: [
                               CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  Color(0xFF667eea),
+                                  Theme.of(context).primaryColor,
                                 ),
                               ),
                               SizedBox(height: 16),
@@ -217,7 +217,7 @@ class RegisterScreenState extends State<RegisterBody>
           child: Icon(
             Icons.person_add_rounded,
             size: 50,
-            color: Color(0xFF667eea),
+            color: Theme.of(context).primaryColor,
           ),
         ),
         SizedBox(height: AppDimens.SIZE_16),
@@ -249,7 +249,9 @@ class RegisterScreenState extends State<RegisterBody>
               AppLocalizations.current.enter_information_to_start,
               style: TextStyle(
                 fontSize: 16,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.8),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -300,7 +302,10 @@ class RegisterScreenState extends State<RegisterBody>
       decoration: InputDecoration(
         labelText: AppLocalizations.current.full_name,
         hintText: AppLocalizations.current.enter_full_name,
-        prefixIcon: Icon(Icons.badge_outlined, color: Color(0xFF667eea)),
+        prefixIcon: Icon(
+          Icons.badge_outlined,
+          color: Theme.of(context).primaryColor,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -311,7 +316,10 @@ class RegisterScreenState extends State<RegisterBody>
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -341,7 +349,10 @@ class RegisterScreenState extends State<RegisterBody>
       decoration: InputDecoration(
         labelText: AppLocalizations.current.username,
         hintText: AppLocalizations.current.enter_username,
-        prefixIcon: Icon(Icons.person_outline, color: Color(0xFF667eea)),
+        prefixIcon: Icon(
+          Icons.person_outline,
+          color: Theme.of(context).primaryColor,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -352,7 +363,10 @@ class RegisterScreenState extends State<RegisterBody>
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -388,7 +402,10 @@ class RegisterScreenState extends State<RegisterBody>
       decoration: InputDecoration(
         labelText: AppLocalizations.current.email,
         hintText: AppLocalizations.current.enter_email,
-        prefixIcon: Icon(Icons.email_outlined, color: Color(0xFF667eea)),
+        prefixIcon: Icon(
+          Icons.email_outlined,
+          color: Theme.of(context).primaryColor,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -399,7 +416,10 @@ class RegisterScreenState extends State<RegisterBody>
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -433,7 +453,10 @@ class RegisterScreenState extends State<RegisterBody>
       decoration: InputDecoration(
         labelText: AppLocalizations.current.password,
         hintText: AppLocalizations.current.enter_password,
-        prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
+        prefixIcon: Icon(
+          Icons.lock_outline,
+          color: Theme.of(context).primaryColor,
+        ),
         suffixIcon: IconButton(
           icon: Icon(
             _obscurePassword
@@ -457,7 +480,10 @@ class RegisterScreenState extends State<RegisterBody>
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -493,7 +519,10 @@ class RegisterScreenState extends State<RegisterBody>
       decoration: InputDecoration(
         labelText: AppLocalizations.current.confirm_password,
         hintText: AppLocalizations.current.enter_confirm_password,
-        prefixIcon: Icon(Icons.lock_outline, color: Color(0xFF667eea)),
+        prefixIcon: Icon(
+          Icons.lock_outline,
+          color: Theme.of(context).primaryColor,
+        ),
         suffixIcon: IconButton(
           icon: Icon(
             _obscureConfirmPassword
@@ -517,7 +546,10 @@ class RegisterScreenState extends State<RegisterBody>
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide(color: Color(0xFF667eea), width: 2),
+          borderSide: BorderSide(
+            color: Theme.of(context).primaryColor,
+            width: 2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -548,12 +580,12 @@ class RegisterScreenState extends State<RegisterBody>
     return ElevatedButton(
       onPressed: _handleRegister,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF667eea),
+        backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         elevation: 4,
         padding: EdgeInsets.symmetric(vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        shadowColor: Color(0xFF667eea).withValues(alpha: 0.5),
+        shadowColor: Theme.of(context).primaryColor.withValues(alpha: 0.5),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -586,7 +618,7 @@ class RegisterScreenState extends State<RegisterBody>
           child: Text(
             AppLocalizations.current.login,
             style: TextStyle(
-              color: Color(0xFF667eea),
+              color: Theme.of(context).primaryColor,
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),

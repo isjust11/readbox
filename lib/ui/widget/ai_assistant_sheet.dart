@@ -219,7 +219,7 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
 
   Widget _buildTabBar(ThemeData theme) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 12),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: Colors.grey[100],
@@ -237,10 +237,13 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
         labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         dividerColor: Colors.transparent,
         tabs: [
-          Tab(icon: Icon(Icons.search_rounded, size: 16), text: AppLocalizations.current.lookup),
+          Tab(
+            icon: Icon(Icons.search_rounded, size: 16),
+            text: AppLocalizations.current.lookup,
+          ),
           Tab(
             icon: Icon(Icons.translate_rounded, size: 16),
-            text: AppLocalizations.current.translate,
+            text: AppLocalizations.current.translation,
           ),
         ],
       ),
@@ -335,7 +338,9 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
                       )
                       : const Icon(Icons.auto_awesome_rounded, size: 18),
               label: Text(
-                _lookupLoading ? AppLocalizations.current.loading : AppLocalizations.current.lookup_button,
+                _lookupLoading
+                    ? AppLocalizations.current.loading
+                    : AppLocalizations.current.lookup_button,
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.primaryColor,
@@ -477,7 +482,11 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
                         ),
                       )
                       : const Icon(Icons.translate_rounded, size: 18),
-              label: Text(_translateLoading ? AppLocalizations.current.loading : AppLocalizations.current.translate_button),
+              label: Text(
+                _translateLoading
+                    ? AppLocalizations.current.loading
+                    : AppLocalizations.current.translate_button,
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: theme.primaryColor,
                 foregroundColor: Colors.white,

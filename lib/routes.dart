@@ -5,7 +5,6 @@ import 'package:readbox/domain/data/models/models.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:readbox/ui/screen/tools/tools_screen.dart';
 
-
 class Routes {
   Routes._();
 
@@ -65,8 +64,9 @@ class Routes {
           type: PageTransitionType.fade,
         );
       case forgotPassword:
+        final username = settings.arguments as String?;
         return PageTransition(
-          child: ForgotPasswordScreen(),
+          child: ForgotPasswordScreen(username: username),
           type: PageTransitionType.rightToLeft,
         );
       case confirmPinScreen:
@@ -89,9 +89,7 @@ class Routes {
         }
         final book = settings.arguments as BookModel;
         return PageTransition(
-          child: AdminUploadScreen(
-            book: book,
-          ),
+          child: AdminUploadScreen(book: book),
           type: PageTransitionType.fade,
         );
       case bookDetailScreen:
@@ -101,7 +99,7 @@ class Routes {
           type: PageTransitionType.rightToLeft,
         );
       case settingsScreen:
-      final user = settings.arguments as UserModel;
+        final user = settings.arguments as UserModel;
         return PageTransition(
           child: SettingScreen(user: user),
           type: PageTransitionType.rightToLeft,
