@@ -169,23 +169,10 @@ class LoginScreenState extends State<LoginBody>
                         ),
                         child: Padding(
                           padding: EdgeInsets.all(18),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Color(0xFF667eea),
-                                ),
-                              ),
-                              // SizedBox(height: 16),
-                              // Text(
-                              //   AppLocalizations.current.logging_in,
-                              //   style: TextStyle(
-                              //     fontSize: 16,
-                              //     fontWeight: FontWeight.w500,
-                              //   ),
-                              // ),
-                            ],
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              theme.primaryColor,
+                            ),
                           ),
                         ),
                       ),

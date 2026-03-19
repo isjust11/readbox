@@ -221,8 +221,7 @@ class _AnimatedSnackBarContentState extends State<_AnimatedSnackBarContent>
                             width: 1,
                           ),
                         ),
-                        color: Colors.white.withValues(alpha: 0.85),
-                      
+                        color: Colors.white,
                       ),
                       child: Icon(
                         widget.snackBarType == SnackBarType.success
