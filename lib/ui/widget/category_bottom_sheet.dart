@@ -93,13 +93,13 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
         position: _slideAnimation,
         child: Container(
           decoration: BoxDecoration(
-            color: colorScheme.surface,
             borderRadius: const BorderRadius.vertical(
               top: Radius.circular(AppDimens.SIZE_24),
             ),
           ),
+          height: MediaQuery.of(context).size.height * 0.8,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             children: [
               // Handle bar
               Container(
@@ -117,7 +117,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
               // Header
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimens.SIZE_16,
+                  horizontal: AppDimens.SIZE_12,
                   vertical: AppDimens.SIZE_12,
                 ),
                 child: Row(

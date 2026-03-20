@@ -160,6 +160,11 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isLargeScreen = screenWidth >= 1024;
+    const double headerMaxWidth = 420;
+    const double formMaxWidth = 520;
+
     return Scaffold(
       body: MultiBlocListener(
         listeners: [
@@ -269,16 +274,32 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
                         padding: EdgeInsets.symmetric(horizontal: 24),
                         child: FadeTransition(
                           opacity: _fadeAnimation,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Header
-                              _buildHeader(),
-                              SizedBox(height: AppDimens.SIZE_24),
-                              // PIN Input Card
-                              _buildPinCard(),
-                            ],
-                          ),
+                          child: isLargeScreen
+                              ? Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: headerMaxWidth,
+                                      child: _buildHeader(),
+                                    ),
+                                    const SizedBox(width: 32),
+                                    SizedBox(
+                                      width: formMaxWidth,
+                                      child: _buildPinCard(),
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Header
+                                    _buildHeader(),
+                                    SizedBox(height: AppDimens.SIZE_24),
+                                    // PIN Input Card
+                                    _buildPinCard(),
+                                  ],
+                                ),
                         ),
                       ),
                     ),

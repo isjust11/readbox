@@ -96,6 +96,11 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isLargeScreen = screenWidth >= 1024;
+    const double headerMaxWidth = 420;
+    const double formMaxWidth = 560;
+
     return BlocListener<AuthCubit, BaseState>(
       listener: (context, state) async {
         if (state is LoadedState) {
@@ -174,10 +179,26 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
                         padding: EdgeInsets.symmetric(horizontal: 24),
                         child: FadeTransition(
                           opacity: _fadeAnimation,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [_buildHeader(), _buildContent()],
-                          ),
+                          child: isLargeScreen
+                              ? Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: headerMaxWidth,
+                                      child: _buildHeader(),
+                                    ),
+                                    const SizedBox(width: 32),
+                                    SizedBox(
+                                      width: formMaxWidth,
+                                      child: _buildContent(),
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [_buildHeader(), _buildContent()],
+                                ),
                         ),
                       ),
                     ),

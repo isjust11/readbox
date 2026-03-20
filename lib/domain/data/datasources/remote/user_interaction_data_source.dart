@@ -246,9 +246,9 @@ class UserInteractionRemoteDataSource {
   Future<List<UserInteractionModel>> getMyInteractions({
     Map<String, dynamic>? query,
   }) async {
-    final ApiResponse apiResponse = await network.get(
+    final ApiResponse apiResponse = await network.post(
       url: '${ApiConstant.apiHost}${ApiConstant.getMyInteractions}',
-      params: query,
+      body: query,
     );
     if (apiResponse.isSuccess) {
       return (apiResponse.data['data'] as List)

@@ -105,6 +105,10 @@ class LoginScreenState extends State<LoginBody>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isLargeScreen = screenWidth >= 1024;
+    const double headerMaxWidth = 420;
+    const double formMaxWidth = 520;
 
     return BaseScreen(
       hideAppBar: true,
@@ -140,16 +144,36 @@ class LoginScreenState extends State<LoginBody>
                   padding: EdgeInsets.symmetric(horizontal: 18),
                   child: FadeTransition(
                     opacity: _fadeAnimation,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Logo/Title Section
-                        _buildHeader(),
-                        SizedBox(height: AppDimens.SIZE_24),
-                        // Login Card
-                        _buildLoginCard(theme),
-                      ],
-                    ),
+                    child: isLargeScreen
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Brand column
+                              SizedBox(
+                                width: headerMaxWidth,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: _buildHeader(),
+                                ),
+                              ),
+                              // Form column
+                              SizedBox(
+                                width: formMaxWidth,
+                                child: _buildLoginCard(theme),
+                              ),
+                            ],
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Logo/Title Section
+                              _buildHeader(),
+                              SizedBox(height: AppDimens.SIZE_24),
+                              // Login Card
+                              _buildLoginCard(theme),
+                            ],
+                          ),
                   ),
                 ),
               ),

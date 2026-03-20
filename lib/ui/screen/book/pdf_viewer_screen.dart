@@ -569,7 +569,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                       : Colors.grey,
             ),
           ),
-          if (isPro ?? false) ...[
+          if ((isPro ?? false) && !isProPlan) ...[
             Container(
               margin: EdgeInsets.only(left: 8),
               padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
@@ -673,7 +673,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       onDocumentLoaded: _onDocumentLoaded,
       onPageChanged: _onPageChanged,
       onDocumentLoadFailed: _onDocumentLoadFailed,
-      enableTextSelection: false,
+      enableTextSelection: true,
       onTextSelectionChanged: (details) {
         if (details.selectedText != null && details.selectedText!.isNotEmpty) {
           setState(() {

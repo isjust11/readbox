@@ -79,6 +79,11 @@ class RegisterScreenState extends State<RegisterBody>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isLargeScreen = screenWidth >= 1024;
+    const double headerMaxWidth = 420;
+    const double formMaxWidth = 520;
+
     return BaseScreen(
       hideAppBar: true,
       messageNotify: CustomSnackBar<AuthCubit>(),
@@ -133,16 +138,32 @@ class RegisterScreenState extends State<RegisterBody>
                         padding: EdgeInsets.symmetric(horizontal: 24),
                         child: FadeTransition(
                           opacity: _fadeAnimation,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Header
-                              _buildHeader(),
-                              SizedBox(height: AppDimens.SIZE_24),
-                              // Register Card
-                              _buildRegisterCard(),
-                            ],
-                          ),
+                          child: isLargeScreen
+                              ? Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: headerMaxWidth,
+                                      child: _buildHeader(),
+                                    ),
+                                    const SizedBox(width: 32),
+                                    SizedBox(
+                                      width: formMaxWidth,
+                                      child: _buildRegisterCard(),
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Header
+                                    _buildHeader(),
+                                    SizedBox(height: AppDimens.SIZE_24),
+                                    // Register Card
+                                    _buildRegisterCard(),
+                                  ],
+                                ),
                         ),
                       ),
                     ),

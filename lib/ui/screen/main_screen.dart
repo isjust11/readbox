@@ -287,6 +287,9 @@ class MainBodyState extends State<MainBody> {
                   // mo bottom sheet chon category
                   showModalBottomSheet(
                     context: context,
+                    // Bắt buộc bật nếu muốn sheet cao hơn ~50% màn hình;
+                    // không bật thì child có height/fullscreen vẫn bị cắt.
+                    isScrollControlled: true,
                     constraints: BoxConstraints(
                       minHeight: MediaQuery.of(context).size.height * 0.8,
                     ),
@@ -573,6 +576,24 @@ class MainBodyState extends State<MainBody> {
                   }).toList();
             }
 
+            // Responsive grid cho màn hình lớn/nhỏ
+            final screenWidth = MediaQuery.of(context).size.width;
+            int crossAxisCount;
+            double childAspectRatio;
+            if (screenWidth >= 1200) {
+              crossAxisCount = 5;
+              childAspectRatio = 0.7;
+            } else if (screenWidth >= 992) {
+              crossAxisCount = 4;
+              childAspectRatio = 0.7;
+            } else if (screenWidth >= 600) {
+              crossAxisCount = 3;
+              childAspectRatio = 0.7;
+            } else {
+              crossAxisCount = 2;
+              childAspectRatio = 0.65;
+            }
+
             // Khi không ở chế độ tìm kiếm: hiển thị thanh chọn category phía trên danh sách
             final content = SmartRefresher(
               enablePullDown: true,
@@ -624,8 +645,8 @@ class MainBodyState extends State<MainBody> {
                       : GridView.builder(
                         padding: EdgeInsets.all(16),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.65,
+                          crossAxisCount: crossAxisCount,
+                          childAspectRatio: childAspectRatio,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 16,
                         ),

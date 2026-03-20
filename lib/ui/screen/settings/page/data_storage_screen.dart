@@ -144,12 +144,21 @@ class _DataStorageScreenState extends State<DataStorageScreen>
             const SizedBox(height: AppDimens.SIZE_16),
 
             // TTS Usage
-            _buildTTSUsageCard(context, subscription, theme, colorScheme),
-            const SizedBox(height: AppDimens.SIZE_16),
+            if (!subscription.isFree)...[
+              _buildTTSUsageCard(context, subscription, theme, colorScheme),
+              const SizedBox(height: AppDimens.SIZE_16),
+            ],
 
             // Convert Usage
-            _buildConvertUsageCard(context, subscription, theme, colorScheme),
-            const SizedBox(height: AppDimens.SIZE_24),
+            if (!subscription.isFree)...[
+              _buildConvertUsageCard(context, subscription, theme, colorScheme),
+              const SizedBox(height: AppDimens.SIZE_24),
+            ],
+            // AI Assistant Usage
+            if (!subscription.isFree)...[
+              _buildAIAssistantUsageCard(context, subscription, theme, colorScheme),
+              const SizedBox(height: AppDimens.SIZE_24),
+            ],
 
             // Activity Statistics
             if (interactionCounts.isNotEmpty) ...[
@@ -167,6 +176,27 @@ class _DataStorageScreenState extends State<DataStorageScreen>
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildAIAssistantUsageCard(
+
+    BuildContext context,
+    UserSubscriptionModel subscription,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
+    return _buildUsageCard(
+      context: context,
+      theme: theme,
+      colorScheme: colorScheme,
+      icon: Icons.auto_awesome_rounded,
+      iconColor: Colors.blue,
+      title: AppLocalizations.current.ai_assistant,
+      used: '0',
+      limit: '0',
+      percentage: 0,
+      isUnlimited: false,
     );
   }
 

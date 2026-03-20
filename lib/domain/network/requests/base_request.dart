@@ -5,9 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 class BaseParamRequest {
   static Map<String, dynamic> request(map) {
-    if (map == null) {
-      map = Map<String, dynamic>();
-    }
+    map ??= <String, dynamic>{};
     var partner = "";
     if (Platform.isIOS) {
       partner = "ios";

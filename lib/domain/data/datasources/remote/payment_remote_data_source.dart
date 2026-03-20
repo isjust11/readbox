@@ -26,9 +26,17 @@ class PaymentRemoteDataSource {
     final ApiResponse apiResponse = await network.post(url: url, body: body);
 
     if (apiResponse.isSuccess && apiResponse.data != null) {
-      return PaymentModel.fromJson(
-        Map<String, dynamic>.from(apiResponse.data as Map),
-      );
+      try {
+        return PaymentModel.fromJson(
+          Map<String, dynamic>.from(apiResponse.data as Map),
+        );
+      } catch (error) {
+        // get code error
+        final code = apiResponse.data['code'];
+        if (code == '231') {
+          return Future.error(apiResponse.data['message']);
+        }
+      }
     }
     return Future.error(apiResponse.errMessage);
   }
