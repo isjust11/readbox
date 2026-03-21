@@ -61,7 +61,7 @@ class UserInteractionRepository {
     required dynamic targetId,
     String? sharePlatform,
   }) => remoteDataSource.download(
-    targetType: targetType,
+    actionType: targetType,
     targetId: targetId,
     sharePlatform: sharePlatform,
   );
