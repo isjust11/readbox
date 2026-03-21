@@ -11,31 +11,39 @@ import 'package:readbox/utils/shared_preference.dart';
 
 class Network {
   static const int DEFAULT_TIMEOUT = 15000;
-  static BaseOptions options =
-      BaseOptions(connectTimeout: DEFAULT_TIMEOUT, receiveTimeout: DEFAULT_TIMEOUT, baseUrl: ApiConstant.apiHost);
+  static BaseOptions options = BaseOptions(
+    connectTimeout: DEFAULT_TIMEOUT,
+    receiveTimeout: DEFAULT_TIMEOUT,
+    baseUrl: ApiConstant.apiHost,
+  );
   static final Dio _dio = Dio(options);
   static final SecureStorageService _secureStorage = SecureStorageService();
-    static bool _isRefreshing = false;
+  static bool _isRefreshing = false;
   static final List<RequestOptions> _requestQueue = [];
   static Completer<bool>? _refreshCompleter;
   Network._internal() {
     // Bypass SSL certificate validation in debug mode only
     if (kDebugMode) {
-
-      _dio.interceptors.add(LogInterceptor(responseBody: true, requestHeader: true));
+      _dio.interceptors.add(
+        LogInterceptor(responseBody: true, requestHeader: true),
+      );
     }
-    _dio.interceptors
-        .add(InterceptorsWrapper(
-          onRequest: (RequestOptions myOption, RequestInterceptorHandler handler) async {
-      // Lấy token từ secure storage
-      String? token = await _secureStorage.getToken();
-      if (token != null && token.isNotEmpty) {
-        myOption.headers["Authorization"] = "Bearer $token";
-        print("===token =====");
-        debugPrint(token);
-      }
-      return handler.next(myOption);
-    }, onError: (DioError error, ErrorInterceptorHandler handler) async {
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (
+          RequestOptions myOption,
+          RequestInterceptorHandler handler,
+        ) async {
+          // Lấy token từ secure storage
+          String? token = await _secureStorage.getToken();
+          if (token != null && token.isNotEmpty) {
+            myOption.headers["Authorization"] = "Bearer $token";
+            print("===token =====");
+            debugPrint(token);
+          }
+          return handler.next(myOption);
+        },
+        onError: (DioError error, ErrorInterceptorHandler handler) async {
           if (error.response?.statusCode == 401) {
             // Nếu đang refresh token, thêm request vào queue và chờ
             if (_isRefreshing) {
@@ -76,8 +84,7 @@ class Network {
             if (refreshSuccess) {
               // Retry request gốc với token mới
               try {
-                final String? newToken =
-                    await _secureStorage.getToken();
+                final String? newToken = await _secureStorage.getToken();
                 error.requestOptions.headers["Authorization"] =
                     "Bearer $newToken";
                 if (newToken == null || newToken.isEmpty) {
@@ -103,8 +110,8 @@ class Network {
           }
           return handler.next(error);
         },
-    
-    ));
+      ),
+    );
   }
 
   static Network instance() {
@@ -113,7 +120,10 @@ class Network {
 
   Dio get dio => _dio;
 
-  Future<ApiResponse> get({required String url, Map<String, dynamic>? params}) async {
+  Future<ApiResponse> get({
+    required String url,
+    Map<String, dynamic>? params,
+  }) async {
     try {
       Response response = await _dio.get(
         url,
@@ -128,36 +138,43 @@ class Network {
     }
   }
 
-  Future<ApiResponse> post(
-      {required String url,
-      Map<String, dynamic>? body,
-      Map<String, dynamic> params = const {},
-      String contentType = Headers.jsonContentType}) async {
+  Future<ApiResponse> post({
+    required String url,
+    Map<String, dynamic>? body,
+    Map<String, dynamic> params = const {},
+    String contentType = Headers.jsonContentType,
+  }) async {
     try {
       Response response = await _dio.post(
         url,
         data: body,
-        options: Options(responseType: ResponseType.json, contentType: contentType),
+        options: Options(
+          responseType: ResponseType.json,
+          contentType: contentType,
+        ),
       );
       return getApiResponse(response);
     } catch (e) {
       return getError(e as DioError);
     }
   }
-  Future<ApiResponse> postWithFormData(
-      {required String url,
-      FormData? formData,
-      Map<String, dynamic> params = const {},
-      String contentType = Headers.jsonContentType,
-      Options? options,
-      CancelToken? cancelToken,
-      void Function(int, int)? onSendProgress,
-      }) async {
+
+  Future<ApiResponse> postWithFormData({
+    required String url,
+    FormData? formData,
+    Map<String, dynamic> params = const {},
+    String contentType = Headers.jsonContentType,
+    Options? options,
+    CancelToken? cancelToken,
+    void Function(int, int)? onSendProgress,
+  }) async {
     try {
       Response response = await _dio.post(
         url,
         data: formData,
-        options: options ?? Options(responseType: ResponseType.bytes, contentType: contentType),
+        options:
+            options ??
+            Options(responseType: ResponseType.bytes, contentType: contentType),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
       );
@@ -170,27 +187,48 @@ class Network {
     }
   }
 
-  Future<ApiResponse> put({required String url, Map<String, dynamic>? body}) async {
+  Future<ApiResponse> put({
+    required String url,
+    Map<String, dynamic>? body,
+  }) async {
     try {
-      Response response = await _dio.put(url, data: body, options: Options(responseType: ResponseType.json));
+      Response response = await _dio.put(
+        url,
+        data: body,
+        options: Options(responseType: ResponseType.json),
+      );
       return getApiResponse(response);
     } catch (e) {
       return getError(e as DioError);
     }
   }
 
-  Future<ApiResponse> patch({required String url, Map<String, dynamic>? body}) async {
+  Future<ApiResponse> patch({
+    required String url,
+    Map<String, dynamic>? body,
+  }) async {
     try {
-      Response response = await _dio.patch(url, data: body, options: Options(responseType: ResponseType.json));
+      Response response = await _dio.patch(
+        url,
+        data: body,
+        options: Options(responseType: ResponseType.json),
+      );
       return getApiResponse(response);
     } catch (e) {
       return getError(e as DioError);
     }
   }
 
-  Future<ApiResponse> delete({required String url, Map<String, dynamic>? body}) async {
+  Future<ApiResponse> delete({
+    required String url,
+    Map<String, dynamic>? body,
+  }) async {
     try {
-      Response response = await _dio.delete(url, data: body, options: Options(responseType: ResponseType.json));
+      Response response = await _dio.delete(
+        url,
+        data: body,
+        options: Options(responseType: ResponseType.json),
+      );
       return getApiResponse(response);
     } catch (e) {
       return getError(e as DioError);
@@ -198,45 +236,55 @@ class Network {
   }
 
   ApiResponse getError(DioError e) {
-    if (e.response?.statusCode == 401) {
-      // handleTokenExpired();
+    if (e.response?.statusCode == 400) {
+      final messages = e.response?.data['message'];
+      if (messages is List) {
+        return ApiResponse.error(
+          messages.join(', '),
+          data: getDataReplace(e.response?.data),
+          code: e.response?.statusCode,
+        );
+      }
+      return ApiResponse.error(
+        e.response?.data['message'] ?? '',
+        data: getDataReplace(e.response?.data),
+        code: e.response?.statusCode,
+      );
     }
     switch (e.type) {
       case DioErrorType.cancel:
-        return ApiResponse.error(
-          AppLocalizations.current.error_cancel
-        );
+        return ApiResponse.error(AppLocalizations.current.error_cancel);
       case DioErrorType.connectTimeout:
-        return ApiResponse.error(
-          AppLocalizations.current.error_timeout
-        );
+        return ApiResponse.error(AppLocalizations.current.error_timeout);
       case DioErrorType.receiveTimeout:
         return ApiResponse.error(
-          AppLocalizations.current.error_request_timeout
+          AppLocalizations.current.error_request_timeout,
         );
       case DioErrorType.other:
         return ApiResponse.error(
-          AppLocalizations.current.error_internal_server_error
+          AppLocalizations.current.error_internal_server_error,
         );
       case DioErrorType.response:
-        return ApiResponse.error(e.response?.data['message'] ?? '', data: getDataReplace(e.response?.data), code: e.response?.statusCode);
-      default:
         return ApiResponse.error(
-          AppLocalizations.current.error_common
+          e.response?.data['message'] ?? '',
+          data: getDataReplace(e.response?.data),
+          code: e.response?.statusCode,
         );
+      default:
+        return ApiResponse.error(AppLocalizations.current.error_common);
     }
   }
 
   ApiResponse getApiResponse(Response response) {
     return ApiResponse.success(
-        data: response.data,
-        code: response.statusCode,
-        status: response.statusCode,
-        errMessage: response.statusMessage ?? '');
+      data: response.data,
+      code: response.statusCode,
+      status: response.statusCode,
+      errMessage: response.statusMessage ?? '',
+    );
   }
 
-
-   Future<bool> _refreshToken() async {
+  Future<bool> _refreshToken() async {
     if (_isRefreshing) {
       // Nếu đang refresh, chờ kết quả
       return await _refreshCompleter?.future ?? false;
@@ -318,7 +366,7 @@ class Network {
     }
   }
 
-   Future<void> _forceLogout() async {
+  Future<void> _forceLogout() async {
     await SharedPreferenceUtil.clearData();
     NavigationService.instance.navigatorKey.currentState
         ?.pushNamedAndRemoveUntil(Routes.loginScreen, (route) => false);

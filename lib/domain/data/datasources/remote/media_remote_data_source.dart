@@ -55,10 +55,7 @@ class MediaRemoteDataSource {
   Future<MediaModel> uploadMedia(File file) async {
     String fileName = file.path.split('/').last;
     FormData formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile(
-        file.path,
-        filename: fileName,
-      ),
+      'file': await MultipartFile.fromFile(file.path, filename: fileName),
     });
     ApiResponse apiResponse = await network.postWithFormData(
       url: '${ApiConstant.apiHost}${ApiConstant.uploadMedia}',

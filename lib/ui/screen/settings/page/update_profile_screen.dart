@@ -61,7 +61,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
   String? _currentAvatarUrl;
   String? _pathRelativeAvatar;
   bool _isLoading = false;
-
+  bool isUpload = false;
   @override
   void initState() {
     super.initState();
@@ -92,11 +92,21 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
       body: BlocListener<AuthCubit, BaseState>(
         listener: (context, state) {
           if (state is LoadedState) {
+            if (isUpload) {
+              AppSnackBar.show(
+                context,
+                message: AppLocalizations.current.update_profile_success,
+                snackBarType: SnackBarType.success,
+              );
+            }
             if (state.data is UserModel) {
               final userModel = state.data as UserModel;
               _fullNameController.text = userModel.fullName ?? '';
               _emailController.text = userModel.email ?? '';
-              _currentAvatarUrl = _getAvatarUrl(userModel.picture, userModel.isSocialPlatform);
+              _currentAvatarUrl = _getAvatarUrl(
+                userModel.picture,
+                userModel.isSocialPlatform,
+              );
               _pathRelativeAvatar = userModel.picture ?? '';
               _phoneNumberController.text = userModel.phoneNumber ?? '';
               _addressController.text = userModel.address ?? '';
@@ -506,30 +516,37 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
     } else {
       urlPicture = _pathRelativeAvatar;
     }
-
-    // upload image to server
-    if (_selectedImage != null) {
-      final media = await mediaCubit.uploadMedia(_selectedImage!);
-      urlPicture = media.publicRelativePath;
+    try {
+      // upload image to server
+      if (_selectedImage != null) {
+        final media = await mediaCubit.uploadMedia(_selectedImage!);
+        urlPicture = media.publicRelativePath;
+      }
+      isUpload = true;
+      final userModel = UserModel.simpleFromJson({
+        'fullName': _fullNameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'phoneNumber': _phoneNumberController.text.trim(),
+        'picture': urlPicture,
+        'address': _addressController.text.trim(),
+        'birthDate': _birthDateController.text.trim(),
+        'facebookLink': _facebookLinkController.text.trim(),
+        'instagramLink': _instagramLinkController.text.trim(),
+        'twitterLink': _twitterLinkController.text.trim(),
+        'linkedinLink': _linkedinLinkController.text.trim(),
+      });
+      await authCubit.updateProfile(userModel: userModel);
+    } catch (e) {
+      isUpload = false;
+      AppSnackBar.show(
+        context,
+        message: e.toString(),
+        snackBarType: SnackBarType.error,
+      );
+      setState(() {
+        _isLoading = false;
+      });
     }
-    final userModel = UserModel.simpleFromJson({
-      'fullName': _fullNameController.text.trim(),
-      'email': _emailController.text.trim(),
-      'phoneNumber': _phoneNumberController.text.trim(),
-      'picture': urlPicture,
-      'address': _addressController.text.trim(),
-      'birthDate': _birthDateController.text.trim(),
-      'facebookLink': _facebookLinkController.text.trim(),
-      'instagramLink': _instagramLinkController.text.trim(),
-      'twitterLink': _twitterLinkController.text.trim(),
-      'linkedinLink': _linkedinLinkController.text.trim(),
-    });
-    await authCubit.updateProfile(userModel: userModel);
-    AppSnackBar.show(
-      context,
-      message: AppLocalizations.current.update_profile_success,
-      snackBarType: SnackBarType.success,
-    );
     // Listen for success
     // Navigator.of(context).pop();
   }

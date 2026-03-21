@@ -261,6 +261,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       context.read<UserInteractionCubit>().incrementUsage(
         usage: IncrementUsageModel(downloadCount: 1),
       );
+      context.read<UserInteractionCubit>().download(
+        targetType: InteractionType.download,
+        targetId: widget.bookId,
+      );
     } catch (e) {
       if (!mounted) return;
       AppSnackBar.show(
@@ -358,17 +362,17 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         _readContinuousEbook();
         break;
       case 'download':
-        if (!(_actionStatus?['canUseDownload'] ?? false)) {
+        if (!isProPlan && !(_actionStatus?['canUseDownload'] ?? false)) {
           Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
           return;
         }
         _downloadAndSavePdf();
         break;
       case 'share':
-        if (!(_actionStatus?['canUseShare'] ?? false)) {
-          Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
-          return;
-        }
+        // if (!(_actionStatus?['canUseShare'] ?? false)) {
+        //   Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
+        //   return;
+        // }
         _shareEbook();
         break;
       case 'bookmark':
@@ -436,6 +440,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         // update interaction action for share
         context.read<UserInteractionCubit>().incrementUsage(
           usage: IncrementUsageModel(shareCount: 1),
+        );
+        context.read<UserInteractionCubit>().share(
+          targetType: InteractionType.share,
+          targetId: widget.bookId,
         );
       }
     } catch (e) {

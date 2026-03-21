@@ -8,9 +8,7 @@ class UserInteractionRemoteDataSource {
   UserInteractionRemoteDataSource({required this.network});
 
   // update interaction action for all common type actions
-  Future<void> incrementUsage({
-    required IncrementUsageModel usage,
-  }) async {
+  Future<void> incrementUsage({required IncrementUsageModel usage}) async {
     final ApiResponse apiResponse = await network.post(
       url: '${ApiConstant.apiHost}${ApiConstant.incrementUsage}',
       body: usage.toJson(),
@@ -98,12 +96,28 @@ class UserInteractionRemoteDataSource {
 
   // share
   Future<dynamic> share({
-    required String targetType,
+    required InteractionType targetType,
     required dynamic targetId,
     String? sharePlatform,
   }) async {
     final ApiResponse apiResponse = await network.post(
-      url: '${ApiConstant.getView}/$targetType/$targetId',
+      url:
+          '${ApiConstant.apiHost}${ApiConstant.interactionAction}/${targetType.value}/$targetId',
+      body: sharePlatform == null ? null : {'sharePlatform': sharePlatform},
+    );
+    if (apiResponse.isSuccess) return apiResponse.data;
+    return Future.error(apiResponse.data);
+  }
+
+  // download
+  Future<dynamic> download({
+    required InteractionType targetType,
+    required dynamic targetId,
+    String? sharePlatform,
+  }) async {
+    final ApiResponse apiResponse = await network.post(
+      url:
+          '${ApiConstant.apiHost}${ApiConstant.interactionAction}/${targetType.value}/$targetId',
       body: sharePlatform == null ? null : {'sharePlatform': sharePlatform},
     );
     if (apiResponse.isSuccess) return apiResponse.data;
@@ -295,7 +309,9 @@ class UserInteractionRemoteDataSource {
       url: '${ApiConstant.apiHost}${ApiConstant.getMyInteractionCounts}',
     );
     if (apiResponse.isSuccess) {
-      final Map<String, dynamic> raw = Map<String, dynamic>.from(apiResponse.data ?? {});
+      final Map<String, dynamic> raw = Map<String, dynamic>.from(
+        apiResponse.data ?? {},
+      );
       return raw.map((key, value) => MapEntry(key, (value as num).toInt()));
     }
     return Future.error(apiResponse.data);

@@ -31,7 +31,10 @@ class UserSubscriptionModel {
   factory UserSubscriptionModel.fromJson(Map<String, dynamic> json) {
     return UserSubscriptionModel(
       id: json['id'],
-      plan: json['plan'] != null ? SubscriptionPlanModel.fromJson(json['plan']) : null,
+      plan:
+          json['plan'] != null
+              ? SubscriptionPlanModel.fromJson(json['plan'])
+              : null,
       startedAt: DateTime.parse(json['startedAt']),
       expiresAt: DateTime.parse(json['expiresAt']),
       storageUsedBytes: _parseBigInt(json['storageUsedBytes']),
@@ -67,7 +70,11 @@ class UserSubscriptionModel {
   /// Giá hiển thị (VD: "99.000đ/tháng")
   String get priceDisplay {
     if (plan?.price == null || plan?.price == 0) return '';
-    final formatter = NumberFormat.currency(locale: 'vi_VN', symbol: 'đ', decimalDigits: 0);
+    final formatter = NumberFormat.currency(
+      locale: 'vi_VN',
+      symbol: 'đ',
+      decimalDigits: 0,
+    );
     final period = plan?.periodType == 'year' ? '/năm' : '/tháng';
     return '${formatter.format(plan?.price)}$period';
   }

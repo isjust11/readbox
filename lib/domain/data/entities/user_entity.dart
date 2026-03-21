@@ -1,7 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:readbox/domain/data/entities/entities.dart';
 
-
 class UserEntity extends BaseEntity {
   String? id;
   String? username;
@@ -33,8 +32,6 @@ class UserEntity extends BaseEntity {
   bool? isGoogleUser;
   bool? isAppleUser;
 
-  
-
   UserEntity.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
     id = json['id'].toString();
     username = json['username'];
@@ -42,10 +39,14 @@ class UserEntity extends BaseEntity {
     isBlock = json['isBlock'];
     fullName = json['fullName'];
     picture = json['picture'];
-    roles = json['roles'] != null ? (json['roles'] as List)
-          .map((role) => RoleEntity.fromJson(role as Map<String, dynamic>))
-          .toList()
-        : [];
+    roles =
+        json['roles'] != null
+            ? (json['roles'] as List)
+                .map(
+                  (role) => RoleEntity.fromJson(role as Map<String, dynamic>),
+                )
+                .toList()
+            : [];
     permissions = json['permissions'] ?? [];
     email = json['email'];
     platformId = json['platformId'];
@@ -57,7 +58,11 @@ class UserEntity extends BaseEntity {
     updatedAt = json['updatedAt'];
     phoneNumber = json['phoneNumber'];
     address = json['address'];
-    birthDate = convertBirthDate(json['birthDate']);
+    if (json['birthDate'] != null) {
+      final datetimeStr =
+          DateTime.parse(json['birthDate']).toLocal().toString();
+      birthDate = DateFormat('dd/MM/yyyy').format(DateTime.parse(datetimeStr));
+    }
     facebookLink = json['facebookLink'];
     instagramLink = json['instagramLink'];
     twitterLink = json['twitterLink'];
@@ -130,10 +135,12 @@ class UserEntity extends BaseEntity {
       if (birthDate == null) {
         return '';
       }
-      final date = DateTime.parse(birthDate);
+      // Parse ngày từ chuỗi (thường là UTC như 1997-08-13T17:00:00.000Z)
+      // Sau đó chuyển về Local (Múi giờ hiện tại, VD: GMT+7 thì sẽ thành 1997-08-14 00:00:00)
+      final date = DateTime.parse(birthDate).toLocal();
       return DateFormat('dd/MM/yyyy').format(date);
     } catch (e) {
-      return '';
+      return birthDate ?? '';
     }
   }
 }
