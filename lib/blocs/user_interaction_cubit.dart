@@ -22,20 +22,17 @@ class UserInteractionCubit extends Cubit<BaseState> {
   final UserInteractionRepository repository;
   UserInteractionCubit({required this.repository}) : super(InitState());
 
-   // save interaction action
-  Future<void> incrementUsage({
-    required IncrementUsageModel usage,
-  }) async {
+  // save interaction action
+  Future<void> incrementUsage({required IncrementUsageModel usage}) async {
     try {
       emit(LoadingState());
-      final response = await repository.incrementUsage(
-        usage: usage,
-      );
+      final response = await repository.incrementUsage(usage: usage);
       emit(LoadedState(response));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
+
   // toggle favorite
   Future<dynamic> toggleFavorite({
     required String targetType,
@@ -123,8 +120,26 @@ class UserInteractionCubit extends Cubit<BaseState> {
     }
   }
 
+  void download({
+    required InteractionType targetType,
+    required dynamic targetId,
+    String? platform,
+  }) async {
+    try {
+      emit(LoadingState());
+      final response = await repository.download(
+        targetType: targetType,
+        targetId: targetId,
+        sharePlatform: platform,
+      );
+      emit(LoadedState(response));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
+
   void share({
-    required String targetType,
+    required InteractionType targetType,
     required dynamic targetId,
     String? platform,
   }) async {
@@ -298,7 +313,10 @@ class UserInteractionCubit extends Cubit<BaseState> {
   }) async {
     try {
       emit(LoadingState());
-      final response = await repository.getUserInteractionStatus(targetType: targetType, targetId: targetId);
+      final response = await repository.getUserInteractionStatus(
+        targetType: targetType,
+        targetId: targetId,
+      );
       emit(LoadedState(response));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));

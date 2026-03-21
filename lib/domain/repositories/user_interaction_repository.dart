@@ -7,20 +7,25 @@ class UserInteractionRepository {
 
   UserInteractionRepository({required this.remoteDataSource});
 
-  Future<void> incrementUsage({
-    required IncrementUsageModel usage,
-  }) => remoteDataSource.incrementUsage(usage: usage);
+  Future<void> incrementUsage({required IncrementUsageModel usage}) =>
+      remoteDataSource.incrementUsage(usage: usage);
 
   Future<UserInteractionModel> toggleFavorite({
     required String targetType,
     required dynamic targetId,
-  }) => remoteDataSource.toggleFavorite(targetType: targetType, targetId: targetId);
+  }) => remoteDataSource.toggleFavorite(
+    targetType: targetType,
+    targetId: targetId,
+  );
 
   Future<UserInteractionModel> toggleArchive({
     required String targetType,
     required dynamic targetId,
-  }) => remoteDataSource.toggleArchive(targetType: targetType, targetId: targetId);
-  
+  }) => remoteDataSource.toggleArchive(
+    targetType: targetType,
+    targetId: targetId,
+  );
+
   Future<UserInteractionModel> view({
     required String targetType,
     required dynamic targetId,
@@ -42,10 +47,20 @@ class UserInteractionRepository {
   }) => remoteDataSource.unbookmark(targetType: targetType, targetId: targetId);
 
   Future<dynamic> share({
-    required String targetType,
+    required InteractionType targetType,
     required dynamic targetId,
     String? sharePlatform,
   }) => remoteDataSource.share(
+    targetType: targetType,
+    targetId: targetId,
+    sharePlatform: sharePlatform,
+  );
+
+  Future<dynamic> download({
+    required InteractionType targetType,
+    required dynamic targetId,
+    String? sharePlatform,
+  }) => remoteDataSource.download(
     targetType: targetType,
     targetId: targetId,
     sharePlatform: sharePlatform,
@@ -77,12 +92,11 @@ class UserInteractionRepository {
     required InteractionTarget targetType,
     required dynamic targetId,
     Map<String, dynamic>? query,
-  }) =>
-    remoteDataSource.loadInteractions(
-      targetType: targetType,
-      targetId: targetId,
-      query: query,
-    );
+  }) => remoteDataSource.loadInteractions(
+    targetType: targetType,
+    targetId: targetId,
+    query: query,
+  );
 
   Future<dynamic> follow({
     required String targetType,
@@ -105,18 +119,40 @@ class UserInteractionRepository {
   }) => remoteDataSource.getStats(targetType: targetType, targetId: targetId);
 
   // save reading progress
-  Future<UserInteractionModel> saveReadingProgress({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId, required ReadingProgressModel readingProgress}) 
-  => remoteDataSource.saveReadingProgress(targetType: targetType, actionType: actionType, targetId: targetId, readingProgress: readingProgress);
+  Future<UserInteractionModel> saveReadingProgress({
+    required InteractionTarget targetType,
+    required InteractionType actionType,
+    required dynamic targetId,
+    required ReadingProgressModel readingProgress,
+  }) => remoteDataSource.saveReadingProgress(
+    targetType: targetType,
+    actionType: actionType,
+    targetId: targetId,
+    readingProgress: readingProgress,
+  );
 
-    Future<List<UserInteractionModel>> getMyInteractions({Map<String, dynamic>? query}) =>
-      remoteDataSource.getMyInteractions(query: query);
+  Future<List<UserInteractionModel>> getMyInteractions({
+    Map<String, dynamic>? query,
+  }) => remoteDataSource.getMyInteractions(query: query);
 
-  Future<Map<String, dynamic>> getUserInteractionStatus({required InteractionTarget targetType, required dynamic targetId}) =>
-    remoteDataSource.getUserInteractionStatus(targetType: targetType, targetId: targetId);
+  Future<Map<String, dynamic>> getUserInteractionStatus({
+    required InteractionTarget targetType,
+    required dynamic targetId,
+  }) => remoteDataSource.getUserInteractionStatus(
+    targetType: targetType,
+    targetId: targetId,
+  );
 
-  Future<UserInteractionModel> getInteractionAction({required InteractionTarget targetType, required InteractionType actionType, required dynamic targetId}) =>
-    remoteDataSource.getInteractionAction(targetType: targetType, actionType: actionType, targetId: targetId);
+  Future<UserInteractionModel> getInteractionAction({
+    required InteractionTarget targetType,
+    required InteractionType actionType,
+    required dynamic targetId,
+  }) => remoteDataSource.getInteractionAction(
+    targetType: targetType,
+    actionType: actionType,
+    targetId: targetId,
+  );
 
   Future<Map<String, int>> getMyInteractionCounts() =>
-    remoteDataSource.getMyInteractionCounts();
+      remoteDataSource.getMyInteractionCounts();
 }

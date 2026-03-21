@@ -3,6 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiConstant {
+  static String localIpAndress = '127.0.0.1';
+  void init() async {
+    localIpAndress = await getLocalIPs();
+  }
+
   /// Giá trị mặc định theo platform khi không cấu hình trong .env
   static String get _platformDefaultHost {
     if (kIsWeb) return 'localhost';
@@ -13,7 +18,21 @@ class ApiConstant {
 
   /// Host API: đọc từ .env (API_BASE_HOST), không có thì dùng _platformDefaultHost
   static String get _baseHost {
+    if (kDebugMode) {
+      return localIpAndress;
+    }
     return dotenv.get('API_BASE_HOST', fallback: _platformDefaultHost).trim();
+  }
+
+  Future<String> getLocalIPs() async {
+    for (var interface in await NetworkInterface.list()) {
+      for (var addr in interface.addresses) {
+        if (addr.type == InternetAddressType.IPv4) {
+          return addr.address;
+        }
+      }
+    }
+    return '127.0.0.1';
   }
 
   /// Port API: đọc từ .env (API_PORT), mặc định 4000

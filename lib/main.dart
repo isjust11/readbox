@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/datasources/remote/admin_remote_data_source.dart';
+import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -32,9 +33,10 @@ String _languageFromSystemLocale() {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
+  ApiConstant().init();
   await initLanguageDetector();
   await di.init();
-   // Initialize Firebase
+  // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Register background message handler
@@ -50,42 +52,54 @@ void main() async {
     language = savedLanguage;
   }
   String theme = await SharedPreferenceUtil.getTheme();
-  runApp(MultiBlocProvider(providers: [
-    BlocProvider(
-      create: (_) => AppCubit(language),
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => AppCubit(language)),
+        BlocProvider(
+          create: (_) => AuthCubit(repository: di.getIt<AuthRepository>()),
+        ),
+        BlocProvider(create: (_) => BookRefreshCubit()),
+        BlocProvider(create: (_) => ThemeCubit(theme)),
+        BlocProvider(
+          create:
+              (_) => UserInteractionCubit(
+                repository: di.getIt<UserInteractionRepository>(),
+              ),
+        ),
+        BlocProvider(
+          create:
+              (_) => NotificationCubit(
+                notificationRepository: di.getIt<NotificationRepository>(),
+              ),
+        ),
+        BlocProvider(
+          create:
+              (_) => CategoryCubit(repository: di.getIt<CategoryRepository>()),
+        ),
+        BlocProvider(
+          create:
+              (_) => UserSubscriptionCubit(
+                repository: di.getIt<UserSubscriptionRepository>(),
+              ),
+        ),
+        BlocProvider(
+          create:
+              (_) => LibraryCubit(
+                repository: di.getIt<BookRepository>(),
+                adminRemoteDataSource: di.getIt<AdminRemoteDataSource>(),
+              ),
+        ),
+        BlocProvider(
+          create:
+              (_) => SubscriptionPlanCubit(
+                repository: di.getIt<SubscriptionRepository>(),
+              ),
+        ),
+      ],
+      child: MyApp(),
     ),
-    BlocProvider(
-      create: (_) => AuthCubit(repository: di.getIt<AuthRepository>()),
-    ),
-    BlocProvider(
-      create: (_) => BookRefreshCubit(),
-    ),
-    BlocProvider(
-      create: (_) => ThemeCubit(theme),
-    ),
-    BlocProvider(
-      create: (_) => UserInteractionCubit(repository: di.getIt<UserInteractionRepository>()),
-    ),
-    BlocProvider(
-      create: (_) => NotificationCubit(notificationRepository: di.getIt<NotificationRepository>()),
-    ),
-    BlocProvider(
-      create: (_) => CategoryCubit(repository: di.getIt<CategoryRepository>()),
-    ),
-    BlocProvider(
-      create: (_) => UserSubscriptionCubit(repository: di.getIt<UserSubscriptionRepository>()),
-    ),
-    BlocProvider(
-      create: (_) => LibraryCubit(
-        repository: di.getIt<BookRepository>(),
-        adminRemoteDataSource: di.getIt<AdminRemoteDataSource>(),
-      ),
-    ),
-    BlocProvider(
-      create: (_) => SubscriptionPlanCubit(repository: di.getIt<SubscriptionRepository>()),
-    ),
-
-  ], child: MyApp()));
+  );
 
   // Init lock-screen TTS asynchronously to avoid blocking app startup.
   Future<void>(() async {

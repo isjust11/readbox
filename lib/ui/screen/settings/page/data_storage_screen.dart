@@ -5,7 +5,6 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-// import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -107,7 +106,6 @@ class _DataStorageScreenState extends State<DataStorageScreen>
   ) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
     return RefreshIndicator(
       onRefresh: () async {
         await context.read<UserSubscriptionCubit>().loadMe();
@@ -131,7 +129,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
 
             // Usage Statistics Title
             Text(
-              AppLocalizations.current.usage_in_current_period,
+              AppLocalizations.current.usage_statistics,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface,
@@ -144,19 +142,14 @@ class _DataStorageScreenState extends State<DataStorageScreen>
             const SizedBox(height: AppDimens.SIZE_16),
 
             // TTS Usage
-            if (!subscription.isFree)...[
+            if (!subscription.isFree) ...[
               _buildTTSUsageCard(context, subscription, theme, colorScheme),
               const SizedBox(height: AppDimens.SIZE_16),
             ],
 
             // Convert Usage
-            if (!subscription.isFree)...[
+            if (!subscription.isFree) ...[
               _buildConvertUsageCard(context, subscription, theme, colorScheme),
-              const SizedBox(height: AppDimens.SIZE_24),
-            ],
-            // AI Assistant Usage
-            if (!subscription.isFree)...[
-              _buildAIAssistantUsageCard(context, subscription, theme, colorScheme),
               const SizedBox(height: AppDimens.SIZE_24),
             ],
 
@@ -176,27 +169,6 @@ class _DataStorageScreenState extends State<DataStorageScreen>
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildAIAssistantUsageCard(
-
-    BuildContext context,
-    UserSubscriptionModel subscription,
-    ThemeData theme,
-    ColorScheme colorScheme,
-  ) {
-    return _buildUsageCard(
-      context: context,
-      theme: theme,
-      colorScheme: colorScheme,
-      icon: Icons.auto_awesome_rounded,
-      iconColor: Colors.blue,
-      title: AppLocalizations.current.ai_assistant,
-      used: '0',
-      limit: '0',
-      percentage: 0,
-      isUnlimited: false,
     );
   }
 
@@ -437,8 +409,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
     final used = subscription.ttsUsedInPeriod; // Số ký tự đã đọc
     final limit = plan?.ttsLimitPerPeriod ?? 0;
     final percentage = limit > 0 ? (used / limit * 100).clamp(0.0, 100.0) : 0.0;
-    final isUnlimited =
-        limit == 0 || limit >= 999999999; // Số ký tự rất lớn = unlimited
+    final isUnlimited = true; // Số ký tự rất lớn = unlimited
 
     return _buildUsageCard(
       context: context,
@@ -448,10 +419,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
       iconColor: Colors.green,
       title: AppLocalizations.current.tts_usage,
       used: _formatCharacters(used),
-      limit:
-          isUnlimited
-              ? AppLocalizations.current.unlimited
-              : _formatCharacters(limit),
+      limit: AppLocalizations.current.unlimited,
       percentage: percentage,
       isUnlimited: isUnlimited,
       unit: AppLocalizations.current.characters,
@@ -469,7 +437,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
         interactionCounts['convert'] ?? subscription.convertUsedInPeriod;
     final limit = plan?.convertLimitPerPeriod ?? 0;
     final percentage = limit > 0 ? (used / limit * 100).clamp(0.0, 100.0) : 0.0;
-    final isUnlimited = limit == 0 || limit >= 999999;
+    final isUnlimited = true;
 
     return _buildUsageCard(
       context: context,
@@ -479,7 +447,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
       iconColor: Colors.orange,
       title: AppLocalizations.current.convert_usage,
       used: '$used',
-      limit: isUnlimited ? 'Unlimited' : '$limit',
+      limit: AppLocalizations.current.unlimited,
       percentage: percentage,
       isUnlimited: isUnlimited,
       unit: AppLocalizations.current.times,
@@ -685,12 +653,6 @@ class _DataStorageScreenState extends State<DataStorageScreen>
         interactionCounts['download'] ?? 0,
         Icons.download_rounded,
         Colors.teal,
-      ),
-      _StatItem(
-        l10n.bookmark_count,
-        interactionCounts['bookmark'] ?? 0,
-        Icons.bookmark_rounded,
-        Colors.amber.shade700,
       ),
       _StatItem(
         l10n.favorite_count,
