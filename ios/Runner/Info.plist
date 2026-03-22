@@ -107,6 +107,8 @@
 	</array>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>This app uses tracking to personalize content and measure ads</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Ứng dụng cần quyền sử dụng Face ID để xác thực đăng nhập bảo mật.</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

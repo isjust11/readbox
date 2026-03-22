@@ -58,10 +58,16 @@ class UserEntity extends BaseEntity {
     updatedAt = json['updatedAt'];
     phoneNumber = json['phoneNumber'];
     address = json['address'];
-    if (json['birthDate'] != null) {
-      final datetimeStr =
-          DateTime.parse(json['birthDate']).toLocal().toString();
-      birthDate = DateFormat('dd/MM/yyyy').format(DateTime.parse(datetimeStr));
+    try {
+      if (json['birthDate'] != null) {
+        final datetimeStr =
+            DateTime.parse(json['birthDate']).toLocal().toString();
+        birthDate = DateFormat(
+          'dd/MM/yyyy',
+        ).format(DateTime.parse(datetimeStr));
+      }
+    } catch (e) {
+      birthDate = json['birthDate'];
     }
     facebookLink = json['facebookLink'];
     instagramLink = json['instagramLink'];

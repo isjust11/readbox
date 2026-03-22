@@ -60,8 +60,8 @@ class BiometricAuthService {
   /// Lấy danh sách các loại sinh trắc học khả dụng
   static Future<List<BiometricType>> getAvailableBiometrics() async {
     try {
-      final List<BiometricType> availableBiometrics = await _localAuth
-          .getAvailableBiometrics();
+      final List<BiometricType> availableBiometrics =
+          await _localAuth.getAvailableBiometrics();
       return availableBiometrics;
     } on PlatformException catch (e) {
       // Log error in development mode
@@ -89,27 +89,29 @@ class BiometricAuthService {
       if (didAuthenticate) {
         return BiometricAuthResult.success();
       } else {
-        return BiometricAuthResult.failure(AppLocalizations.current.authentication_failed);
+        return BiometricAuthResult.failure(
+          AppLocalizations.current.authentication_failed,
+        );
       }
     } on PlatformException catch (e) {
       String message;
       switch (e.code) {
         case auth_error.notAvailable:
-          message = AppLocalizations.current.biometric_not_available_on_this_device;
+          message =
+              AppLocalizations.current.biometric_not_available_on_this_device;
           break;
         case auth_error.notEnrolled:
-          message =
-              AppLocalizations.current.biometric_not_enrolled;
+          message = AppLocalizations.current.biometric_not_enrolled;
           break;
         case auth_error.lockedOut:
           message = AppLocalizations.current.too_many_attempts;
           break;
         case auth_error.permanentlyLockedOut:
-          message =
-              AppLocalizations.current.biometric_permanently_locked_out;
+          message = AppLocalizations.current.biometric_permanently_locked_out;
           break;
         default:
-          message = '${AppLocalizations.current.authentication_error}: ${e.message}';
+          message =
+              '${AppLocalizations.current.authentication_error}: ${e.message}';
       }
       return BiometricAuthResult.failure(message);
     }
@@ -408,7 +410,9 @@ class BiometricAuthService {
         AppLocalizations.current.no_login_info_saved,
       );
     } catch (e) {
-      return BiometricAuthResult.failure(AppLocalizations.current.login_error + ': $e');
+      return BiometricAuthResult.failure(
+        '${AppLocalizations.current.login_error}: $e',
+      );
     }
   }
 

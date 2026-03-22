@@ -89,7 +89,7 @@ class AuthRemoteDataSource {
 
   Future<AuthenModel> mobileSocialLogin(Map<String, dynamic> param) async {
     ApiResponse apiResponse = await network.post(
-      url: ApiConstant.mobileSocialLogin,
+      url: '${ApiConstant.apiHost}${ApiConstant.mobileSocialLogin}',
       body: param,
     );
     if (apiResponse.isSuccess) {
