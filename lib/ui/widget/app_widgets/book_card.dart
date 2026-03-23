@@ -143,7 +143,6 @@ class _BookCardState extends State<BookCard> {
                         children: [
                           Container(
                             width: 80,
-                            height: 120,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               color: Colors.grey[200],
@@ -156,26 +155,28 @@ class _BookCardState extends State<BookCard> {
                             ),
                             child:
                                 book.coverImageUrl != null
-                                    ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child:
-                                          Platform.isAndroid
-                                              ? Image.network(
-                                                _getImageUrl(
-                                                  book.coverImageUrl,
+                                    ? Flexible(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child:
+                                            Platform.isAndroid
+                                                ? Image.network(
+                                                  _getImageUrl(
+                                                    book.coverImageUrl,
+                                                  ),
+                                                  width: 80,
+                                                  height: 100,
+                                                  fit: BoxFit.cover,
+                                                )
+                                                : BaseNetworkImage(
+                                                  url: _getImageUrl(
+                                                    book.coverImageUrl,
+                                                  ),
+                                                  width: 80,
+                                                  height: 100,
+                                                  fit: BoxFit.cover,
                                                 ),
-                                                width: 80,
-                                                height: 120,
-                                                fit: BoxFit.cover,
-                                              )
-                                              : BaseNetworkImage(
-                                                url: _getImageUrl(
-                                                  book.coverImageUrl,
-                                                ),
-                                                width: 80,
-                                                height: 120,
-                                                fit: BoxFit.cover,
-                                              ),
+                                      ),
                                     )
                                     : _buildErrorCover(),
                           ),

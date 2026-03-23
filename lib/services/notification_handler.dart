@@ -140,11 +140,7 @@ class NotificationHandler {
       backgroundColor: Theme.of(context).primaryColor,
     );
 
-    AppSnackBar.show(
-      context,
-      message: body,
-      snackBarType: SnackBarType.info,
-    );
+    AppSnackBar.show(context, message: body, snackBarType: SnackBarType.info);
   }
 
   /// Parse notification type and return appropriate icon
@@ -162,6 +158,10 @@ class NotificationHandler {
         return Icons.message;
       case 'announcement':
         return Icons.campaign;
+      case 'payment':
+        return Icons.payment;
+      case 'interaction':
+        return Icons.chat_bubble;
       default:
         return Icons.notifications;
     }
@@ -173,13 +173,17 @@ class NotificationHandler {
       case 'ebook':
         return Colors.blue;
       case 'feedback':
-        return Colors.purple; 
+        return Colors.purple;
       case 'new_article':
         return Colors.orange;
       case 'system':
         return Colors.green;
       case 'announcement':
         return Colors.red;
+      case 'payment':
+        return Colors.amber;
+      case 'interaction':
+        return Colors.blue;
       default:
         return Colors.grey;
     }

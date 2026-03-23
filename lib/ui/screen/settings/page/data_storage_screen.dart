@@ -227,7 +227,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
               const SizedBox(width: AppDimens.SIZE_16),
               Container(
                 constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.3,
+                  maxWidth: MediaQuery.of(context).size.width * 0.4,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -342,7 +342,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                   ],
                 ),
               ),
-              const SizedBox(width: AppDimens.SIZE_8),
+              const SizedBox(width: AppDimens.SIZE_4),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -422,7 +422,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
       limit: AppLocalizations.current.unlimited,
       percentage: percentage,
       isUnlimited: isUnlimited,
-      unit: AppLocalizations.current.characters,
+      unit: '',
     );
   }
 
@@ -542,7 +542,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '$used ${unit ?? ''}',
+                used,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: colorScheme.onSurface,

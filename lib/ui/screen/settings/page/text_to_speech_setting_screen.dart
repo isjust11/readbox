@@ -23,7 +23,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
   bool _isLoading = true;
   bool _isTesting = false;
 
-  //timer 
+  //timer
   Timer? _volumeDebounce;
   Timer? _pitchDebounce;
   Timer? _speechRateDebounce;
@@ -109,8 +109,13 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
       _speechRate = prefs.getDouble('tts_speech_rate') ?? 0.5;
       _volume = prefs.getDouble('tts_volume') ?? 1.0;
       _pitch = prefs.getDouble('tts_pitch') ?? 1.0;
-      final ttVoice = prefs.getString('tts_voice') != null ? jsonDecode(prefs.getString('tts_voice')!) as Map<String, dynamic> : null;
-      _selectedVoice = ttVoice != null ? Map<String, String>.from(ttVoice) : null;
+      final ttVoice =
+          prefs.getString('tts_voice') != null
+              ? jsonDecode(prefs.getString('tts_voice')!)
+                  as Map<String, dynamic>
+              : null;
+      _selectedVoice =
+          ttVoice != null ? Map<String, String>.from(ttVoice) : null;
     });
 
     // Apply loaded settings to TTS service
@@ -127,7 +132,6 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
     await prefs.setDouble('tts_speech_rate', _speechRate);
     await prefs.setDouble('tts_volume', _volume);
     await prefs.setDouble('tts_pitch', _pitch);
-    _showSuccess(AppLocalizations.current.settingsSaved);
   }
 
   Future<void> _updateSpeechRate(double rate) async {
@@ -194,14 +198,6 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
     if (pitch < 0.8) return AppLocalizations.current.low;
     if (pitch < 1.3) return AppLocalizations.current.medium;
     return AppLocalizations.current.high;
-  }
-
-  void _showSuccess(String message) {
-    AppSnackBar.show(
-      context,
-      message: message,
-      snackBarType: SnackBarType.success,
-    );
   }
 
   void _showError(String message) {
@@ -386,7 +382,9 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               max: 1.0,
               divisions: 10,
               activeColor: Theme.of(context).primaryColor,
-              inactiveColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+              inactiveColor: Theme.of(
+                context,
+              ).primaryColor.withValues(alpha: 0.2),
               onChanged: _onSpeechRateChanged,
             ),
           ),
@@ -427,7 +425,9 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               max: 1.0,
               divisions: 10,
               activeColor: Theme.of(context).primaryColor,
-              inactiveColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+              inactiveColor: Theme.of(
+                context,
+              ).primaryColor.withValues(alpha: 0.2),
               onChanged: _onVolumeChanged,
             ),
           ),
@@ -480,7 +480,9 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               max: 2.0,
               divisions: 10,
               activeColor: Theme.of(context).primaryColor,
-              inactiveColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+              inactiveColor: Theme.of(
+                context,
+              ).primaryColor.withValues(alpha: 0.2),
               onChanged: _onPitchChanged,
             ),
           ),
@@ -510,14 +512,15 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
             height: 200,
             decoration: BoxDecoration(
               border: Border.all(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.2),
               ),
               borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
             ),
             child: ListView.separated(
               physics: const BouncingScrollPhysics(),
-              itemCount:
-                   _availableVoices.length,
+              itemCount: _availableVoices.length,
               separatorBuilder:
                   (context, index) => Divider(
                     height: 1,
@@ -539,7 +542,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
                         AppColors.colorTitle,
                   ),
                   trailing:
-                      _selectedVoice?['name'] == voice['name']  
+                      _selectedVoice?['name'] == voice['name']
                           ? Icon(
                             Icons.check_circle,
                             color: Theme.of(context).primaryColor,
@@ -550,7 +553,8 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
                       'name': voice['name'] as String,
                       // 'gender': voice['gender'] as String,
                       'locale': voice['locale'] as String,
-                      'identifier': Platform.isIOS ? (voice['identifier'] as String) : '',
+                      'identifier':
+                          Platform.isIOS ? (voice['identifier'] as String) : '',
                       'quality': voice['quality'] as String,
                     };
                     final prefs = await SharedPreferences.getInstance();

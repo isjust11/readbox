@@ -15,7 +15,7 @@ class BiometricAuthService {
   // Cấu hình Flutter Secure Storage với bảo mật cao
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
-    iOptions: IOSOptions(
+    iOptions: IOSOptions( 
       accessibility: KeychainAccessibility.first_unlock_this_device,
       synchronizable: false,
     ),

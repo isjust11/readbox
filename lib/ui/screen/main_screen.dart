@@ -204,25 +204,6 @@ class MainBodyState extends State<MainBody> {
     }
   }
 
-  void _showFilterBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder:
-          (context) => SearchFilterBottomSheet(
-            filterModel: _filterModel,
-            onApplyFilters: (filterModel) {
-              setState(() {
-                _filterModel = filterModel;
-              });
-              page = 1;
-              getBooks(isLoadMore: false);
-            },
-          ),
-    );
-  }
-
   Widget _buildCategoryBar(ColorScheme colorScheme) {
     final categoryCount = categories.length;
     return Container(

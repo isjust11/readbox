@@ -47,6 +47,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   final PdfViewerController _pdfController = PdfViewerController();
   final TextEditingController _searchQueryController = TextEditingController();
   bool _isLoading = true;
+  bool _isLoadingText = false;
   String? _error;
   int _currentPage = 1;
   int _totalPages = 0;
@@ -467,18 +468,27 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   /// Đọc trang hiện tại (dùng cho khởi động đọc liên tục)
   Future<void> _readCurrentPage() async {
     if (!_isReadingContinuous || !mounted) return;
+
+    setState(() => _isLoadingText = true);
+
     // File local: đợi _pdfBytes nếu chưa có (load cho TTS)
     if (_isLocal && _pdfBytes == null) {
       await _loadLocalBytesForTts();
       await Future.delayed(const Duration(milliseconds: 300));
-      if (!mounted || !_isReadingContinuous) return;
+      if (!mounted || !_isReadingContinuous) {
+        if (mounted) setState(() => _isLoadingText = false);
+        return;
+      }
     }
     if (_pdfBytes == null && !_isLocal) {
       // Network: tải bytes on-demand cho TTS
       final bytes = await _ensurePdfBytesForNetwork();
       if (bytes == null || !mounted || !_isReadingContinuous) {
         if (mounted) {
-          setState(() => _isReadingContinuous = false);
+          setState(() {
+            _isReadingContinuous = false;
+            _isLoadingText = false;
+          });
           AppSnackBar.show(
             context,
             message: AppLocalizations.current.pdf_load_failed_retry,
@@ -505,6 +515,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             _ttsReadingText = pageText;
             _ttsWordStart = 0;
             _ttsWordEnd = 0;
+            _isLoadingText = false;
             // _showTtsReadingPanel = true;
           });
         }
@@ -521,6 +532,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           );
         }
       } else {
+        if (mounted) setState(() => _isLoadingText = false);
         // Trang trống → chuyển sang trang tiếp
         if (_currentPage < _totalPages) {
           _readNextPage();
@@ -535,6 +547,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         }
       }
     } catch (_) {
+      if (mounted) setState(() => _isLoadingText = false);
       if (_currentPage < _totalPages) {
         _readNextPage();
       } else {
@@ -1160,6 +1173,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                   ],
                 ),
               ),
+            ),
+          if (_isLoadingText)
+            Container(
+              color: Colors.black45,
+              child: Center(child: CircularProgressIndicator()),
             ),
           // Toggle toolbar button
           if (!showToolbar)

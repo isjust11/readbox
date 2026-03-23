@@ -277,7 +277,8 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                   separatorBuilder:
                       (context, index) => const Divider(height: 1),
                   itemBuilder: (context, index) {
-                    final notification = _notificationCubit.notifications[index];
+                    final notification =
+                        _notificationCubit.notifications[index];
                     return _buildNotificationItem(context, notification);
                   },
                 ),
@@ -384,7 +385,21 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                 arguments: jsonDecode(notification.metadata ?? '{}')['id'],
               );
               break;
+            case NotificationType.payment:
+              Navigator.pushNamed(
+                context,
+                Routes.dataStorageScreen,
+                arguments: notification,
+              );
+              break;
             case NotificationType.feedback:
+              Navigator.pushNamed(
+                context,
+                Routes.notificationDetailScreen,
+                arguments: notification,
+              );
+              break;
+            case NotificationType.interaction:
               Navigator.pushNamed(
                 context,
                 Routes.notificationDetailScreen,
