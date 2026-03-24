@@ -1,3 +1,5 @@
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
@@ -15,7 +17,7 @@ class BiometricAuthService {
   // Cấu hình Flutter Secure Storage với bảo mật cao
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
-    iOptions: IOSOptions( 
+    iOptions: IOSOptions(
       accessibility: KeychainAccessibility.first_unlock_this_device,
       synchronizable: false,
     ),
@@ -391,6 +393,23 @@ class BiometricAuthService {
       // Kiểm tra social login info trước
       final socialInfo = await getStoredSocialLoginInfo();
       if (socialInfo != null) {
+        if (socialInfo['platform'] == 'google') {
+          GoogleSignInAccount? googleUser =
+              await GoogleSignIn().signInSilently();
+          if (googleUser != null) {
+            final GoogleSignInAuthentication auth =
+                await googleUser.authentication;
+            socialInfo['accessToken'] = auth.accessToken;
+          }
+        } else if (socialInfo['platform'] == 'facebook') {
+          // Lấy accessToken hiện tại của Facebook (FacebookSDK tự refresh ngầm)
+          final AccessToken? accessToken =
+              await FacebookAuth.instance.accessToken;
+          if (accessToken != null) {
+            socialInfo['accessToken'] = accessToken.tokenString;
+          }
+        }
+
         return BiometricAuthResult.success(
           data: socialInfo,
           isSocialLogin: true,

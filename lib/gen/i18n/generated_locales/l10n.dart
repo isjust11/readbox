@@ -18,8 +18,10 @@ class AppLocalizations {
   static AppLocalizations? _current;
 
   static AppLocalizations get current {
-    assert(_current != null,
-        'No instance of AppLocalizations was loaded. Try to initialize the AppLocalizations delegate before accessing AppLocalizations.current.');
+    assert(
+      _current != null,
+      'No instance of AppLocalizations was loaded. Try to initialize the AppLocalizations delegate before accessing AppLocalizations.current.',
+    );
     return _current!;
   }
 
@@ -41,8 +43,10 @@ class AppLocalizations {
 
   static AppLocalizations of(BuildContext context) {
     final instance = AppLocalizations.maybeOf(context);
-    assert(instance != null,
-        'No instance of AppLocalizations present in the widget tree. Did you add AppLocalizations.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of AppLocalizations present in the widget tree. Did you add AppLocalizations.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -52,162 +56,82 @@ class AppLocalizations {
 
   /// `ReadBox`
   String get app_name {
-    return Intl.message(
-      'ReadBox',
-      name: 'app_name',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('ReadBox', name: 'app_name', desc: '', args: []);
   }
 
   /// `Google`
   String get google {
-    return Intl.message(
-      'Google',
-      name: 'google',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Google', name: 'google', desc: '', args: []);
   }
 
   /// `Facebook`
   String get facebook {
-    return Intl.message(
-      'Facebook',
-      name: 'facebook',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Facebook', name: 'facebook', desc: '', args: []);
   }
 
   /// `Đang tải...`
   String get loading {
-    return Intl.message(
-      'Đang tải...',
-      name: 'loading',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đang tải...', name: 'loading', desc: '', args: []);
   }
 
   /// `Lỗi`
   String get error {
-    return Intl.message(
-      'Lỗi',
-      name: 'error',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Lỗi', name: 'error', desc: '', args: []);
   }
 
   /// `Thành công`
   String get success {
-    return Intl.message(
-      'Thành công',
-      name: 'success',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thành công', name: 'success', desc: '', args: []);
   }
 
   /// `Cảnh báo`
   String get warning {
-    return Intl.message(
-      'Cảnh báo',
-      name: 'warning',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cảnh báo', name: 'warning', desc: '', args: []);
   }
 
   /// `Thông tin`
   String get info {
-    return Intl.message(
-      'Thông tin',
-      name: 'info',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thông tin', name: 'info', desc: '', args: []);
   }
 
   /// `Xác nhận`
   String get confirm {
-    return Intl.message(
-      'Xác nhận',
-      name: 'confirm',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xác nhận', name: 'confirm', desc: '', args: []);
   }
 
   /// `Hủy`
   String get cancel {
-    return Intl.message(
-      'Hủy',
-      name: 'cancel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hủy', name: 'cancel', desc: '', args: []);
   }
 
   /// `Đóng`
   String get close {
-    return Intl.message(
-      'Đóng',
-      name: 'close',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đóng', name: 'close', desc: '', args: []);
   }
 
   /// `Thử lại`
   String get retry {
-    return Intl.message(
-      'Thử lại',
-      name: 'retry',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thử lại', name: 'retry', desc: '', args: []);
   }
 
   /// `Làm mới`
   String get refresh {
-    return Intl.message(
-      'Làm mới',
-      name: 'refresh',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Làm mới', name: 'refresh', desc: '', args: []);
   }
 
   /// `Tìm kiếm`
   String get search {
-    return Intl.message(
-      'Tìm kiếm',
-      name: 'search',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tìm kiếm', name: 'search', desc: '', args: []);
   }
 
   /// `Từ đầu`
   String get start {
-    return Intl.message(
-      'Từ đầu',
-      name: 'start',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Từ đầu', name: 'start', desc: '', args: []);
   }
 
   /// `Tiếp theo`
   String get next {
-    return Intl.message(
-      'Tiếp theo',
-      name: 'next',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tiếp theo', name: 'next', desc: '', args: []);
   }
 
   /// `Nhập tên đăng nhập`
@@ -222,12 +146,7 @@ class AppLocalizations {
 
   /// `Tên đăng nhập`
   String get username {
-    return Intl.message(
-      'Tên đăng nhập',
-      name: 'username',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tên đăng nhập', name: 'username', desc: '', args: []);
   }
 
   /// `Vui lòng nhập tên đăng nhập`
@@ -242,32 +161,17 @@ class AppLocalizations {
 
   /// `Đăng nhập`
   String get login {
-    return Intl.message(
-      'Đăng nhập',
-      name: 'login',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đăng nhập', name: 'login', desc: '', args: []);
   }
 
   /// `Đăng xuất`
   String get logout {
-    return Intl.message(
-      'Đăng xuất',
-      name: 'logout',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đăng xuất', name: 'logout', desc: '', args: []);
   }
 
   /// `Đăng ký`
   String get register {
-    return Intl.message(
-      'Đăng ký',
-      name: 'register',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đăng ký', name: 'register', desc: '', args: []);
   }
 
   /// `Quên mật khẩu`
@@ -302,22 +206,12 @@ class AppLocalizations {
 
   /// `Xác thực mã`
   String get verify_code {
-    return Intl.message(
-      'Xác thực mã',
-      name: 'verify_code',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xác thực mã', name: 'verify_code', desc: '', args: []);
   }
 
   /// `Không có dữ liệu`
   String get empty {
-    return Intl.message(
-      'Không có dữ liệu',
-      name: 'empty',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Không có dữ liệu', name: 'empty', desc: '', args: []);
   }
 
   /// `Kéo xuống để làm mới`
@@ -332,12 +226,7 @@ class AppLocalizations {
 
   /// `Thử lại`
   String get try_again {
-    return Intl.message(
-      'Thử lại',
-      name: 'try_again',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thử lại', name: 'try_again', desc: '', args: []);
   }
 
   /// `Đã xảy ra lỗi, vui lòng thử lại sau`
@@ -352,132 +241,67 @@ class AppLocalizations {
 
   /// `Đồng ý`
   String get agree {
-    return Intl.message(
-      'Đồng ý',
-      name: 'agree',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đồng ý', name: 'agree', desc: '', args: []);
   }
 
   /// `Không đồng ý`
   String get disagree {
-    return Intl.message(
-      'Không đồng ý',
-      name: 'disagree',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Không đồng ý', name: 'disagree', desc: '', args: []);
   }
 
   /// `Hoàn thành`
   String get done {
-    return Intl.message(
-      'Hoàn thành',
-      name: 'done',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hoàn thành', name: 'done', desc: '', args: []);
   }
 
   /// `Trang chủ`
   String get home {
-    return Intl.message(
-      'Trang chủ',
-      name: 'home',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Trang chủ', name: 'home', desc: '', args: []);
   }
 
   /// `Tin tức`
   String get news {
-    return Intl.message(
-      'Tin tức',
-      name: 'news',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tin tức', name: 'news', desc: '', args: []);
   }
 
   /// `Hồ sơ`
   String get profile {
-    return Intl.message(
-      'Hồ sơ',
-      name: 'profile',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hồ sơ', name: 'profile', desc: '', args: []);
   }
 
   /// `Cài đặt`
   String get settings {
-    return Intl.message(
-      'Cài đặt',
-      name: 'settings',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cài đặt', name: 'settings', desc: '', args: []);
   }
 
   /// `năm trước`
   String get years_ago {
-    return Intl.message(
-      'năm trước',
-      name: 'years_ago',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('năm trước', name: 'years_ago', desc: '', args: []);
   }
 
   /// `tháng trước`
   String get months_ago {
-    return Intl.message(
-      'tháng trước',
-      name: 'months_ago',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('tháng trước', name: 'months_ago', desc: '', args: []);
   }
 
   /// `ngày trước`
   String get days_ago {
-    return Intl.message(
-      'ngày trước',
-      name: 'days_ago',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('ngày trước', name: 'days_ago', desc: '', args: []);
   }
 
   /// `giờ trước`
   String get hours_ago {
-    return Intl.message(
-      'giờ trước',
-      name: 'hours_ago',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('giờ trước', name: 'hours_ago', desc: '', args: []);
   }
 
   /// `phút trước`
   String get minutes_ago {
-    return Intl.message(
-      'phút trước',
-      name: 'minutes_ago',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('phút trước', name: 'minutes_ago', desc: '', args: []);
   }
 
   /// `vừa xong`
   String get just_now {
-    return Intl.message(
-      'vừa xong',
-      name: 'just_now',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('vừa xong', name: 'just_now', desc: '', args: []);
   }
 
   /// `Không có kết nối internet`
@@ -572,12 +396,7 @@ class AppLocalizations {
 
   /// `Khám phá`
   String get book_discover {
-    return Intl.message(
-      'Khám phá',
-      name: 'book_discover',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Khám phá', name: 'book_discover', desc: '', args: []);
   }
 
   /// `Sách công khai`
@@ -602,42 +421,22 @@ class AppLocalizations {
 
   /// `Sách của tôi`
   String get my_books {
-    return Intl.message(
-      'Sách của tôi',
-      name: 'my_books',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sách của tôi', name: 'my_books', desc: '', args: []);
   }
 
   /// `Thêm sách`
   String get add_book {
-    return Intl.message(
-      'Thêm sách',
-      name: 'add_book',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thêm sách', name: 'add_book', desc: '', args: []);
   }
 
   /// `Sửa sách`
   String get edit_book {
-    return Intl.message(
-      'Sửa sách',
-      name: 'edit_book',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sửa sách', name: 'edit_book', desc: '', args: []);
   }
 
   /// `Xóa sách`
   String get delete_book {
-    return Intl.message(
-      'Xóa sách',
-      name: 'delete_book',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xóa sách', name: 'delete_book', desc: '', args: []);
   }
 
   /// `Đã tải hết dữ liệu`
@@ -762,12 +561,7 @@ class AppLocalizations {
 
   /// `Phản hồi`
   String get feedback {
-    return Intl.message(
-      'Phản hồi',
-      name: 'feedback',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Phản hồi', name: 'feedback', desc: '', args: []);
   }
 
   /// `Google Play Services không khả dụng`
@@ -962,12 +756,7 @@ class AppLocalizations {
 
   /// `Không có tên`
   String get noName {
-    return Intl.message(
-      'Không có tên',
-      name: 'noName',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Không có tên', name: 'noName', desc: '', args: []);
   }
 
   /// `Chỉnh sửa hồ sơ`
@@ -992,12 +781,7 @@ class AppLocalizations {
 
   /// `Bảo mật`
   String get security {
-    return Intl.message(
-      'Bảo mật',
-      name: 'security',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Bảo mật', name: 'security', desc: '', args: []);
   }
 
   /// `Cài đặt quyền riêng tư`
@@ -1012,12 +796,7 @@ class AppLocalizations {
 
   /// `Ngôn ngữ`
   String get language {
-    return Intl.message(
-      'Ngôn ngữ',
-      name: 'language',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ngôn ngữ', name: 'language', desc: '', args: []);
   }
 
   /// `Thay đổi ngôn ngữ ứng dụng`
@@ -1032,12 +811,7 @@ class AppLocalizations {
 
   /// `Giao diện`
   String get theme {
-    return Intl.message(
-      'Giao diện',
-      name: 'theme',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Giao diện', name: 'theme', desc: '', args: []);
   }
 
   /// `Chọn giao diện ứng dụng`
@@ -1052,12 +826,7 @@ class AppLocalizations {
 
   /// `Thông báo`
   String get notifications {
-    return Intl.message(
-      'Thông báo',
-      name: 'notifications',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thông báo', name: 'notifications', desc: '', args: []);
   }
 
   /// `Quản lý thông báo`
@@ -1142,42 +911,22 @@ class AppLocalizations {
 
   /// `Về ứng dụng`
   String get aboutApp {
-    return Intl.message(
-      'Về ứng dụng',
-      name: 'aboutApp',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Về ứng dụng', name: 'aboutApp', desc: '', args: []);
   }
 
   /// `Phiên bản`
   String get version {
-    return Intl.message(
-      'Phiên bản',
-      name: 'version',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Phiên bản', name: 'version', desc: '', args: []);
   }
 
   /// `Sáng`
   String get light {
-    return Intl.message(
-      'Sáng',
-      name: 'light',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sáng', name: 'light', desc: '', args: []);
   }
 
   /// `Tối`
   String get dark {
-    return Intl.message(
-      'Tối',
-      name: 'dark',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tối', name: 'dark', desc: '', args: []);
   }
 
   /// `Không có thông tin đăng nhập`
@@ -1262,12 +1011,7 @@ class AppLocalizations {
 
   /// `Tiêu đề`
   String get feedbackTitle {
-    return Intl.message(
-      'Tiêu đề',
-      name: 'feedbackTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tiêu đề', name: 'feedbackTitle', desc: '', args: []);
   }
 
   /// `Vui lòng nhập tiêu đề`
@@ -1322,12 +1066,7 @@ class AppLocalizations {
 
   /// `Tên`
   String get feedbackName {
-    return Intl.message(
-      'Tên',
-      name: 'feedbackName',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tên', name: 'feedbackName', desc: '', args: []);
   }
 
   /// `Email không hợp lệ`
@@ -1702,42 +1441,22 @@ class AppLocalizations {
 
   /// `Mật khẩu`
   String get password {
-    return Intl.message(
-      'Mật khẩu',
-      name: 'password',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mật khẩu', name: 'password', desc: '', args: []);
   }
 
   /// `Email`
   String get email {
-    return Intl.message(
-      'Email',
-      name: 'email',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Email', name: 'email', desc: '', args: []);
   }
 
   /// `Số điện thoại`
   String get phone {
-    return Intl.message(
-      'Số điện thoại',
-      name: 'phone',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Số điện thoại', name: 'phone', desc: '', args: []);
   }
 
   /// `Họ và tên`
   String get full_name {
-    return Intl.message(
-      'Họ và tên',
-      name: 'full_name',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Họ và tên', name: 'full_name', desc: '', args: []);
   }
 
   /// `Xác nhận mật khẩu`
@@ -1752,12 +1471,7 @@ class AppLocalizations {
 
   /// `Nhập email`
   String get enter_email {
-    return Intl.message(
-      'Nhập email',
-      name: 'enter_email',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nhập email', name: 'enter_email', desc: '', args: []);
   }
 
   /// `Nhập số điện thoại`
@@ -1892,12 +1606,7 @@ class AppLocalizations {
 
   /// `Gửi lại mã`
   String get resend_code {
-    return Intl.message(
-      'Gửi lại mã',
-      name: 'resend_code',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Gửi lại mã', name: 'resend_code', desc: '', args: []);
   }
 
   /// `Quay lại đăng nhập`
@@ -1952,12 +1661,7 @@ class AppLocalizations {
 
   /// `Ngày tạo`
   String get created_at {
-    return Intl.message(
-      'Ngày tạo',
-      name: 'created_at',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ngày tạo', name: 'created_at', desc: '', args: []);
   }
 
   /// `Ngày cập nhật`
@@ -1992,42 +1696,22 @@ class AppLocalizations {
 
   /// `Vai trò`
   String get roles {
-    return Intl.message(
-      'Vai trò',
-      name: 'roles',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Vai trò', name: 'roles', desc: '', args: []);
   }
 
   /// `Quyền`
   String get permissions {
-    return Intl.message(
-      'Quyền',
-      name: 'permissions',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Quyền', name: 'permissions', desc: '', args: []);
   }
 
   /// `Ngày sinh`
   String get birth_date {
-    return Intl.message(
-      'Ngày sinh',
-      name: 'birth_date',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ngày sinh', name: 'birth_date', desc: '', args: []);
   }
 
   /// `Địa chỉ`
   String get address {
-    return Intl.message(
-      'Địa chỉ',
-      name: 'address',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Địa chỉ', name: 'address', desc: '', args: []);
   }
 
   /// `Số điện thoại`
@@ -2102,62 +1786,32 @@ class AppLocalizations {
 
   /// `Đang lưu...`
   String get saving {
-    return Intl.message(
-      'Đang lưu...',
-      name: 'saving',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đang lưu...', name: 'saving', desc: '', args: []);
   }
 
   /// `Lưu`
   String get save {
-    return Intl.message(
-      'Lưu',
-      name: 'save',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Lưu', name: 'save', desc: '', args: []);
   }
 
   /// `Sửa`
   String get edit {
-    return Intl.message(
-      'Sửa',
-      name: 'edit',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sửa', name: 'edit', desc: '', args: []);
   }
 
   /// `Máy ảnh`
   String get camera {
-    return Intl.message(
-      'Máy ảnh',
-      name: 'camera',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Máy ảnh', name: 'camera', desc: '', args: []);
   }
 
   /// `Thư viện ảnh`
   String get gallery {
-    return Intl.message(
-      'Thư viện ảnh',
-      name: 'gallery',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thư viện ảnh', name: 'gallery', desc: '', args: []);
   }
 
   /// `Cập nhật`
   String get update {
-    return Intl.message(
-      'Cập nhật',
-      name: 'update',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cập nhật', name: 'update', desc: '', args: []);
   }
 
   /// `Cập nhật hồ sơ`
@@ -2472,32 +2126,17 @@ class AppLocalizations {
 
   /// `File Ebook`
   String get fileEbook {
-    return Intl.message(
-      'File Ebook',
-      name: 'fileEbook',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('File Ebook', name: 'fileEbook', desc: '', args: []);
   }
 
   /// `Bắt buộc`
   String get required_field {
-    return Intl.message(
-      'Bắt buộc',
-      name: 'required_field',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Bắt buộc', name: 'required_field', desc: '', args: []);
   }
 
   /// `Chọn file`
   String get select_file {
-    return Intl.message(
-      'Chọn file',
-      name: 'select_file',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chọn file', name: 'select_file', desc: '', args: []);
   }
 
   /// `Từ file picker`
@@ -2512,12 +2151,7 @@ class AppLocalizations {
 
   /// `Trong bộ nhớ`
   String get in_memory {
-    return Intl.message(
-      'Trong bộ nhớ',
-      name: 'in_memory',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Trong bộ nhớ', name: 'in_memory', desc: '', args: []);
   }
 
   /// `Sẵn sàng upload`
@@ -2542,12 +2176,7 @@ class AppLocalizations {
 
   /// `Upload File`
   String get upload_file {
-    return Intl.message(
-      'Upload File',
-      name: 'upload_file',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Upload File', name: 'upload_file', desc: '', args: []);
   }
 
   /// `Upload thành công`
@@ -2562,12 +2191,7 @@ class AppLocalizations {
 
   /// `Ảnh Bìa`
   String get cover_image {
-    return Intl.message(
-      'Ảnh Bìa',
-      name: 'cover_image',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ảnh Bìa', name: 'cover_image', desc: '', args: []);
   }
 
   /// `JPG, PNG, WEBP`
@@ -2582,12 +2206,7 @@ class AppLocalizations {
 
   /// `Tùy chọn`
   String get optional {
-    return Intl.message(
-      'Tùy chọn',
-      name: 'optional',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tùy chọn', name: 'optional', desc: '', args: []);
   }
 
   /// `Chọn ảnh bìa`
@@ -2642,112 +2261,57 @@ class AppLocalizations {
 
   /// `Tiêu đề`
   String get title {
-    return Intl.message(
-      'Tiêu đề',
-      name: 'title',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tiêu đề', name: 'title', desc: '', args: []);
   }
 
   /// `Tác giả`
   String get author {
-    return Intl.message(
-      'Tác giả',
-      name: 'author',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tác giả', name: 'author', desc: '', args: []);
   }
 
   /// `Mô tả`
   String get description {
-    return Intl.message(
-      'Mô tả',
-      name: 'description',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mô tả', name: 'description', desc: '', args: []);
   }
 
   /// `Xem thêm`
   String get read_more {
-    return Intl.message(
-      'Xem thêm',
-      name: 'read_more',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xem thêm', name: 'read_more', desc: '', args: []);
   }
 
   /// `Thu gọn`
   String get show_less {
-    return Intl.message(
-      'Thu gọn',
-      name: 'show_less',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thu gọn', name: 'show_less', desc: '', args: []);
   }
 
   /// `Nhà xuất bản`
   String get publisher {
-    return Intl.message(
-      'Nhà xuất bản',
-      name: 'publisher',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nhà xuất bản', name: 'publisher', desc: '', args: []);
   }
 
   /// `ISBN`
   String get isbn {
-    return Intl.message(
-      'ISBN',
-      name: 'isbn',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('ISBN', name: 'isbn', desc: '', args: []);
   }
 
   /// `Số trang`
   String get total_pages {
-    return Intl.message(
-      'Số trang',
-      name: 'total_pages',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Số trang', name: 'total_pages', desc: '', args: []);
   }
 
   /// `Thể loại`
   String get category {
-    return Intl.message(
-      'Thể loại',
-      name: 'category',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thể loại', name: 'category', desc: '', args: []);
   }
 
   /// `Công khai`
   String get public {
-    return Intl.message(
-      'Công khai',
-      name: 'public',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Công khai', name: 'public', desc: '', args: []);
   }
 
   /// `Riêng tư`
   String get private {
-    return Intl.message(
-      'Riêng tư',
-      name: 'private',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Riêng tư', name: 'private', desc: '', args: []);
   }
 
   /// `Sách sẽ hiển thị cho mọi người`
@@ -2882,12 +2446,7 @@ class AppLocalizations {
 
   /// `Ngôn ngữ dịch`
   String get translate {
-    return Intl.message(
-      'Ngôn ngữ dịch',
-      name: 'translate',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Ngôn ngữ dịch', name: 'translate', desc: '', args: []);
   }
 
   /// `Text to speech`
@@ -2912,12 +2471,7 @@ class AppLocalizations {
 
   /// `Thư viện Ebook`
   String get library {
-    return Intl.message(
-      'Thư viện Ebook',
-      name: 'library',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thư viện Ebook', name: 'library', desc: '', args: []);
   }
 
   /// `Cài đặt ngôn ngữ TTS`
@@ -2942,32 +2496,17 @@ class AppLocalizations {
 
   /// `Cài đặt TTS`
   String get ttsSettings {
-    return Intl.message(
-      'Cài đặt TTS',
-      name: 'ttsSettings',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cài đặt TTS', name: 'ttsSettings', desc: '', args: []);
   }
 
   /// `Tốc độ đọc`
   String get ttsSpeed {
-    return Intl.message(
-      'Tốc độ đọc',
-      name: 'ttsSpeed',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tốc độ đọc', name: 'ttsSpeed', desc: '', args: []);
   }
 
   /// `Âm lượng`
   String get ttsVolume {
-    return Intl.message(
-      'Âm lượng',
-      name: 'ttsVolume',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Âm lượng', name: 'ttsVolume', desc: '', args: []);
   }
 
   /// `Cao độ giọng nói`
@@ -2982,22 +2521,12 @@ class AppLocalizations {
 
   /// `Giọng đọc`
   String get ttsVoice {
-    return Intl.message(
-      'Giọng đọc',
-      name: 'ttsVoice',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Giọng đọc', name: 'ttsVoice', desc: '', args: []);
   }
 
   /// `Kiểm tra đọc`
   String get testTTS {
-    return Intl.message(
-      'Kiểm tra đọc',
-      name: 'testTTS',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Kiểm tra đọc', name: 'testTTS', desc: '', args: []);
   }
 
   /// `Xin chào, đây là bài kiểm tra đọc văn bản.`
@@ -3062,112 +2591,57 @@ class AppLocalizations {
 
   /// `Tốc độ đọc`
   String get readingSpeed {
-    return Intl.message(
-      'Tốc độ đọc',
-      name: 'readingSpeed',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tốc độ đọc', name: 'readingSpeed', desc: '', args: []);
   }
 
   /// `Chậm`
   String get slow {
-    return Intl.message(
-      'Chậm',
-      name: 'slow',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chậm', name: 'slow', desc: '', args: []);
   }
 
   /// `Bình thường`
   String get normal {
-    return Intl.message(
-      'Bình thường',
-      name: 'normal',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Bình thường', name: 'normal', desc: '', args: []);
   }
 
   /// `Nhanh`
   String get fast {
-    return Intl.message(
-      'Nhanh',
-      name: 'fast',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nhanh', name: 'fast', desc: '', args: []);
   }
 
   /// `Rất nhanh`
   String get veryFast {
-    return Intl.message(
-      'Rất nhanh',
-      name: 'veryFast',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Rất nhanh', name: 'veryFast', desc: '', args: []);
   }
 
   /// `Cao độ giọng`
   String get voicePitch {
-    return Intl.message(
-      'Cao độ giọng',
-      name: 'voicePitch',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cao độ giọng', name: 'voicePitch', desc: '', args: []);
   }
 
   /// `Thấp`
   String get low {
-    return Intl.message(
-      'Thấp',
-      name: 'low',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thấp', name: 'low', desc: '', args: []);
   }
 
   /// `Trung bình`
   String get medium {
-    return Intl.message(
-      'Trung bình',
-      name: 'medium',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Trung bình', name: 'medium', desc: '', args: []);
   }
 
   /// `Cao`
   String get high {
-    return Intl.message(
-      'Cao',
-      name: 'high',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Cao', name: 'high', desc: '', args: []);
   }
 
   /// `Phát thử`
   String get playTest {
-    return Intl.message(
-      'Phát thử',
-      name: 'playTest',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Phát thử', name: 'playTest', desc: '', args: []);
   }
 
   /// `Dừng`
   String get stopTest {
-    return Intl.message(
-      'Dừng',
-      name: 'stopTest',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Dừng', name: 'stopTest', desc: '', args: []);
   }
 
   /// `Đã thay đổi ngôn ngữ`
@@ -3432,12 +2906,7 @@ class AppLocalizations {
 
   /// `Badge`
   String get notificationBadge {
-    return Intl.message(
-      'Badge',
-      name: 'notificationBadge',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Badge', name: 'notificationBadge', desc: '', args: []);
   }
 
   /// `Hiển thị badge trên icon`
@@ -3512,12 +2981,7 @@ class AppLocalizations {
 
   /// `Mở cài đặt`
   String get openSettings {
-    return Intl.message(
-      'Mở cài đặt',
-      name: 'openSettings',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mở cài đặt', name: 'openSettings', desc: '', args: []);
   }
 
   /// `Quyền bị từ chối`
@@ -3612,12 +3076,7 @@ class AppLocalizations {
 
   /// `FCM Token`
   String get fcmToken {
-    return Intl.message(
-      'FCM Token',
-      name: 'fcmToken',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('FCM Token', name: 'fcmToken', desc: '', args: []);
   }
 
   /// `Sao chép token`
@@ -3682,22 +3141,12 @@ class AppLocalizations {
 
   /// `Mới`
   String get new_book {
-    return Intl.message(
-      'Mới',
-      name: 'new_book',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mới', name: 'new_book', desc: '', args: []);
   }
 
   /// `Đọc sách`
   String get read_book {
-    return Intl.message(
-      'Đọc sách',
-      name: 'read_book',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đọc sách', name: 'read_book', desc: '', args: []);
   }
 
   /// `Xem chi tiết`
@@ -3762,52 +3211,27 @@ class AppLocalizations {
 
   /// `Lọc`
   String get filter {
-    return Intl.message(
-      'Lọc',
-      name: 'filter',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Lọc', name: 'filter', desc: '', args: []);
   }
 
   /// `Tất cả`
   String get all {
-    return Intl.message(
-      'Tất cả',
-      name: 'all',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tất cả', name: 'all', desc: '', args: []);
   }
 
   /// `Chưa đọc`
   String get unread {
-    return Intl.message(
-      'Chưa đọc',
-      name: 'unread',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chưa đọc', name: 'unread', desc: '', args: []);
   }
 
   /// `Đã đọc`
   String get read {
-    return Intl.message(
-      'Đã đọc',
-      name: 'read',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đã đọc', name: 'read', desc: '', args: []);
   }
 
   /// `Xóa tất cả`
   String get deleteAll {
-    return Intl.message(
-      'Xóa tất cả',
-      name: 'deleteAll',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xóa tất cả', name: 'deleteAll', desc: '', args: []);
   }
 
   /// `Bạn có chắc chắn muốn xóa tất cả thông báo?`
@@ -4032,12 +3456,7 @@ class AppLocalizations {
 
   /// `Bạn có`
   String get youHave {
-    return Intl.message(
-      'Bạn có',
-      name: 'youHave',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Bạn có', name: 'youHave', desc: '', args: []);
   }
 
   /// `thông báo chưa đọc`
@@ -4052,12 +3471,7 @@ class AppLocalizations {
 
   /// `Xóa`
   String get delete {
-    return Intl.message(
-      'Xóa',
-      name: 'delete',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xóa', name: 'delete', desc: '', args: []);
   }
 
   /// `Đã xóa thông báo thành công`
@@ -4162,12 +3576,7 @@ class AppLocalizations {
 
   /// `Hoàn thành`
   String get completed {
-    return Intl.message(
-      'Hoàn thành',
-      name: 'completed',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hoàn thành', name: 'completed', desc: '', args: []);
   }
 
   /// `Đọc tiếp`
@@ -4192,32 +3601,17 @@ class AppLocalizations {
 
   /// `Kích thước`
   String get size {
-    return Intl.message(
-      'Kích thước',
-      name: 'size',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Kích thước', name: 'size', desc: '', args: []);
   }
 
   /// `Trang`
   String get pages {
-    return Intl.message(
-      'Trang',
-      name: 'pages',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Trang', name: 'pages', desc: '', args: []);
   }
 
   /// `Đọc lần cuối`
   String get last_read {
-    return Intl.message(
-      'Đọc lần cuối',
-      name: 'last_read',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đọc lần cuối', name: 'last_read', desc: '', args: []);
   }
 
   /// `Bộ lọc tìm kiếm`
@@ -4232,52 +3626,27 @@ class AppLocalizations {
 
   /// `Đặt lại`
   String get reset {
-    return Intl.message(
-      'Đặt lại',
-      name: 'reset',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đặt lại', name: 'reset', desc: '', args: []);
   }
 
   /// `Tôi đăng tải`
   String get i_uploaded {
-    return Intl.message(
-      'Tôi đăng tải',
-      name: 'i_uploaded',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tôi đăng tải', name: 'i_uploaded', desc: '', args: []);
   }
 
   /// `Định dạng`
   String get format {
-    return Intl.message(
-      'Định dạng',
-      name: 'format',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Định dạng', name: 'format', desc: '', args: []);
   }
 
   /// `EPUB`
   String get epub {
-    return Intl.message(
-      'EPUB',
-      name: 'epub',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('EPUB', name: 'epub', desc: '', args: []);
   }
 
   /// `PDF`
   String get pdf {
-    return Intl.message(
-      'PDF',
-      name: 'pdf',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('PDF', name: 'pdf', desc: '', args: []);
   }
 
   /// `Áp dụng bộ lọc`
@@ -4292,12 +3661,7 @@ class AppLocalizations {
 
   /// `Không tên`
   String get no_name {
-    return Intl.message(
-      'Không tên',
-      name: 'no_name',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Không tên', name: 'no_name', desc: '', args: []);
   }
 
   /// `Đã xóa sách khỏi thư viện`
@@ -4342,12 +3706,7 @@ class AppLocalizations {
 
   /// `Chọn tất cả`
   String get select_all {
-    return Intl.message(
-      'Chọn tất cả',
-      name: 'select_all',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chọn tất cả', name: 'select_all', desc: '', args: []);
   }
 
   /// `Dùng 'Chọn file' để duyệt thư mục`
@@ -4372,22 +3731,12 @@ class AppLocalizations {
 
   /// `Tìm sách`
   String get find_book {
-    return Intl.message(
-      'Tìm sách',
-      name: 'find_book',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tìm sách', name: 'find_book', desc: '', args: []);
   }
 
   /// `Tìm sách`
   String get search_book {
-    return Intl.message(
-      'Tìm sách',
-      name: 'search_book',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tìm sách', name: 'search_book', desc: '', args: []);
   }
 
   /// `Chọn tất cả sách`
@@ -4412,12 +3761,7 @@ class AppLocalizations {
 
   /// `Quét lại`
   String get scan_again {
-    return Intl.message(
-      'Quét lại',
-      name: 'scan_again',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Quét lại', name: 'scan_again', desc: '', args: []);
   }
 
   /// `Nhấn vào file để chọn hoặc long press để chọn file`
@@ -4572,22 +3916,12 @@ class AppLocalizations {
 
   /// `Quay lại`
   String get go_back {
-    return Intl.message(
-      'Quay lại',
-      name: 'go_back',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Quay lại', name: 'go_back', desc: '', args: []);
   }
 
   /// `Loại file`
   String get file_type {
-    return Intl.message(
-      'Loại file',
-      name: 'file_type',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Loại file', name: 'file_type', desc: '', args: []);
   }
 
   /// `Kích thước file`
@@ -4612,12 +3946,7 @@ class AppLocalizations {
 
   /// `Đang đọc`
   String get reading_books {
-    return Intl.message(
-      'Đang đọc',
-      name: 'reading_books',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đang đọc', name: 'reading_books', desc: '', args: []);
   }
 
   /// `Bạn chưa có sách nào đang đọc.`
@@ -4662,12 +3991,7 @@ class AppLocalizations {
 
   /// `Công cụ`
   String get tools {
-    return Intl.message(
-      'Công cụ',
-      name: 'tools',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Công cụ', name: 'tools', desc: '', args: []);
   }
 
   /// `Tìm trong PDF...`
@@ -4712,12 +4036,7 @@ class AppLocalizations {
 
   /// `Chia sẻ`
   String get pdf_share {
-    return Intl.message(
-      'Chia sẻ',
-      name: 'pdf_share',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chia sẻ', name: 'pdf_share', desc: '', args: []);
   }
 
   /// `"{title}"được chia sẻ từ Readbox. Tải app để đọc sách miễn phí! 📚`
@@ -4842,22 +4161,12 @@ class AppLocalizations {
 
   /// `Đang đọc`
   String get pdf_reading {
-    return Intl.message(
-      'Đang đọc',
-      name: 'pdf_reading',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đang đọc', name: 'pdf_reading', desc: '', args: []);
   }
 
   /// `Tìm`
   String get pdf_search_tooltip {
-    return Intl.message(
-      'Tìm',
-      name: 'pdf_search_tooltip',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tìm', name: 'pdf_search_tooltip', desc: '', args: []);
   }
 
   /// `Nhảy đến trang`
@@ -4882,12 +4191,7 @@ class AppLocalizations {
 
   /// `Đến`
   String get pdf_go {
-    return Intl.message(
-      'Đến',
-      name: 'pdf_go',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đến', name: 'pdf_go', desc: '', args: []);
   }
 
   /// `Số trang không hợp lệ`
@@ -4942,12 +4246,7 @@ class AppLocalizations {
 
   /// `Hoàn tác`
   String get pdf_undo {
-    return Intl.message(
-      'Hoàn tác',
-      name: 'pdf_undo',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hoàn tác', name: 'pdf_undo', desc: '', args: []);
   }
 
   /// `Hoàn thành vẽ`
@@ -5262,12 +4561,7 @@ class AppLocalizations {
 
   /// `Xem trước`
   String get tools_preview {
-    return Intl.message(
-      'Xem trước',
-      name: 'tools_preview',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xem trước', name: 'tools_preview', desc: '', args: []);
   }
 
   /// `Đang xử lý...`
@@ -5382,32 +4676,17 @@ class AppLocalizations {
 
   /// `Đã thêm`
   String get added {
-    return Intl.message(
-      'Đã thêm',
-      name: 'added',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đã thêm', name: 'added', desc: '', args: []);
   }
 
   /// `sách`
   String get books {
-    return Intl.message(
-      'sách',
-      name: 'books',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('sách', name: 'books', desc: '', args: []);
   }
 
   /// `vào thư viện`
   String get to_library {
-    return Intl.message(
-      'vào thư viện',
-      name: 'to_library',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('vào thư viện', name: 'to_library', desc: '', args: []);
   }
 
   /// `sách đã tồn tại`
@@ -5452,32 +4731,17 @@ class AppLocalizations {
 
   /// `Tìm thấy`
   String get found {
-    return Intl.message(
-      'Tìm thấy',
-      name: 'found',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tìm thấy', name: 'found', desc: '', args: []);
   }
 
   /// `file`
   String get files {
-    return Intl.message(
-      'file',
-      name: 'files',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('file', name: 'files', desc: '', args: []);
   }
 
   /// `Đã chọn`
   String get selected {
-    return Intl.message(
-      'Đã chọn',
-      name: 'selected',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đã chọn', name: 'selected', desc: '', args: []);
   }
 
   /// `từ thư mục`
@@ -5512,22 +4776,12 @@ class AppLocalizations {
 
   /// `Tìm file word`
   String get find_word {
-    return Intl.message(
-      'Tìm file word',
-      name: 'find_word',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tìm file word', name: 'find_word', desc: '', args: []);
   }
 
   /// `Tìm file ảnh`
   String get find_image {
-    return Intl.message(
-      'Tìm file ảnh',
-      name: 'find_image',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tìm file ảnh', name: 'find_image', desc: '', args: []);
   }
 
   /// `Không tìm thấy file .docx`
@@ -5562,12 +4816,7 @@ class AppLocalizations {
 
   /// `Chạm để xem`
   String get tap_to_view {
-    return Intl.message(
-      'Chạm để xem',
-      name: 'tap_to_view',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chạm để xem', name: 'tap_to_view', desc: '', args: []);
   }
 
   /// `Vui lòng xác thực để đăng nhập`
@@ -5722,12 +4971,7 @@ class AppLocalizations {
 
   /// `Xác thực`
   String get verify {
-    return Intl.message(
-      'Xác thực',
-      name: 'verify',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xác thực', name: 'verify', desc: '', args: []);
   }
 
   /// `Xóa và nhập lại`
@@ -5752,22 +4996,12 @@ class AppLocalizations {
 
   /// `giây`
   String get seconds {
-    return Intl.message(
-      'giây',
-      name: 'seconds',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('giây', name: 'seconds', desc: '', args: []);
   }
 
   /// `Gửi lại`
   String get resend_pin {
-    return Intl.message(
-      'Gửi lại',
-      name: 'resend_pin',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Gửi lại', name: 'resend_pin', desc: '', args: []);
   }
 
   /// `Mã PIN đã được gửi lại thành công`
@@ -5812,12 +5046,7 @@ class AppLocalizations {
 
   /// `Xem`
   String get view {
-    return Intl.message(
-      'Xem',
-      name: 'view',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xem', name: 'view', desc: '', args: []);
   }
 
   /// `Không thể tải PDF, vui lòng thử lại sau hoặc liên hệ quản trị viên để được hỗ trợ.`
@@ -5972,12 +5201,7 @@ class AppLocalizations {
 
   /// `Nhận xét`
   String get reviews {
-    return Intl.message(
-      'Nhận xét',
-      name: 'reviews',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nhận xét', name: 'reviews', desc: '', args: []);
   }
 
   /// `Đánh giá trung bình`
@@ -6042,22 +5266,12 @@ class AppLocalizations {
 
   /// `Chọn gói`
   String get selectPlan {
-    return Intl.message(
-      'Chọn gói',
-      name: 'selectPlan',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chọn gói', name: 'selectPlan', desc: '', args: []);
   }
 
   /// `Phổ biến`
   String get popular {
-    return Intl.message(
-      'Phổ biến',
-      name: 'popular',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Phổ biến', name: 'popular', desc: '', args: []);
   }
 
   /// `Dung lượng lưu trữ`
@@ -6092,32 +5306,17 @@ class AppLocalizations {
 
   /// `/kỳ`
   String get perPeriod {
-    return Intl.message(
-      '/kỳ',
-      name: 'perPeriod',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('/kỳ', name: 'perPeriod', desc: '', args: []);
   }
 
   /// `Miễn phí`
   String get free {
-    return Intl.message(
-      'Miễn phí',
-      name: 'free',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Miễn phí', name: 'free', desc: '', args: []);
   }
 
   /// `Dùng miễn phí`
   String get useFree {
-    return Intl.message(
-      'Dùng miễn phí',
-      name: 'useFree',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Dùng miễn phí', name: 'useFree', desc: '', args: []);
   }
 
   /// `Xem và quản lý gói của bạn`
@@ -6132,12 +5331,7 @@ class AppLocalizations {
 
   /// `Thanh toán`
   String get payment {
-    return Intl.message(
-      'Thanh toán',
-      name: 'payment',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thanh toán', name: 'payment', desc: '', args: []);
   }
 
   /// `Kết quả thanh toán`
@@ -6182,22 +5376,12 @@ class AppLocalizations {
 
   /// `Về trang chủ`
   String get backToHome {
-    return Intl.message(
-      'Về trang chủ',
-      name: 'backToHome',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Về trang chủ', name: 'backToHome', desc: '', args: []);
   }
 
   /// `Thử lại`
   String get tryAgain {
-    return Intl.message(
-      'Thử lại',
-      name: 'tryAgain',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Thử lại', name: 'tryAgain', desc: '', args: []);
   }
 
   /// `Chọn phương thức thanh toán`
@@ -6252,12 +5436,7 @@ class AppLocalizations {
 
   /// `danh mục`
   String get categories {
-    return Intl.message(
-      'danh mục',
-      name: 'categories',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('danh mục', name: 'categories', desc: '', args: []);
   }
 
   /// `Tìm kiếm danh mục...`
@@ -6362,12 +5541,7 @@ class AppLocalizations {
 
   /// `Đọc Văn Bản`
   String get tts_usage {
-    return Intl.message(
-      'Đọc Văn Bản',
-      name: 'tts_usage',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đọc Văn Bản', name: 'tts_usage', desc: '', args: []);
   }
 
   /// `Chuyển Đổi Tài Liệu`
@@ -6382,12 +5556,7 @@ class AppLocalizations {
 
   /// `lần`
   String get times {
-    return Intl.message(
-      'lần',
-      name: 'times',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('lần', name: 'times', desc: '', args: []);
   }
 
   /// `Chu Kỳ Đăng Ký`
@@ -6402,22 +5571,12 @@ class AppLocalizations {
 
   /// `Bắt Đầu`
   String get started_at {
-    return Intl.message(
-      'Bắt Đầu',
-      name: 'started_at',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Bắt Đầu', name: 'started_at', desc: '', args: []);
   }
 
   /// `Hết Hạn`
   String get expires_at {
-    return Intl.message(
-      'Hết Hạn',
-      name: 'expires_at',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hết Hạn', name: 'expires_at', desc: '', args: []);
   }
 
   /// `Số Ngày Còn Lại`
@@ -6452,22 +5611,12 @@ class AppLocalizations {
 
   /// `Xem Các Gói`
   String get view_plans {
-    return Intl.message(
-      'Xem Các Gói',
-      name: 'view_plans',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Xem Các Gói', name: 'view_plans', desc: '', args: []);
   }
 
   /// `đã sử dụng`
   String get used {
-    return Intl.message(
-      'đã sử dụng',
-      name: 'used',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('đã sử dụng', name: 'used', desc: '', args: []);
   }
 
   /// `Không giới hạn`
@@ -6492,42 +5641,22 @@ class AppLocalizations {
 
   /// `ngày`
   String get days {
-    return Intl.message(
-      'ngày',
-      name: 'days',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('ngày', name: 'days', desc: '', args: []);
   }
 
   /// `Hết hạn`
   String get expired {
-    return Intl.message(
-      'Hết hạn',
-      name: 'expired',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hết hạn', name: 'expired', desc: '', args: []);
   }
 
   /// `PRO`
   String get pro {
-    return Intl.message(
-      'PRO',
-      name: 'pro',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('PRO', name: 'pro', desc: '', args: []);
   }
 
   /// `Gói Miễn Phí`
   String get freePlan {
-    return Intl.message(
-      'Gói Miễn Phí',
-      name: 'freePlan',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Gói Miễn Phí', name: 'freePlan', desc: '', args: []);
   }
 
   /// `Thống Kê Hoạt Động`
@@ -6552,22 +5681,12 @@ class AppLocalizations {
 
   /// `Đang Đọc`
   String get reading_count {
-    return Intl.message(
-      'Đang Đọc',
-      name: 'reading_count',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đang Đọc', name: 'reading_count', desc: '', args: []);
   }
 
   /// `Đánh Dấu`
   String get bookmark_count {
-    return Intl.message(
-      'Đánh Dấu',
-      name: 'bookmark_count',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đánh Dấu', name: 'bookmark_count', desc: '', args: []);
   }
 
   /// `Yêu Thích`
@@ -6582,32 +5701,17 @@ class AppLocalizations {
 
   /// `Chia Sẻ`
   String get share_count {
-    return Intl.message(
-      'Chia Sẻ',
-      name: 'share_count',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chia Sẻ', name: 'share_count', desc: '', args: []);
   }
 
   /// `Đánh Giá`
   String get rating_count {
-    return Intl.message(
-      'Đánh Giá',
-      name: 'rating_count',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Đánh Giá', name: 'rating_count', desc: '', args: []);
   }
 
   /// `Lưu Trữ`
   String get archived_count {
-    return Intl.message(
-      'Lưu Trữ',
-      name: 'archived_count',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Lưu Trữ', name: 'archived_count', desc: '', args: []);
   }
 
   /// `Tổng Tương Tác`
@@ -6622,12 +5726,7 @@ class AppLocalizations {
 
   /// `ký tự`
   String get characters {
-    return Intl.message(
-      'ký tự',
-      name: 'characters',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('ký tự', name: 'characters', desc: '', args: []);
   }
 
   /// `Bạn đã hết lượt sử dụng chuyển đổi tài liệu Word sang PDF miễn phí`
@@ -6652,12 +5751,7 @@ class AppLocalizations {
 
   /// `Nâng cấp`
   String get upgrade_now {
-    return Intl.message(
-      'Nâng cấp',
-      name: 'upgrade_now',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Nâng cấp', name: 'upgrade_now', desc: '', args: []);
   }
 
   /// `Nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF`
@@ -6702,7 +5796,7 @@ class AppLocalizations {
 
   /// `Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF`
   String
-      get upgrade_to_premium_to_use_this_feature_button_description_description {
+  get upgrade_to_premium_to_use_this_feature_button_description_description {
     return Intl.message(
       'Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF',
       name:
@@ -6714,7 +5808,7 @@ class AppLocalizations {
 
   /// `Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF`
   String
-      get upgrade_to_premium_to_use_this_feature_button_description_description_description {
+  get upgrade_to_premium_to_use_this_feature_button_description_description_description {
     return Intl.message(
       'Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF',
       name:
@@ -6736,12 +5830,7 @@ class AppLocalizations {
 
   /// `Chia Sẻ`
   String get share_limit {
-    return Intl.message(
-      'Chia Sẻ',
-      name: 'share_limit',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Chia Sẻ', name: 'share_limit', desc: '', args: []);
   }
 
   /// `Google Drive`
@@ -6906,12 +5995,7 @@ class AppLocalizations {
 
   /// `Kết nối`
   String get connect {
-    return Intl.message(
-      'Kết nối',
-      name: 'connect',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Kết nối', name: 'connect', desc: '', args: []);
   }
 
   /// `Thanh toán`
@@ -6986,12 +6070,7 @@ class AppLocalizations {
 
   /// `Mã thiết bị`
   String get device_id {
-    return Intl.message(
-      'Mã thiết bị',
-      name: 'device_id',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Mã thiết bị', name: 'device_id', desc: '', args: []);
   }
 
   /// `Thông tin thiết bị`
@@ -7096,12 +6175,7 @@ class AppLocalizations {
 
   /// `Momo`
   String get paymentMethodMomo {
-    return Intl.message(
-      'Momo',
-      name: 'paymentMethodMomo',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Momo', name: 'paymentMethodMomo', desc: '', args: []);
   }
 
   /// `Thanh toán qua Momo`
@@ -7156,22 +6230,12 @@ class AppLocalizations {
 
   /// `Trợ lý AI`
   String get ai_assistant {
-    return Intl.message(
-      'Trợ lý AI',
-      name: 'ai_assistant',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Trợ lý AI', name: 'ai_assistant', desc: '', args: []);
   }
 
   /// `Tra cứu`
   String get lookup {
-    return Intl.message(
-      'Tra cứu',
-      name: 'lookup',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tra cứu', name: 'lookup', desc: '', args: []);
   }
 
   /// `Từ hoặc khái niệm cần tra cứu`
@@ -7256,12 +6320,7 @@ class AppLocalizations {
 
   /// `Dịch thuật`
   String get translation {
-    return Intl.message(
-      'Dịch thuật',
-      name: 'translation',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Dịch thuật', name: 'translation', desc: '', args: []);
   }
 
   /// `Kết quả từ Gemini AI`
@@ -7286,22 +6345,12 @@ class AppLocalizations {
 
   /// `Sao chép`
   String get copy {
-    return Intl.message(
-      'Sao chép',
-      name: 'copy',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Sao chép', name: 'copy', desc: '', args: []);
   }
 
   /// `Kết quả`
   String get result {
-    return Intl.message(
-      'Kết quả',
-      name: 'result',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Kết quả', name: 'result', desc: '', args: []);
   }
 
   /// `Mật khẩu mới`
@@ -7352,6 +6401,16 @@ class AppLocalizations {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Năm`
+  String get year {
+    return Intl.message('Năm', name: 'year', desc: '', args: []);
+  }
+
+  /// `Tháng`
+  String get month {
+    return Intl.message('Tháng', name: 'month', desc: '', args: []);
   }
 }
 

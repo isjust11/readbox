@@ -764,5 +764,7 @@
   "enter_new_password": "Enter new password",
   "confirm_new_password": "Confirm new password",
   "enter_confirm_new_password": "Enter confirm new password",
-  "reset_password_success": "Reset password success"
+  "reset_password_success": "Reset password success",
+  "year": "Year",
+  "month": "Month"
 }
