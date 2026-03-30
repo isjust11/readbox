@@ -40,17 +40,10 @@ class _PdfScannerScreenState extends State<PdfScannerScreen> {
   Future<void> _requestPermissions() async {
     // Request storage permissions
     if (Platform.isAndroid) {
-      final status = await Permission.manageExternalStorage.request();
-      if (status.isGranted) {
-        setState(() => _hasPermission = true);
+      final storageStatus = await Permission.storage.request();
+      setState(() => _hasPermission = storageStatus.isGranted);
+      if (storageStatus.isGranted) {
         _scanForFiles();
-      } else {
-        // Fallback to regular storage permission
-        final storageStatus = await Permission.storage.request();
-        setState(() => _hasPermission = storageStatus.isGranted);
-        if (storageStatus.isGranted) {
-          _scanForFiles();
-        }
       }
     } else if (Platform.isIOS) {
       final status = await Permission.storage.request();

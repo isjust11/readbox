@@ -51,6 +51,12 @@ class ApiConstant {
     return int.tryParse(v) ?? 3005;
   }
 
+  /// Timeout API: đọc từ .env (API_TIMEOUT), mặc định 15000ms
+  static int get apiTimeout {
+    final v = dotenv.get('API_TIMEOUT', fallback: '15000').trim();
+    return int.tryParse(v) ?? 15000;
+  }
+
   static String get apiHost => "http://$_baseHost:$apiPort/";
   static String get apiHostStorage => "http://$_baseHost:$storagePort";
   static String get storageHost => "http://$_baseHost:$storagePort";

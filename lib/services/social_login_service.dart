@@ -4,6 +4,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:readbox/config/google_signin_config.dart';
 import 'dart:io';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class SocialLoginService {
   static final GoogleSignIn _googleSignIn = GoogleSignInConfig.googleSignIn;
@@ -197,6 +198,38 @@ class SocialLoginService {
         throw Exception(AppLocalizations.current.facebook_invalid_client);
       }
 
+      rethrow;
+    }
+  }
+
+  /// Đăng nhập bằng Apple
+  static Future<Map<String, dynamic>?> signInWithApple() async {
+    try {
+      final AuthorizationCredentialAppleID credential =
+          await SignInWithApple.getAppleIDCredential(
+            scopes: [
+              AppleIDAuthorizationScopes.email,
+              AppleIDAuthorizationScopes.fullName,
+            ],
+          );
+
+      return {
+        'platformId': credential.userIdentifier,
+        'email': credential.email ?? '',
+        'fullName':
+            credential.givenName != null
+                ? '${credential.givenName} ${credential.familyName}'
+                : '',
+        'platform': 'apple',
+        'accessToken': credential.identityToken, // Dùng identityToken làm accessToken để verify ở backend
+      };
+    } catch (error) {
+      print('❌ Apple Sign-In Error: $error');
+      if (error is SignInWithAppleAuthorizationException) {
+        if (error.code == AuthorizationErrorCode.canceled) {
+          return null;
+        }
+      }
       rethrow;
     }
   }

@@ -231,6 +231,38 @@ class AuthCubit extends Cubit<BaseState> {
     }
   }
 
+  Future doAppleLogin() async {
+    try {
+      emit(LoadingState());
+
+      final socialData = await SocialLoginService.signInWithApple();
+      if (socialData == null) {
+        emit(InitState()); // User cancelled
+        return;
+      }
+
+      // Lấy FCM token để gửi kèm theo request
+      final fcmToken = fcmService.fcmToken;
+
+      // Thêm fcmToken vào socialData
+      final loginData = Map<String, dynamic>.from(socialData);
+      if (fcmToken != null) {
+        loginData['fcmToken'] = fcmToken;
+      }
+      final deviceId = fcmService.deviceId;
+      loginData['deviceId'] = deviceId;
+
+      AuthenModel authModel = await repository.mobileSocialLogin(loginData);
+
+      // Lưu thông tin social login cho sinh trắc học
+      await BiometricAuthService.storeSocialLoginInfo(socialData);
+
+      emit(LoadedState(authModel));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
+
   Future doMobileSocialLogin({
     required String platformId,
     required String email,
