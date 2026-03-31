@@ -16,12 +16,16 @@ class ApiConstant {
     return 'localhost';
   }
 
-  /// Host API: đọc từ .env (API_BASE_HOST), không có thì dùng _platformDefaultHost
+  /// Host API: đọc từ .env (API_BASE_HOST), ưu tiên dùng khi có cấu hình (kể cả debug hay release)
   static String get _baseHost {
+    final envHost = dotenv.get('API_BASE_HOST', fallback: '').trim();
+    if (envHost.isNotEmpty) {
+      return envHost;
+    }
     if (kDebugMode) {
       return localIpAndress;
     }
-    return dotenv.get('API_BASE_HOST', fallback: _platformDefaultHost).trim();
+    return _platformDefaultHost;
   }
 
   Future<String> getLocalIPs() async {
@@ -45,6 +49,12 @@ class ApiConstant {
   static int get storagePort {
     final v = dotenv.get('STORAGE_PORT', fallback: '3005').trim();
     return int.tryParse(v) ?? 3005;
+  }
+
+  /// Timeout API: đọc từ .env (API_TIMEOUT), mặc định 15000ms
+  static int get apiTimeout {
+    final v = dotenv.get('API_TIMEOUT', fallback: '15000').trim();
+    return int.tryParse(v) ?? 15000;
   }
 
   static String get apiHost => "http://$_baseHost:$apiPort/";

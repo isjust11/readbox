@@ -144,36 +144,37 @@ class LoginScreenState extends State<LoginBody>
                   padding: EdgeInsets.symmetric(horizontal: 18),
                   child: FadeTransition(
                     opacity: _fadeAnimation,
-                    child: isLargeScreen
-                        ? Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Brand column
-                              SizedBox(
-                                width: headerMaxWidth,
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: _buildHeader(),
+                    child:
+                        isLargeScreen
+                            ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Brand column
+                                SizedBox(
+                                  width: headerMaxWidth,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: _buildHeader(),
+                                  ),
                                 ),
-                              ),
-                              // Form column
-                              SizedBox(
-                                width: formMaxWidth,
-                                child: _buildLoginCard(theme),
-                              ),
-                            ],
-                          )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Logo/Title Section
-                              _buildHeader(),
-                              SizedBox(height: AppDimens.SIZE_24),
-                              // Login Card
-                              _buildLoginCard(theme),
-                            ],
-                          ),
+                                // Form column
+                                SizedBox(
+                                  width: formMaxWidth,
+                                  child: _buildLoginCard(theme),
+                                ),
+                              ],
+                            )
+                            : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Logo/Title Section
+                                _buildHeader(),
+                                SizedBox(height: AppDimens.SIZE_24),
+                                // Login Card
+                                _buildLoginCard(theme),
+                              ],
+                            ),
                   ),
                 ),
               ),
@@ -529,76 +530,75 @@ class LoginScreenState extends State<LoginBody>
   }
 
   Widget _buildSocialLogin() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
-        // Nút đăng nhập Google
-        _buildSocialLoginButton(
-          text: AppLocalizations.current.google,
-          backgroundColor: AppColors.white,
-          textColor: AppColors.textDark,
-          borderColor: AppColors.inputBorderLight,
-          iconPath: Assets.icons.icGoogle,
-          onPressed: () {
-            context.read<AuthCubit>().doGoogleLogin();
-          },
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Đăng nhập bằng Apple (Chỉ hiện trên iOS)
+            if (Theme.of(context).platform == TargetPlatform.iOS) ...[
+              _buildCircularSocialButton(
+                icon: Icon(Icons.apple, size: 28, color: Colors.white),
+                backgroundColor: Colors.black,
+                onPressed: () => context.read<AuthCubit>().doAppleLogin(),
+              ),
+              SizedBox(width: 20),
+            ],
+            // Đăng nhập bằng Google
+            _buildCircularSocialButton(
+              icon: SvgPicture.asset(
+                Assets.icons.icGoogle,
+                width: 24,
+                height: 24,
+              ),
+              backgroundColor: Colors.white,
+              borderColor: Colors.grey.shade300,
+              onPressed: () => context.read<AuthCubit>().doGoogleLogin(),
+            ),
+            SizedBox(width: 20),
+            // Đăng nhập bằng Facebook
+            _buildCircularSocialButton(
+              icon: SvgPicture.asset(
+                Assets.icons.icFacebook,
+                width: 24,
+                height: 24,
+              ),
+              backgroundColor: Theme.of(
+                context,
+              ).primaryColor.withValues(alpha: 0.2),
+              onPressed: () => context.read<AuthCubit>().doFacebookLogin(),
+            ),
+          ],
         ),
-        SizedBox(width: AppDimens.SIZE_12),
-        // Nút đăng nhập Facebook
-        _buildSocialLoginButton(
-          text: AppLocalizations.current.facebook,
-          backgroundColor: Color.fromARGB(255, 38, 93, 164), // Facebook blue
-          textColor: AppColors.white,
-          borderColor: AppColors.inputBorderLight,
-          iconPath: Assets.icons.icFacebook,
-          onPressed: () {
-            context.read<AuthCubit>().doFacebookLogin();
-          },
-        ),
-        SizedBox(height: AppDimens.SIZE_24),
       ],
     );
   }
 
-  Widget _buildSocialLoginButton({
-    required String text,
+  Widget _buildCircularSocialButton({
+    required Widget icon,
     required Color backgroundColor,
-    required Color textColor,
-    required Color borderColor,
-    required String iconPath,
+    Color? borderColor,
     required VoidCallback onPressed,
   }) {
-    return SizedBox(
-      height: AppDimens.SIZE_40,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          foregroundColor: textColor,
-          side: BorderSide(color: borderColor, width: 1),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
-          ),
-          elevation: 0,
-        ),
-        onPressed: onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // SVG Icon
-            SvgPicture.asset(
-              iconPath,
-              width: AppDimens.SIZE_20,
-              height: AppDimens.SIZE_20,
-            ),
-            SizedBox(width: AppDimens.SIZE_12),
-            CustomTextLabel(
-              text,
-              fontSize: AppDimens.SIZE_14,
-              fontWeight: FontWeight.w600,
-              color: textColor,
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(30),
+      child: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          shape: BoxShape.circle,
+          border: borderColor != null ? Border.all(color: borderColor) : null,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: Offset(0, 4),
             ),
           ],
         ),
+        child: Center(child: icon),
       ),
     );
   }

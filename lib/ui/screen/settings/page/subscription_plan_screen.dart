@@ -470,7 +470,9 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                             final isSelected =
                                 _selectedDurationMonths == months;
                             String label =
-                                months == 12 ? '1 Năm' : '$months Tháng';
+                                months == 12
+                                    ? '1 ${AppLocalizations.current.year}'
+                                    : '$months ${AppLocalizations.current.month}';
                             String discountText = '';
                             // if (months == 3) discountText = 'Giảm 10%';
                             // if (months == 6) discountText = 'Giảm 15%';
@@ -779,8 +781,8 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   }
 
   String _getStorageDisplayForDuration(SubscriptionPlanModel plan) {
-    final multiplier = _getDurationMultiplier(plan);
-    final totalBytes = (plan.storageLimitBytes * multiplier).round();
+    // final multiplier = _getDurationMultiplier(plan);
+    final totalBytes = (plan.storageLimitBytes).round();
 
     const int mb = 1024 * 1024;
     const int gb = 1024 * mb;
@@ -819,10 +821,10 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     );
     String periodInfo =
         _selectedDurationMonths == 12
-            ? '/năm'
-            : '/$_selectedDurationMonths tháng';
+            ? '/1 ${AppLocalizations.current.year}'
+            : '/$_selectedDurationMonths ${AppLocalizations.current.month}';
     if (_selectedDurationMonths == 1) {
-      periodInfo = '/tháng';
+      periodInfo = '/${AppLocalizations.current.month}';
     }
     return '${formatter.format(totalPrice)}$periodInfo';
   }

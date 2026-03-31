@@ -5,12 +5,11 @@ enum NotificationType {
   feedback,
   new_article,
   system,
+  payment,
+  interaction,
 }
 
-enum NotificationStatus {
-  READ,
-  UNREAD,
-}
+enum NotificationStatus { READ, UNREAD }
 
 class NotificationEntity extends BaseEntity {
   String? id;
@@ -51,24 +50,19 @@ class NotificationEntity extends BaseEntity {
     body = json['content'];
     message = json['message'] ?? json['content'];
     type = _parseNotificationType(json['type']);
-    data = json['data'] != null
-        ? Map<String, dynamic>.from(json['data'])
-        : null;
-    status = json['status'] != null
-        ? NotificationStatus.values.firstWhere(
-            (e) => e.toString() == 'NotificationStatus.${json['status']}',
-            orElse: () => NotificationStatus.UNREAD,
-          )
-        : NotificationStatus.UNREAD;
-    sentAt = json['sentAt'] != null
-        ? DateTime.parse(json['sentAt'])
-        : null;
-    createdAt = json['createdAt'] != null
-        ? DateTime.parse(json['createdAt'])
-        : null;
-    readAt = json['readAt'] != null 
-        ? DateTime.parse(json['readAt']) 
-        : null;
+    data =
+        json['data'] != null ? Map<String, dynamic>.from(json['data']) : null;
+    status =
+        json['status'] != null
+            ? NotificationStatus.values.firstWhere(
+              (e) => e.toString() == 'NotificationStatus.${json['status']}',
+              orElse: () => NotificationStatus.UNREAD,
+            )
+            : NotificationStatus.UNREAD;
+    sentAt = json['sentAt'] != null ? DateTime.parse(json['sentAt']) : null;
+    createdAt =
+        json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null;
+    readAt = json['readAt'] != null ? DateTime.parse(json['readAt']) : null;
     userId = json['userId']?.toString();
     imageUrl = json['imageUrl'];
     actionUrl = json['actionUrl'];
@@ -77,9 +71,9 @@ class NotificationEntity extends BaseEntity {
 
   NotificationType _parseNotificationType(dynamic typeValue) {
     if (typeValue == null) return NotificationType.system;
-    
+
     final typeString = typeValue.toString().toLowerCase();
-    
+
     switch (typeString) {
       case 'ebook':
         return NotificationType.ebook;
@@ -89,6 +83,10 @@ class NotificationEntity extends BaseEntity {
         return NotificationType.new_article;
       case 'system':
         return NotificationType.system;
+      case 'payment':
+        return NotificationType.payment;
+      case 'interaction':
+        return NotificationType.interaction;
       default:
         return NotificationType.system;
     }

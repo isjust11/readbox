@@ -10,10 +10,11 @@ import 'package:readbox/utils/navigator.dart';
 import 'package:readbox/utils/shared_preference.dart';
 
 class Network {
-  static const int DEFAULT_TIMEOUT = 15000;
+  static int get DEFAULT_TIMEOUT => ApiConstant.apiTimeout;
   static BaseOptions options = BaseOptions(
     connectTimeout: DEFAULT_TIMEOUT,
     receiveTimeout: DEFAULT_TIMEOUT,
+    sendTimeout: DEFAULT_TIMEOUT, // Added sendTimeout as well
     baseUrl: ApiConstant.apiHost,
   );
   static final Dio _dio = Dio(options);

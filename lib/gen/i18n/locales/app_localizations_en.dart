@@ -2209,4 +2209,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reset_password_success => 'Reset password success';
+
+  @override
+  String get year => 'Year';
+
+  @override
+  String get month => 'Month';
 }

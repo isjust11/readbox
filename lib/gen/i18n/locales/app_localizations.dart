@@ -4341,6 +4341,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset password success'**
   String get reset_password_success;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
 }
 
 class _AppLocalizationsDelegate

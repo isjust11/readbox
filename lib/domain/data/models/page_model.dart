@@ -6,11 +6,10 @@ class PageModel {
   final String? metaTitle;
   final String? metaDescription;
   final String? thumbnail;
-  // final String? createdBy;
-  // final String? updatedBy;
   final bool isActive;
   final String createdAt;
   final String updatedAt;
+  final String? linkPages;
 
   PageModel({
     required this.id,
@@ -20,11 +19,10 @@ class PageModel {
     required this.metaTitle,
     required this.metaDescription,
     required this.thumbnail,
-    // required this.createdBy,
-    // required this.updatedBy,
     required this.isActive,
     required this.createdAt,
     required this.updatedAt,
+    this.linkPages,
   });
 
   factory PageModel.fromJson(Map<String, dynamic> map) {
@@ -36,8 +34,7 @@ class PageModel {
       metaTitle: map['metaTitle'],
       metaDescription: map['metaDescription'],
       thumbnail: map['thumbnail'],
-      // createdBy: map['createdBy'],
-      // updatedBy: map['updatedBy'],
+      linkPages: map['linkPages'],
       isActive: map['isActive'],
       createdAt: map['createdAt'],
       updatedAt: map['updatedAt'],
@@ -53,8 +50,7 @@ class PageModel {
       'metaTitle': metaTitle,
       'metaDescription': metaDescription,
       'thumbnail': thumbnail,
-      // 'createdBy': createdBy,
-      // 'updatedBy': updatedBy,
+      'linkPages': linkPages,
       'isActive': isActive,
       'createdAt': createdAt,
       'updatedAt': updatedAt,

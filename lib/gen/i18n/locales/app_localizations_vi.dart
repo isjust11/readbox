@@ -2212,4 +2212,10 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get reset_password_success => 'Đặt lại mật khẩu thành công';
+
+  @override
+  String get year => 'Năm';
+
+  @override
+  String get month => 'Tháng';
 }

@@ -5,15 +5,13 @@ import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/blocs/page_cubit.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:readbox/utils/html_style_helper.dart';
-import 'package:readbox/utils/html_content_processor.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/injection_container.dart';
 
 class PrivacySecurityScreen extends StatelessWidget {
   const PrivacySecurityScreen({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -23,19 +21,45 @@ class PrivacySecurityScreen extends StatelessWidget {
   }
 }
 
-class PrivacySecurityBody extends StatelessWidget {
+class PrivacySecurityBody extends StatefulWidget {
   const PrivacySecurityBody({super.key});
 
   @override
+  State<PrivacySecurityBody> createState() => _PrivacySecurityBodyState();
+}
+
+class _PrivacySecurityBodyState extends State<PrivacySecurityBody> {
+  WebViewController? _webViewController;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<PageCubit>().getPageBySlug('privateAndSecurity');
+  }
+
+  void _initWebView(String linkPages) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    _webViewController =
+        WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..setBackgroundColor(isDark ? const Color(0xFF1a1a1a) : Colors.white)
+          ..setNavigationDelegate(
+            NavigationDelegate(
+              onPageFinished: (_) {
+                if (mounted) setState(() => _isLoading = false);
+              },
+            ),
+          )
+          ..loadRequest(Uri.parse(linkPages));
+  }
+
+  @override
   Widget build(BuildContext context) {
-    context.read<PageCubit>().getPageBySlug('securityandpravicy');
     return BaseScreen(
       title: AppLocalizations.current.privacy_and_security,
       colorTitle: Theme.of(context).colorScheme.surfaceContainerHighest,
-      // stateWidget: CustomLoading<PageCubit>(
-      //   message: AppLocalizations.current.loading,
-      //   size: AppDimens.SIZE_32,
-      // ),
       body: _buildBody(context),
       colorBg: Theme.of(context).colorScheme.surface,
     );
@@ -46,37 +70,38 @@ class PrivacySecurityBody extends StatelessWidget {
       bloc: context.read<PageCubit>(),
       builder: (context, state) {
         if (state is LoadedState) {
-          final rawContent = state.data.content ?? '';
+          final linkPages = state.data.linkPages ?? '';
 
-          // Process HTML content to handle encoded entities and code blocks
-          final processedContent = HtmlContentProcessor.processHtmlContent(
-            rawContent,
-          );
-
-          if (processedContent.isEmpty) {
+          if (linkPages.isEmpty) {
             return Center(
               child: Text(
                 AppLocalizations.current.no_content_to_display,
-                style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.colorTitle),
+                style: TextStyle(
+                  fontSize: 16,
+                  color:
+                      Theme.of(context).textTheme.bodyMedium?.color ??
+                      AppColors.colorTitle,
+                ),
               ),
             );
           }
 
-          return SingleChildScrollView(
-            physics: const ScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Html(
-              data: processedContent,
-              style: HtmlStyleHelper.getNewsContentStyle(),
-            ),
+          if (_webViewController == null) {
+            _initWebView(linkPages);
+          }
+
+          return Stack(
+            children: [
+              if (_webViewController != null)
+                WebViewWidget(controller: _webViewController!),
+              if (_isLoading) const Center(child: CircularProgressIndicator()),
+            ],
           );
         }
         if (state is ErrorState) {
-          return Center(
-            child: Text(state.data.toString()),
-          );
+          return Center(child: Text(state.data.toString()));
         }
-        return const SizedBox.shrink();
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

@@ -14,6 +14,7 @@ import 'package:readbox/routes.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:light_dark_theme_toggle/light_dark_theme_toggle.dart';
 import 'package:readbox/domain/data/models/models.dart';
+
 class SettingScreen extends StatefulWidget {
   final UserModel? user;
   const SettingScreen({super.key, this.user});
@@ -203,7 +204,7 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-   // Build setting readbook section
+  // Build setting readbook section
   Widget _buildUsageAndPayment(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
@@ -317,11 +318,15 @@ class _SettingScreenState extends State<SettingScreen> {
             trailing: LightDarkThemeToggle(
               color: Theme.of(context).primaryColor,
               themeIconType: ThemeIconType.expand,
-              highlightColor: Theme.of(context).primaryColor.withValues(alpha: 0.5),
+              highlightColor: Theme.of(
+                context,
+              ).primaryColor.withValues(alpha: 0.5),
 
               value: context.read<ThemeCubit>().state == 'light',
               onChanged: (value) {
-                context.read<ThemeCubit>().changeTheme(value ? 'light' : 'dark');
+                context.read<ThemeCubit>().changeTheme(
+                  value ? 'light' : 'dark',
+                );
               },
             ),
           ),
@@ -335,7 +340,7 @@ class _SettingScreenState extends State<SettingScreen> {
               onChanged: (value) async {
                 final fcmService = FCMService();
                 final success = await fcmService.toggleNotifications(value);
-                
+
                 if (success) {
                   setState(() {
                     _notificationsEnabled = value;
@@ -345,7 +350,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   setState(() {
                     _notificationsEnabled = false;
                   });
-                  
+
                   if (mounted) {
                     // Hiển thị dialog hướng dẫn user vào Settings
                     _showPermissionDeniedDialog();
@@ -387,20 +392,6 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       child: Column(
         children: [
-          _buildSettingItem(
-            icon: Icons.help_outline,
-            title: AppLocalizations.current.helpCenter,
-            subtitle: AppLocalizations.current.getHelpAndSupport,
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              size: AppDimens.SIZE_16,
-              color: Theme.of(context).primaryColor,
-            ),
-            onTap: () {
-              Navigator.of(context).pushNamed(Routes.supportCenterScreen);
-            },
-          ),
-          _buildDivider(),
           _buildSettingItem(
             icon: Icons.feedback,
             title: AppLocalizations.current.sendFeedback,
@@ -599,24 +590,27 @@ class _SettingScreenState extends State<SettingScreen> {
   void _showPermissionDeniedDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Notification Permission Required'),
-        content: Text('Please enable notifications in your device settings to receive notifications from ReadBox.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.current.cancel),
+      builder:
+          (context) => AlertDialog(
+            title: Text('Notification Permission Required'),
+            content: Text(
+              'Please enable notifications in your device settings to receive notifications from ReadBox.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(AppLocalizations.current.cancel),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  // TODO: Mở Settings app (cần package như app_settings)
+                  // AppSettings.openAppSettings();
+                },
+                child: Text('Open Settings'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              // TODO: Mở Settings app (cần package như app_settings)
-              // AppSettings.openAppSettings();
-            },
-            child: Text('Open Settings'),
-          ),
-        ],
-      ),
     );
   }
 }
