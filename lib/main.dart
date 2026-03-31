@@ -14,6 +14,7 @@ import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/services/fcm_service.dart';
 import 'injection_container.dart' as di;
 import 'ui/app.dart';
+import 'services/revenuecat_service.dart';
 import 'utils/language_detector.dart';
 import 'utils/shared_preference.dart';
 import 'utils/tts_lock_screen_controller.dart';
@@ -33,6 +34,7 @@ String _languageFromSystemLocale() {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
+  RevenueCatService.instance.init();
   ApiConstant().init();
   await initLanguageDetector();
   await di.init();

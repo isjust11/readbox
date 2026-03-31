@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +16,7 @@ import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/screen/settings/page/payment_webview_screen.dart';
 import 'package:readbox/ui/screen/settings/page/payment_result_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 
 class SubscriptionPlanScreen extends StatefulWidget {
   const SubscriptionPlanScreen({super.key});
@@ -829,6 +832,19 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
       await context.read<SubscriptionPlanCubit>().createSubscriptionPlan(
         plan.id!,
       );
+      return;
+    }
+
+    if (Platform.isIOS) {
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const PaywallView(),
+        ),
+      );
+      // Lấy trạng thái mới nhất để refresh
+      if (context.mounted) {
+         context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
+      }
       return;
     }
 

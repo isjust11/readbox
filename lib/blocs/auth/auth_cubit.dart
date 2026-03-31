@@ -6,6 +6,7 @@ import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/utils/shared_preference.dart';
+import 'package:readbox/services/revenuecat_service.dart';
 
 class AuthCubit extends Cubit<BaseState> {
   final AuthRepository repository;
@@ -36,6 +37,10 @@ class AuthCubit extends Cubit<BaseState> {
       //save secure storage
       await BiometricAuthService.storeCredentials(username!, password!);
 
+      if (userModel.user != null && userModel.user!.id != null) {
+        RevenueCatService.instance.login(userModel.user!.id.toString());
+      }
+
       emit(LoadedState(userModel));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -51,6 +56,7 @@ class AuthCubit extends Cubit<BaseState> {
 
       // Xóa preferences (non-sensitive data)
       await SharedPreferenceUtil.clearData();
+      await RevenueCatService.instance.logout();
 
       emit(LoadedState(null));
     } catch (e) {
@@ -62,6 +68,9 @@ class AuthCubit extends Cubit<BaseState> {
     try {
       emit(LoadingState());
       final profile = await repository.getProfile();
+      if (profile != null && profile.id != null) {
+        RevenueCatService.instance.login(profile.id.toString());
+      }
       emit(LoadedState(profile));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -194,6 +203,10 @@ class AuthCubit extends Cubit<BaseState> {
       // Lưu thông tin social login cho sinh trắc học
       await BiometricAuthService.storeSocialLoginInfo(socialData);
 
+      if (authModel.user != null && authModel.user!.id != null) {
+        RevenueCatService.instance.login(authModel.user!.id.toString());
+      }
+
       emit(LoadedState(authModel));
     } catch (e) {
       String errorMessage = BlocUtils.getMessageError(e);
@@ -224,6 +237,10 @@ class AuthCubit extends Cubit<BaseState> {
 
       // Lưu thông tin social login cho sinh trắc học
       await BiometricAuthService.storeSocialLoginInfo(socialData);
+
+      if (authModel.user != null && authModel.user!.id != null) {
+        RevenueCatService.instance.login(authModel.user!.id.toString());
+      }
 
       emit(LoadedState(authModel));
     } catch (e) {
@@ -257,6 +274,10 @@ class AuthCubit extends Cubit<BaseState> {
         if (fcmToken != null) "fcmToken": fcmToken,
       });
 
+      if (authModel.user != null && authModel.user!.id != null) {
+        RevenueCatService.instance.login(authModel.user!.id.toString());
+      }
+
       emit(LoadedState(authModel));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -284,6 +305,10 @@ class AuthCubit extends Cubit<BaseState> {
           }
 
           AuthenModel authModel = await repository.mobileSocialLogin(loginData);
+
+          if (authModel.user != null && authModel.user!.id != null) {
+            RevenueCatService.instance.login(authModel.user!.id.toString());
+          }
 
           emit(LoadedState(authModel));
         } else {
