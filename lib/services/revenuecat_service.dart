@@ -1,4 +1,4 @@
-
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,10 +17,15 @@ class RevenueCatService {
 
   Future<void> init() async {
     try {
-      final apiKey = dotenv.env['REVENUECAT_KEY'];
+      final apiKey =
+          Platform.isIOS
+              ? dotenv.env['REVENUECAT_IOS_KEY']
+              : dotenv.env['REVENUECAT_ANDROID_KEY'];
       if (apiKey == null || apiKey.isEmpty) {
         if (kDebugMode) {
-          print('RevenueCat API Key is missing in .env');
+          print(
+            'RevenueCat API Key is missing in .env for ${Platform.operatingSystem}',
+          );
         }
         return;
       }
@@ -29,14 +34,11 @@ class RevenueCatService {
 
       // Initialize RevenueCat configuration
       PurchasesConfiguration configuration;
-      
-      // Usually you differentiate between iOS and Android. 
-      // If you use the same key for both, just pass it.
-      // If you only plan to fix this on iOS first, it will configure for iOS when running iOS.
+
       configuration = PurchasesConfiguration(apiKey);
-      
+
       await Purchases.configure(configuration);
-      
+
       if (kDebugMode) {
         print('RevenueCat initialized successfully');
       }
