@@ -284,7 +284,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                           Text(
                             plan.isFree
                                 ? AppLocalizations.current.free
-                                : plan.priceDisplay,
+                                : '\$\$\$',
                             style: TextStyle(
                               fontSize: 11,
                               color:
@@ -408,37 +408,6 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                           ),
                         ),
                       ),
-                      // badge discount by selected duration months
-                      if (_selectedDurationMonths != 1) ...[
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.red.withValues(alpha: 0.8),
-                                Colors.red,
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: Text(
-                            _selectedDurationMonths == 3
-                                ? '-10%'
-                                : _selectedDurationMonths == 6
-                                ? '-15%'
-                                : _selectedDurationMonths == 12
-                                ? '-20%'
-                                : '',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
                     ],
                   ),
 
@@ -456,104 +425,11 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 ],
 
                 const SizedBox(height: 12),
-                if (!plan.isFree) ...[
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    margin: const EdgeInsets.only(bottom: 4),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.7),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      children:
-                          [1, 3, 6, 12].map((months) {
-                            final isSelected =
-                                _selectedDurationMonths == months;
-                            String label =
-                                months == 12
-                                    ? '1 ${AppLocalizations.current.year}'
-                                    : '$months ${AppLocalizations.current.month}';
-                            String discountText = '';
-                            // if (months == 3) discountText = 'Giảm 10%';
-                            // if (months == 6) discountText = 'Giảm 15%';
-                            // if (months == 12) discountText = 'Tiết kiệm 20%';
-
-                            return Expanded(
-                              child: GestureDetector(
-                                onTap:
-                                    () => setState(
-                                      () => _selectedDurationMonths = months,
-                                    ),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 4,
-                                    horizontal: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        isSelected
-                                            ? theme.colorScheme.primary
-                                                .withValues(alpha: 0.8)
-                                            : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        label,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight:
-                                              isSelected
-                                                  ? FontWeight.w600
-                                                  : FontWeight.w500,
-                                          color:
-                                              isSelected
-                                                  ? theme
-                                                      .colorScheme
-                                                      .onSecondary
-                                                  : theme
-                                                      .colorScheme
-                                                      .onSecondary
-                                                      .withValues(alpha: 0.7),
-                                        ),
-                                      ),
-                                      if (discountText.isNotEmpty) ...[
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          discountText,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color:
-                                                isSelected
-                                                    ? theme.colorScheme.primary
-                                                        .withValues(alpha: 0.7)
-                                                    : (theme
-                                                            .textTheme
-                                                            .bodySmall
-                                                            ?.color ??
-                                                        AppColors
-                                                            .textLightGrey),
-                                          ),
-                                        ),
-                                      ],
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                    ),
-                  ),
-                ],
-                if (plan.isFree) ...[
-                  Divider(
-                    height: 1,
-                    color: theme.dividerColor.withValues(alpha: 0.3),
-                  ),
-                  const SizedBox(height: 16),
-                ],
+                Divider(
+                  height: 1,
+                  color: theme.dividerColor.withValues(alpha: 0.3),
+                ),
+                const SizedBox(height: 16),
 
                 // Features
                 _buildFeatureItem(
@@ -803,30 +679,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
 
   String _getFormattedPrice(SubscriptionPlanModel plan) {
     if (plan.price == null || plan.price! <= 0) return '';
-    double basePrice = plan.price!;
-    double totalPrice = basePrice * _selectedDurationMonths;
-
-    if (_selectedDurationMonths == 3) {
-      totalPrice *= 0.90;
-    } else if (_selectedDurationMonths == 6) {
-      totalPrice *= 0.85;
-    } else if (_selectedDurationMonths == 12) {
-      totalPrice *= 0.80; // 20% discount
-    }
-
-    final formatter = NumberFormat.currency(
-      locale: 'vi_VN',
-      symbol: 'đ',
-      decimalDigits: 0,
-    );
-    String periodInfo =
-        _selectedDurationMonths == 12
-            ? '/1 ${AppLocalizations.current.year}'
-            : '/$_selectedDurationMonths ${AppLocalizations.current.month}';
-    if (_selectedDurationMonths == 1) {
-      periodInfo = '/${AppLocalizations.current.month}';
-    }
-    return '${formatter.format(totalPrice)}$periodInfo';
+    return '\$\$\$';
   }
 
   void _onSelectPlan(BuildContext context, SubscriptionPlanModel plan) async {
@@ -838,14 +691,12 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     }
 
     if (Platform.isIOS) {
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const PaywallView(),
-        ),
-      );
+      await Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => const PaywallView()));
       // Lấy trạng thái mới nhất để refresh
       if (context.mounted) {
-         context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
+        context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
       }
       return;
     }
