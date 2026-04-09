@@ -766,5 +766,9 @@
   "enter_confirm_new_password": "Enter confirm new password",
   "reset_password_success": "Reset password success",
   "year": "Year",
-  "month": "Month"
+  "month": "Month",
+  "delete_account": "Delete Account",
+  "delete_account_description": "Permanently delete your account and data",
+  "delete_account_confirm": "Are you sure you want to delete your account? This action cannot be undone and all data will be permanently removed.",
+  "delete_account_failed": "Account deletion failed"
 }

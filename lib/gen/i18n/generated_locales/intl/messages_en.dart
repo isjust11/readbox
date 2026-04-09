@@ -254,6 +254,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteNotificationSuccess": MessageLookupByLibrary.simpleMessage(
       "Delete notification successfully",
     ),
+    "delete_account": MessageLookupByLibrary.simpleMessage("Delete Account"),
+    "delete_account_confirm": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to delete your account? This action cannot be undone and all data will be permanently removed.",
+    ),
+    "delete_account_description": MessageLookupByLibrary.simpleMessage(
+      "Permanently delete your account and data",
+    ),
+    "delete_account_failed": MessageLookupByLibrary.simpleMessage(
+      "Account deletion failed",
+    ),
     "delete_book": MessageLookupByLibrary.simpleMessage("Delete book"),
     "delete_book_confirmation": m0,
     "delete_book_confirmation_message": MessageLookupByLibrary.simpleMessage(

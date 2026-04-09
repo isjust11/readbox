@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
@@ -14,6 +15,7 @@ import 'package:readbox/routes.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:light_dark_theme_toggle/light_dark_theme_toggle.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/utils/navigator.dart';
 
 class SettingScreen extends StatefulWidget {
   final UserModel? user;
@@ -72,11 +74,23 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return BaseScreen(
-      hideAppBar: true,
-      colorBg: theme.colorScheme.surface,
-      body: _buildLayoutSection(context, theme),
-      floatingButton: _buildFloatingButton(),
+    return BlocListener<AuthCubit, BaseState>(
+      listener: (context, state) {
+        if (state is LoadedState) {
+          final data = state.data;
+          if (data is Map && data['isDeleted'] == true) {
+            Navigator.of(
+              context,
+            ).pushNamedAndRemoveUntil(Routes.loginScreen, (route) => false);
+          }
+        }
+      },
+      child: BaseScreen(
+        hideAppBar: true,
+        colorBg: theme.colorScheme.surface,
+        body: _buildLayoutSection(context, theme),
+        floatingButton: _buildFloatingButton(),
+      ),
     );
   }
 
@@ -412,8 +426,47 @@ class _SettingScreenState extends State<SettingScreen> {
             subtitle: '${AppLocalizations.current.version} $_appVersion',
             trailing: SizedBox(),
           ),
+          _buildDivider(),
+          _buildSettingItem(
+            icon: Icons.person_remove_outlined,
+            title: AppLocalizations.current.delete_account,
+            subtitle: AppLocalizations.current.delete_account_description,
+            onTap: _showDeleteAccountConfirmation,
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: AppDimens.SIZE_16,
+              color: Colors.red,
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+  void _showDeleteAccountConfirmation() {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: Text(AppLocalizations.current.delete_account),
+            content: Text(AppLocalizations.current.delete_account_confirm),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(AppLocalizations.current.cancel),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.read<AuthCubit>().deleteAccount(
+                    widget.user?.id ?? '',
+                  );
+                },
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                child: Text(AppLocalizations.current.delete),
+              ),
+            ],
+          ),
     );
   }
 

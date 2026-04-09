@@ -6412,6 +6412,46 @@ class AppLocalizations {
   String get month {
     return Intl.message('Tháng', name: 'month', desc: '', args: []);
   }
+
+  /// `Xóa tài khoản`
+  String get delete_account {
+    return Intl.message(
+      'Xóa tài khoản',
+      name: 'delete_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa vĩnh viễn tài khoản và dữ liệu của bạn`
+  String get delete_account_description {
+    return Intl.message(
+      'Xóa vĩnh viễn tài khoản và dữ liệu của bạn',
+      name: 'delete_account_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác và tất cả dữ liệu sẽ bị xóa vĩnh viễn.`
+  String get delete_account_confirm {
+    return Intl.message(
+      'Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác và tất cả dữ liệu sẽ bị xóa vĩnh viễn.',
+      name: 'delete_account_confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa tài khoản thất bại`
+  String get delete_account_failed {
+    return Intl.message(
+      'Xóa tài khoản thất bại',
+      name: 'delete_account_failed',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

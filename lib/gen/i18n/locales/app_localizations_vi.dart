@@ -2218,4 +2218,18 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get month => 'Tháng';
+
+  @override
+  String get delete_account => 'Xóa tài khoản';
+
+  @override
+  String get delete_account_description =>
+      'Xóa vĩnh viễn tài khoản và dữ liệu của bạn';
+
+  @override
+  String get delete_account_confirm =>
+      'Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác và tất cả dữ liệu sẽ bị xóa vĩnh viễn.';
+
+  @override
+  String get delete_account_failed => 'Xóa tài khoản thất bại';
 }

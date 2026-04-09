@@ -86,18 +86,20 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Readbox cần truy cập Camera để bạn có thể chụp ảnh trực tiếp làm ảnh đại diện hoặc quét tài liệu PDF.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs access to photo library to select PDF and ebook files</string>
+	<string>Readbox cần truy cập thư viện ảnh để bạn có thể chọn ảnh đại diện từ máy và tải lên các tài liệu sách cá nhân.</string>
 	<key>NSDocumentsFolderUsageDescription</key>
-	<string>This app needs access to documents folder to find and import PDF and ebook files</string>
+	<string>Readbox cần truy cập thư mục tài liệu để tìm và nhập các file sách PDF, EPUB vào ứng dụng.</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>This app needs access to speech recognition for text-to-speech features</string>
+	<string>Readbox cần quyền nhận diện giọng nói để hỗ trợ tính năng tìm kiếm bằng giọng nói và điều khiển đọc sách.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>This app needs microphone access for text-to-speech features</string>
+	<string>Readbox cần truy cập Microphone để hỗ trợ bạn thực hiện các lệnh điều khiển bằng giọng nói.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>This app uses the local network to connect to the development tools when debugging from your computer.</string>
 	<key>NSBonjourServices</key>

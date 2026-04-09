@@ -174,6 +174,20 @@ PODS:
   - permission_handler_apple (9.3.0):
     - Flutter
   - PromisesObjC (2.4.0)
+  - purchases_flutter (9.15.1):
+    - Flutter
+    - PurchasesHybridCommon (= 17.53.0)
+  - purchases_ui_flutter (9.15.1):
+    - Flutter
+    - PurchasesHybridCommonUI (= 17.53.0)
+  - PurchasesHybridCommon (17.53.0):
+    - RevenueCat (= 5.66.0)
+  - PurchasesHybridCommonUI (17.53.0):
+    - PurchasesHybridCommon (= 17.53.0)
+    - RevenueCatUI (= 5.66.0)
+  - RevenueCat (5.66.0)
+  - RevenueCatUI (5.66.0):
+    - RevenueCat (= 5.66.0)
   - SDWebImage (5.21.5):
     - SDWebImage/Core (= 5.21.5)
   - SDWebImage/Core (5.21.5)
@@ -219,6 +233,8 @@ DEPENDENCIES:
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - pdfx (from `.symlinks/plugins/pdfx/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - purchases_flutter (from `.symlinks/plugins/purchases_flutter/ios`)
+  - purchases_ui_flutter (from `.symlinks/plugins/purchases_ui_flutter/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
@@ -249,6 +265,10 @@ SPEC REPOS:
     - GTMSessionFetcher
     - nanopb
     - PromisesObjC
+    - PurchasesHybridCommon
+    - PurchasesHybridCommonUI
+    - RevenueCat
+    - RevenueCatUI
     - SDWebImage
     - SwiftyGif
 
@@ -297,6 +317,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/pdfx/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
+  purchases_flutter:
+    :path: ".symlinks/plugins/purchases_flutter/ios"
+  purchases_ui_flutter:
+    :path: ".symlinks/plugins/purchases_ui_flutter/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
   shared_preferences_foundation:
@@ -355,6 +379,12 @@ SPEC CHECKSUMS:
   pdfx: 77f4dddc48361fbb01486fa2bdee4532cbb97ef3
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
+  purchases_flutter: eaa65afecf3a856e8729efceab7a01b8685e2eab
+  purchases_ui_flutter: a716603c97c961794aa03ed7bb734978e610fb45
+  PurchasesHybridCommon: 53d966ac5c39df13c3c759289bb3ef3e2f9f1622
+  PurchasesHybridCommonUI: c9ac2debefc5a098cfeca28bf05a9602eb49cb32
+  RevenueCat: a3cf721ad8b1b56a930d748a40342aba16c09bbb
+  RevenueCatUI: 1091be7f4e7eb6068bc0c78d470af3a2a19d3a49
   SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
   share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7

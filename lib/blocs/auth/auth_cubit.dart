@@ -5,6 +5,7 @@ import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/services/services.dart';
+import 'package:readbox/utils/navigator.dart';
 import 'package:readbox/utils/shared_preference.dart';
 import 'package:readbox/services/revenuecat_service.dart';
 
@@ -57,7 +58,6 @@ class AuthCubit extends Cubit<BaseState> {
       // Xóa preferences (non-sensitive data)
       await SharedPreferenceUtil.clearData();
       await RevenueCatService.instance.logout();
-
       emit(LoadedState(null));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -436,6 +436,27 @@ class AuthCubit extends Cubit<BaseState> {
       // Repository sẽ tự động lưu vào secure storage
       UserModel updatedUserModel = await repository.updateProfile(userModel);
       emit(LoadedState(updatedUserModel));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
+
+  Future deleteAccount(String userId) async {
+    try {
+      emit(LoadingState());
+      bool success = await repository.deleteAccount(userId);
+      if (success) {
+        // Xóa tất cả dữ liệu nhạy cảm từ secure storage
+        await _secureStorage.clearAllSecureData();
+        // Xóa preferences (non-sensitive data)
+        await SharedPreferenceUtil.clearData();
+        await RevenueCatService.instance.logout();
+
+        // Phát state báo hiệu đã xóa thành công để UI handle navigation
+        emit(LoadedState({'isDeleted': true}));
+      } else {
+        emit(ErrorState(AppLocalizations.current.delete_account_failed));
+      }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }

@@ -261,6 +261,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "deleteNotificationSuccess": MessageLookupByLibrary.simpleMessage(
       "Xóa thông báo thành công",
     ),
+    "delete_account": MessageLookupByLibrary.simpleMessage("Xóa tài khoản"),
+    "delete_account_confirm": MessageLookupByLibrary.simpleMessage(
+      "Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác và tất cả dữ liệu sẽ bị xóa vĩnh viễn.",
+    ),
+    "delete_account_description": MessageLookupByLibrary.simpleMessage(
+      "Xóa vĩnh viễn tài khoản và dữ liệu của bạn",
+    ),
+    "delete_account_failed": MessageLookupByLibrary.simpleMessage(
+      "Xóa tài khoản thất bại",
+    ),
     "delete_book": MessageLookupByLibrary.simpleMessage("Xóa sách"),
     "delete_book_confirmation": m0,
     "delete_book_confirmation_message": MessageLookupByLibrary.simpleMessage(

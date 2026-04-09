@@ -2215,4 +2215,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get month => 'Month';
+
+  @override
+  String get delete_account => 'Delete Account';
+
+  @override
+  String get delete_account_description =>
+      'Permanently delete your account and data';
+
+  @override
+  String get delete_account_confirm =>
+      'Are you sure you want to delete your account? This action cannot be undone and all data will be permanently removed.';
+
+  @override
+  String get delete_account_failed => 'Account deletion failed';
 }

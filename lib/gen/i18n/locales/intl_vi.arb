@@ -789,5 +789,9 @@
   "enter_confirm_new_password": "Nhập lại mật khẩu mới",
   "reset_password_success": "Đặt lại mật khẩu thành công",
   "year": "Năm",
-  "month": "Tháng"
+  "month": "Tháng",
+  "delete_account": "Xóa tài khoản",
+  "delete_account_description": "Xóa vĩnh viễn tài khoản và dữ liệu của bạn",
+  "delete_account_confirm": "Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác và tất cả dữ liệu sẽ bị xóa vĩnh viễn.",
+  "delete_account_failed": "Xóa tài khoản thất bại"
 }

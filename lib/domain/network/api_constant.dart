@@ -72,6 +72,7 @@ class ApiConstant {
   static final refreshToken = "auth/refresh-token";
   static final forgotPassword = "auth/forgot-password";
   static final resetPassword = "auth/reset-password";
+  static final deleteAccount = "auth/delete-account";
   static final getMedia = "media";
   static final getPage = "pages";
   // Book endpoints

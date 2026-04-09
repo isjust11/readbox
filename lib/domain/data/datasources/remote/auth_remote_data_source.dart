@@ -119,4 +119,14 @@ class AuthRemoteDataSource {
     }
     return Future.error(apiResponse.errMessage);
   }
+
+  Future<bool> deleteAccount(String userId) async {
+    ApiResponse apiResponse = await network.delete(
+      url: '${ApiConstant.apiHost}${ApiConstant.deleteAccount}/$userId',
+    );
+    if (apiResponse.isSuccess) {
+      return true;
+    }
+    return Future.error(apiResponse.errMessage);
+  }
 }

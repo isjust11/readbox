@@ -74,4 +74,8 @@ class AuthRepository {
     await localDataSource.saveUserInfo(userModel);
     return userModel;
   }
+
+  Future<bool> deleteAccount(String userId) async {
+    return await remoteDataSource.deleteAccount(userId);
+  }
 }
