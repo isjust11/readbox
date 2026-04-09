@@ -3,6 +3,7 @@ import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 
 class SubscriptionPlanCubit extends Cubit<BaseState> {
   final SubscriptionRepository repository;
@@ -34,6 +35,16 @@ class SubscriptionPlanCubit extends Cubit<BaseState> {
       emit(LoadingState());
       final usage = await repository.checkUsage();
       emit(LoadedState<Map<String, bool>>(usage));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
+
+  Future<void> restorePurchases() async {
+    try {
+      emit(LoadingState());
+      await repository.restorePurchases();
+      emit(LoadedState<String>(AppLocalizations.current.restore_purchases_success));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }

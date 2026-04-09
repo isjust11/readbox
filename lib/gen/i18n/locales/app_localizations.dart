@@ -4377,6 +4377,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Account deletion failed'**
   String get delete_account_failed;
+
+  /// No description provided for @restore_purchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore Purchases'**
+  String get restore_purchases;
+
+  /// No description provided for @restore_purchases_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchases restored successfully'**
+  String get restore_purchases_success;
+
+  /// No description provided for @terms_of_use.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Use'**
+  String get terms_of_use;
+
+  /// No description provided for @privacy_policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacy_policy;
+
+  /// No description provided for @subscription_disclosure.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period. Account will be charged for renewal within 24-hours prior to the end of the current period.'**
+  String get subscription_disclosure;
 }
 
 class _AppLocalizationsDelegate

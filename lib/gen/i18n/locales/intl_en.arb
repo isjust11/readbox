@@ -770,5 +770,10 @@
   "delete_account": "Delete Account",
   "delete_account_description": "Permanently delete your account and data",
   "delete_account_confirm": "Are you sure you want to delete your account? This action cannot be undone and all data will be permanently removed.",
-  "delete_account_failed": "Account deletion failed"
+  "delete_account_failed": "Account deletion failed",
+  "restore_purchases": "Restore Purchases",
+  "restore_purchases_success": "Purchases restored successfully",
+  "terms_of_use": "Terms of Use",
+  "privacy_policy": "Privacy Policy",
+  "subscription_disclosure": "Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period. Account will be charged for renewal within 24-hours prior to the end of the current period."
 }

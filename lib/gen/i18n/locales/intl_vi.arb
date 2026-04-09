@@ -793,5 +793,10 @@
   "delete_account": "Xóa tài khoản",
   "delete_account_description": "Xóa vĩnh viễn tài khoản và dữ liệu của bạn",
   "delete_account_confirm": "Bạn có chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác và tất cả dữ liệu sẽ bị xóa vĩnh viễn.",
-  "delete_account_failed": "Xóa tài khoản thất bại"
+  "delete_account_failed": "Xóa tài khoản thất bại",
+  "restore_purchases": "Khôi phục giao dịch",
+  "restore_purchases_success": "Khôi phục giao dịch thành công",
+  "terms_of_use": "Điều khoản sử dụng",
+  "privacy_policy": "Chính sách bảo mật",
+  "subscription_disclosure": "Gói đăng ký sẽ tự động gia hạn trừ khi tính năng tự động gia hạn được tắt ít nhất 24 giờ trước khi kết thúc giai đoạn hiện tại. Tài khoản sẽ bị tính phí gia hạn trong vòng 24 giờ trước khi kết thúc giai đoạn hiện tại."
 }

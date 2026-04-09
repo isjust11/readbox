@@ -1085,6 +1085,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacy_and_security": MessageLookupByLibrary.simpleMessage(
       "Quyền riêng tư và bảo mật",
     ),
+    "privacy_policy": MessageLookupByLibrary.simpleMessage(
+      "Chính sách bảo mật",
+    ),
     "private": MessageLookupByLibrary.simpleMessage("Riêng tư"),
     "private_books": MessageLookupByLibrary.simpleMessage("Sách riêng tư"),
     "pro": MessageLookupByLibrary.simpleMessage("PRO"),
@@ -1155,6 +1158,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_password": MessageLookupByLibrary.simpleMessage("Đặt lại mật khẩu"),
     "reset_password_success": MessageLookupByLibrary.simpleMessage(
       "Đặt lại mật khẩu thành công",
+    ),
+    "restore_purchases": MessageLookupByLibrary.simpleMessage(
+      "Khôi phục giao dịch",
+    ),
+    "restore_purchases_success": MessageLookupByLibrary.simpleMessage(
+      "Khôi phục giao dịch thành công",
     ),
     "result": MessageLookupByLibrary.simpleMessage("Kết quả"),
     "result_from_gemini": MessageLookupByLibrary.simpleMessage(
@@ -1239,6 +1248,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "storage_usage": MessageLookupByLibrary.simpleMessage("Dung Lượng Lưu Trữ"),
     "submit_rating": MessageLookupByLibrary.simpleMessage("Gửi đánh giá"),
     "subscriptionPlans": MessageLookupByLibrary.simpleMessage("Gói dịch vụ"),
+    "subscription_disclosure": MessageLookupByLibrary.simpleMessage(
+      "Gói đăng ký sẽ tự động gia hạn trừ khi tính năng tự động gia hạn được tắt ít nhất 24 giờ trước khi kết thúc giai đoạn hiện tại. Tài khoản sẽ bị tính phí gia hạn trong vòng 24 giờ trước khi kết thúc giai đoạn hiện tại.",
+    ),
     "subscription_period": MessageLookupByLibrary.simpleMessage(
       "Chu Kỳ Đăng Ký",
     ),
@@ -1252,6 +1264,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tap_to_rate": MessageLookupByLibrary.simpleMessage("Nhấn để đánh giá"),
     "tap_to_view": MessageLookupByLibrary.simpleMessage("Chạm để xem"),
+    "terms_of_use": MessageLookupByLibrary.simpleMessage("Điều khoản sử dụng"),
     "testNotification": MessageLookupByLibrary.simpleMessage(
       "Kiểm tra thông báo",
     ),

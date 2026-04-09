@@ -17,6 +17,7 @@ import 'package:readbox/ui/screen/settings/page/payment_webview_screen.dart';
 import 'package:readbox/ui/screen/settings/page/payment_result_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
+import 'package:readbox/routes.dart';
 
 class SubscriptionPlanScreen extends StatefulWidget {
   const SubscriptionPlanScreen({super.key});
@@ -208,12 +209,33 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
 
                 // Selected plan detail card
                 _buildPlanDetail(context, selectedPlan, isCurrent),
+                const SizedBox(height: 12),
+
+                // Restore Purchases for iOS
+                if (Platform.isIOS)
+                  Center(
+                    child: TextButton(
+                      onPressed:
+                          () =>
+                              context
+                                  .read<SubscriptionPlanCubit>()
+                                  .restorePurchases(),
+                      child: Text(
+                        AppLocalizations.current.restore_purchases,
+                        style: TextStyle(
+                          color: theme.colorScheme.primary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+
                 const SizedBox(height: 24),
 
-                // if (!selectedPlan.isFree) ...[
-                //   _buildDurationSelector(context, selectedPlan),
-                //   const SizedBox(height: 24),
-                // ],
+                // Compliance Footer (Privacy & Terms)
+                _buildComplianceFooter(context),
+                const SizedBox(height: 32),
               ],
             ),
           ),
@@ -222,6 +244,68 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         // Bottom CTA
         _buildBottomCTA(context, selectedPlan, isCurrent),
       ],
+    );
+  }
+
+  Widget _buildComplianceFooter(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            AppLocalizations.current.subscription_disclosure,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 11,
+              color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+              height: 1.4,
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildFooterLink(
+              context,
+              AppLocalizations.current.privacy_policy,
+              () => Navigator.pushNamed(context, Routes.privacySecurityScreen),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 8),
+              width: 1,
+              height: 12,
+              color: theme.dividerColor,
+            ),
+            _buildFooterLink(context, AppLocalizations.current.terms_of_use, () {
+              // Giả sử có slug termsOfUse hoặc dùng chung privacySecurityScreen với logic khác
+              // Ở đây dùng tạm privacySecurityScreen để demo
+              Navigator.pushNamed(context, Routes.privacySecurityScreen);
+            }),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFooterLink(
+    BuildContext context,
+    String label,
+    VoidCallback onTap,
+  ) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 12,
+          color: theme.colorScheme.primary,
+          fontWeight: FontWeight.w500,
+          decoration: TextDecoration.underline,
+        ),
+      ),
     );
   }
 

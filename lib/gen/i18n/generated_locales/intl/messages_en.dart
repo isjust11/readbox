@@ -1030,6 +1030,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "privacy_and_security": MessageLookupByLibrary.simpleMessage(
       "Privacy and security",
     ),
+    "privacy_policy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "private": MessageLookupByLibrary.simpleMessage("Private"),
     "private_books": MessageLookupByLibrary.simpleMessage("Private books"),
     "pro": MessageLookupByLibrary.simpleMessage("PRO"),
@@ -1100,6 +1101,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_password": MessageLookupByLibrary.simpleMessage("Reset password"),
     "reset_password_success": MessageLookupByLibrary.simpleMessage(
       "Reset password success",
+    ),
+    "restore_purchases": MessageLookupByLibrary.simpleMessage(
+      "Restore Purchases",
+    ),
+    "restore_purchases_success": MessageLookupByLibrary.simpleMessage(
+      "Purchases restored successfully",
     ),
     "result": MessageLookupByLibrary.simpleMessage("Result"),
     "result_from_gemini": MessageLookupByLibrary.simpleMessage(
@@ -1182,6 +1189,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscriptionPlans": MessageLookupByLibrary.simpleMessage(
       "Subscription plans",
     ),
+    "subscription_disclosure": MessageLookupByLibrary.simpleMessage(
+      "Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period. Account will be charged for renewal within 24-hours prior to the end of the current period.",
+    ),
     "subscription_period": MessageLookupByLibrary.simpleMessage(
       "Subscription Period",
     ),
@@ -1195,6 +1205,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tap_to_rate": MessageLookupByLibrary.simpleMessage("Tap to rate"),
     "tap_to_view": MessageLookupByLibrary.simpleMessage("Tap to view"),
+    "terms_of_use": MessageLookupByLibrary.simpleMessage("Terms of Use"),
     "testNotification": MessageLookupByLibrary.simpleMessage(
       "Test Notification",
     ),

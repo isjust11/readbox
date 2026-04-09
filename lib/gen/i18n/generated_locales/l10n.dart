@@ -6452,6 +6452,56 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Khôi phục giao dịch`
+  String get restore_purchases {
+    return Intl.message(
+      'Khôi phục giao dịch',
+      name: 'restore_purchases',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Khôi phục giao dịch thành công`
+  String get restore_purchases_success {
+    return Intl.message(
+      'Khôi phục giao dịch thành công',
+      name: 'restore_purchases_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Điều khoản sử dụng`
+  String get terms_of_use {
+    return Intl.message(
+      'Điều khoản sử dụng',
+      name: 'terms_of_use',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chính sách bảo mật`
+  String get privacy_policy {
+    return Intl.message(
+      'Chính sách bảo mật',
+      name: 'privacy_policy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gói đăng ký sẽ tự động gia hạn trừ khi tính năng tự động gia hạn được tắt ít nhất 24 giờ trước khi kết thúc giai đoạn hiện tại. Tài khoản sẽ bị tính phí gia hạn trong vòng 24 giờ trước khi kết thúc giai đoạn hiện tại.`
+  String get subscription_disclosure {
+    return Intl.message(
+      'Gói đăng ký sẽ tự động gia hạn trừ khi tính năng tự động gia hạn được tắt ít nhất 24 giờ trước khi kết thúc giai đoạn hiện tại. Tài khoản sẽ bị tính phí gia hạn trong vòng 24 giờ trước khi kết thúc giai đoạn hiện tại.',
+      name: 'subscription_disclosure',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

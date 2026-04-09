@@ -90,4 +90,18 @@ class RevenueCatService {
       return false;
     }
   }
+
+  Future<void> restorePurchases() async {
+    try {
+      await Purchases.restorePurchases();
+      if (kDebugMode) {
+        print('RevenueCat: Purchases restored');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error restoring purchases: $e');
+      }
+      rethrow;
+    }
+  }
 }

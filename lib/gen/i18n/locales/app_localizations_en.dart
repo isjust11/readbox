@@ -2229,4 +2229,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get delete_account_failed => 'Account deletion failed';
+
+  @override
+  String get restore_purchases => 'Restore Purchases';
+
+  @override
+  String get restore_purchases_success => 'Purchases restored successfully';
+
+  @override
+  String get terms_of_use => 'Terms of Use';
+
+  @override
+  String get privacy_policy => 'Privacy Policy';
+
+  @override
+  String get subscription_disclosure =>
+      'Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period. Account will be charged for renewal within 24-hours prior to the end of the current period.';
 }

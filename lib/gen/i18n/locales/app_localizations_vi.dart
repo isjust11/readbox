@@ -2232,4 +2232,20 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get delete_account_failed => 'Xóa tài khoản thất bại';
+
+  @override
+  String get restore_purchases => 'Khôi phục giao dịch';
+
+  @override
+  String get restore_purchases_success => 'Khôi phục giao dịch thành công';
+
+  @override
+  String get terms_of_use => 'Điều khoản sử dụng';
+
+  @override
+  String get privacy_policy => 'Chính sách bảo mật';
+
+  @override
+  String get subscription_disclosure =>
+      'Gói đăng ký sẽ tự động gia hạn trừ khi tính năng tự động gia hạn được tắt ít nhất 24 giờ trước khi kết thúc giai đoạn hiện tại. Tài khoản sẽ bị tính phí gia hạn trong vòng 24 giờ trước khi kết thúc giai đoạn hiện tại.';
 }

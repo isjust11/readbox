@@ -1,5 +1,6 @@
 import 'package:readbox/domain/data/datasources/datasource.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/services/revenuecat_service.dart';
 
 class SubscriptionRepository {
   final SubscriptionRemoteDataSource remoteDataSource;
@@ -15,4 +16,8 @@ class SubscriptionRepository {
 
   Future<Map<String, bool>> checkUsage() async 
     => await remoteDataSource.checkUsage();
+
+  Future<void> restorePurchases() async {
+    await RevenueCatService.instance.restorePurchases();
+  }
 }
