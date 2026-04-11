@@ -1,4 +1,3 @@
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:readbox/config/google_signin_config.dart';
@@ -135,23 +134,6 @@ class SocialLoginService {
       // Cảnh báo nếu đang chạy trên simulator
       if (isSimulator) {
         print('⚠️ WARNING: Running on iOS Simulator');
-      }
-
-      // Chỉ yêu cầu App Tracking Transparency trên iOS 14+
-      // Android không hỗ trợ và sẽ trả về notSupported
-      if (Platform.isIOS) {
-        print('📱 iOS detected - Requesting tracking authorization...');
-        final status =
-            await AppTrackingTransparency.requestTrackingAuthorization();
-        print('📱 Tracking status: $status');
-        
-        // Trên iOS, nếu user từ chối tracking, vẫn cho phép đăng nhập
-        // nhưng có thể hạn chế một số tính năng analytics
-        if (status == TrackingStatus.denied || status == TrackingStatus.restricted) {
-          print('⚠️ User denied tracking, but login will continue');
-        }
-      } else {
-        print('🤖 Android detected - Skipping App Tracking Transparency');
       }
 
       // Thực hiện đăng nhập Facebook

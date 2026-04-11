@@ -1,6 +1,4 @@
 PODS:
-  - app_tracking_transparency (0.0.1):
-    - Flutter
   - AppAuth (1.7.6):
     - AppAuth/Core (= 1.7.6)
     - AppAuth/ExternalUserAgent (= 1.7.6)
@@ -211,7 +209,6 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
-  - app_tracking_transparency (from `.symlinks/plugins/app_tracking_transparency/ios`)
   - audio_service (from `.symlinks/plugins/audio_service/darwin`)
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
@@ -273,8 +270,6 @@ SPEC REPOS:
     - SwiftyGif
 
 EXTERNAL SOURCES:
-  app_tracking_transparency:
-    :path: ".symlinks/plugins/app_tracking_transparency/ios"
   audio_service:
     :path: ".symlinks/plugins/audio_service/darwin"
   audio_session:
@@ -337,7 +332,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
-  app_tracking_transparency: 3d84f147f67ca82d3c15355c36b1fa6b66ca7c92
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
   audio_service: aa99a6ba2ae7565996015322b0bb024e1d25c6fd
