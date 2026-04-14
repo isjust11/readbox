@@ -32,11 +32,19 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   bool _didInitSelectedIndex = false; // đã set index theo current plan chưa
   int _selectedDurationMonths = 1; // 1, 3, 6, 12
   Offerings? _offerings;
+  late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(viewportFraction: 0.45, initialPage: 0);
     _fetchOfferings();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchOfferings() async {
@@ -53,8 +61,9 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   }
 
   Package? _getPackageForPlan(SubscriptionPlanModel plan) {
-    if (_offerings == null || _offerings!.current == null || plan.isFree)
+    if (_offerings == null || _offerings!.current == null || plan.isFree) {
       return null;
+    }
     final currentOffering = _offerings!.current!;
 
     final code = plan.code.toUpperCase();
@@ -93,6 +102,16 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
               context,
               AppLocalizations.current.activationFreePlanSuccess,
             );
+            context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
+          }
+          // Restore purchases success
+          if (state is LoadedState<String>) {
+            _showMessage(context, state.data);
+            context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
+          }
+          // Error
+          if (state is ErrorState) {
+            _showMessage(context, state.data.toString(), isError: true);
             context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
           }
         },
@@ -164,9 +183,8 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         ),
       );
     }
-    if (state is ErrorState) {
-      return _buildError(context, state.data.toString());
-    }
+    // ErrorState được xử lý trong listener, giữ lại danh sách cũ
+    // không render error ở đây để tránh màn hình trắng
     if (state is LoadedState<List<SubscriptionPlanModel>>) {
       final plans = state.data;
       if (plans.isEmpty) return _buildEmpty(context);
@@ -183,42 +201,13 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         child: _buildPlanList(context, plans),
       );
     }
-    return const SizedBox.shrink();
-  }
-
-  Widget _buildError(BuildContext context, String message) {
-    return Center(
+    // LoadedState<String> (restore success), LoadedState<UserSubscriptionModel>,
+    // và ErrorState đều được handle trong listener rồi reload plans.
+    // Trong thời gian chờ reload, hiển thị loading để tránh màn hình trắng.
+    return const Center(
       child: Padding(
-        padding: const EdgeInsets.all(AppDimens.SIZE_24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline_rounded,
-              size: AppDimens.SIZE_48,
-              color: AppColors.errorRed,
-            ),
-            const SizedBox(height: AppDimens.SIZE_16),
-            CustomTextLabel(
-              message,
-              fontSize: AppDimens.SIZE_14,
-              color:
-                  Theme.of(context).textTheme.bodyMedium?.color ??
-                  AppColors.colorTitle,
-              textAlign: TextAlign.center,
-              maxLines: 5,
-            ),
-            const SizedBox(height: AppDimens.SIZE_16),
-            FilledButton.icon(
-              onPressed:
-                  () => context.read<SubscriptionPlanCubit>().loadPlans(
-                    activeOnly: true,
-                  ),
-              icon: const Icon(Icons.refresh, size: AppDimens.SIZE_20),
-              label: Text(AppLocalizations.current.retry),
-            ),
-          ],
-        ),
+        padding: EdgeInsets.all(AppDimens.SIZE_24),
+        child: CircularProgressIndicator(),
       ),
     );
   }
@@ -263,6 +252,11 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
       final idx = plans.indexWhere((p) => p.id == userSub!.plan!.id);
       if (idx != -1) {
         _selectedIndex = idx;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_pageController.hasClients) {
+            _pageController.jumpToPage(idx);
+          }
+        });
       }
       _didInitSelectedIndex = true;
     }
@@ -312,40 +306,6 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 _buildValuePropCard(context, selectedPlan),
                 const SizedBox(height: 16),
 
-                // Pagination dots (mocked)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: theme.dividerColor.withValues(alpha: 0.3),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: theme.dividerColor.withValues(alpha: 0.3),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-
                 // Horizontal Plan Options
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -377,43 +337,32 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Quyền lợi ${plan.name}',
+            plan.name,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,
               color: theme.textTheme.bodyLarge?.color,
             ),
           ),
-          const SizedBox(height: 8),
-          Row(
-            children: List.generate(
-              5,
-              (_) => const Icon(
-                Icons.star_rounded,
-                color: Colors.orange,
-                size: 18,
-              ),
-            ),
-          ),
           const SizedBox(height: 16),
           _buildMiniFeature(
-            'Lưu trữ đám mây',
+            AppLocalizations.current.storageLimit,
             _getStorageDisplayForDuration(plan),
             theme,
           ),
           _buildMiniFeature(
-            'Trợ lý AI',
-            '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)} lượt',
+            AppLocalizations.current.ai_assistant,
+            '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)}',
             theme,
           ),
           _buildMiniFeature(
-            'Đọc văn bản (TTS)',
-            '${_getLimitForDuration(plan.ttsLimitPerPeriod, plan)} lượt',
+            AppLocalizations.current.textToSpeech,
+            '${_getLimitForDuration(plan.ttsLimitPerPeriod, plan)}',
             theme,
           ),
           _buildMiniFeature(
-            'Chuyển thẻ Text/Audio',
-            '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)} lượt',
+            AppLocalizations.current.tools_word_to_pdf,
+            '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)}',
             theme,
           ),
         ],
@@ -423,13 +372,13 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
 
   Widget _buildMiniFeature(String title, String value, ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 14),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
             Icons.check_circle_rounded,
-            size: 20,
+            size: 18,
             color: theme.colorScheme.primary,
           ),
           const SizedBox(width: 10),
@@ -461,134 +410,222 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     List<SubscriptionPlanModel> plans,
     UserSubscriptionModel? userSub,
   ) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: List.generate(plans.length, (i) {
-        final plan = plans[i];
-        final isSelected = _selectedIndex == i;
-        final theme = Theme.of(context);
+    return SizedBox(
+      height: 180,
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: plans.length,
+        onPageChanged: (i) {
+          setState(() {
+            _selectedIndex = i;
+          });
+          HapticFeedback.selectionClick();
+        },
+        clipBehavior: Clip.none,
+        itemBuilder: (context, i) {
+          final plan = plans[i];
+          final isSelected = _selectedIndex == i;
+          final theme = Theme.of(context);
 
-        final type = plan.periodType.toLowerCase();
-        final code = plan.code.toUpperCase();
+          return AnimatedBuilder(
+            animation: _pageController,
+            builder: (context, child) {
+              double value = 1.0;
+              if (_pageController.position.haveDimensions) {
+                value = (i - (_pageController.page ?? 0)).toDouble();
+              } else {
+                value = (i - (_pageController.initialPage.toDouble()));
+              }
 
-        String mainVal = '1';
-        String unitVal = 'MONTH';
-        bool isInfinity = false;
+              // Hiệu ứng "cuộn tròn" - scaling và rotation nhẹ
+              final double scale = (1 - (value.abs() * 0.2)).clamp(0.8, 1.0);
+              final double opacity = (1 - (value.abs() * 0.4)).clamp(0.5, 1.0);
+              final double rotation =
+                  value * 0.2; // Chỗ này tạo hiệu ứng vòng cung
 
-        if (type == 'month' || code.contains('MONTH') || code.contains('PRO')) {
-          mainVal = '30';
-          unitVal = 'DAYS';
-        } else if (type == 'year' || code.contains('YEAR')) {
-          mainVal = '12';
-          unitVal = 'MONTHS';
-        } else if (type == 'lifetime' || code.contains('LIFETIME')) {
-          mainVal = '∞';
-          unitVal = 'LIFETIME';
-          isInfinity = true;
-        } else if (plan.isFree) {
-          mainVal = '0';
-          unitVal = 'FREE';
-        }
-
-        final Color textColor =
-            isSelected
-                ? Colors.white
-                : (theme.textTheme.bodyLarge?.color ?? Colors.black);
-
-        final Decoration decoration =
-            isSelected
-                ? BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      theme.colorScheme.primary,
-                      theme.colorScheme.primary.withAlpha(200),
-                    ],
-                    begin: Alignment.bottomRight,
-                    end: Alignment.topLeft,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.4),
-                      blurRadius: 16,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                  border: Border.all(color: Colors.transparent, width: 1.5),
-                )
-                : BoxDecoration(
-                  color: theme.colorScheme.surface.withValues(alpha: 0.8),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: theme.dividerColor.withValues(alpha: 0.2),
-                    width: 1.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                );
-
-        return Expanded(
-          child: GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedIndex = i;
-                _selectedDurationMonths = 1;
-              });
-              HapticFeedback.lightImpact();
+              return Transform(
+                transform:
+                    Matrix4.identity()
+                      ..setEntry(3, 2, 0.001) // perspective
+                      ..scale(scale)
+                      ..rotateY(rotation),
+                alignment: Alignment.center,
+                child: Opacity(opacity: opacity, child: child),
+              );
             },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeOut,
-              margin: EdgeInsets.only(
-                right: i < plans.length - 1 ? 8 : 0,
-                top: isSelected ? 0 : 12,
-                bottom: isSelected ? 0 : 12,
+            child: _buildPlanItem(context, plan, i, isSelected, theme, plans),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPlanItem(
+    BuildContext context,
+    SubscriptionPlanModel plan,
+    int i,
+    bool isSelected,
+    ThemeData theme,
+    List<SubscriptionPlanModel> plans,
+  ) {
+    final type = plan.periodType.toLowerCase();
+    final code = plan.code.toUpperCase();
+
+    String mainVal = '1';
+    String unitVal = 'MONTH';
+    bool isInfinity = false;
+
+    if (type == 'month' || code.contains('MONTH')) {
+      mainVal = '30';
+      unitVal = 'DAYS';
+    } else if (type == 'year' || code.contains('YEAR')) {
+      mainVal = '12';
+      unitVal = 'MONTHS';
+    } else if (type == 'lifetime' || code.contains('LIFETIME')) {
+      mainVal = '∞';
+      unitVal = 'LIFETIME';
+      isInfinity = true;
+    } else if (plan.isFree) {
+      mainVal = '0';
+      unitVal = 'FREE';
+    }
+
+    final Color textColor =
+        isSelected
+            ? Colors.white
+            : (theme.textTheme.bodyLarge?.color ?? Colors.black);
+
+    final Decoration decoration =
+        isSelected
+            ? BoxDecoration(
+              gradient: LinearGradient(
+                colors: [theme.primaryColor, theme.primaryColor.withAlpha(200)],
+                begin: Alignment.bottomRight,
+                end: Alignment.topLeft,
               ),
-              padding: EdgeInsets.symmetric(
-                vertical: isSelected ? 24 : 16,
-                horizontal: 4,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.primaryColor.withValues(alpha: 0.4),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            )
+            : BoxDecoration(
+              color: theme.colorScheme.surface.withValues(alpha: 0.8),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: theme.dividerColor.withValues(alpha: 0.2),
+                width: 1.5,
               ),
-              decoration: decoration,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Column(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            );
+
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.bottomCenter,
+      children: [
+        // ── Bóng không gian (ambient ground shadow) ──
+        Positioned(
+          bottom: -4,
+          left: 18,
+          right: 18,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 550),
+            height: 24,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              boxShadow: [
+                BoxShadow(
+                  color:
+                      isSelected
+                          ? theme.primaryColor.withValues(alpha: 0.45)
+                          : Colors.black.withValues(alpha: 0.18),
+                  blurRadius: isSelected ? 28 : 16,
+                  spreadRadius: isSelected ? 2 : 0,
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // ── Card chính ──
+        GestureDetector(
+          onTap: () {
+            _pageController.animateToPage(
+              i,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeOutCubic,
+            );
+            setState(() {
+              _selectedIndex = i;
+              _selectedDurationMonths = 1;
+            });
+            HapticFeedback.lightImpact();
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+            decoration: decoration,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 4,
+                  ),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (isInfinity)
-                        Icon(Icons.all_inclusive, size: 36, color: textColor)
+                        Icon(Icons.all_inclusive, size: 40, color: textColor)
                       else
-                        Text(
-                          mainVal,
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w900,
-                            color: textColor,
-                            height: 1.1,
-                          ),
-                        ),
+                        plan.isFree
+                            ? const SizedBox()
+                            : Text(
+                              mainVal,
+                              style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w900,
+                                color: textColor,
+                                height: 1.1,
+                              ),
+                            ),
                       const SizedBox(height: 6),
-                      Text(
-                        unitVal,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w800,
-                          color: textColor.withValues(alpha: 0.9),
-                          letterSpacing: 0.5,
-                        ),
-                      ),
+                      plan.isFree
+                          ? Padding(
+                            padding: const EdgeInsets.only(top: 18),
+                            child: Text(
+                              "FREE",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w800,
+                                color: textColor.withValues(alpha: 0.9),
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          )
+                          : Text(
+                            unitVal,
+                            style: TextStyle(
+                              fontSize: plan.isFree ? 24 : 12,
+                              fontWeight: FontWeight.w800,
+                              color: textColor.withValues(alpha: 0.9),
+                              letterSpacing: 0.5,
+                            ),
+                          ),
                       const SizedBox(height: 16),
                       Text(
-                        plan.isFree
-                            ? AppLocalizations.current.free
-                            : _getPriceDisplay(plan),
+                        plan.isFree ? "" : _getPriceDisplay(plan),
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
@@ -600,28 +637,34 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                       ),
                     ],
                   ),
-                  if (isSelected)
-                    Positioned(
-                      top: -30,
-                      right: -10,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                        child: Icon(
-                          Icons.check_circle,
-                          size: 22,
-                          color: theme.colorScheme.primary,
-                        ),
+                ),
+                if (isSelected)
+                  Positioned(
+                    top: -15,
+                    right: -5,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.check_circle,
+                        size: 26,
+                        color: theme.primaryColor,
                       ),
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
           ),
-        );
-      }),
+        ),
+      ],
     );
   }
 
@@ -693,7 +736,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                               : () => _onSelectPlan(context, plan),
                       style: FilledButton.styleFrom(
                         backgroundColor:
-                            theme.colorScheme.primary, // The bright purple/blue
+                            theme.primaryColor, // The bright purple/blue
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -703,7 +746,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                       child: Text(
                         plan.isFree
                             ? AppLocalizations.current.useFree
-                            : 'Join directly and save',
+                            : AppLocalizations.current.selectPlan,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
@@ -717,7 +760,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (Platform.isIOS) ...[
+              if (Platform.isIOS && hasPaidPlan) ...[
                 _buildFooterLink(
                   context,
                   AppLocalizations.current.restore_purchases,
