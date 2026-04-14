@@ -1,8 +1,8 @@
 import 'dart:io';
+import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
@@ -17,6 +17,7 @@ import 'package:readbox/ui/screen/settings/page/payment_webview_screen.dart';
 import 'package:readbox/ui/screen/settings/page/payment_result_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:readbox/routes.dart';
 
 class SubscriptionPlanScreen extends StatefulWidget {
@@ -30,10 +31,53 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   int _selectedIndex = 0;
   bool _didInitSelectedIndex = false; // đã set index theo current plan chưa
   int _selectedDurationMonths = 1; // 1, 3, 6, 12
+  Offerings? _offerings;
 
   @override
   void initState() {
     super.initState();
+    _fetchOfferings();
+  }
+
+  Future<void> _fetchOfferings() async {
+    try {
+      final offerings = await Purchases.getOfferings();
+      if (mounted) {
+        setState(() {
+          _offerings = offerings;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching offerings: $e');
+    }
+  }
+
+  Package? _getPackageForPlan(SubscriptionPlanModel plan) {
+    if (_offerings == null || _offerings!.current == null || plan.isFree)
+      return null;
+    final currentOffering = _offerings!.current!;
+
+    final code = plan.code.toUpperCase();
+    if (plan.periodType == 'lifetime' || code.contains('LIFETIME')) {
+      return currentOffering.lifetime;
+    } else if (plan.periodType == 'year' || code.contains('YEAR')) {
+      return currentOffering.annual;
+    } else if (plan.periodType == 'month' ||
+        code.contains('MONTH') ||
+        code.contains('PRO')) {
+      return currentOffering.monthly;
+    }
+    return null;
+  }
+
+  String _getPriceDisplay(SubscriptionPlanModel plan) {
+    if (Platform.isIOS) {
+      final package = _getPackageForPlan(plan);
+      if (package != null) {
+        return package.storeProduct.priceString;
+      }
+    }
+    return plan.priceDisplay;
   }
 
   @override
@@ -53,17 +97,57 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
           }
         },
         builder: (context, state) {
-          return BaseScreen(
-            title: AppLocalizations.current.subscriptionPlans,
-            colorTitle: Theme.of(context).colorScheme.onSurface,
-            colorBg: Theme.of(context).colorScheme.surfaceContainerLowest,
-            body: RefreshIndicator(
-              onRefresh: () async {
-                context.read<SubscriptionPlanCubit>().loadPlans(
-                  activeOnly: true,
-                );
-              },
-              child: _buildBodyByState(context, state),
+          return Scaffold(
+            body: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? [
+                            const Color(0xFF2B1055),
+                            const Color(0xFF1B1B2F),
+                          ] // Deep premium colors
+                          : [
+                            const Color(0xFFFDE4FF),
+                            const Color(0xFFE6EBFB),
+                          ], // Vibrant light colors
+                ),
+              ),
+              child: SafeArea(
+                bottom: false,
+                child: Stack(
+                  children: [
+                    RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<SubscriptionPlanCubit>().loadPlans(
+                          activeOnly: true,
+                        );
+                      },
+                      child: _buildBodyByState(context, state),
+                    ),
+                    // Custom Back Button
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: IconButton(
+                        icon: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surface.withValues(alpha: 0.4),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.close_rounded, size: 24),
+                        ),
+                        onPressed: () => Navigator.of(context).maybePop(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         },
@@ -86,7 +170,18 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     if (state is LoadedState<List<SubscriptionPlanModel>>) {
       final plans = state.data;
       if (plans.isEmpty) return _buildEmpty(context);
-      return _buildPlanList(context, plans);
+      return TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: const Duration(milliseconds: 700),
+        curve: Curves.easeOutCubic,
+        builder: (context, value, child) {
+          return Transform.translate(
+            offset: Offset(0, 50 * (1 - value)),
+            child: Opacity(opacity: value, child: child),
+          );
+        },
+        child: _buildPlanList(context, plans),
+      );
     }
     return const SizedBox.shrink();
   }
@@ -180,112 +275,489 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         Expanded(
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
             child: Column(
               children: [
-                // Header
-                Icon(
-                  Icons.workspace_premium_rounded,
-                  size: 48,
-                  color: theme.colorScheme.primary,
-                ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 40),
+                // Stacked app icon
                 Text(
-                  AppLocalizations.current.choosePlanDescription,
+                  'Get Readbox Pro',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 14,
-                    color:
-                        theme.textTheme.bodyMedium?.color ??
-                        AppColors.textMediumGrey,
-                    height: 1.4,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    color: theme.textTheme.bodyLarge?.color,
+                    letterSpacing: -0.5,
                   ),
                 ),
-                const SizedBox(height: 24),
-
-                // Plan selector tabs
-                _buildPlanTabs(context, plans, userSub),
-                const SizedBox(height: 24),
-
-                // Selected plan detail card
-                _buildPlanDetail(context, selectedPlan, isCurrent),
-                const SizedBox(height: 12),
-
-                // Restore Purchases for iOS
-                if (Platform.isIOS)
-                  Center(
-                    child: TextButton(
-                      onPressed:
-                          () =>
-                              context
-                                  .read<SubscriptionPlanCubit>()
-                                  .restorePurchases(),
-                      child: Text(
-                        AppLocalizations.current.restore_purchases,
-                        style: TextStyle(
-                          color: theme.colorScheme.primary,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Text(
+                    AppLocalizations.current.choosePlanDescription,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color:
+                          theme.textTheme.bodyMedium?.color?.withValues(
+                            alpha: 0.7,
+                          ) ??
+                          AppColors.textMediumGrey,
+                      height: 1.5,
                     ),
                   ),
+                ),
+                const SizedBox(height: 32),
 
-                const SizedBox(height: 24),
+                // Testimonial / Value prop card
+                _buildValuePropCard(context, selectedPlan),
+                const SizedBox(height: 16),
 
-                // Compliance Footer (Privacy & Terms)
-                _buildComplianceFooter(context),
+                // Pagination dots (mocked)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: theme.dividerColor.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: theme.dividerColor.withValues(alpha: 0.3),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+
+                // Horizontal Plan Options
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  width: double.infinity,
+                  child: _buildPlanOptions(context, plans, userSub),
+                ),
                 const SizedBox(height: 32),
               ],
             ),
           ),
         ),
 
-        // Bottom CTA
+        // Bottom CTA & Footer
         _buildBottomCTA(context, selectedPlan, isCurrent),
       ],
     );
   }
 
-  Widget _buildComplianceFooter(BuildContext context) {
+  Widget _buildValuePropCard(BuildContext context, SubscriptionPlanModel plan) {
     final theme = Theme.of(context);
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            AppLocalizations.current.subscription_disclosure,
-            textAlign: TextAlign.center,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Quyền lợi ${plan.name}',
             style: TextStyle(
-              fontSize: 11,
-              color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
-              height: 1.4,
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              color: theme.textTheme.bodyLarge?.color,
             ),
           ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildFooterLink(
-              context,
-              AppLocalizations.current.privacy_policy,
-              () => Navigator.pushNamed(context, Routes.privacySecurityScreen),
+          const SizedBox(height: 8),
+          Row(
+            children: List.generate(
+              5,
+              (_) => const Icon(
+                Icons.star_rounded,
+                color: Colors.orange,
+                size: 18,
+              ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-              width: 1,
-              height: 12,
-              color: theme.dividerColor,
+          ),
+          const SizedBox(height: 16),
+          _buildMiniFeature(
+            'Lưu trữ đám mây',
+            _getStorageDisplayForDuration(plan),
+            theme,
+          ),
+          _buildMiniFeature(
+            'Trợ lý AI',
+            '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)} lượt',
+            theme,
+          ),
+          _buildMiniFeature(
+            'Đọc văn bản (TTS)',
+            '${_getLimitForDuration(plan.ttsLimitPerPeriod, plan)} lượt',
+            theme,
+          ),
+          _buildMiniFeature(
+            'Chuyển thẻ Text/Audio',
+            '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)} lượt',
+            theme,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMiniFeature(String title, String value, ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.check_circle_rounded,
+            size: 20,
+            color: theme.colorScheme.primary,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 0.8),
+              ),
             ),
-            _buildFooterLink(context, AppLocalizations.current.terms_of_use, () {
-              // Giả sử có slug termsOfUse hoặc dùng chung privacySecurityScreen với logic khác
-              // Ở đây dùng tạm privacySecurityScreen để demo
-              Navigator.pushNamed(context, Routes.privacySecurityScreen);
-            }),
-          ],
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: theme.textTheme.bodyLarge?.color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPlanOptions(
+    BuildContext context,
+    List<SubscriptionPlanModel> plans,
+    UserSubscriptionModel? userSub,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: List.generate(plans.length, (i) {
+        final plan = plans[i];
+        final isSelected = _selectedIndex == i;
+        final theme = Theme.of(context);
+
+        final type = plan.periodType.toLowerCase();
+        final code = plan.code.toUpperCase();
+
+        String mainVal = '1';
+        String unitVal = 'MONTH';
+        bool isInfinity = false;
+
+        if (type == 'month' || code.contains('MONTH') || code.contains('PRO')) {
+          mainVal = '30';
+          unitVal = 'DAYS';
+        } else if (type == 'year' || code.contains('YEAR')) {
+          mainVal = '12';
+          unitVal = 'MONTHS';
+        } else if (type == 'lifetime' || code.contains('LIFETIME')) {
+          mainVal = '∞';
+          unitVal = 'LIFETIME';
+          isInfinity = true;
+        } else if (plan.isFree) {
+          mainVal = '0';
+          unitVal = 'FREE';
+        }
+
+        final Color textColor =
+            isSelected
+                ? Colors.white
+                : (theme.textTheme.bodyLarge?.color ?? Colors.black);
+
+        final Decoration decoration =
+            isSelected
+                ? BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      theme.colorScheme.primary,
+                      theme.colorScheme.primary.withAlpha(200),
+                    ],
+                    begin: Alignment.bottomRight,
+                    end: Alignment.topLeft,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                      blurRadius: 16,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                  border: Border.all(color: Colors.transparent, width: 1.5),
+                )
+                : BoxDecoration(
+                  color: theme.colorScheme.surface.withValues(alpha: 0.8),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: theme.dividerColor.withValues(alpha: 0.2),
+                    width: 1.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.03),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                );
+
+        return Expanded(
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedIndex = i;
+                _selectedDurationMonths = 1;
+              });
+              HapticFeedback.lightImpact();
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOut,
+              margin: EdgeInsets.only(
+                right: i < plans.length - 1 ? 8 : 0,
+                top: isSelected ? 0 : 12,
+                bottom: isSelected ? 0 : 12,
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: isSelected ? 24 : 16,
+                horizontal: 4,
+              ),
+              decoration: decoration,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (isInfinity)
+                        Icon(Icons.all_inclusive, size: 36, color: textColor)
+                      else
+                        Text(
+                          mainVal,
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w900,
+                            color: textColor,
+                            height: 1.1,
+                          ),
+                        ),
+                      const SizedBox(height: 6),
+                      Text(
+                        unitVal,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          color: textColor.withValues(alpha: 0.9),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        plan.isFree
+                            ? AppLocalizations.current.free
+                            : _getPriceDisplay(plan),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: textColor,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                  if (isSelected)
+                    Positioned(
+                      top: -30,
+                      right: -10,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: Icon(
+                          Icons.check_circle,
+                          size: 22,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildBottomCTA(
+    BuildContext context,
+    SubscriptionPlanModel plan,
+    bool isCurrent,
+  ) {
+    final theme = Theme.of(context);
+    final userSub = context.watch<UserSubscriptionCubit>().userSubscription;
+    final hasPaidPlan = userSub?.plan != null && !(userSub!.plan!.isFree);
+    final isFreePlan = plan.isFree;
+    final isFreePlanVisible = isFreePlan && hasPaidPlan;
+
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        20,
+        20,
+        20,
+        MediaQuery.of(context).padding.bottom + 16,
+      ),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(
+          top: BorderSide(color: theme.dividerColor.withValues(alpha: 0.1)),
         ),
-      ],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            height: 56, // Tall prominent button
+            child:
+                isCurrent
+                    ? OutlinedButton.icon(
+                      onPressed: null,
+                      icon: Icon(
+                        Icons.check_circle,
+                        size: 20,
+                        color: AppColors.successGreen,
+                      ),
+                      label: Text(
+                        AppLocalizations.current.currentPlan,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: theme.primaryColor,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        side: BorderSide(color: theme.primaryColor, width: 2),
+                      ),
+                    )
+                    : FilledButton(
+                      onPressed:
+                          isFreePlanVisible
+                              ? null
+                              : () => _onSelectPlan(context, plan),
+                      style: FilledButton.styleFrom(
+                        backgroundColor:
+                            theme.colorScheme.primary, // The bright purple/blue
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        plan.isFree
+                            ? AppLocalizations.current.useFree
+                            : 'Join directly and save',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+          ),
+          const SizedBox(height: 20),
+          // Footer Links
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (Platform.isIOS) ...[
+                _buildFooterLink(
+                  context,
+                  AppLocalizations.current.restore_purchases,
+                  () {
+                    context.read<SubscriptionPlanCubit>().restorePurchases();
+                  },
+                ),
+                _buildDivider(theme),
+              ],
+              _buildFooterLink(
+                context,
+                AppLocalizations.current.terms_of_use,
+                () {
+                  Navigator.pushNamed(context, Routes.privacySecurityScreen);
+                },
+              ),
+              _buildDivider(theme),
+              _buildFooterLink(
+                context,
+                AppLocalizations.current.privacy_policy,
+                () {
+                  Navigator.pushNamed(context, Routes.privacySecurityScreen);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDivider(ThemeData theme) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12),
+      width: 4,
+      height: 4,
+      decoration: BoxDecoration(
+        color: theme.dividerColor,
+        shape: BoxShape.circle,
+      ),
     );
   }
 
@@ -305,432 +777,6 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
           fontWeight: FontWeight.w500,
           decoration: TextDecoration.underline,
         ),
-      ),
-    );
-  }
-
-  Widget _buildPlanTabs(
-    BuildContext context,
-    List<SubscriptionPlanModel> plans,
-    UserSubscriptionModel? userSub,
-  ) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHigh,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        children: List.generate(plans.length, (i) {
-          final plan = plans[i];
-          final isSelected = _selectedIndex == i;
-          final isCurrent = userSub?.plan?.id == plan.id;
-
-          return Expanded(
-            child: GestureDetector(
-              onTap:
-                  () => setState(() {
-                    _selectedIndex = i;
-                    _selectedDurationMonths = 1;
-                  }),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                decoration: BoxDecoration(
-                  color:
-                      isSelected
-                          ? theme.colorScheme.surface
-                          : Colors.transparent,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Stack(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: Column(
-                        children: [
-                          Text(
-                            plan.name,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight:
-                                  isSelected
-                                      ? FontWeight.w700
-                                      : FontWeight.w500,
-                              color:
-                                  isSelected
-                                      ? theme.colorScheme.primary
-                                      : theme.textTheme.bodyMedium?.color,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            plan.isFree
-                                ? AppLocalizations.current.free
-                                : '\$\$\$',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color:
-                                  isSelected
-                                      ? theme.colorScheme.primary.withValues(
-                                        alpha: 0.7,
-                                      )
-                                      : (theme.textTheme.bodySmall?.color ??
-                                          AppColors.textLightGrey),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (isCurrent)
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child:
-                              isCurrent && plan.isFree
-                                  ? Icon(
-                                    Icons.workspace_premium_rounded,
-                                    color: theme.colorScheme.primary,
-                                    size: 20,
-                                  )
-                                  : Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 20,
-                                  ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget _buildPlanDetail(
-    BuildContext context,
-    SubscriptionPlanModel plan,
-    bool isCurrent,
-  ) {
-    final theme = Theme.of(context);
-    final isPopular = plan.code == 'advanced' || plan.code == 'ultra';
-
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-        border:
-            isPopular
-                ? Border.all(color: theme.colorScheme.primary, width: 1.5)
-                : Border.all(color: theme.dividerColor.withValues(alpha: 0.3)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          if (isPopular)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(18.5),
-                ),
-              ),
-              child: Text(
-                AppLocalizations.current.popular,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: theme.colorScheme.onPrimary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ),
-
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                // Price
-                if (plan.isFree)
-                  Text(
-                    AppLocalizations.current.free,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.successGreen,
-                    ),
-                  )
-                else
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            _getFormattedPrice(plan),
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                if (plan.description != null &&
-                    plan.description!.isNotEmpty) ...[
-                  Text(
-                    plan.description!,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: theme.textTheme.bodyMedium?.color,
-                      height: 1.4,
-                    ),
-                  ),
-                ],
-
-                const SizedBox(height: 12),
-                Divider(
-                  height: 1,
-                  color: theme.dividerColor.withValues(alpha: 0.3),
-                ),
-                const SizedBox(height: 16),
-
-                // Features
-                _buildFeatureItem(
-                  context,
-                  Icons.cloud_outlined,
-                  AppLocalizations.current.storageLimit,
-                  _getStorageDisplayForDuration(plan),
-                  false,
-                  true,
-                  !plan.isFree,
-                ),
-                _buildFeatureItem(
-                  context,
-                  Icons.auto_awesome_rounded,
-                  AppLocalizations.current.ai_assistant,
-                  '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
-                  plan.isFree,
-                  false,
-                  !plan.isFree,
-                ),
-
-                _buildFeatureItem(
-                  context,
-                  Icons.record_voice_over_outlined,
-                  AppLocalizations.current.ttsLimit,
-                  '${_getLimitForDuration(plan.ttsLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
-                  plan.isFree,
-                  false,
-                  !plan.isFree,
-                ),
-                _buildFeatureItem(
-                  context,
-                  Icons.picture_as_pdf_outlined,
-                  AppLocalizations.current.convertLimit,
-                  '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
-                  plan.isFree,
-                  false,
-                  !plan.isFree,
-                ),
-
-                _buildFeatureItem(
-                  context,
-                  Icons.download_outlined,
-                  AppLocalizations.current.download_limit,
-                  '${_getLimitForDuration(plan.downloadLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
-                  false,
-                  plan.isFree ? true : false,
-                  !plan.isFree,
-                ),
-                _buildFeatureItem(
-                  context,
-                  Icons.share_outlined,
-                  AppLocalizations.current.share_limit,
-                  '${_getLimitForDuration(plan.shareLimitPerPeriod, plan)} ${AppLocalizations.current.perPeriod}',
-                  false,
-                  false,
-                  !plan.isFree,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeatureItem(
-    BuildContext context,
-    IconData icon,
-    String label,
-    String value,
-    bool? requiredProPlan,
-    bool? showValue,
-    bool? isPro,
-  ) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, size: 18, color: theme.colorScheme.primary),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 14,
-                color:
-                    theme.textTheme.bodyMedium?.color ??
-                    AppColors.textMediumGrey,
-                decoration:
-                    requiredProPlan == true ? TextDecoration.lineThrough : null,
-              ),
-            ),
-          ),
-          if (showValue == true) ...[
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: theme.textTheme.bodyLarge?.color ?? AppColors.colorTitle,
-              ),
-            ),
-          ],
-          if (isPro == true && showValue == false) ...[
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(Icons.all_inclusive, size: 16, color: Colors.orange),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomCTA(
-    BuildContext context,
-    SubscriptionPlanModel plan,
-    bool isCurrent,
-  ) {
-    final theme = Theme.of(context);
-    final userSub = context.watch<UserSubscriptionCubit>().userSubscription;
-    final hasPaidPlan = userSub?.plan != null && !(userSub!.plan!.isFree);
-    final isFreePlan = plan.isFree;
-    final isFreePlanVisible = isFreePlan && hasPaidPlan;
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        8,
-        12,
-        8,
-        MediaQuery.of(context).padding.bottom + 8,
-      ),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(
-          top: BorderSide(color: theme.dividerColor.withValues(alpha: 0.2)),
-        ),
-      ),
-      child: SafeArea(
-        top: false,
-        child:
-            isCurrent
-                ? SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: OutlinedButton.icon(
-                    onPressed: null,
-                    icon:
-                        plan.isFree
-                            ? const Icon(
-                              Icons.workspace_premium_rounded,
-                              size: 20,
-                              color: AppColors.successGreen,
-                            )
-                            : const Icon(
-                              Icons.star,
-                              size: 20,
-                              color: Colors.orange,
-                            ),
-                    label: Text(
-                      AppLocalizations.current.currentPlan,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: theme.primaryColor,
-                      ),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: theme.primaryColor,
-                      side: BorderSide(color: theme.primaryColor),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                  ),
-                )
-                : SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed:
-                        isFreePlanVisible
-                            ? null
-                            : () => _onSelectPlan(context, plan),
-                    style: FilledButton.styleFrom(
-                      backgroundColor:
-                          isFreePlan
-                              ? AppColors.successGreen
-                              : theme.primaryColor,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      plan.isFree
-                          ? AppLocalizations.current.useFree
-                          : AppLocalizations.current.selectPlan,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
       ),
     );
   }
@@ -761,11 +807,6 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     return (baseLimit * multiplier).round();
   }
 
-  String _getFormattedPrice(SubscriptionPlanModel plan) {
-    if (plan.price == null || plan.price! <= 0) return '';
-    return '\$\$\$';
-  }
-
   void _onSelectPlan(BuildContext context, SubscriptionPlanModel plan) async {
     if (plan.isFree) {
       await context.read<SubscriptionPlanCubit>().createSubscriptionPlan(
@@ -775,6 +816,55 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     }
 
     if (Platform.isIOS) {
+      final package = _getPackageForPlan(plan);
+
+      if (package != null) {
+        final purchaseParams = PurchaseParams.package(package);
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder:
+              (context) => const Center(child: CircularProgressIndicator()),
+        );
+        try {
+          final result = await Purchases.purchase(purchaseParams);
+          if (context.mounted) Navigator.pop(context); // hide loading
+
+          final isActive =
+              result.customerInfo.entitlements.all.isNotEmpty &&
+              result.customerInfo.entitlements.all.values.any(
+                (e) => e.isActive,
+              );
+
+          if (isActive && context.mounted) {
+            context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
+            _showMessage(context, AppLocalizations.current.success);
+          }
+        } on PlatformException catch (e) {
+          if (context.mounted) Navigator.pop(context); // hide loading
+          final errorCode = PurchasesErrorHelper.getErrorCode(e);
+          if (errorCode != PurchasesErrorCode.purchaseCancelledError) {
+            if (context.mounted) {
+              _showMessage(
+                context,
+                e.message ?? 'Purchase failed',
+                isError: true,
+              );
+            }
+          }
+        } catch (e) {
+          if (context.mounted) Navigator.pop(context); // hide loading
+          if (context.mounted) {
+            _showMessage(
+              context,
+              'An unexpected error occurred.',
+              isError: true,
+            );
+          }
+        }
+        return;
+      }
+
       await Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (context) => const PaywallView()));

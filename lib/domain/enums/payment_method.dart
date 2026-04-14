@@ -4,7 +4,8 @@ enum PaymentMethod {
   momo('momo'),
   zalopay('zalopay'),
   payos('payos'),
-  cash('cash');
+  cash('cash'),
+  revenuecat('revenuecat');
 
   const PaymentMethod(this.value);
   final String value;

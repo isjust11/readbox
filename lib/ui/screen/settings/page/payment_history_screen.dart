@@ -5,10 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/payment/payment_cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
-import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/dimens.dart';
-import 'package:readbox/ui/widget/base_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
 class PaymentHistoryScreen extends StatefulWidget {

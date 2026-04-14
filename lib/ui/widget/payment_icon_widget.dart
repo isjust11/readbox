@@ -28,6 +28,12 @@ class PaymentIconWidget extends StatelessWidget {
           width: AppDimens.SIZE_32,
           height: AppDimens.SIZE_32,
         );
+      case PaymentMethod.revenuecat:
+        return Image.asset(
+          Assets.images.revenuecat.path,
+          width: AppDimens.SIZE_32,
+          height: AppDimens.SIZE_32,
+        );
       default:
         return Image.asset(
           Assets.images.payos.path,

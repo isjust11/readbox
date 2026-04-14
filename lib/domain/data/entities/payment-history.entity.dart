@@ -37,7 +37,7 @@ class PaymentHistoryEntity extends BaseEntity {
 
   String? failureReason;
 
-  int? userSubscriptionId;
+  String? userSubscriptionId;
 
   DateTime? createdAt;
 

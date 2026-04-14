@@ -17,26 +17,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_avatar.svg
   String get icAvatar => 'assets/icons/ic_avatar.svg';
 
-  /// File path: assets/icons/ic_baithuoc.svg
-  String get icBaithuoc => 'assets/icons/ic_baithuoc.svg';
-
   /// File path: assets/icons/ic_calendar.svg
   String get icCalendar => 'assets/icons/ic_calendar.svg';
 
   /// File path: assets/icons/ic_category.svg
   String get icCategory => 'assets/icons/ic_category.svg';
 
-  /// File path: assets/icons/ic_caythuoc.svg
-  String get icCaythuoc => 'assets/icons/ic_caythuoc.svg';
-
-  /// File path: assets/icons/ic_certificate.svg
-  String get icCertificate => 'assets/icons/ic_certificate.svg';
-
   /// File path: assets/icons/ic_chart_storage.svg
   String get icChartStorage => 'assets/icons/ic_chart_storage.svg';
-
-  /// File path: assets/icons/ic_check.svg
-  String get icCheck => 'assets/icons/ic_check.svg';
 
   /// File path: assets/icons/ic_close_circle.svg
   String get icCloseCircle => 'assets/icons/ic_close_circle.svg';
@@ -168,13 +156,9 @@ class $AssetsIconsGen {
   /// List of all assets
   List<dynamic> get values => [
     icAvatar,
-    icBaithuoc,
     icCalendar,
     icCategory,
-    icCaythuoc,
-    icCertificate,
     icChartStorage,
-    icCheck,
     icCloseCircle,
     icCloud,
     icComplant,
@@ -244,27 +228,8 @@ class $AssetsImagesGen {
   AssetGenImage get icGallery =>
       const AssetGenImage('assets/images/ic_gallery.png');
 
-  /// File path: assets/images/ic_intro_2.png
-  AssetGenImage get icIntro2 =>
-      const AssetGenImage('assets/images/ic_intro_2.png');
-
-  /// File path: assets/images/ic_qr_code.png
-  AssetGenImage get icQrCode =>
-      const AssetGenImage('assets/images/ic_qr_code.png');
-
-  /// File path: assets/images/ic_scan_qr.png
-  AssetGenImage get icScanQr =>
-      const AssetGenImage('assets/images/ic_scan_qr.png');
-
   /// File path: assets/images/ic_search.svg
   String get icSearch => 'assets/images/ic_search.svg';
-
-  /// File path: assets/images/ic_splash.png
-  AssetGenImage get icSplash =>
-      const AssetGenImage('assets/images/ic_splash.png');
-
-  /// File path: assets/images/logo.png
-  AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
   /// File path: assets/images/logo_thumbnail.png
   AssetGenImage get logoThumbnail =>
@@ -280,6 +245,10 @@ class $AssetsImagesGen {
   AssetGenImage get profileBackground =>
       const AssetGenImage('assets/images/profile_background.png');
 
+  /// File path: assets/images/revenuecat.png
+  AssetGenImage get revenuecat =>
+      const AssetGenImage('assets/images/revenuecat.png');
+
   /// File path: assets/images/vnpay.png
   AssetGenImage get vnpay => const AssetGenImage('assets/images/vnpay.png');
 
@@ -291,16 +260,12 @@ class $AssetsImagesGen {
     icBack,
     icBackSvg,
     icGallery,
-    icIntro2,
-    icQrCode,
-    icScanQr,
     icSearch,
-    icSplash,
-    logo,
     logoThumbnail,
     momo,
     payos,
     profileBackground,
+    revenuecat,
     vnpay,
   ];
 }
