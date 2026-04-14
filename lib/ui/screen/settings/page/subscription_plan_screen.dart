@@ -870,7 +870,10 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
       ).push(MaterialPageRoute(builder: (context) => const PaywallView()));
       // Lấy trạng thái mới nhất để refresh
       if (context.mounted) {
+        // Refresh danh sách gói
         context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
+        // QUAN TRỌNG: Refresh thông tin đăng ký của User để UI biết đã mua thành công
+        context.read<UserSubscriptionCubit>().loadMe();
       }
       return;
     }
