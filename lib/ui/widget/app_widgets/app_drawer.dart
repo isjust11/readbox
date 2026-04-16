@@ -272,8 +272,14 @@ class _AppDrawerState extends State<AppDrawer> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                iconColor?.withValues(alpha: 0.15) ?? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15),
-                iconColor?.withValues(alpha: 0.55) ?? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+                iconColor?.withValues(alpha: 0.15) ??
+                    Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.15),
+                iconColor?.withValues(alpha: 0.55) ??
+                    Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.55),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/enums/payment_method.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
+import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/colors.dart';
@@ -119,6 +121,10 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
           return Scaffold(
             body: Container(
               decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(Assets.images.paymentBg.path),
+                  fit: BoxFit.cover,
+                ),
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -278,7 +284,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 28,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                     color: theme.textTheme.bodyLarge?.color,
                     letterSpacing: -0.5,
                   ),
@@ -326,80 +332,127 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
 
   Widget _buildValuePropCard(BuildContext context, SubscriptionPlanModel plan) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            plan.name,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              color: theme.textTheme.bodyLarge?.color,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color:
+                  isDark
+                      ? Colors.black.withValues(alpha: 0.3)
+                      : Colors.white.withValues(alpha: 0.45),
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(
+                color:
+                    isDark
+                        ? Colors.white.withValues(alpha: 0.1)
+                        : Colors.white.withValues(alpha: 0.5),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  plan.isFree ? "Gói miễn phí" : plan.name,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: theme.textTheme.bodyLarge?.color,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                _buildMiniFeature(
+                  AppLocalizations.current.storageLimit,
+                  _getStorageDisplayForDuration(plan),
+                  theme,
+                  plan,
+                  icon: Icons.inventory_2_rounded,
+                  colors: [const Color(0xFF4FACFE), const Color(0xFF00F2FE)],
+                  isStorage: true,
+                ),
+                _buildMiniFeature(
+                  AppLocalizations.current.ai_assistant,
+                  plan.isFree ? "" : 'Unlimited',
+                  theme,
+                  plan,
+                  icon: Icons.psychology_rounded,
+                  colors: [const Color(0xFF667EEA), const Color(0xFF764BA2)],
+                ),
+                _buildMiniFeature(
+                  AppLocalizations.current.textToSpeech,
+                  plan.isFree ? "" : 'Unlimited',
+                  theme,
+                  plan,
+                  icon: Icons.record_voice_over_rounded,
+                  colors: [const Color(0xFF2AF598), const Color(0xFF009EFD)],
+                ),
+                _buildMiniFeature(
+                  AppLocalizations.current.tools_word_to_pdf,
+                  plan.isFree ? "" : 'Unlimited',
+                  theme,
+                  plan,
+                  icon: Icons.transform_rounded,
+                  colors: [const Color(0xFFF093FB), const Color(0xFFF5576C)],
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 16),
-          _buildMiniFeature(
-            AppLocalizations.current.storageLimit,
-            _getStorageDisplayForDuration(plan),
-            theme,
-          ),
-          _buildMiniFeature(
-            AppLocalizations.current.ai_assistant,
-            '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)}',
-            theme,
-          ),
-          _buildMiniFeature(
-            AppLocalizations.current.textToSpeech,
-            '${_getLimitForDuration(plan.ttsLimitPerPeriod, plan)}',
-            theme,
-          ),
-          _buildMiniFeature(
-            AppLocalizations.current.tools_word_to_pdf,
-            '${_getLimitForDuration(plan.convertLimitPerPeriod, plan)}',
-            theme,
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildMiniFeature(String title, String value, ThemeData theme) {
+  Widget _buildMiniFeature(
+    String title,
+    String value,
+    ThemeData theme,
+    SubscriptionPlanModel plan, {
+    required IconData icon,
+    required List<Color> colors,
+    bool? isStorage = false,
+  }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.only(bottom: 20),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.check_circle_rounded,
-            size: 18,
-            color: theme.colorScheme.primary,
+          ShaderMask(
+            shaderCallback: (bounds) {
+              return LinearGradient(
+                colors: colors,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ).createShader(bounds);
+            },
+            child: Icon(icon, size: 28, color: Colors.white),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 16),
           Expanded(
             child: Text(
               title,
               style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 0.8),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 0.9),
               ),
             ),
           ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: theme.textTheme.bodyLarge?.color,
+          if (value.isNotEmpty)
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: colors.last.withValues(alpha: 0.9),
+                letterSpacing: 0.3,
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -495,38 +548,23 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
             ? Colors.white
             : (theme.textTheme.bodyLarge?.color ?? Colors.black);
 
-    final Decoration decoration =
+    final isDark = theme.brightness == Brightness.dark;
+
+    final Color cardBg =
         isSelected
-            ? BoxDecoration(
-              gradient: LinearGradient(
-                colors: [theme.primaryColor, theme.primaryColor.withAlpha(200)],
-                begin: Alignment.bottomRight,
-                end: Alignment.topLeft,
-              ),
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.primaryColor.withValues(alpha: 0.4),
-                  blurRadius: 16,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            )
-            : BoxDecoration(
-              color: theme.colorScheme.surface.withValues(alpha: 0.8),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: theme.dividerColor.withValues(alpha: 0.2),
-                width: 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            );
+            ? (isDark
+                ? theme.primaryColor.withValues(alpha: 0.15)
+                : theme.primaryColor.withValues(alpha: 0.1))
+            : (isDark
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.white.withValues(alpha: 0.45));
+
+    final Color borderColor =
+        isSelected
+            ? theme.primaryColor
+            : (isDark
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.white.withValues(alpha: 0.5));
 
     return Stack(
       clipBehavior: Clip.none,
@@ -572,95 +610,116 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
           },
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-            decoration: decoration,
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 4,
+                    vertical: 20,
+                    horizontal: 12,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
+                  decoration: BoxDecoration(
+                    color: cardBg,
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: borderColor, width: 2),
+                  ),
+                  child: Stack(
+                    clipBehavior: Clip.none,
                     children: [
-                      if (isInfinity)
-                        Icon(Icons.all_inclusive, size: 40, color: textColor)
-                      else
-                        plan.isFree
-                            ? const SizedBox()
-                            : Text(
-                              mainVal,
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.w900,
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (isInfinity)
+                              Icon(
+                                Icons.all_inclusive,
+                                size: 40,
                                 color: textColor,
-                                height: 1.1,
-                              ),
-                            ),
-                      const SizedBox(height: 6),
-                      plan.isFree
-                          ? Padding(
-                            padding: const EdgeInsets.only(top: 18),
-                            child: Text(
-                              "FREE",
+                              )
+                            else
+                              plan.isFree
+                                  ? const SizedBox()
+                                  : Text(
+                                    mainVal,
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.w700,
+                                      color: textColor,
+                                      height: 1.1,
+                                    ),
+                                  ),
+                            const SizedBox(height: 6),
+                            plan.isFree
+                                ? Padding(
+                                  padding: const EdgeInsets.only(top: 18),
+                                  child: Text(
+                                    "FREE",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w800,
+                                      color: textColor.withValues(alpha: 0.9),
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                )
+                                : Text(
+                                  unitVal,
+                                  style: TextStyle(
+                                    fontSize: plan.isFree ? 24 : 12,
+                                    fontWeight: FontWeight.w800,
+                                    color: textColor.withValues(alpha: 0.9),
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                            const SizedBox(height: 16),
+                            Text(
+                              plan.isFree ? "" : _getPriceDisplay(plan),
                               style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w800,
-                                color: textColor.withValues(alpha: 0.9),
-                                letterSpacing: 0.5,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: textColor,
                               ),
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.visible,
                             ),
-                          )
-                          : Text(
-                            unitVal,
-                            style: TextStyle(
-                              fontSize: plan.isFree ? 24 : 12,
-                              fontWeight: FontWeight.w800,
-                              color: textColor.withValues(alpha: 0.9),
-                              letterSpacing: 0.5,
+                          ],
+                        ),
+                      ),
+                      if (isSelected)
+                        Positioned(
+                          top: -10,
+                          right: -5,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.check_circle,
+                              size: 26,
+                              color: theme.primaryColor,
                             ),
                           ),
-                      const SizedBox(height: 16),
-                      Text(
-                        plan.isFree ? "" : _getPriceDisplay(plan),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: textColor,
                         ),
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
                     ],
                   ),
                 ),
-                if (isSelected)
-                  Positioned(
-                    top: -15,
-                    right: -5,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.check_circle,
-                        size: 26,
-                        color: theme.primaryColor,
-                      ),
-                    ),
-                  ),
-              ],
+              ),
             ),
           ),
         ),
@@ -679,115 +738,149 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     final isFreePlan = plan.isFree;
     final isFreePlanVisible = isFreePlan && hasPaidPlan;
 
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        20,
-        20,
-        20,
-        MediaQuery.of(context).padding.bottom + 16,
-      ),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(
-          top: BorderSide(color: theme.dividerColor.withValues(alpha: 0.1)),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+            20,
+            24,
+            20,
+            MediaQuery.of(context).padding.bottom + 16,
           ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: double.infinity,
-            height: 56, // Tall prominent button
-            child:
-                isCurrent
-                    ? OutlinedButton.icon(
-                      onPressed: null,
-                      icon: Icon(
-                        Icons.check_circle,
-                        size: 20,
-                        color: AppColors.successGreen,
-                      ),
-                      label: Text(
-                        AppLocalizations.current.currentPlan,
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: theme.primaryColor,
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        side: BorderSide(color: theme.primaryColor, width: 2),
-                      ),
-                    )
-                    : FilledButton(
-                      onPressed:
-                          isFreePlanVisible
-                              ? null
-                              : () => _onSelectPlan(context, plan),
-                      style: FilledButton.styleFrom(
-                        backgroundColor:
-                            theme.primaryColor, // The bright purple/blue
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        plan.isFree
-                            ? AppLocalizations.current.useFree
-                            : AppLocalizations.current.selectPlan,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
-          ),
-          const SizedBox(height: 20),
-          // Footer Links
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (Platform.isIOS && hasPaidPlan) ...[
-                _buildFooterLink(
-                  context,
-                  AppLocalizations.current.restore_purchases,
-                  () {
-                    context.read<SubscriptionPlanCubit>().restorePurchases();
-                  },
-                ),
-                _buildDivider(theme),
-              ],
-              _buildFooterLink(
-                context,
-                AppLocalizations.current.terms_of_use,
-                () {
-                  Navigator.pushNamed(context, Routes.privacySecurityScreen);
-                },
+          decoration: BoxDecoration(
+            color:
+                Theme.of(context).brightness == Brightness.dark
+                    ? Colors.black.withValues(alpha: 0.2)
+                    : Colors.white.withValues(alpha: 0.1),
+            border: Border(
+              top: BorderSide(
+                color: theme.dividerColor.withValues(alpha: 0.1),
+                width: 0.5,
               ),
-              _buildDivider(theme),
-              _buildFooterLink(
-                context,
-                AppLocalizations.current.privacy_policy,
-                () {
-                  Navigator.pushNamed(context, Routes.privacySecurityScreen);
-                },
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 52,
+                child:
+                    isCurrent
+                        ? OutlinedButton.icon(
+                          onPressed: null,
+                          icon: Icon(
+                            Icons.check_circle_rounded,
+                            size: 20,
+                            color: AppColors.successGreen,
+                          ),
+                          label: Text(
+                            AppLocalizations.current.currentPlan,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: theme.primaryColor,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            side: BorderSide(
+                              color: theme.primaryColor.withValues(alpha: 0.5),
+                              width: 1.5,
+                            ),
+                            backgroundColor: theme.primaryColor.withValues(
+                              alpha: 0.05,
+                            ),
+                          ),
+                        )
+                        : Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: theme.primaryColor.withValues(
+                                  alpha: 0.3,
+                                ),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: FilledButton(
+                            onPressed:
+                                isFreePlanVisible
+                                    ? null
+                                    : () => _onSelectPlan(context, plan),
+                            style: FilledButton.styleFrom(
+                              backgroundColor: theme.primaryColor,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              elevation: 0,
+                            ),
+                            child: Text(
+                              plan.isFree
+                                  ? AppLocalizations.current.useFree
+                                  : AppLocalizations.current.selectPlan,
+                              style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ),
+                        ),
+              ),
+              const SizedBox(height: 20),
+              // Footer Links
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (Platform.isIOS && hasPaidPlan) ...[
+                      _buildFooterLink(
+                        context,
+                        AppLocalizations.current.restore_purchases,
+                        () {
+                          context
+                              .read<SubscriptionPlanCubit>()
+                              .restorePurchases();
+                        },
+                      ),
+                      _buildDivider(theme),
+                    ],
+                    _buildFooterLink(
+                      context,
+                      AppLocalizations.current.terms_of_use,
+                      () {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.privacySecurityScreen,
+                        );
+                      },
+                    ),
+                    _buildDivider(theme),
+                    _buildFooterLink(
+                      context,
+                      AppLocalizations.current.privacy_policy,
+                      () {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.privacySecurityScreen,
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -824,13 +917,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
     );
   }
 
-  double _getDurationMultiplier(SubscriptionPlanModel plan) {
-    final baseMonths = plan.periodType == 'year' ? 12 : 1;
-    return _selectedDurationMonths / baseMonths;
-  }
-
   String _getStorageDisplayForDuration(SubscriptionPlanModel plan) {
-    // final multiplier = _getDurationMultiplier(plan);
     final totalBytes = (plan.storageLimitBytes).round();
 
     const int mb = 1024 * 1024;
@@ -843,11 +930,6 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
       return '${(totalBytes / mb).round()} MB';
     }
     return '$totalBytes B';
-  }
-
-  int _getLimitForDuration(int baseLimit, SubscriptionPlanModel plan) {
-    final multiplier = _getDurationMultiplier(plan);
-    return (baseLimit * multiplier).round();
   }
 
   void _onSelectPlan(BuildContext context, SubscriptionPlanModel plan) async {

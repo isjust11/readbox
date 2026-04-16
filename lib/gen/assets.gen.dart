@@ -238,6 +238,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/momo.png
   AssetGenImage get momo => const AssetGenImage('assets/images/momo.png');
 
+  /// File path: assets/images/payment_bg.png
+  AssetGenImage get paymentBg =>
+      const AssetGenImage('assets/images/payment_bg.png');
+
   /// File path: assets/images/payos.png
   AssetGenImage get payos => const AssetGenImage('assets/images/payos.png');
 
@@ -263,6 +267,7 @@ class $AssetsImagesGen {
     icSearch,
     logoThumbnail,
     momo,
+    paymentBg,
     payos,
     profileBackground,
     revenuecat,

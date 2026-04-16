@@ -88,9 +88,12 @@ class SubscriptionPlanModel {
   /// Giá hiển thị (VD: "99.000đ/tháng")
   String get priceDisplay {
     if (price == null || price! <= 0) return '';
-    final formatter = NumberFormat.currency(locale: 'vi_VN', symbol: 'đ', decimalDigits: 0);
-    final period = periodType == 'year' ? '/năm' : '/tháng';
-    return '${formatter.format(price)}$period';
+    final formatter = NumberFormat.currency(
+      locale: 'vi_VN',
+      symbol: 'đ',
+      decimalDigits: 0,
+    );
+    return formatter.format(price);
   }
 
   bool get isFree => price == null || price == 0;
