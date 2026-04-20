@@ -4407,6 +4407,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period. Account will be charged for renewal within 24-hours prior to the end of the current period.'**
   String get subscription_disclosure;
+
+  /// No description provided for @subscription_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription success {planName}'**
+  String subscription_success(Object planName);
 }
 
 class _AppLocalizationsDelegate

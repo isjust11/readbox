@@ -32,11 +32,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m4(error) => "Read error: ${error}";
 
-  static String m5(path) => "File saved to: ${path}";
+  static String m5(planName) => "Subscription success ${planName}";
 
-  static String m6(count) => "${count} pages";
+  static String m6(path) => "File saved to: ${path}";
 
-  static String m7(count) => "${count} ratings";
+  static String m7(count) => "${count} pages";
+
+  static String m8(count) => "${count} ratings";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1195,6 +1197,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscription_period": MessageLookupByLibrary.simpleMessage(
       "Subscription Period",
     ),
+    "subscription_success": m5,
     "success": MessageLookupByLibrary.simpleMessage("Success"),
     "systemNotifications": MessageLookupByLibrary.simpleMessage(
       "System Notifications",
@@ -1250,11 +1253,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "tools_document_scanner_description": MessageLookupByLibrary.simpleMessage(
       "Scan documents using camera",
     ),
-    "tools_file_saved_to": m5,
+    "tools_file_saved_to": m6,
     "tools_no_file_selected": MessageLookupByLibrary.simpleMessage(
       "No file selected",
     ),
-    "tools_pages_count": m6,
+    "tools_pages_count": m7,
     "tools_preview": MessageLookupByLibrary.simpleMessage("Preview"),
     "tools_processing": MessageLookupByLibrary.simpleMessage("Processing..."),
     "tools_remove_page": MessageLookupByLibrary.simpleMessage("Remove page"),
@@ -1288,7 +1291,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Total Interactions",
     ),
     "total_pages": MessageLookupByLibrary.simpleMessage("Total pages"),
-    "total_ratings": m7,
+    "total_ratings": m8,
     "transactionId": MessageLookupByLibrary.simpleMessage("Transaction ID"),
     "transaction_id": MessageLookupByLibrary.simpleMessage("Transaction ID"),
     "translate": MessageLookupByLibrary.simpleMessage("Language translation"),

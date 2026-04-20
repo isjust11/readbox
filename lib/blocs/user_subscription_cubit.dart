@@ -19,5 +19,10 @@ class UserSubscriptionCubit extends Cubit<BaseState> {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
+
+  void clear() {
+    userSubscription = null;
+    emit(InitState());
+  }
 }
 

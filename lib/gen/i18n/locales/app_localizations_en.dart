@@ -2245,4 +2245,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get subscription_disclosure =>
       'Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period. Account will be charged for renewal within 24-hours prior to the end of the current period.';
+
+  @override
+  String subscription_success(Object planName) {
+    return 'Subscription success $planName';
+  }
 }

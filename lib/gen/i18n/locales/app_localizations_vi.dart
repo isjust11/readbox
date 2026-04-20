@@ -2248,4 +2248,9 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get subscription_disclosure =>
       'Gói đăng ký sẽ tự động gia hạn trừ khi tính năng tự động gia hạn được tắt ít nhất 24 giờ trước khi kết thúc giai đoạn hiện tại. Tài khoản sẽ bị tính phí gia hạn trong vòng 24 giờ trước khi kết thúc giai đoạn hiện tại.';
+
+  @override
+  String subscription_success(Object planName) {
+    return 'Đăng ký gói $planName thành công';
+  }
 }

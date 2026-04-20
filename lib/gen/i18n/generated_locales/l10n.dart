@@ -6502,6 +6502,16 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Đăng ký gói {planName} thành công`
+  String subscription_success(Object planName) {
+    return Intl.message(
+      'Đăng ký gói $planName thành công',
+      name: 'subscription_success',
+      desc: '',
+      args: [planName],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/routes.dart';
-import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/app_widgets/app_profile.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -234,7 +235,11 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   void _handleLogout() async {
-    await SecureStorageService().clearAllSecureData();
+    // 1. Perform central logout (RevenueCat, secure storage, etc.)
+    await context.read<AuthCubit>().doLogout();
+
+    // 2. Clear subscription data
+    context.read<UserSubscriptionCubit>().clear();
     if (context.mounted) {
       Navigator.of(
         context,

@@ -962,8 +962,13 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
               );
 
           if (isActive && context.mounted) {
-            context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
-            _showMessage(context, AppLocalizations.current.success);
+            context.read<UserSubscriptionCubit>().loadMe();
+            _showMessage(
+              context,
+              AppLocalizations.current.subscription_success
+                  .toString()
+                  .replaceFirst('{planName}', plan.name),
+            );
           }
         } on PlatformException catch (e) {
           if (context.mounted) Navigator.pop(context); // hide loading
