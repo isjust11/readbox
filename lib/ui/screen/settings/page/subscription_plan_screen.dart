@@ -962,13 +962,15 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
               );
 
           if (isActive && context.mounted) {
-            context.read<UserSubscriptionCubit>().loadMe();
-            _showMessage(
-              context,
-              AppLocalizations.current.subscription_success
-                  .toString()
-                  .replaceFirst('{planName}', plan.name),
-            );
+            // 1. Cập nhật thông tin subscription của user
+            await context.read<UserSubscriptionCubit>().loadMe();
+
+            if (context.mounted) {
+              _showMessage(
+                context,
+                AppLocalizations.current.subscription_success,
+              );
+            }
           }
         } on PlatformException catch (e) {
           if (context.mounted) Navigator.pop(context); // hide loading

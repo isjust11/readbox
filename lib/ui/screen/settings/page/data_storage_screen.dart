@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
@@ -821,7 +822,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
   }
 
   String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+    return DateFormat('dd/MM/yyyy').format(date.toLocal());
   }
 }
 

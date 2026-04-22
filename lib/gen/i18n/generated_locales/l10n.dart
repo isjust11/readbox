@@ -6503,13 +6503,13 @@ class AppLocalizations {
     );
   }
 
-  /// `Đăng ký gói {planName} thành công`
-  String subscription_success(Object planName) {
+  /// `Đăng ký gói thành công`
+  String get subscription_success {
     return Intl.message(
-      'Đăng ký gói $planName thành công',
+      'Đăng ký gói thành công',
       name: 'subscription_success',
       desc: '',
-      args: [planName],
+      args: [],
     );
   }
 }

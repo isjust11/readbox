@@ -41,9 +41,9 @@ class RevenueCatService {
       // with non-consumable (Lifetime) products.
       // StoreKit 2 in sandbox can cause "purchased product was missing in the receipt" errors.
       // TODO: Consider re-enabling SK2 after production validation is confirmed stable.
-      if (Platform.isIOS) {
-        configuration.usesStoreKit2IfAvailable = false;
-      }
+      // if (Platform.isIOS) {
+      //   configuration.usesStoreKit2IfAvailable = false;
+      // }
 
       await Purchases.configure(configuration);
 

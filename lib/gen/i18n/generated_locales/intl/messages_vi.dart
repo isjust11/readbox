@@ -32,13 +32,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m4(error) => "Lỗi đọc: ${error}";
 
-  static String m5(planName) => "Đăng ký gói ${planName} thành công";
+  static String m5(path) => "File đã lưu tại: ${path}";
 
-  static String m6(path) => "File đã lưu tại: ${path}";
+  static String m6(count) => "${count} trang";
 
-  static String m7(count) => "${count} trang";
-
-  static String m8(count) => "${count} đánh giá";
+  static String m7(count) => "${count} đánh giá";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1256,7 +1254,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscription_period": MessageLookupByLibrary.simpleMessage(
       "Chu Kỳ Đăng Ký",
     ),
-    "subscription_success": m5,
+    "subscription_success": MessageLookupByLibrary.simpleMessage(
+      "Đăng ký gói thành công",
+    ),
     "success": MessageLookupByLibrary.simpleMessage("Thành công"),
     "systemNotifications": MessageLookupByLibrary.simpleMessage(
       "Thông báo hệ thống",
@@ -1316,11 +1316,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "tools_document_scanner_description": MessageLookupByLibrary.simpleMessage(
       "Quét tài liệu bằng camera",
     ),
-    "tools_file_saved_to": m6,
+    "tools_file_saved_to": m5,
     "tools_no_file_selected": MessageLookupByLibrary.simpleMessage(
       "Chưa chọn file",
     ),
-    "tools_pages_count": m7,
+    "tools_pages_count": m6,
     "tools_preview": MessageLookupByLibrary.simpleMessage("Xem trước"),
     "tools_processing": MessageLookupByLibrary.simpleMessage("Đang xử lý..."),
     "tools_remove_page": MessageLookupByLibrary.simpleMessage("Xóa trang"),
@@ -1356,7 +1356,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tổng Tương Tác",
     ),
     "total_pages": MessageLookupByLibrary.simpleMessage("Số trang"),
-    "total_ratings": m8,
+    "total_ratings": m7,
     "transactionId": MessageLookupByLibrary.simpleMessage("Mã giao dịch"),
     "transaction_id": MessageLookupByLibrary.simpleMessage("Mã giao dịch"),
     "translate": MessageLookupByLibrary.simpleMessage("Ngôn ngữ dịch"),

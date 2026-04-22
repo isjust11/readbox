@@ -4411,8 +4411,8 @@ abstract class AppLocalizations {
   /// No description provided for @subscription_success.
   ///
   /// In en, this message translates to:
-  /// **'Subscription success {planName}'**
-  String subscription_success(Object planName);
+  /// **'Subscription success'**
+  String get subscription_success;
 }
 
 class _AppLocalizationsDelegate
