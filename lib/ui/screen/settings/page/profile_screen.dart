@@ -19,6 +19,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return BaseScreen(
+      useSafeAreaTop: false,
       hideAppBar: true,
       body: _buildUserInfo(context, user),
       colorBg: theme.colorScheme.surface,

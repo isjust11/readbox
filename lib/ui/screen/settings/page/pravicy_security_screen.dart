@@ -57,7 +57,8 @@ class _PrivacySecurityBodyState extends State<PrivacySecurityBody> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
+    return BaseScreen<PageCubit>(
+      autoHandleState: true,
       title: AppLocalizations.current.privacy_and_security,
       colorTitle: Theme.of(context).colorScheme.surfaceContainerHighest,
       body: _buildBody(context),
@@ -94,14 +95,11 @@ class _PrivacySecurityBodyState extends State<PrivacySecurityBody> {
             children: [
               if (_webViewController != null)
                 WebViewWidget(controller: _webViewController!),
-              if (_isLoading) const Center(child: CircularProgressIndicator()),
             ],
           );
         }
-        if (state is ErrorState) {
-          return Center(child: Text(state.data.toString()));
-        }
-        return const Center(child: CircularProgressIndicator());
+
+        return const SizedBox.shrink();
       },
     );
   }

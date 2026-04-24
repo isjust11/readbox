@@ -2248,4 +2248,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscription_success => 'Subscription success';
+
+  @override
+  String get no_data_description => 'No data available to display';
+
+  @override
+  String get please_select_ebook_file => 'Please select ebook file';
+
+  @override
+  String get uploading_progress_cancel_warning =>
+      'Uploading progress is in progress. If you exit, the process will be cancelled. Are you sure you want to exit?';
 }

@@ -8,6 +8,7 @@ import 'package:readbox/routes.dart';
 import 'package:readbox/services/secure_storage_service.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:readbox/ui/widget/widget.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -84,7 +85,10 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
+    return BaseScreen(
+      hideAppBar: true,
+      useSafeAreaTop: false,
+      useSafeAreaBottom: false,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

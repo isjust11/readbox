@@ -28,13 +28,10 @@ class SupportCenterBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<PageCubit>().getPageBySlug('support-center');
-    return BaseScreen(
+    return BaseScreen<PageCubit>(
+      autoHandleState: true,
       title: AppLocalizations.current.helpCenter,
       colorTitle: Theme.of(context).colorScheme.onPrimary,
-      // stateWidget: CustomLoading<PageCubit>(
-      //   message: AppLocalizations.current.loading,
-      //   size: AppDimens.SIZE_32,
-      // ),
       body: _buildBody(context),
       colorBg: Theme.of(context).colorScheme.surface,
     );
@@ -70,11 +67,7 @@ class SupportCenterBody extends StatelessWidget {
             ),
           );
         }
-        if (state is ErrorState) {
-          return Center(
-            child: Text(state.data.toString()),
-          );
-        }
+
         return const SizedBox.shrink();
       },
     );

@@ -13,8 +13,12 @@ class UserSubscriptionCubit extends Cubit<BaseState> {
     try {
       emit(LoadingState());
       final me = await repository.getMe();
-      userSubscription = me;
-      emit(LoadedState<UserSubscriptionModel>(me));
+      if (me == null) {
+        emit(EmptyState());
+      } else {
+        userSubscription = me;
+        emit(LoadedState<UserSubscriptionModel>(me));
+      }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }
@@ -25,4 +29,3 @@ class UserSubscriptionCubit extends Cubit<BaseState> {
     emit(InitState());
   }
 }
-

@@ -83,7 +83,11 @@ class NotificationCubit extends Cubit<BaseState> {
       }
 
       unreadCountNotifier.value = _unreadCount;
-      emit(LoadedState(List.from(_notifications)));
+      if (_notifications.isEmpty) {
+        emit(EmptyState());
+      } else {
+        emit(LoadedState(List.from(_notifications)));
+      }
     } catch (e) {
       _isLoadingMore = false;
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -130,11 +134,7 @@ class NotificationCubit extends Cubit<BaseState> {
         _notifications[index] = updatedNotification;
         _unreadCount = _unreadCount + 1;
         unreadCountNotifier.value = _unreadCount;
-        emit(
-          LoadedState(
-            List.from(_notifications),
-          ),
-        );
+        emit(LoadedState(List.from(_notifications)));
       }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
@@ -174,11 +174,7 @@ class NotificationCubit extends Cubit<BaseState> {
       }
       _totalCount = _totalCount > 0 ? _totalCount - 1 : 0;
 
-      emit(
-        LoadedState(
-          List.from(_notifications),
-        ),
-      );
+      emit(LoadedState(List.from(_notifications)));
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }

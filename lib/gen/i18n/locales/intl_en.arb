@@ -776,5 +776,8 @@
   "terms_of_use": "Terms of Use",
   "privacy_policy": "Privacy Policy",
   "subscription_disclosure": "Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period. Account will be charged for renewal within 24-hours prior to the end of the current period.",
-  "subscription_success": "Subscription success"
+  "subscription_success": "Subscription success",
+  "no_data_description": "No data available to display",
+  "please_select_ebook_file": "Please select ebook file",
+  "uploading_progress_cancel_warning": "Uploading progress is in progress. If you exit, the process will be cancelled. Are you sure you want to exit?"
 }

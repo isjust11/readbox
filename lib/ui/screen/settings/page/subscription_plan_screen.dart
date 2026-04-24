@@ -118,7 +118,13 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
           }
         },
         builder: (context, state) {
-          return Scaffold(
+          return BaseScreen<SubscriptionPlanCubit>(
+            useSafeAreaTop: false,
+            useSafeAreaBottom: false,
+            autoHandleState: true,
+            emptyIcon: Assets.icons.walletEmpty,
+            emptyMessage: AppLocalizations.current.noSubscriptionPlans,
+            hideAppBar: true,
             body: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
@@ -181,19 +187,9 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   }
 
   Widget _buildBodyByState(BuildContext context, BaseState state) {
-    if (state is LoadingState || state is InitState) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(AppDimens.SIZE_24),
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-    // ErrorState được xử lý trong listener, giữ lại danh sách cũ
     // không render error ở đây để tránh màn hình trắng
     if (state is LoadedState<List<SubscriptionPlanModel>>) {
       final plans = state.data;
-      if (plans.isEmpty) return _buildEmpty(context);
       return TweenAnimationBuilder<double>(
         tween: Tween(begin: 0.0, end: 1.0),
         duration: const Duration(milliseconds: 700),
@@ -207,44 +203,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         child: _buildPlanList(context, plans),
       );
     }
-    // LoadedState<String> (restore success), LoadedState<UserSubscriptionModel>,
-    // và ErrorState đều được handle trong listener rồi reload plans.
-    // Trong thời gian chờ reload, hiển thị loading để tránh màn hình trắng.
-    return const Center(
-      child: Padding(
-        padding: EdgeInsets.all(AppDimens.SIZE_24),
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-
-  Widget _buildEmpty(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppDimens.SIZE_24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.card_membership_outlined,
-              size: AppDimens.SIZE_60,
-              color: Theme.of(
-                context,
-              ).colorScheme.primary.withValues(alpha: 0.5),
-            ),
-            const SizedBox(height: AppDimens.SIZE_16),
-            CustomTextLabel(
-              AppLocalizations.current.noSubscriptionPlans,
-              fontSize: AppDimens.SIZE_16,
-              color:
-                  Theme.of(context).textTheme.bodyMedium?.color ??
-                  AppColors.colorTitle,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
+    return const SizedBox.shrink();
   }
 
   Widget _buildPlanList(

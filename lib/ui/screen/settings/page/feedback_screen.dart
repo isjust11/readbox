@@ -10,8 +10,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io';
 import 'package:readbox/injection_container.dart';
+import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
-
 
 class FeedbackScreen extends StatelessWidget {
   const FeedbackScreen({super.key});
@@ -107,15 +107,18 @@ class _FeedbackBodyState extends State<FeedbackBody> {
       content: _contentController.text.trim(),
       type: _selectedType,
       priority: _selectedPriority,
-      email: _emailController.text.trim().isNotEmpty
-          ? _emailController.text.trim()
-          : null,
-      phone: _phoneController.text.trim().isNotEmpty
-          ? _phoneController.text.trim()
-          : null,
-      name: _nameController.text.trim().isNotEmpty
-          ? _nameController.text.trim()
-          : null,
+      email:
+          _emailController.text.trim().isNotEmpty
+              ? _emailController.text.trim()
+              : null,
+      phone:
+          _phoneController.text.trim().isNotEmpty
+              ? _phoneController.text.trim()
+              : null,
+      name:
+          _nameController.text.trim().isNotEmpty
+              ? _nameController.text.trim()
+              : null,
       deviceInfo: _deviceInfo.isNotEmpty ? _deviceInfo : null,
       appVersion: _appVersion.isNotEmpty ? _appVersion : null,
       osVersion: _osVersion.isNotEmpty ? _osVersion : null,
@@ -127,30 +130,29 @@ class _FeedbackBodyState extends State<FeedbackBody> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<FeedbackCubit, BaseState>(
-      bloc: context.read<FeedbackCubit>(),
-      listener: (context, state) {
+    final theme = Theme.of(context);
+    return BaseScreen<FeedbackCubit>(
+      autoHandleState: true,
+      useSafeAreaBottom: false,
+      useSafeAreaTop: false,
+      title: AppLocalizations.current.sendFeedback,
+      colorTitle: theme.colorScheme.surfaceContainerHighest,
+      onStateChanged: (context, state) {
         if (state is LoadedState) {
           _clearForm();
+          AppSnackBar.show(
+            context,
+            message: AppLocalizations.current.feedbackSuccess,
+            snackBarType: SnackBarType.success,
+          );
         }
       },
-      child: BlocBuilder<FeedbackCubit, BaseState>(
-        bloc: context.read<FeedbackCubit>(),
-        builder: (context, state) {
-          final theme = Theme.of(context);
-          return BaseScreen(
-            title: AppLocalizations.current.sendFeedback,
-            colorTitle: theme.colorScheme.surfaceContainerHighest,
-            body: _buildBody(theme, state),
-            messageNotify: CustomSnackBar<FeedbackCubit>(),
-            colorBg: theme.colorScheme.surface,
-          );
-        },
-      ),
+      body: _buildBody(theme),
+      colorBg: theme.colorScheme.surface,
     );
   }
 
-  Widget _buildBody(ThemeData theme, BaseState state) {
+  Widget _buildBody(ThemeData theme) {
     return SingleChildScrollView(
       padding: EdgeInsets.all(AppDimens.SIZE_16),
       child: Form(
@@ -162,7 +164,7 @@ class _FeedbackBodyState extends State<FeedbackBody> {
             const SizedBox(height: AppDimens.SIZE_12),
             _buildFeedbackForm(),
             const SizedBox(height: AppDimens.SIZE_12),
-            _buildSubmitButton(state),
+            _buildSubmitButton(),
           ],
         ),
       ),
@@ -177,7 +179,9 @@ class _FeedbackBodyState extends State<FeedbackBody> {
         CustomTextLabel(
           AppLocalizations.current.feedbackDescription,
           fontSize: AppDimens.SIZE_16,
-          color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.colorTitle,
+          color:
+              Theme.of(context).textTheme.bodyMedium?.color ??
+              AppColors.colorTitle,
         ),
       ],
     );
@@ -206,7 +210,11 @@ class _FeedbackBodyState extends State<FeedbackBody> {
           title: AppLocalizations.current.feedbackTitle,
           hintText: AppLocalizations.current.feedbackTitle,
           prefixIcon: Icon(Icons.title_outlined),
-          validator: (value) => value.isEmpty ? AppLocalizations.current.feedbackTitleRequired : null,
+          validator:
+              (value) =>
+                  value.isEmpty
+                      ? AppLocalizations.current.feedbackTitleRequired
+                      : null,
         ),
         const SizedBox(height: 16),
 
@@ -219,7 +227,11 @@ class _FeedbackBodyState extends State<FeedbackBody> {
           prefixIcon: Icon(Icons.description_outlined),
           maxLines: 5,
           minLines: 5,
-          validator: (value) => value.isEmpty ? AppLocalizations.current.feedbackContentRequired : null,
+          validator:
+              (value) =>
+                  value.isEmpty
+                      ? AppLocalizations.current.feedbackContentRequired
+                      : null,
         ),
         const SizedBox(height: 16),
 
@@ -243,7 +255,11 @@ class _FeedbackBodyState extends State<FeedbackBody> {
                 title: 'Email',
                 hintText: 'Email',
                 prefixIcon: Icon(Icons.email_outlined),
-                validator: (value) => value.isEmpty ? AppLocalizations.current.feedbackEmailInvalid : null,
+                validator:
+                    (value) =>
+                        value.isEmpty
+                            ? AppLocalizations.current.feedbackEmailInvalid
+                            : null,
               ),
             ),
           ],
@@ -255,7 +271,11 @@ class _FeedbackBodyState extends State<FeedbackBody> {
           hintText: AppLocalizations.current.feedbackPhone,
           prefixIcon: Icon(Icons.phone_outlined),
           keyboardType: TextInputType.phone,
-          validator: (value) => value.isEmpty ? AppLocalizations.current.feedbackPhoneInvalid : null,
+          validator:
+              (value) =>
+                  value.isEmpty
+                      ? AppLocalizations.current.feedbackPhoneInvalid
+                      : null,
         ),
         const SizedBox(height: 16),
         // Tùy chọn
@@ -281,7 +301,8 @@ class _FeedbackBodyState extends State<FeedbackBody> {
       title,
       fontSize: AppDimens.SIZE_14,
       fontWeight: FontWeight.w600,
-      color: Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.colorTitle,
+      color:
+          Theme.of(context).textTheme.bodyMedium?.color ?? AppColors.colorTitle,
     );
   }
 
@@ -301,7 +322,10 @@ class _FeedbackBodyState extends State<FeedbackBody> {
   Widget _buildPrioritySelector() {
     return CustomDropDown(
       hintText: AppLocalizations.current.feedbackPriority,
-      listValues: FeedbackPriority.values.map((priority) => priority.displayName).toList(),
+      listValues:
+          FeedbackPriority.values
+              .map((priority) => priority.displayName)
+              .toList(),
       selectedIndex: _selectedPriority.index,
       didSelected: (index) {
         setState(() {
@@ -311,34 +335,37 @@ class _FeedbackBodyState extends State<FeedbackBody> {
     );
   }
 
-  Widget _buildSubmitButton(BaseState state) {
+  Widget _buildSubmitButton() {
     final theme = Theme.of(context);
-    final isLoading = state is LoadingState;
+
     return SizedBox(
       width: double.infinity,
       height: 40,
       child: ElevatedButton(
-        onPressed: isLoading ? null : _submitFeedback,
+        onPressed: _submitFeedback,
         style: ElevatedButton.styleFrom(
           backgroundColor: theme.primaryColor,
           foregroundColor: theme.colorScheme.onPrimary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        child: isLoading
-            ? SizedBox(
-                width: AppDimens.SIZE_20,
-                height: AppDimens.SIZE_20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.onPrimary),
+        child:
+            BlocProvider.of<FeedbackCubit>(context).state is LoadingState
+                ? SizedBox(
+                  width: AppDimens.SIZE_20,
+                  height: AppDimens.SIZE_20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      theme.colorScheme.onPrimary,
+                    ),
+                  ),
+                )
+                : CustomTextLabel(
+                  AppLocalizations.current.feedbackSend,
+                  fontSize: AppDimens.SIZE_16,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSecondary,
                 ),
-              )
-            : CustomTextLabel(
-                AppLocalizations.current.feedbackSend,
-                fontSize: AppDimens.SIZE_16,
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSecondary,
-              ),
       ),
     );
   }

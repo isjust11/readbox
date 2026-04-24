@@ -37,8 +37,12 @@ class EmptyData extends StatelessWidget {
         SvgPicture.asset(
           width: AppDimens.SIZE_128,
           height: AppDimens.SIZE_128,
-          Assets.icons.icNoDocument,
+          Assets.icons.documentEmpty,
           fit: BoxFit.contain,
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).colorScheme.outline,
+            BlendMode.srcIn,
+          ),
         ),
         const SizedBox(height: AppDimens.SIZE_4),
         CustomTextLabel(
@@ -71,8 +75,12 @@ class EmptyData extends StatelessWidget {
         SvgPicture.asset(
           width: AppDimens.SIZE_128,
           height: AppDimens.SIZE_128,
-          Assets.icons.icSearchEmpty,
+          Assets.icons.searchEmpty,
           fit: BoxFit.contain,
+          colorFilter: ColorFilter.mode(
+            Theme.of(context).colorScheme.outline,
+            BlendMode.srcIn,
+          ),
         ),
         const SizedBox(height: AppDimens.SIZE_4),
         CustomTextLabel(

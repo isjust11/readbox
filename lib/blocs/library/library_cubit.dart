@@ -12,7 +12,7 @@ import 'package:readbox/domain/data/datasources/remote/admin_remote_data_source.
 class LibraryCubit extends Cubit<BaseState> {
   final AdminRemoteDataSource adminRemoteDataSource;
   String? _errorUploadEbook;
-  String? _errorUploadCoverImage; 
+  String? _errorUploadCoverImage;
   String? _ebookFileUrl;
   String? _coverImageUrl;
   bool _uploadEbookSuccess = false;
@@ -29,10 +29,8 @@ class LibraryCubit extends Cubit<BaseState> {
   bool get isUploading => _isUploading;
   final BookRepository repository;
 
-  LibraryCubit({
-    required this.repository,
-    required this.adminRemoteDataSource,
-  }) : super(InitState());
+  LibraryCubit({required this.repository, required this.adminRemoteDataSource})
+    : super(InitState());
 
   List<BookModel> _books = [];
   List<BookModel> get books => _books;
@@ -132,16 +130,15 @@ class LibraryCubit extends Cubit<BaseState> {
     _errorUploadCoverImage = null;
   }
 
-    Future<void> loadCategories() async {
+  Future<void> loadCategories() async {
     try {
       emit(LoadingState());
       _categories = await adminRemoteDataSource.getCategories();
       emit(LoadedState(_categories));
     } catch (e) {
-      emit(ErrorState(BlocUtils.getMessageError(e),));
+      emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
-
 
   void resetCoverImage() {
     _coverImageUrl = null;
@@ -241,7 +238,11 @@ class LibraryCubit extends Cubit<BaseState> {
   }) async {
     try {
       if (_ebookFileUrl == null) {
-        emit(ErrorState(BlocUtils.getMessageError('Please upload ebook file first'),));
+        emit(
+          ErrorState(
+            BlocUtils.getMessageError('Please upload ebook file first'),
+          ),
+        );
         return;
       }
 
@@ -268,12 +269,9 @@ class LibraryCubit extends Cubit<BaseState> {
       _ebookFileUrl = null;
       _coverImageUrl = null;
       _uploadEbookSuccess = true;
-      emit(LoadedState(
-        response,
-        message: 'Book created successfully',
-      ));
+      emit(LoadedState(response, message: 'Book created successfully'));
     } catch (e) {
-      emit(ErrorState(BlocUtils.getMessageError(e),));
+      emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
 
@@ -290,7 +288,8 @@ class LibraryCubit extends Cubit<BaseState> {
     bool isPublic = true,
     String? categoryId,
     String? existingFileUrl, // File URL từ server (nếu không upload file mới)
-    String? existingCoverImageUrl, // Cover URL từ server (nếu không upload cover mới)
+    String?
+    existingCoverImageUrl, // Cover URL từ server (nếu không upload cover mới)
     int? fileSize,
   }) async {
     try {
@@ -300,8 +299,12 @@ class LibraryCubit extends Cubit<BaseState> {
         'title': title,
         'author': author,
         'description': description,
-        'fileUrl': _ebookFileUrl ?? existingFileUrl, // Dùng file mới nếu có, không thì dùng file cũ
-        'coverImageUrl': _coverImageUrl ?? existingCoverImageUrl, // Dùng cover mới nếu có, không thì dùng cover cũ
+        'fileUrl':
+            _ebookFileUrl ??
+            existingFileUrl, // Dùng file mới nếu có, không thì dùng file cũ
+        'coverImageUrl':
+            _coverImageUrl ??
+            existingCoverImageUrl, // Dùng cover mới nếu có, không thì dùng cover cũ
         'publisher': publisher,
         'isbn': isbn,
         'totalPages': totalPages,
@@ -312,7 +315,7 @@ class LibraryCubit extends Cubit<BaseState> {
       };
 
       final response = await adminRemoteDataSource.updateBook(bookId, bookData);
-      if(_books.isNotEmpty) {
+      if (_books.isNotEmpty) {
         _books.removeWhere((book) => book.id == bookId);
         _books.add(response);
       }
@@ -320,12 +323,9 @@ class LibraryCubit extends Cubit<BaseState> {
       _ebookFileUrl = null;
       _coverImageUrl = null;
       _uploadEbookSuccess = true;
-      emit(LoadedState(
-        response,
-        message: 'Book updated successfully',
-      ));
+      emit(LoadedState(response, message: 'Book updated successfully'));
     } catch (e) {
-      emit(ErrorState(BlocUtils.getMessageError(e),));
+      emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
 

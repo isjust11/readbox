@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/payment/payment_cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -38,34 +39,12 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
       value: _paymentCubit,
       child: BaseScreen<PaymentCubit>(
         title: AppLocalizations.current.payment_history,
+        emptyIcon: Assets.icons.walletEmpty,
+        emptyMessage: AppLocalizations.current.no_payment_history,
         body: BlocBuilder<PaymentCubit, BaseState>(
           builder: (context, state) {
             if (state is LoadedState<List<PaymentHistoryModel>>) {
               final payments = state.data;
-
-              if (payments.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.history,
-                        size: 64,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: 0.5),
-                      ),
-                      const SizedBox(height: AppDimens.SIZE_16),
-                      Text(
-                        AppLocalizations.current.no_payment_history,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }
 
               return ListView.separated(
                 padding: const EdgeInsets.all(AppDimens.SIZE_16),

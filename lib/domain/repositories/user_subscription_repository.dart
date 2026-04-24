@@ -6,6 +6,6 @@ class UserSubscriptionRepository {
 
   UserSubscriptionRepository({required this.remoteDataSource});
 
-  Future<UserSubscriptionModel> getMe() async 
-    => await remoteDataSource.getMe();
+  Future<UserSubscriptionModel?> getMe() async =>
+      await remoteDataSource.getMe();
 }

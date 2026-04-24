@@ -46,7 +46,11 @@ class PaymentCubit extends Cubit<BaseState> {
     try {
       emit(LoadingState());
       final history = await repository.getPaymentHistory();
-      emit(LoadedState<List<PaymentHistoryModel>>(history));
+      if (history.isEmpty) {
+        emit(EmptyState());
+      } else {
+        emit(LoadedState<List<PaymentHistoryModel>>(history));
+      }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
     }

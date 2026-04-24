@@ -7,6 +7,7 @@ import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/entities/entities.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/res/enum.dart';
@@ -140,10 +141,17 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return BaseScreen(
+    return BaseScreen<NotificationCubit>(
+      autoHandleState: true,
+      useSafeAreaBottom: false,
+      useSafeAreaTop: false,
       colorTitle: theme.colorScheme.surfaceContainerHighest,
       body: _buildBody(context),
-      colorBg: Theme.of(context).colorScheme.surface,
+      colorBg: theme.colorScheme.surface,
+      emptyIcon: Assets.icons.notificationEmpty,
+      emptyMessage: AppLocalizations.current.noNotifications,
+      emptyDescription:
+          AppLocalizations.current.youWillReceiveNotificationsHere,
       customAppBar: BaseAppBar(
         title: AppLocalizations.current.notifications,
         centerTitle: true,
@@ -190,44 +198,7 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
   Widget _buildBody(BuildContext context) {
     return BlocBuilder<NotificationCubit, BaseState>(
       bloc: _notificationCubit,
-      buildWhen: (previous, current) {
-        // Rebuild when state type changes OR when state data changes
-        return previous.runtimeType != current.runtimeType ||
-            previous != current;
-      },
       builder: (context, state) {
-        if (state is LoadingState) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (state is ErrorState) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 48,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                const SizedBox(height: 16),
-                Text(state.data),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _onRefresh,
-                  child: Text(AppLocalizations.current.try_again),
-                ),
-              ],
-            ),
-          );
-        }
-
-        final notifications = _notificationCubit.notifications;
-
-        if (notifications.isEmpty) {
-          return _buildEmptyState();
-        }
-
         return Column(
           children: [
             if (_notificationCubit.unreadCount > 0)
@@ -287,31 +258,6 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.notifications_none, size: 80, color: Colors.grey[400]),
-          const SizedBox(height: 16),
-          Text(
-            AppLocalizations.current.noNotifications,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            AppLocalizations.current.youWillReceiveNotificationsHere,
-            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-          ),
-        ],
-      ),
     );
   }
 

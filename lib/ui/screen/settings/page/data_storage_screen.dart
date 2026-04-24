@@ -53,40 +53,16 @@ class _DataStorageScreenState extends State<DataStorageScreen>
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen(
+    return BaseScreen<UserSubscriptionCubit>(
+      useSafeAreaBottom: false,
+      useSafeAreaTop: false,
+      autoHandleState: true,
       title: AppLocalizations.current.usage_statistics,
+      onRetry: () async {
+        await context.read<UserSubscriptionCubit>().loadMe();
+      },
       body: BlocBuilder<UserSubscriptionCubit, BaseState>(
         builder: (context, state) {
-          if (state is LoadingState) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is ErrorState) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
-                  const SizedBox(height: 16),
-                  Text(
-                    state.message ??
-                        AppLocalizations.current.error_loading_data,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      context.read<UserSubscriptionCubit>().loadMe();
-                    },
-                    icon: const Icon(Icons.refresh),
-                    label: Text(AppLocalizations.current.retry),
-                  ),
-                ],
-              ),
-            );
-          }
-
           if (state is LoadedState<UserSubscriptionModel>) {
             final subscription = state.data;
             return FadeTransition(
@@ -110,8 +86,8 @@ class _DataStorageScreenState extends State<DataStorageScreen>
     return RefreshIndicator(
       onRefresh: () async {
         await context.read<UserSubscriptionCubit>().loadMe();
-        final counts =
-            await context.read<UserInteractionCubit>().getMyInteractionCounts();
+        final counts = await context.read<UserInteractionCubit>()
+            .getMyInteractionCounts();
         if (mounted) {
           setState(() {
             interactionCounts = counts;

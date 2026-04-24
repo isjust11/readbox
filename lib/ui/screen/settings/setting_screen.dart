@@ -78,9 +78,7 @@ class _SettingScreenState extends State<SettingScreen> {
         if (state is LoadedState) {
           final data = state.data;
           if (data is Map && data['isDeleted'] == true) {
-            // Clear subscription data before leaving
             context.read<UserSubscriptionCubit>().clear();
-            
             Navigator.of(
               context,
             ).pushNamedAndRemoveUntil(Routes.loginScreen, (route) => false);

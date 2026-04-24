@@ -4413,6 +4413,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Subscription success'**
   String get subscription_success;
+
+  /// No description provided for @no_data_description.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available to display'**
+  String get no_data_description;
+
+  /// No description provided for @please_select_ebook_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select ebook file'**
+  String get please_select_ebook_file;
+
+  /// No description provided for @uploading_progress_cancel_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading progress is in progress. If you exit, the process will be cancelled. Are you sure you want to exit?'**
+  String get uploading_progress_cancel_warning;
 }
 
 class _AppLocalizationsDelegate

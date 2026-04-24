@@ -14,6 +14,63 @@ import 'package:flutter/widgets.dart';
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/Bill_empty.svg
+  String get billEmpty => 'assets/icons/Bill_empty.svg';
+
+  /// File path: assets/icons/Blogs_empty.svg
+  String get blogsEmpty => 'assets/icons/Blogs_empty.svg';
+
+  /// File path: assets/icons/Calendar_empty.svg
+  String get calendarEmpty => 'assets/icons/Calendar_empty.svg';
+
+  /// File path: assets/icons/Cards_empty.svg
+  String get cardsEmpty => 'assets/icons/Cards_empty.svg';
+
+  /// File path: assets/icons/Dashboard_empty.svg
+  String get dashboardEmpty => 'assets/icons/Dashboard_empty.svg';
+
+  /// File path: assets/icons/Data_empty.svg
+  String get dataEmpty => 'assets/icons/Data_empty.svg';
+
+  /// File path: assets/icons/Document_empty.svg
+  String get documentEmpty => 'assets/icons/Document_empty.svg';
+
+  /// File path: assets/icons/Email_empty.svg
+  String get emailEmpty => 'assets/icons/Email_empty.svg';
+
+  /// File path: assets/icons/Folder_empty.svg
+  String get folderEmpty => 'assets/icons/Folder_empty.svg';
+
+  /// File path: assets/icons/Inbox_empty.svg
+  String get inboxEmpty => 'assets/icons/Inbox_empty.svg';
+
+  /// File path: assets/icons/Navigation_empty.svg
+  String get navigationEmpty => 'assets/icons/Navigation_empty.svg';
+
+  /// File path: assets/icons/Notification_empty.svg
+  String get notificationEmpty => 'assets/icons/Notification_empty.svg';
+
+  /// File path: assets/icons/Photos_empty.svg
+  String get photosEmpty => 'assets/icons/Photos_empty.svg';
+
+  /// File path: assets/icons/Search_empty.svg
+  String get searchEmpty => 'assets/icons/Search_empty.svg';
+
+  /// File path: assets/icons/Tags_empty.svg
+  String get tagsEmpty => 'assets/icons/Tags_empty.svg';
+
+  /// File path: assets/icons/Task_empty.svg
+  String get taskEmpty => 'assets/icons/Task_empty.svg';
+
+  /// File path: assets/icons/Upload_empty.svg
+  String get uploadEmpty => 'assets/icons/Upload_empty.svg';
+
+  /// File path: assets/icons/User_empty.svg
+  String get userEmpty => 'assets/icons/User_empty.svg';
+
+  /// File path: assets/icons/Wallet_empty.svg
+  String get walletEmpty => 'assets/icons/Wallet_empty.svg';
+
   /// File path: assets/icons/ic_avatar.svg
   String get icAvatar => 'assets/icons/ic_avatar.svg';
 
@@ -153,8 +210,30 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_word.svg
   String get icWord => 'assets/icons/ic_word.svg';
 
+  /// File path: assets/icons/message_empty.svg
+  String get messageEmpty => 'assets/icons/message_empty.svg';
+
   /// List of all assets
   List<dynamic> get values => [
+    billEmpty,
+    blogsEmpty,
+    calendarEmpty,
+    cardsEmpty,
+    dashboardEmpty,
+    dataEmpty,
+    documentEmpty,
+    emailEmpty,
+    folderEmpty,
+    inboxEmpty,
+    navigationEmpty,
+    notificationEmpty,
+    photosEmpty,
+    searchEmpty,
+    tagsEmpty,
+    taskEmpty,
+    uploadEmpty,
+    userEmpty,
+    walletEmpty,
     icAvatar,
     icCalendar,
     icCategory,
@@ -201,6 +280,7 @@ class $AssetsIconsGen {
     icTrash,
     icUser,
     icWord,
+    messageEmpty,
   ];
 }
 

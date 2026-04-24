@@ -24,7 +24,6 @@ class ReviewsScreen extends StatefulWidget {
   final double? averageRating;
   final int? totalRatings;
 
-
   const ReviewsScreen({
     super.key,
     required this.bookId,
@@ -48,7 +47,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   bool _hasMore = true;
   bool _hasError = false;
   String? _errorMessage;
-    UserModel? currentUser;
+  UserModel? currentUser;
   @override
   void initState() {
     super.initState();
@@ -145,19 +144,20 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   void _showRatingDialog({UserInteractionEntity? existingReview}) {
     showDialog(
       context: context,
-      builder: (context) => RatingDialog(
-        initialRating: existingReview?.rating?.toDouble(),
-        initialComment: existingReview?.comment,
-        onSubmit: (rating, comment) async {
-          await context.read<UserInteractionCubit>().rateAndComment(
-            targetType: 'book',
-            targetId: widget.bookId,
-            rating: rating,
-            comment: comment.isNotEmpty ? comment : null,
-          );
-          await _loadReviews(isRefresh: true);
-        },
-      ),
+      builder:
+          (context) => RatingDialog(
+            initialRating: existingReview?.rating?.toDouble(),
+            initialComment: existingReview?.comment,
+            onSubmit: (rating, comment) async {
+              await context.read<UserInteractionCubit>().rateAndComment(
+                targetType: 'book',
+                targetId: widget.bookId,
+                rating: rating,
+                comment: comment.isNotEmpty ? comment : null,
+              );
+              await _loadReviews(isRefresh: true);
+            },
+          ),
     );
   }
 
@@ -166,31 +166,23 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return BlocProvider.value(
-      value: context.read<UserInteractionCubit>(),
-      child: BaseScreen(
-        colorBg: colorScheme.surface,
-        customAppBar: BaseAppBar(
-          title: AppLocalizations.current.reviews,
-          centerTitle: true,
-        ),
-        body: RefreshIndicator(
-          onRefresh: () => _loadReviews(isRefresh: true),
-          child: _buildBody(colorScheme),
-        ),
+    return BaseScreen<UserInteractionCubit>(
+      autoHandleState: true,
+      useSafeAreaBottom: true,
+      useSafeAreaTop: false,
+      colorBg: colorScheme.surface,
+      customAppBar: BaseAppBar(
+        title: AppLocalizations.current.reviews,
+        centerTitle: true,
+      ),
+      body: RefreshIndicator(
+        onRefresh: () => _loadReviews(isRefresh: true),
+        child: _buildBody(colorScheme),
       ),
     );
   }
 
   Widget _buildBody(ColorScheme colorScheme) {
-    if (_isLoading && _reviews.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (_hasError && _reviews.isEmpty) {
-      return _buildErrorState(colorScheme);
-    }
-
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -217,9 +209,10 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
             padding: const EdgeInsets.all(16),
             child: RatingSummaryWidget(
               averageRating: _calculatedAverageRating,
-              totalRatings: _totalCount > 0
-                  ? _totalCount
-                  : (widget.totalRatings ?? _reviews.length),
+              totalRatings:
+                  _totalCount > 0
+                      ? _totalCount
+                      : (widget.totalRatings ?? _reviews.length),
               ratingDistribution:
                   _reviews.isNotEmpty ? _ratingDistribution : null,
             ),
@@ -261,7 +254,10 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                 const SizedBox(width: 8),
                 if (_reviews.isNotEmpty)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(12),
@@ -283,59 +279,53 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         // Reviews list
         _reviews.isEmpty
             ? SliverFillRemaining(
-                hasScrollBody: false,
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.rate_review_outlined,
-                          size: 64,
-                          color: colorScheme.outline,
+              hasScrollBody: false,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.rate_review_outlined,
+                        size: 64,
+                        color: colorScheme.outline,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        AppLocalizations.current.no_reviews_yet,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: colorScheme.onSurfaceVariant,
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          AppLocalizations.current.no_reviews_yet,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            : SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final review = _reviews[index];
-                      return Column(
-                        children: [
-                          _ReviewTile(
-                            review: review,
-                            onEdit: () => _showRatingDialog(existingReview: review),
-                            onDelete: () async {
-                              await _loadReviews(isRefresh: true);
-                            },
-                          ),
-                          if (index < _reviews.length - 1)
-                            Divider(
-                              height: 1,
-                              color: colorScheme.outlineVariant,
-                            ),
-                        ],
-                      );
-                    },
-                    childCount: _reviews.length,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               ),
+            )
+            : SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final review = _reviews[index];
+                  return Column(
+                    children: [
+                      _ReviewTile(
+                        review: review,
+                        onEdit: () => _showRatingDialog(existingReview: review),
+                        onDelete: () async {
+                          await _loadReviews(isRefresh: true);
+                        },
+                      ),
+                      if (index < _reviews.length - 1)
+                        Divider(height: 1, color: colorScheme.outlineVariant),
+                    ],
+                  );
+                }, childCount: _reviews.length),
+              ),
+            ),
 
         // Load more indicator
         if (_isLoadingMore)
@@ -364,11 +354,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: colorScheme.error,
-            ),
+            Icon(Icons.error_outline, size: 64, color: colorScheme.error),
             const SizedBox(height: 16),
             Text(
               _errorMessage ?? AppLocalizations.current.error_common,
@@ -396,17 +382,14 @@ class _ReviewTile extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
-  const _ReviewTile({
-    required this.review,
-    this.onEdit,
-    this.onDelete,
-  });
+  const _ReviewTile({required this.review, this.onEdit, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
     final currentUser = context.read<AppCubit>().getUser();
     final colorScheme = Theme.of(context).colorScheme;
-    final displayName = review.user?.fullName ??
+    final displayName =
+        review.user?.fullName ??
         review.user?.username ??
         review.user?.email ??
         'Anonymous';
@@ -421,23 +404,25 @@ class _ReviewTile extends StatelessWidget {
               CircleAvatar(
                 radius: 20,
                 backgroundColor: colorScheme.primaryContainer,
-                child: review.user?.picture != null
-                    ? ClipOval(
-                        child: Image.network(
-                          _getUserAvatarUrl(review.user!.picture!),
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Icon(
-                            Icons.person,
-                            color: colorScheme.onPrimaryContainer,
+                child:
+                    review.user?.picture != null
+                        ? ClipOval(
+                          child: Image.network(
+                            _getUserAvatarUrl(review.user!.picture!),
+                            width: 40,
+                            height: 40,
+                            fit: BoxFit.cover,
+                            errorBuilder:
+                                (_, __, ___) => Icon(
+                                  Icons.person,
+                                  color: colorScheme.onPrimaryContainer,
+                                ),
                           ),
+                        )
+                        : Icon(
+                          Icons.person,
+                          color: colorScheme.onPrimaryContainer,
                         ),
-                      )
-                    : Icon(
-                        Icons.person,
-                        color: colorScheme.onPrimaryContainer,
-                      ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -465,40 +450,49 @@ class _ReviewTile extends StatelessWidget {
                   ],
                 ),
               ),
-              if (currentUser?.id == review.userId && (onEdit != null || onDelete != null))
+              if (currentUser?.id == review.userId &&
+                  (onEdit != null || onDelete != null))
                 PopupMenuButton<String>(
-                  icon: Icon(Icons.more_vert, color: colorScheme.onSurfaceVariant),
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
                   onSelected: (v) {
                     if (v == 'edit') onEdit?.call();
                     if (v == 'delete') onDelete?.call();
                   },
-                  itemBuilder: (context) => [
-                    if (onEdit != null)
-                      PopupMenuItem(
-                        value: 'edit',
-                        child: Row(
-                          children: [
-                            const Icon(Icons.edit, size: 20),
-                            const SizedBox(width: 8),
-                            Text(AppLocalizations.current.edit_review),
-                          ],
-                        ),
-                      ),
-                    if (onDelete != null)
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: Row(
-                          children: [
-                            Icon(Icons.delete, size: 20, color: colorScheme.error),
-                            const SizedBox(width: 8),
-                            Text(
-                              AppLocalizations.current.delete_review,
-                              style: TextStyle(color: colorScheme.error),
+                  itemBuilder:
+                      (context) => [
+                        if (onEdit != null)
+                          PopupMenuItem(
+                            value: 'edit',
+                            child: Row(
+                              children: [
+                                const Icon(Icons.edit, size: 20),
+                                const SizedBox(width: 8),
+                                Text(AppLocalizations.current.edit_review),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                  ],
+                          ),
+                        if (onDelete != null)
+                          PopupMenuItem(
+                            value: 'delete',
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.delete,
+                                  size: 20,
+                                  color: colorScheme.error,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  AppLocalizations.current.delete_review,
+                                  style: TextStyle(color: colorScheme.error),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
                 ),
             ],
           ),
@@ -511,8 +505,8 @@ class _ReviewTile extends StatelessWidget {
                   review.rating! >= star
                       ? Icons.star_rounded
                       : review.rating! >= star - 0.5
-                          ? Icons.star_half_rounded
-                          : Icons.star_border_rounded,
+                      ? Icons.star_half_rounded
+                      : Icons.star_border_rounded,
                   size: 20,
                   color: Colors.amber,
                 );
@@ -541,11 +535,16 @@ class _ReviewTile extends StatelessWidget {
       final now = DateTime.now();
       final diff = now.difference(dt);
 
-      if (diff.inDays > 365) return '${diff.inDays ~/ 365} ${AppLocalizations.current.years_ago}';
-      if (diff.inDays > 30) return '${diff.inDays ~/ 30} ${AppLocalizations.current.months_ago}';
-      if (diff.inDays > 0) return '${diff.inDays} ${AppLocalizations.current.days_ago}';
-      if (diff.inHours > 0) return '${diff.inHours} ${AppLocalizations.current.hours_ago}';
-      if (diff.inMinutes > 0) return '${diff.inMinutes} ${AppLocalizations.current.minutes_ago}';
+      if (diff.inDays > 365)
+        return '${diff.inDays ~/ 365} ${AppLocalizations.current.years_ago}';
+      if (diff.inDays > 30)
+        return '${diff.inDays ~/ 30} ${AppLocalizations.current.months_ago}';
+      if (diff.inDays > 0)
+        return '${diff.inDays} ${AppLocalizations.current.days_ago}';
+      if (diff.inHours > 0)
+        return '${diff.inHours} ${AppLocalizations.current.hours_ago}';
+      if (diff.inMinutes > 0)
+        return '${diff.inMinutes} ${AppLocalizations.current.minutes_ago}';
       return AppLocalizations.current.just_now;
     } catch (_) {
       return dateStr;

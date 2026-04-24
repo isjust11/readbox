@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/gen/assets.gen.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/resources.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/custom_snack_bar.dart';
@@ -29,6 +31,13 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
   final SystemUiOverlayStyle systemUiOverlayStyle;
   final Color colorBg;
   final Widget? drawer;
+  // icon for state
+  final String? emptyIcon;
+  final String? emptyMessage;
+  final String? emptyDescription;
+  final String? errorIcon;
+  final String? errorMessage;
+  final String? errorDescription;
 
   // Tùy chọn nâng cấp an toàn cho màn hình
   final bool useSafeAreaTop;
@@ -38,7 +47,7 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
   // Xử lý auto loading, error, success
   final bool autoHandleState;
   final void Function(BuildContext context, BaseState state)? onStateChanged;
-
+  final void Function()? onRetry;
   const BaseScreen({
     super.key,
     this.body,
@@ -62,6 +71,13 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
     this.extendBodyBehindAppBar = false,
     this.autoHandleState = true,
     this.onStateChanged,
+    this.onRetry,
+    this.emptyIcon,
+    this.emptyMessage,
+    this.emptyDescription,
+    this.errorIcon,
+    this.errorMessage,
+    this.errorDescription,
   });
 
   Type _typeOf<X>() => X;
@@ -118,12 +134,13 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                   children: [
                     // Màu nền
                     Container(color: colorBg),
+                    //  build error state
 
                     // 4. Bỏ fallback Container() sang SizedBox.shrink
                     SafeArea(
                       top: useSafeAreaTop && hideAppBar,
                       bottom: useSafeAreaBottom,
-                      child: body ?? const SizedBox.shrink(),
+                      child: _bodyContent(context),
                     ),
 
                     // Lớp phủ (Overlay) tự động catch LoadingState
@@ -241,6 +258,102 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
               ),
       centerTitle: true,
       actions: rightWidgets ?? [],
+    );
+  }
+
+  // loading widget
+  Widget _bodyContent(BuildContext context) {
+    return _shouldListen
+        ? BlocBuilder<T, BaseState>(
+          builder: (context, state) {
+            if (state is ErrorState) {
+              return _errorWidget(context, state);
+            }
+            // no data
+            if (state is EmptyState) {
+              return _emptyWidget(context);
+            }
+            return body ?? const SizedBox.shrink();
+          },
+        )
+        : body ?? const SizedBox.shrink();
+  }
+
+  // empty widget
+  Widget _emptyWidget(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            emptyIcon ?? Assets.icons.folderEmpty,
+            width: 120,
+            height: 120,
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).colorScheme.outline,
+              BlendMode.srcIn,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            emptyMessage ?? AppLocalizations.current.empty,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            emptyDescription ?? AppLocalizations.current.no_data_description,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // error widget
+  Widget _errorWidget(BuildContext context, BaseState state) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            errorIcon ?? Assets.icons.dataEmpty,
+            width: 120,
+            height: 120,
+            colorFilter: ColorFilter.mode(
+              Theme.of(context).colorScheme.outline,
+              BlendMode.srcIn,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            errorMessage ?? AppLocalizations.current.error_occurred,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            errorDescription ??
+                state.message ??
+                AppLocalizations.current.error_common,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton.icon(
+            onPressed: onRetry,
+            icon: const Icon(Icons.refresh),
+            label: Text(AppLocalizations.current.retry),
+          ),
+        ],
+      ),
     );
   }
 }

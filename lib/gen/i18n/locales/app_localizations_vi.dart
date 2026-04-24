@@ -2251,4 +2251,14 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get subscription_success => 'Đăng ký gói thành công';
+
+  @override
+  String get no_data_description => 'Không có dữ liệu để hiển thị';
+
+  @override
+  String get please_select_ebook_file => 'Vui lòng chọn file ebook';
+
+  @override
+  String get uploading_progress_cancel_warning =>
+      'Đang trong quá trình tải lên. Nếu thoát, quá trình sẽ bị hủy. Bạn có chắc muốn thoát?';
 }
