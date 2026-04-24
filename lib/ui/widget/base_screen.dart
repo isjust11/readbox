@@ -132,11 +132,16 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                         child: BlocBuilder<T, BaseState>(
                           builder: (context, state) {
                             if (state is LoadingState) {
-                              return Container(
-                                alignment: Alignment.center,
-                                child: LoadingAnimationWidget.threeArchedCircle(
-                                  color: AppColors.baseColor,
-                                  size: AppDimens.SIZE_32,
+                              return IgnorePointer(
+                                child: Container(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  alignment: Alignment.center,
+                                  child:
+                                      LoadingAnimationWidget.threeArchedCircle(
+                                        color: AppColors.baseColor,
+                                        size: AppDimens.SIZE_32,
+                                      ),
                                 ),
                               );
                             }

@@ -103,7 +103,7 @@ class _WordToPdfConverterBodyState extends State<WordToPdfConverterBody> {
         final outputPath = cubit.outputPath;
         final isConverting = state is LoadingState;
 
-        return BaseScreen(
+        return BaseScreen<ConverterCubit>(
           colorBg: colorScheme.surface,
           title: AppLocalizations.current.tools_word_to_pdf,
           messageNotify: CustomSnackBar<ConverterCubit>(

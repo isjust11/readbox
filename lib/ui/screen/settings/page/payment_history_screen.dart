@@ -36,43 +36,10 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _paymentCubit,
-      child: BaseScreen(
+      child: BaseScreen<PaymentCubit>(
         title: AppLocalizations.current.payment_history,
         body: BlocBuilder<PaymentCubit, BaseState>(
           builder: (context, state) {
-            if (state is LoadingState) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state is ErrorState) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                    const SizedBox(height: AppDimens.SIZE_16),
-                    Text(
-                      state.message ?? AppLocalizations.current.error,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    ),
-                    const SizedBox(height: AppDimens.SIZE_16),
-                    ElevatedButton(
-                      onPressed: () {
-                        _paymentCubit.getPaymentHistory();
-                      },
-                      child: Text(AppLocalizations.current.retry),
-                    ),
-                  ],
-                ),
-              );
-            }
-
             if (state is LoadedState<List<PaymentHistoryModel>>) {
               final payments = state.data;
 
@@ -113,6 +80,36 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
               );
             }
 
+            if (state is ErrorState) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    const SizedBox(height: AppDimens.SIZE_16),
+                    Text(
+                      state.message ?? AppLocalizations.current.error,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                    const SizedBox(height: AppDimens.SIZE_16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<PaymentCubit>().getPaymentHistory();
+                      },
+                      child: Text(AppLocalizations.current.retry),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            // Trả về SizedBox rỗng khi đang loading vì BaseScreen đã có overlay loading
             return const SizedBox.shrink();
           },
         ),

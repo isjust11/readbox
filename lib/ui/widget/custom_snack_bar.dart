@@ -181,13 +181,8 @@ class _AnimatedSnackBarContentState extends State<_AnimatedSnackBarContent>
                 gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
-                  colors: [
-                    accentColor.withValues(alpha: 0.95),
-                    accentColor.withValues(alpha: 0.85),
-                    accentColor.withValues(alpha: 0.75),
-                    accentColor.withValues(alpha: 0.65),
-                  ],
-                  stops: const [0.0, 0.12, 0.25, 1.0],
+                  colors: [accentColor],
+                  stops: const [0.0],
                 ),
                 borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
                 border: Border.all(
