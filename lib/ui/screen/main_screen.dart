@@ -31,7 +31,6 @@ class MainBody extends StatefulWidget {
 }
 
 class MainBodyState extends State<MainBody> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _searchController = TextEditingController();
   final RefreshController _refreshController = RefreshController(
     initialRefresh: false,
@@ -411,10 +410,10 @@ class MainBodyState extends State<MainBody> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: colorScheme.surface,
-      appBar: AppBar(
+    return BaseScreen<LibraryCubit>(
+      colorBg: colorScheme.surface,
+      autoHandleState: true,
+      customAppBar: AppBar(
         backgroundColor: colorScheme.surfaceContainerHighest,
         iconTheme: IconThemeData(color: colorScheme.onSurface),
         title:
@@ -445,30 +444,6 @@ class MainBodyState extends State<MainBody> {
                 )
                 : Text(title, style: TextStyle(color: colorScheme.onSurface)),
         actions: [
-          // if (_isSearching)
-          //   IconButton(
-          //     icon: Stack(
-          //       children: [
-          //         Icon(Icons.tune, color: colorScheme.onSurface),
-          //         if (_filterModel?.categoryId != null ||
-          //             (_filterModel?.isMyUpload ?? false) ||
-          //             _filterModel?.format != null)
-          //           Positioned(
-          //             top: 0,
-          //             right: 0,
-          //             child: Container(
-          //               width: 8,
-          //               height: 8,
-          //               decoration: BoxDecoration(
-          //                 color: colorScheme.primary,
-          //                 shape: BoxShape.circle,
-          //               ),
-          //             ),
-          //           ),
-          //       ],
-          //     ),
-          //     onPressed: _showFilterBottomSheet,
-          //   ),
           IconButton(
             icon: Icon(
               _isSearching ? Icons.close : Icons.search,
@@ -510,35 +485,6 @@ class MainBodyState extends State<MainBody> {
             final books = context.read<LibraryCubit>().books;
             final cubit = context.read<LibraryCubit>();
             Widget widgetView = SizedBox.shrink();
-            if (state is LoadingState) {
-              widgetView = Center(child: CircularProgressIndicator());
-            } else if (state is ErrorState) {
-              widgetView = Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: colorScheme.error,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      state.data?.toString() ??
-                          AppLocalizations.current.error_loading_books,
-                      style: TextStyle(fontSize: 16),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => getBooks(isLoadMore: true),
-                      child: Text(AppLocalizations.current.try_again),
-                    ),
-                  ],
-                ),
-              );
-            }
-
             // Hiển thị empty state
             if (state is LoadedState && books.isEmpty) {
               widgetView = EmptyData(
@@ -684,8 +630,7 @@ class MainBodyState extends State<MainBody> {
           },
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: _buildContinueReadingFab(context),
+      floatingButton: _buildContinueReadingFab(context),
     );
   }
 

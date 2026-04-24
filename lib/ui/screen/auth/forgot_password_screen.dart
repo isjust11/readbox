@@ -101,8 +101,12 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
     const double headerMaxWidth = 420;
     const double formMaxWidth = 560;
 
-    return BlocListener<AuthCubit, BaseState>(
-      listener: (context, state) async {
+    return BaseScreen<AuthCubit>(
+      autoHandleState: true,
+      useSafeAreaTop: false,
+      useSafeAreaBottom: false,
+      hideAppBar: true,
+      onStateChanged: (context, state) async {
         if (state is LoadedState) {
           final code = state.data['code'];
           if (code == 'verify-pin') {
@@ -142,45 +146,43 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
           }
         }
       },
-      child: BaseScreen(
-        messageNotify: CustomSnackBar<AuthCubit>(),
-        hideAppBar: true,
-        body: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Theme.of(context).primaryColor,
-                    Color(0xFF764ba2),
-                    Color(0xFFf093fb),
-                  ],
-                ),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Theme.of(context).primaryColor,
+                  Color(0xFF764ba2),
+                  Color(0xFFf093fb),
+                ],
               ),
             ),
-            SafeArea(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-                        onPressed: () => Navigator.pop(context),
-                      ),
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
                     ),
                   ),
-                  Expanded(
-                    child: Center(
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(horizontal: 24),
-                        child: FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: isLargeScreen
-                              ? Row(
+                ),
+                Expanded(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: FadeTransition(
+                        opacity: _fadeAnimation,
+                        child:
+                            isLargeScreen
+                                ? Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -195,45 +197,18 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
                                     ),
                                   ],
                                 )
-                              : Column(
+                                : Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [_buildHeader(), _buildContent()],
                                 ),
-                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            BlocBuilder<AuthCubit, BaseState>(
-              builder: (context, state) {
-                if (state is LoadingState) {
-                  return Container(
-                    color: Colors.black45,
-                    child: Center(
-                      child: Card(
-                        elevation: 8,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(18),
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              AppColors.primaryBlue,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }
-                return SizedBox.shrink();
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

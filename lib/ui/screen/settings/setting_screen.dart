@@ -15,7 +15,6 @@ import 'package:readbox/routes.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:light_dark_theme_toggle/light_dark_theme_toggle.dart';
 import 'package:readbox/domain/data/models/models.dart';
-import 'package:readbox/utils/navigator.dart';
 
 class SettingScreen extends StatefulWidget {
   final UserModel? user;
@@ -90,6 +89,7 @@ class _SettingScreenState extends State<SettingScreen> {
       },
       child: BaseScreen(
         hideAppBar: true,
+        useSafeAreaTop: false,
         colorBg: theme.colorScheme.surface,
         body: _buildLayoutSection(context, theme),
         floatingButton: _buildFloatingButton(),

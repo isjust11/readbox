@@ -1,54 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/res/resources.dart';
+import 'package:readbox/res/enum.dart';
+import 'package:readbox/ui/widget/custom_snack_bar.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
-import 'package:scale_size/scale_size.dart';
 
-class BaseScreen extends StatelessWidget {
-  static double toolbarHeight = 50;
+class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
+  static const double toolbarHeight = 50.0;
 
-  // body của màn hình
+  // Khai báo giữ nguyên để tương thích 100% với code cũ
   final Widget? body;
-
-  // title của appbar có 2 kiểu String và Widget
-  // title là kiểu Widget thì sẽ render widget
-  // title là String
   final dynamic title;
-
-  // trường hợp có AppBar đặc biệt thì dùng customAppBar
   final Widget? customAppBar;
-
-  // callBack của onBackPress với trường hợp  hiddenIconBack = false
   final Function? onBackPress;
-
-  // custom widget bên phải của appBar
   final List<Widget>? rightWidgets;
-
-  // loadingWidget để show loading toàn màn hình
   final Widget? stateWidget;
-
-  // show thông báo
   final Widget? messageNotify;
   final Widget? floatingButton;
   final Widget? bottomNavigationBar;
-
-  // phần liên quan tới action
-  // final InteractionTarget? interactionTarget;
   final String? interactionId;
-
-  // nếu true => sẽ ẩn backIcon , mặc định là true
   final bool hiddenIconBack;
-
   final Color colorTitle;
   final bool hideAppBar;
-
   final SystemUiOverlayStyle systemUiOverlayStyle;
-
-  // base bg color
   final Color colorBg;
-
   final Widget? drawer;
+
+  // Tùy chọn nâng cấp an toàn cho màn hình
+  final bool useSafeAreaTop;
+  final bool useSafeAreaBottom;
+  final bool extendBodyBehindAppBar;
+
+  // Xử lý auto loading, error, success
+  final bool autoHandleState;
+  final void Function(BuildContext context, BaseState state)? onStateChanged;
 
   const BaseScreen({
     super.key,
@@ -66,62 +55,150 @@ class BaseScreen extends StatelessWidget {
     this.colorBg = AppColors.white,
     this.systemUiOverlayStyle = SystemUiOverlayStyle.dark,
     this.bottomNavigationBar,
-    // this.interactionTarget,
     this.interactionId,
     this.drawer,
+    this.useSafeAreaTop = true,
+    this.useSafeAreaBottom = true,
+    this.extendBodyBehindAppBar = false,
+    this.autoHandleState = true,
+    this.onStateChanged,
   });
+
+  Type _typeOf<X>() => X;
+  bool get _shouldListen =>
+      autoHandleState && T != dynamic && T != _typeOf<Cubit<BaseState>>();
 
   @override
   Widget build(BuildContext context) {
-    // _handleInteraction(context, interactionTarget, interactionId);
-
-    final scaffold = Scaffold(
-      appBar: hideAppBar ? null : (customAppBar ?? baseAppBar(context)),
-      backgroundColor: colorBg,
-      drawer: drawer,
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-        },
+    Widget content = PopScope(
+      canPop: onBackPress == null,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (onBackPress != null) {
+          // Giữ đúng thứ tự xử lý cũ
+          Navigator.of(context).pop();
+          onBackPress?.call();
+        }
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: systemUiOverlayStyle,
         child: Stack(
           children: [
-            body ?? Container(), // luôn hiển thị stateWidget (overlay) nếu có
-            Positioned(
-              top: AppDimens.SIZE_0,
-              right: AppDimens.SIZE_0,
-              left: AppDimens.SIZE_0,
-              bottom: AppDimens.SIZE_0,
-              child: stateWidget ?? Container(),
+            // 1. Tối ưu: Đặt background Appbar sau các node chung
+            if (!hideAppBar)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Assets.images.appBarBackground.image(
+                  width: double.infinity,
+                  height: toolbarHeight + MediaQuery.of(context).padding.top,
+                  fit: BoxFit.fill,
+                ),
+              ),
+
+            // 2. Chuyển Scaffold sang cơ chế minh bạch
+            Scaffold(
+              backgroundColor: hideAppBar ? colorBg : Colors.transparent,
+              appBar:
+                  hideAppBar
+                      ? null
+                      : (customAppBar as PreferredSizeWidget? ??
+                          _buildBaseAppBar(context)),
+              drawer: drawer,
+              extendBodyBehindAppBar: extendBodyBehindAppBar,
+              floatingActionButton: floatingButton,
+              bottomNavigationBar: bottomNavigationBar,
+              body: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                // 3. Tối ưu: Tránh leak memory bằng FocusManager thay vì sinh object rác rỗng
+                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Màu nền
+                    Container(color: colorBg),
+
+                    // 4. Bỏ fallback Container() sang SizedBox.shrink
+                    SafeArea(
+                      top: useSafeAreaTop && hideAppBar,
+                      bottom: useSafeAreaBottom,
+                      child: body ?? const SizedBox.shrink(),
+                    ),
+
+                    // Lớp phủ (Overlay) tự động catch LoadingState
+                    if (_shouldListen)
+                      Positioned.fill(
+                        child: BlocBuilder<T, BaseState>(
+                          builder: (context, state) {
+                            if (state is LoadingState) {
+                              return Container(
+                                alignment: Alignment.center,
+                                child: LoadingAnimationWidget.threeArchedCircle(
+                                  color: AppColors.baseColor,
+                                  size: AppDimens.SIZE_32,
+                                ),
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                      ),
+
+                    if (stateWidget != null)
+                      Positioned.fill(child: stateWidget!),
+                    if (messageNotify != null)
+                      Positioned.fill(child: messageNotify!),
+                  ],
+                ),
+              ),
             ),
-            messageNotify ?? Container(),
           ],
         ),
       ),
-      floatingActionButton: floatingButton,
-      bottomNavigationBar: bottomNavigationBar,
     );
-    return AnnotatedRegion(
-      value: systemUiOverlayStyle,
-      child: Stack(
-        children: [
-          // Positioned.fill(child: Container(color: backgroundColor,)),
-          Container(
-            child: Assets.images.appBarBackground.image(
-              width: 1.width,
-              height: toolbarHeight + 1.top,
-              fit: BoxFit.fill,
-            ),
-          ),
-          scaffold,
-        ],
-      ),
-    );
+
+    // Lắng nghe State để tự động bung thông báo Error / Success
+    if (_shouldListen) {
+      content = BlocListener<T, BaseState>(
+        listener: (context, state) {
+          // Callback thoát ra cho screen
+          onStateChanged?.call(context, state);
+
+          // Tự động đẩy logic UI báo lỗi hoặc báo thành công
+          if (state is LoadedState) {
+            final mess = state.message;
+            if (mess.isNotEmpty) {
+              AppSnackBar.show(
+                context,
+                message: mess,
+                snackBarType: SnackBarType.success,
+              );
+            }
+          } else if (state is ErrorState) {
+            final dynamic messData = state.message ?? state.data;
+            final messString = messData?.toString() ?? 'Có lỗi xảy ra!';
+            if (messString.isNotEmpty) {
+              AppSnackBar.show(
+                context,
+                message: messString,
+                snackBarType: SnackBarType.error,
+              );
+            }
+          }
+        },
+        child: content,
+      );
+    }
+
+    return content;
   }
 
-  baseAppBar(BuildContext context) {
+  PreferredSizeWidget _buildBaseAppBar(BuildContext context) {
     final theme = Theme.of(context);
-    var widgetTitle;
+    Widget widgetTitle;
+
+    // Giữ cơ chế xử lý String và Widget
     if (title is Widget) {
       widgetTitle = title;
     } else {
@@ -139,75 +216,26 @@ class BaseScreen extends StatelessWidget {
       toolbarHeight: toolbarHeight,
       title: widgetTitle,
       backgroundColor: theme.primaryColor.withValues(alpha: 0.8),
-      leading: hiddenIconBack
-          ? Container()
-          : InkWell(
-              onTap: () {
-                Navigator.pop(context);
-                onBackPress?.call();
-              },
-              child: Container(
-                width: AppDimens.SIZE_60,
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: theme.colorScheme.onSecondary,
-                  size: AppDimens.SIZE_16,
+      leading:
+          hiddenIconBack
+              ? const SizedBox.shrink()
+              : InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                  onBackPress?.call();
+                },
+                child: Container(
+                  width: AppDimens.SIZE_60,
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: theme.colorScheme.onSecondary,
+                    size: AppDimens.SIZE_16,
+                  ),
                 ),
               ),
-            ),
       centerTitle: true,
       actions: rightWidgets ?? [],
     );
   }
-
-  // handle interaction
-  // void _handleInteraction(
-  //   BuildContext context,
-  //   InteractionTarget? interactionTarget,
-  //   String? interactionId,
-  // ) {
-  //   if (interactionTarget == InteractionTarget.article ||
-  //       interactionTarget == InteractionTarget.herbal ||
-  //       interactionTarget == InteractionTarget.folkMedicine ||
-  //       interactionTarget == InteractionTarget.author) {
-  //     _processGetStatsInteraction(context, interactionTarget!, interactionId);
-  //     _processAutoIncrementView(context, interactionTarget, interactionId);
-  //     _processGetStatusInteraction(context, interactionTarget, interactionId);
-  //     return;
-  //   }
-  // }
-
-  // void _processGetStatusInteraction(
-  //   BuildContext context,
-  //   InteractionTarget interactionTarget,
-  //   String? interactionId,
-  // ) {
-  //   context.read<UserInteractionCubit>().getStatus(
-  //     targetType: interactionTarget.value,
-  //     targetId: interactionId,
-  //   );
-  // }
-
-  // void _processGetStatsInteraction(
-  //   BuildContext context,
-  //   InteractionTarget interactionTarget,
-  //   String? interactionId,
-  // ) {
-  //   context.read<UserInteractionCubit>().getStats(
-  //     targetType: interactionTarget.value,
-  //     targetId: interactionId,
-  //   );
-  // }
-
-  // void _processAutoIncrementView(
-  //   BuildContext context,
-  //   InteractionTarget interactionTarget,
-  //   String? interactionId,
-  // ) {
-  //   context.read<UserInteractionCubit>().view(
-  //     targetType: interactionTarget.value,
-  //     targetId: interactionId,
-  //   );
-  // }
 }

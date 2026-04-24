@@ -185,7 +185,7 @@ class _AnimatedSnackBarContentState extends State<_AnimatedSnackBarContent>
                     accentColor.withValues(alpha: 0.95),
                     accentColor.withValues(alpha: 0.85),
                     accentColor.withValues(alpha: 0.75),
-                    accentColor.withValues(alpha: 0.55),
+                    accentColor.withValues(alpha: 0.65),
                   ],
                   stops: const [0.0, 0.12, 0.25, 1.0],
                 ),

@@ -50,20 +50,6 @@ class CustomLoading<T extends Cubit<BaseState>> extends StatelessWidget {
   }
 }
 
-// Custom Circular Loading Indicator with smooth animation
-
-/// CustomLoading widget that works with both Bloc and Cubit
-/// Usage with Bloc:
-/// CustomBlocLoading<NewsBloc, NewsState>(
-///   loadingState: (state) => state is NewsLoading,
-///   message: 'Đang tải tin tức...',
-/// )
-///
-/// Usage with Cubit:
-/// CustomBlocLoading<AuthCubit, BaseState>(
-///   loadingState: (state) => state is LoadingState,
-///   message: 'Đang xử lý...',
-/// )
 class CustomBlocResult<B extends StateStreamable<S>, S>
     extends StatelessWidget {
   final String? message;

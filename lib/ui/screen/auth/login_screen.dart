@@ -110,105 +110,77 @@ class LoginScreenState extends State<LoginBody>
     const double headerMaxWidth = 420;
     const double formMaxWidth = 520;
 
-    return BaseScreen(
+    return BaseScreen<AuthCubit>(
       hideAppBar: true,
-      messageNotify: CustomSnackBar<AuthCubit>(),
-      body: BlocListener<AuthCubit, BaseState>(
-        listener: (context, state) {
-          if (state is LoadedState) {
-            getIt.get<UserInfoCubit>().getUserInfo();
-            Navigator.pushReplacementNamed(context, Routes.mainScreen);
-          }
-        },
-        child: Stack(
-          children: [
-            // Gradient Background
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    theme.primaryColor,
-                    Color(0xFF764ba2),
-                    Color(0xFFf093fb),
-                  ],
-                ),
+      autoHandleState: true,
+      useSafeAreaTop: false,
+      useSafeAreaBottom: false,
+      onStateChanged: (context, state) {
+        if (state is LoadedState) {
+          getIt.get<UserInfoCubit>().getUserInfo();
+          Navigator.pushReplacementNamed(context, Routes.mainScreen);
+        }
+      },
+      body: Stack(
+        children: [
+          // Gradient Background
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  theme.primaryColor,
+                  Color(0xFF764ba2),
+                  Color(0xFFf093fb),
+                ],
               ),
             ),
+          ),
 
-            // Main Content
-            SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 18),
-                  child: FadeTransition(
-                    opacity: _fadeAnimation,
-                    child:
-                        isLargeScreen
-                            ? Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Brand column
-                                SizedBox(
-                                  width: headerMaxWidth,
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: _buildHeader(),
-                                  ),
+          // Main Content
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 18),
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child:
+                      isLargeScreen
+                          ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Brand column
+                              SizedBox(
+                                width: headerMaxWidth,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: _buildHeader(),
                                 ),
-                                // Form column
-                                SizedBox(
-                                  width: formMaxWidth,
-                                  child: _buildLoginCard(theme),
-                                ),
-                              ],
-                            )
-                            : Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Logo/Title Section
-                                _buildHeader(),
-                                SizedBox(height: AppDimens.SIZE_24),
-                                // Login Card
-                                _buildLoginCard(theme),
-                              ],
-                            ),
-                  ),
-                ),
-              ),
-            ),
-
-            // Loading Overlay
-            BlocBuilder<AuthCubit, BaseState>(
-              builder: (context, state) {
-                if (state is LoadingState) {
-                  return Container(
-                    color: Colors.black45,
-                    child: Center(
-                      child: Card(
-                        elevation: 8,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(18),
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              theme.primaryColor,
-                            ),
+                              ),
+                              // Form column
+                              SizedBox(
+                                width: formMaxWidth,
+                                child: _buildLoginCard(theme),
+                              ),
+                            ],
+                          )
+                          : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Logo/Title Section
+                              _buildHeader(),
+                              SizedBox(height: AppDimens.SIZE_24),
+                              // Login Card
+                              _buildLoginCard(theme),
+                            ],
                           ),
-                        ),
-                      ),
-                    ),
-                  );
-                }
-                return SizedBox.shrink();
-              },
+                ),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

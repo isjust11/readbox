@@ -84,9 +84,21 @@ class RegisterScreenState extends State<RegisterBody>
     const double headerMaxWidth = 420;
     const double formMaxWidth = 520;
 
-    return BaseScreen(
+    return BaseScreen<AuthCubit>(
       hideAppBar: true,
-      messageNotify: CustomSnackBar<AuthCubit>(),
+      autoHandleState: true,
+      useSafeAreaTop: false,
+      useSafeAreaBottom: false,
+      onStateChanged: (context, state) {
+        if (state is LoadedState) {
+          // Navigate to confirm PIN screen with email
+          Navigator.pushReplacementNamed(
+            context,
+            Routes.confirmPinScreen,
+            arguments: _emailController.text.trim(),
+          );
+        }
+      },
       body: BlocListener<AuthCubit, BaseState>(
         listener: (context, state) {
           if (state is LoadedState) {
@@ -138,79 +150,40 @@ class RegisterScreenState extends State<RegisterBody>
                         padding: EdgeInsets.symmetric(horizontal: 24),
                         child: FadeTransition(
                           opacity: _fadeAnimation,
-                          child: isLargeScreen
-                              ? Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: headerMaxWidth,
-                                      child: _buildHeader(),
-                                    ),
-                                    const SizedBox(width: 32),
-                                    SizedBox(
-                                      width: formMaxWidth,
-                                      child: _buildRegisterCard(),
-                                    ),
-                                  ],
-                                )
-                              : Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    // Header
-                                    _buildHeader(),
-                                    SizedBox(height: AppDimens.SIZE_24),
-                                    // Register Card
-                                    _buildRegisterCard(),
-                                  ],
-                                ),
+                          child:
+                              isLargeScreen
+                                  ? Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: headerMaxWidth,
+                                        child: _buildHeader(),
+                                      ),
+                                      const SizedBox(width: 32),
+                                      SizedBox(
+                                        width: formMaxWidth,
+                                        child: _buildRegisterCard(),
+                                      ),
+                                    ],
+                                  )
+                                  : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Header
+                                      _buildHeader(),
+                                      SizedBox(height: AppDimens.SIZE_24),
+                                      // Register Card
+                                      _buildRegisterCard(),
+                                    ],
+                                  ),
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-
-            // Loading Overlay
-            BlocBuilder<AuthCubit, BaseState>(
-              builder: (context, state) {
-                if (state is LoadingState) {
-                  return Container(
-                    color: Colors.black45,
-                    child: Center(
-                      child: Card(
-                        elevation: 8,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(32),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Theme.of(context).primaryColor,
-                                ),
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                AppLocalizations.current.creating_account,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }
-                return SizedBox.shrink();
-              },
             ),
           ],
         ),

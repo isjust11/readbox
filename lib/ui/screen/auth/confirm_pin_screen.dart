@@ -8,7 +8,6 @@ import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
-import 'package:readbox/res/colors.dart';
 import 'package:readbox/res/dimens.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
@@ -165,117 +164,114 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
     const double headerMaxWidth = 420;
     const double formMaxWidth = 520;
 
-    return Scaffold(
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<AuthCubit, BaseState>(
-            listener: (context, state) {
-              if (state is LoadedState) {
-                // Backend trả về Map với code và message
-                if (state.data is Map<String, dynamic>) {
-                  final result = state.data as Map<String, dynamic>;
-                  final code = result['code'];
+    return BaseScreen<AuthCubit>(
+      autoHandleState: true,
+      useSafeAreaTop: false,
+      useSafeAreaBottom: false,
+      hideAppBar: true,
+      onStateChanged: (context, state) {
+        if (state is LoadedState) {
+          // Backend trả về Map với code và message
+          if (state.data is Map<String, dynamic>) {
+            final result = state.data as Map<String, dynamic>;
+            final code = result['code'];
 
-                  if (code == 'verify') {
-                    // Xác thực thành công
-                    if (widget.type == ConfirmPinType.forgotPassword) {
-                      Navigator.pop(context, true);
-                    } else {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.loginScreen,
-                      );
-                    }
-                    AppSnackBar.show(
-                      context,
-                      message:
-                          result['message'] ??
-                          AppLocalizations.current.authentication_success,
-                      snackBarType: SnackBarType.success,
-                    );
-                  } else if (code == 'resend') {
-                    // Gửi mã PIN mới thành công
-                    _startResendTimer();
-                    AppSnackBar.show(
-                      context,
-                      message:
-                          result['message'] ??
-                          AppLocalizations.current.pin_resend_success,
-                      snackBarType: SnackBarType.success,
-                    );
-                  } else {
-                    // Xác thực thất bại
-                    _clearPin();
-                    AppSnackBar.show(
-                      context,
-                      message:
-                          result['message'] ??
-                          AppLocalizations.current.pin_verification_failed,
-                      snackBarType: SnackBarType.error,
-                    );
-                  }
-                } else {
-                  // Fallback: nếu data không phải Map (backward compatibility)
-                  _clearPin();
-                  AppSnackBar.show(
-                    context,
-                    message: AppLocalizations.current.pin_verification_failed,
-                    snackBarType: SnackBarType.error,
-                  );
-                }
-              } else if (state is ErrorState) {
-                AppSnackBar.show(
-                  context,
-                  message: BlocUtils.getMessageError(state.data),
-                  snackBarType: SnackBarType.error,
-                );
-                _clearPin();
+            if (code == 'verify') {
+              // Xác thực thành công
+              if (widget.type == ConfirmPinType.forgotPassword) {
+                Navigator.pop(context, true);
+              } else {
+                Navigator.pushReplacementNamed(context, Routes.loginScreen);
               }
-            },
-          ),
-        ],
-        child: Stack(
-          children: [
-            // Gradient Background
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    theme.primaryColor,
-                    Color(0xFF764ba2),
-                    Color(0xFFf093fb),
-                  ],
-                ),
+              AppSnackBar.show(
+                context,
+                message:
+                    result['message'] ??
+                    AppLocalizations.current.authentication_success,
+                snackBarType: SnackBarType.success,
+              );
+            } else if (code == 'resend') {
+              // Gửi mã PIN mới thành công
+              _startResendTimer();
+              AppSnackBar.show(
+                context,
+                message:
+                    result['message'] ??
+                    AppLocalizations.current.pin_resend_success,
+                snackBarType: SnackBarType.success,
+              );
+            } else {
+              // Xác thực thất bại
+              _clearPin();
+              AppSnackBar.show(
+                context,
+                message:
+                    result['message'] ??
+                    AppLocalizations.current.pin_verification_failed,
+                snackBarType: SnackBarType.error,
+              );
+            }
+          } else {
+            // Fallback: nếu data không phải Map (backward compatibility)
+            _clearPin();
+            AppSnackBar.show(
+              context,
+              message: AppLocalizations.current.pin_verification_failed,
+              snackBarType: SnackBarType.error,
+            );
+          }
+        } else if (state is ErrorState) {
+          AppSnackBar.show(
+            context,
+            message: BlocUtils.getMessageError(state.data),
+            snackBarType: SnackBarType.error,
+          );
+          _clearPin();
+        }
+      },
+      body: Stack(
+        children: [
+          // Gradient Background
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  theme.primaryColor,
+                  Color(0xFF764ba2),
+                  Color(0xFFf093fb),
+                ],
               ),
             ),
+          ),
 
-            // Main Content
-            SafeArea(
-              child: Column(
-                children: [
-                  // Back Button
-                  Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-                        onPressed: () => Navigator.pop(context),
-                      ),
+          // Main Content
+          SafeArea(
+            child: Column(
+              children: [
+                // Back Button
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
                     ),
                   ),
+                ),
 
-                  // Scrollable Content
-                  Expanded(
-                    child: Center(
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(horizontal: 24),
-                        child: FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: isLargeScreen
-                              ? Row(
+                // Scrollable Content
+                Expanded(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      child: FadeTransition(
+                        opacity: _fadeAnimation,
+                        child:
+                            isLargeScreen
+                                ? Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -290,7 +286,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
                                     ),
                                   ],
                                 )
-                              : Column(
+                                : Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     // Header
@@ -300,43 +296,14 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
                                     _buildPinCard(),
                                   ],
                                 ),
-                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-
-            // Loading Overlay
-            BlocBuilder<AuthCubit, BaseState>(
-              builder: (context, state) {
-                if (state is LoadingState) {
-                  return Container(
-                    color: Colors.black45,
-                    child: Center(
-                      child: Card(
-                        elevation: 8,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(18),
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              AppColors.primaryBlue,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }
-                return SizedBox.shrink();
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
