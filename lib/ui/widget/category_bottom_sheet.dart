@@ -93,6 +93,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
         position: _slideAnimation,
         child: Container(
           decoration: BoxDecoration(
+            color: colorScheme.surface,
             borderRadius: const BorderRadius.vertical(
               top: Radius.circular(AppDimens.SIZE_24),
             ),

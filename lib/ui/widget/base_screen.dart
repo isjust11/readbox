@@ -38,11 +38,13 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
   final String? errorIcon;
   final String? errorMessage;
   final String? errorDescription;
+  final Gradient? gradientBg;
 
   // Tùy chọn nâng cấp an toàn cho màn hình
   final bool useSafeAreaTop;
   final bool useSafeAreaBottom;
   final bool extendBodyBehindAppBar;
+  final bool implementErrorWidget;
 
   // Xử lý auto loading, error, success
   final bool autoHandleState;
@@ -78,6 +80,8 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
     this.errorIcon,
     this.errorMessage,
     this.errorDescription,
+    this.implementErrorWidget = false,
+    this.gradientBg,
   });
 
   Type _typeOf<X>() => X;
@@ -133,7 +137,16 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                   fit: StackFit.expand,
                   children: [
                     // Màu nền
-                    Container(color: colorBg),
+                    Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(Assets.images.mainBg.path),
+                          fit: BoxFit.fill,
+                        ),
+                        color: colorBg,
+                        gradient: gradientBg,
+                      ),
+                    ),
                     //  build error state
 
                     // 4. Bỏ fallback Container() sang SizedBox.shrink
@@ -266,7 +279,7 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
     return _shouldListen
         ? BlocBuilder<T, BaseState>(
           builder: (context, state) {
-            if (state is ErrorState) {
+            if (state is ErrorState && implementErrorWidget) {
               return _errorWidget(context, state);
             }
             // no data

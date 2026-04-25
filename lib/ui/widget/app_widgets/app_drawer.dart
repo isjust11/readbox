@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
@@ -47,16 +48,7 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Theme.of(context).primaryColor.withValues(alpha: 0.05),
-              Theme.of(context).colorScheme.surface,
-            ],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: AppTheme.indigoCyanGradient),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

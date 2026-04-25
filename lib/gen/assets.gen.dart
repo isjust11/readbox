@@ -315,6 +315,9 @@ class $AssetsImagesGen {
   AssetGenImage get logoThumbnail =>
       const AssetGenImage('assets/images/logo_thumbnail.png');
 
+  /// File path: assets/images/main_bg.png
+  AssetGenImage get mainBg => const AssetGenImage('assets/images/main_bg.png');
+
   /// File path: assets/images/momo.png
   AssetGenImage get momo => const AssetGenImage('assets/images/momo.png');
 
@@ -346,6 +349,7 @@ class $AssetsImagesGen {
     icGallery,
     icSearch,
     logoThumbnail,
+    mainBg,
     momo,
     paymentBg,
     payos,

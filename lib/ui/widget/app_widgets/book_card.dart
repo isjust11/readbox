@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -502,102 +503,120 @@ class _BookCardState extends State<BookCard> {
       },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.08),
-              blurRadius: 12,
-              offset: Offset(0, 4),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.06),
+              blurRadius: 8,
+              offset: const Offset(4, 8),
             ),
           ],
         ),
-        child: Material(
-          color: theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
-          child: InkWell(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Material(
+              color: theme.colorScheme.surface.withValues(alpha: 0.8),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.15),
+                  width: 1,
+                ),
+              ),
+              child: InkWell(
             onTap: () => widget.onRead(widget.book),
             onLongPress: () {
               _loadUserInteractionStatus();
               // Long press: Hiển thị menu options
               _showBookOptions(context, widget.book);
             },
-            borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
+            borderRadius: BorderRadius.circular(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Book Cover
                 Expanded(
-                  flex: 4,
+                  flex: 6,
                   child: Stack(
                     children: [
                       Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(AppDimens.SIZE_16),
-                          ),
-                          gradient: LinearGradient(
-                            colors: [
-                              Theme.of(
-                                context,
-                              ).colorScheme.surface.withValues(alpha: 0.1),
-                              Theme.of(
-                                context,
-                              ).colorScheme.surface.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Stack(
+                            children: [
+                              widget.book.coverImageUrl != null
+                                  ? (Platform.isAndroid
+                                      ? Image.network(
+                                        _getImageUrl(widget.book.coverImageUrl),
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                      )
+                                      : BaseNetworkImage(
+                                        url: _getImageUrl(
+                                          widget.book.coverImageUrl,
+                                        ),
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                      ))
+                                  : Container(
+                                    color: theme.colorScheme.surfaceVariant,
+                                    child: _buildErrorCover(),
+                                  ),
+                              // Spine effect
+                              Positioned(
+                                left: 0,
+                                top: 0,
+                                bottom: 0,
+                                child: Container(
+                                  width: 4,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.black.withValues(alpha: 0.3),
+                                        Colors.black.withValues(alpha: 0.0),
+                                      ],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
                           ),
                         ),
-                        child:
-                            widget.book.coverImageUrl != null
-                                ? ClipRRect(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(AppDimens.SIZE_16),
-                                  ),
-                                  child:
-                                      Platform.isAndroid
-                                          ? Image.network(
-                                            _getImageUrl(
-                                              widget.book.coverImageUrl,
-                                            ),
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                          )
-                                          : BaseNetworkImage(
-                                            url: _getImageUrl(
-                                              widget.book.coverImageUrl,
-                                            ),
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                          ),
-                                )
-                                : _buildErrorCover(),
                       ),
                       // Favorite badge
                       if (_favoriteStatus &&
                           widget.filterType == FilterType.favorite)
                         Positioned(
-                          top: 8,
-                          right: 8,
+                          top: 16,
+                          right: 16,
                           child: Container(
-                            padding: EdgeInsets.all(6),
+                            padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              color: Colors.red.withValues(alpha: 0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.red.withValues(alpha: 0.3),
-                                  blurRadius: 8,
-                                  offset: Offset(0, 2),
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 4,
                                 ),
                               ],
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.favorite,
-                              size: 16,
-                              color: Colors.white,
+                              size: 14,
+                              color: Colors.red,
                             ),
                           ),
                         ),
@@ -606,7 +625,7 @@ class _BookCardState extends State<BookCard> {
                 ),
                 // Book Info
                 Expanded(
-                  flex: 5,
+                  flex: 4,
                   child: Padding(
                     padding: EdgeInsets.all(12),
                     child: Column(
@@ -618,10 +637,10 @@ class _BookCardState extends State<BookCard> {
                           children: [
                             Text(
                               widget.book.displayTitle,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                height: 1.3,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                                height: 1.2,
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -638,106 +657,47 @@ class _BookCardState extends State<BookCard> {
                         ),
                         // Rating
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             if (widget.book.totalPages != null &&
                                 widget.book.totalPages! > 0) ...[
                               Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: AppDimens.SIZE_8,
-                                  vertical: AppDimens.SIZE_4,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    AppDimens.SIZE_8,
-                                  ),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Theme.of(
-                                        context,
-                                      ).primaryColor.withValues(alpha: 0.45),
-                                      Theme.of(
-                                        context,
-                                      ).primaryColor.withValues(alpha: 0.15),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  border: Border.all(
-                                    color: Theme.of(
-                                      context,
-                                    ).primaryColor.withValues(alpha: 0.2),
-                                    width: 1,
-                                  ),
+                                  color: theme.colorScheme.primaryContainer
+                                      .withValues(alpha: 0.5),
+                                  borderRadius: BorderRadius.circular(6),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.numbers_rounded,
-                                      color:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.onPrimaryContainer,
-                                      size: 12,
-                                    ),
-                                    const SizedBox(width: 2),
-                                    Text(
-                                      '${widget.book.totalPages} ${AppLocalizations.current.pages}',
-                                      style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: AppSize.fontSizeSmall,
-                                        fontWeight: FontWeight.w500,
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.onPrimaryContainer,
-                                      ),
-                                    ),
-                                  ],
+                                child: Text(
+                                  '${widget.book.totalPages}p',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    color: theme.colorScheme.onPrimaryContainer,
+                                  ),
                                 ),
                               ),
+                              const SizedBox(width: 8),
                             ],
                             if (_rating != null && _rating! > 0) ...[
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: AppDimens.SIZE_8,
-                                  vertical: AppDimens.SIZE_4,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    AppDimens.SIZE_8,
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.star_rounded,
+                                    size: 14,
+                                    color: Colors.amber,
                                   ),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.amber.withValues(alpha: 0.45),
-                                      Colors.amber.withValues(alpha: 0.15),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  border: Border.all(
-                                    color: Colors.amber.withValues(alpha: 0.3),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.star,
-                                      size: 14,
-                                      color: Colors.amber[700],
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    '$_rating',
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      '$_rating',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.amber[900],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ],
                           ],
@@ -751,25 +711,27 @@ class _BookCardState extends State<BookCard> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  ),
+);
+}
 
   Widget _authorWidget(String author) {
     return Row(
       children: [
-        SvgPicture.asset(
-          Assets.icons.icUser,
-          width: AppSize.iconSizeMedium,
-          height: AppSize.iconSizeMedium,
-          colorFilter: ColorFilter.mode(Colors.blue[500]!, BlendMode.srcIn),
+        Icon(
+          Icons.person_outline_rounded,
+          size: 14,
+          color: Colors.blue.shade400,
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 4),
         Expanded(
           child: Text(
             author,
             style: TextStyle(
-              fontSize: AppSize.fontSizeMedium,
-              color: Colors.grey[600],
+              fontSize: 11,
+              color: Colors.blue.shade700.withValues(alpha: 0.8),
+              fontWeight: FontWeight.w500,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -780,31 +742,30 @@ class _BookCardState extends State<BookCard> {
   }
 
   Widget _categoryWidget(String category) {
-    return Column(
-      children: [
-        const SizedBox(height: AppDimens.SIZE_6),
-        Row(
-          children: [
-            SvgPicture.asset(
-              Assets.icons.icCategory,
-              width: AppSize.iconSizeMedium,
-              height: AppSize.iconSizeMedium,
-              colorFilter: ColorFilter.mode(
-                Colors.orange[400]!,
-                BlendMode.srcIn,
-              ),
-            ),
-            SizedBox(width: AppDimens.SIZE_8),
-            Text(
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        children: [
+          Icon(
+            Icons.local_offer_outlined,
+            size: 12,
+            color: Colors.orange.shade400,
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Text(
               category,
               style: TextStyle(
-                fontSize: AppSize.fontSizeMedium,
-                color: Colors.grey[600],
+                fontSize: 10,
+                color: Colors.orange.shade700,
+                fontWeight: FontWeight.w500,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }

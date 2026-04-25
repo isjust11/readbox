@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
@@ -208,18 +210,24 @@ class MainBodyState extends State<MainBody> {
     final categoryCount = categories.length;
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(
-        horizontal: AppDimens.SIZE_16,
-        vertical: AppDimens.SIZE_8,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 8),
+
       decoration: BoxDecoration(
         color: colorScheme.surface,
         border: Border(
           bottom: BorderSide(color: colorScheme.outline.withValues(alpha: 0.2)),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.onSurface.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         children: [
+          const SizedBox(width: 16),
           Expanded(
             flex: categoryCount > 3 ? 10 : categoryCount,
             child: SingleChildScrollView(
@@ -262,18 +270,15 @@ class MainBodyState extends State<MainBody> {
           ),
           Visibility(
             visible: categoryCount > 3,
-            child: Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               child: GestureDetector(
                 onTap: () {
                   // mo bottom sheet chon category
                   showModalBottomSheet(
                     context: context,
-                    // Bắt buộc bật nếu muốn sheet cao hơn ~50% màn hình;
-                    // không bật thì child có height/fullscreen vẫn bị cắt.
                     isScrollControlled: true,
-                    constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height * 0.8,
-                    ),
+                    backgroundColor: Colors.transparent,
                     builder:
                         (context) => CategoryBottomSheet(
                           categories: categories,
@@ -289,10 +294,17 @@ class MainBodyState extends State<MainBody> {
                         ),
                   );
                 },
-                child: Icon(
-                  Icons.apps,
-                  color: colorScheme.secondary,
-                  size: AppDimens.SIZE_24,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    gradient: AppTheme.indigoCyanGradient,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    Icons.grid_view_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
                 ),
               ),
             ),
@@ -309,52 +321,53 @@ class MainBodyState extends State<MainBody> {
     required VoidCallback onTap,
   }) {
     return Padding(
-      padding: EdgeInsets.only(right: AppDimens.SIZE_8),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppDimens.SIZE_8,
-            vertical: AppDimens.SIZE_4,
-          ),
-          decoration: BoxDecoration(
-            color:
-                isSelected
-                    ? colorScheme.primary
-                    : colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(20),
-            border:
-                isSelected
-                    ? null
-                    : Border.all(
-                      color: colorScheme.outline.withValues(alpha: 0.3),
-                    ),
-          ),
-          child: Row(
-            children: [
-              isSelected
-                  ? Padding(
-                    padding: EdgeInsets.only(right: AppDimens.SIZE_4),
-                    child: Icon(
-                      Icons.check,
-                      color: colorScheme.onPrimary,
-                      size: AppDimens.SIZE_12,
-                    ),
-                  )
-                  : SizedBox.shrink(),
-              Text(
+      padding: const EdgeInsets.only(right: 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color:
+                    isSelected
+                        ? null
+                        : colorScheme.surface.withValues(alpha: 0.6),
+                gradient: isSelected ? AppTheme.indigoCyanGradient : null,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow:
+                    isSelected
+                        ? [
+                          BoxShadow(
+                            color: colorScheme.primary.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ]
+                        : null,
+                border: Border.all(
+                  color:
+                      isSelected
+                          ? Colors.indigo.shade100
+                          : colorScheme.outline.withValues(alpha: 0.2),
+                  width: 1,
+                ),
+              ),
+              child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: AppDimens.SIZE_10,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  fontSize: 12,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   color:
                       isSelected
                           ? colorScheme.onPrimary
-                          : colorScheme.onSurface,
+                          : colorScheme.onSurfaceVariant,
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -415,8 +428,10 @@ class MainBodyState extends State<MainBody> {
       colorBg: colorScheme.surface,
       autoHandleState: true,
       customAppBar: AppBar(
-        backgroundColor: colorScheme.surfaceContainerHighest,
-        iconTheme: IconThemeData(color: colorScheme.onSurface),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        backgroundColor: colorScheme.surface,
+        iconTheme: IconThemeData(color: colorScheme.onSurface, size: 22),
         title:
             _isSearching
                 ? TextField(
@@ -425,9 +440,13 @@ class MainBodyState extends State<MainBody> {
                   decoration: InputDecoration(
                     hintText: AppLocalizations.current.search_books,
                     border: InputBorder.none,
-                    hintStyle: TextStyle(color: AppColors.hintTextColor),
+                    hintStyle: TextStyle(
+                      color: colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.5,
+                      ),
+                    ),
                   ),
-                  style: TextStyle(color: colorScheme.onSurface),
+                  style: TextStyle(color: colorScheme.onSurface, fontSize: 16),
                   onChanged: (value) {
                     // Hủy timer trước đó nếu có
                     _debounceTimer?.cancel();
@@ -443,7 +462,14 @@ class MainBodyState extends State<MainBody> {
                     );
                   },
                 )
-                : Text(title, style: TextStyle(color: colorScheme.onSurface)),
+                : Text(
+                  title,
+                  style: TextStyle(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 20,
+                  ),
+                ),
         actions: [
           IconButton(
             icon: Icon(
@@ -519,7 +545,7 @@ class MainBodyState extends State<MainBody> {
               childAspectRatio = 0.7;
             } else {
               crossAxisCount = 2;
-              childAspectRatio = 0.65;
+              childAspectRatio = 0.6;
             }
 
             // Khi không ở chế độ tìm kiếm: hiển thị thanh chọn category phía trên danh sách
@@ -648,18 +674,35 @@ class MainBodyState extends State<MainBody> {
               ? FloatingActionButton.extended(
                 heroTag: 'continue-reading-fab',
                 onPressed: () => _showContinueReadingBottomSheet(context),
-                icon: Icon(
-                  Icons.menu_book_rounded,
-                  color: theme.colorScheme.onInverseSurface,
-                ),
-                label: Text(
-                  AppLocalizations.current.continue_reading,
-                  style: TextStyle(
-                    color: theme.colorScheme.onInverseSurface,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
                 backgroundColor: theme.primaryColor.withValues(alpha: 0.8),
+                elevation: 4,
+                highlightElevation: 8,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                extendedPadding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
+                label: Row(
+                  children: [
+                    Icon(
+                      Icons.play_circle_fill_rounded,
+                      color: theme.colorScheme.onPrimary,
+                      size: 24,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      AppLocalizations.current.continue_reading,
+                      style: TextStyle(
+                        color: theme.colorScheme.onPrimary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
               )
               : SizedBox.shrink();
         }

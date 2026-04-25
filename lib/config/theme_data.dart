@@ -19,62 +19,42 @@ class AppTheme {
     primaryColor: Colors.blue,
     useMaterial3: true,
     textTheme: const TextTheme(
-      bodyLarge: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
-      bodyMedium: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
-      bodySmall: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
-      titleLarge: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
-      titleMedium: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
-      titleSmall: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
-      headlineLarge: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
-      headlineMedium: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
-      headlineSmall: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
-      displayLarge: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
-      displayMedium: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
-      displaySmall: TextStyle(
-        color: AppColors.lightBackgroundAlt,
-      ),
+      bodyLarge: TextStyle(color: AppColors.lightBackgroundAlt),
+      bodyMedium: TextStyle(color: AppColors.lightBackgroundAlt),
+      bodySmall: TextStyle(color: AppColors.lightBackgroundAlt),
+      titleLarge: TextStyle(color: AppColors.lightBackgroundAlt),
+      titleMedium: TextStyle(color: AppColors.lightBackgroundAlt),
+      titleSmall: TextStyle(color: AppColors.lightBackgroundAlt),
+      headlineLarge: TextStyle(color: AppColors.lightBackgroundAlt),
+      headlineMedium: TextStyle(color: AppColors.lightBackgroundAlt),
+      headlineSmall: TextStyle(color: AppColors.lightBackgroundAlt),
+      displayLarge: TextStyle(color: AppColors.lightBackgroundAlt),
+      displayMedium: TextStyle(color: AppColors.lightBackgroundAlt),
+      displaySmall: TextStyle(color: AppColors.lightBackgroundAlt),
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.white,
-      titleTextStyle: TextStyle(
-        color: AppColors.black,
-      ),
-      iconTheme: IconThemeData(
-        color: AppColors.black,
-      ),
+      titleTextStyle: TextStyle(color: AppColors.black),
+      iconTheme: IconThemeData(color: AppColors.black),
     ),
     scaffoldBackgroundColor: AppColors.white,
     cardColor: AppColors.white,
-    cardTheme: CardThemeData(
-      color: AppColors.white,
-    ),
-    iconTheme: IconThemeData(
-      color: AppColors.black,
-    ),
+    cardTheme: CardThemeData(color: AppColors.white),
+    iconTheme: IconThemeData(color: AppColors.black),
     dividerTheme: DividerThemeData(
       color: AppColors.lightBackgroundAlt.withValues(alpha: 0.2),
     ),
   );
+
+  // gradient theme
+  static final LinearGradient indigoCyanGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Colors.indigo.shade400.withValues(alpha: 0.2),
+      Colors.cyanAccent.shade400.withValues(alpha: 0.3),
+    ],
+  );
+
+  
 }
