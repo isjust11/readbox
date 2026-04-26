@@ -126,7 +126,5 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>Ứng dụng cần quyền theo dõi để cung cấp trải nghiệm cá nhân hóa và quảng cáo phù hợp hơn với bạn.</string>
 </dict>
 </plist>

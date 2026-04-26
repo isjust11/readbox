@@ -140,8 +140,12 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage(Assets.images.mainBg.path),
-                          fit: BoxFit.fill,
+                          image: AssetImage(
+                            Theme.of(context).brightness == Brightness.light
+                                ? Assets.images.mainbgLight.path
+                                : Assets.images.mainbgDart.path,
+                          ),
+                          fit: BoxFit.cover,
                         ),
                         color: colorBg,
                         gradient: gradientBg,

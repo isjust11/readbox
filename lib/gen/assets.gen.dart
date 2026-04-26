@@ -315,8 +315,13 @@ class $AssetsImagesGen {
   AssetGenImage get logoThumbnail =>
       const AssetGenImage('assets/images/logo_thumbnail.png');
 
-  /// File path: assets/images/main_bg.png
-  AssetGenImage get mainBg => const AssetGenImage('assets/images/main_bg.png');
+  /// File path: assets/images/mainbg_dart.png
+  AssetGenImage get mainbgDart =>
+      const AssetGenImage('assets/images/mainbg_dart.png');
+
+  /// File path: assets/images/mainbg_light.png
+  AssetGenImage get mainbgLight =>
+      const AssetGenImage('assets/images/mainbg_light.png');
 
   /// File path: assets/images/momo.png
   AssetGenImage get momo => const AssetGenImage('assets/images/momo.png');
@@ -349,7 +354,8 @@ class $AssetsImagesGen {
     icGallery,
     icSearch,
     logoThumbnail,
-    mainBg,
+    mainbgDart,
+    mainbgLight,
     momo,
     paymentBg,
     payos,
