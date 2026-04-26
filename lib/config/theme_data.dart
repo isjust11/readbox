@@ -4,9 +4,9 @@ import 'package:readbox/res/colors.dart';
 class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    primarySwatch: Colors.blue,
-    primaryColor: Colors.blue,
-    colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+    primarySwatch: Colors.indigo,
+    primaryColor: Colors.indigo,
+    colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
     useMaterial3: true,
     dividerTheme: DividerThemeData(
       color: AppColors.lightBackgroundAlt.withValues(alpha: 0.2),
@@ -15,8 +15,8 @@ class AppTheme {
 
   static final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    primarySwatch: Colors.blue,
-    primaryColor: Colors.blue,
+    primarySwatch: Colors.indigo,
+    primaryColor: Colors.indigo,
     useMaterial3: true,
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: AppColors.lightBackgroundAlt),
@@ -47,14 +47,16 @@ class AppTheme {
   );
 
   // gradient theme
-  static final LinearGradient indigoCyanGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [
-      Colors.indigo.shade400.withValues(alpha: 0.2),
-      Colors.cyanAccent.shade400.withValues(alpha: 0.3),
-    ],
-  );
-
-  
+  static LinearGradient indigoCyanGradient({
+    double? opacity,
+    Alignment begin = Alignment.topLeft,
+    Alignment end = Alignment.bottomRight,
+    List<Color> colors = const [Colors.indigo, Colors.cyanAccent],
+  }) {
+    return LinearGradient(
+      begin: begin,
+      end: end,
+      colors: colors.map((e) => e.withValues(alpha: opacity ?? 0.2)).toList(),
+    );
+  }
 }

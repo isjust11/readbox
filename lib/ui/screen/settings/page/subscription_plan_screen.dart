@@ -21,6 +21,7 @@ import 'package:readbox/ui/widget/widget.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:readbox/routes.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SubscriptionPlanScreen extends StatefulWidget {
   const SubscriptionPlanScreen({super.key});
@@ -801,7 +802,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (Platform.isIOS && hasPaidPlan) ...[
+                    if (Platform.isIOS) ...[
                       _buildFooterLink(
                         context,
                         AppLocalizations.current.restore_purchases,
@@ -816,11 +817,27 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                     _buildFooterLink(
                       context,
                       AppLocalizations.current.terms_of_use,
-                      () {
-                        Navigator.pushNamed(
-                          context,
-                          Routes.privacySecurityScreen,
-                        );
+                      () async {
+                        // Theo yêu cầu của Apple, nếu dùng Standard EULA, hãy dẫn thẳng ra link web của họ.
+                        const url =
+                            'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
+                        try {
+                          final uri = Uri.parse(url);
+                          // Nếu bạn đã cài package url_launcher, hãy dùng code dưới đây.
+                          await launchUrl(
+                            uri,
+                            mode: LaunchMode.externalApplication,
+                          );
+
+                          // Tạm thời nếu chưa import url_launcher thì vẫn dẫn về trang nội bộ nhưng
+                          // BẠN PHẢI ĐẢM BẢO trong màn hình này có ĐẦY ĐỦ TEXT của Apple Standard EULA.
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   Routes.privacySecurityScreen,
+                          // );
+                        } catch (e) {
+                          debugPrint('Could not launch $url');
+                        }
                       },
                     ),
                     _buildDivider(theme),

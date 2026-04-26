@@ -48,7 +48,12 @@ class _AppDrawerState extends State<AppDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        decoration: BoxDecoration(gradient: AppTheme.indigoCyanGradient),
+        decoration: BoxDecoration(
+          gradient: AppTheme.indigoCyanGradient(
+            opacity: 0.6,
+            colors: [Colors.indigoAccent, Colors.cyan, Colors.white],
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

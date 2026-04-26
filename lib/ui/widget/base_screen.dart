@@ -169,7 +169,10 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                                   alignment: Alignment.center,
                                   child:
                                       LoadingAnimationWidget.threeArchedCircle(
-                                        color: AppColors.baseColor,
+                                        color:
+                                            Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
                                         size: AppDimens.SIZE_32,
                                       ),
                                 ),

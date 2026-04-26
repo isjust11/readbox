@@ -297,7 +297,7 @@ class MainBodyState extends State<MainBody> {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    gradient: AppTheme.indigoCyanGradient,
+                    gradient: AppTheme.indigoCyanGradient(),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -336,7 +336,7 @@ class MainBodyState extends State<MainBody> {
                     isSelected
                         ? null
                         : colorScheme.surface.withValues(alpha: 0.6),
-                gradient: isSelected ? AppTheme.indigoCyanGradient : null,
+                gradient: isSelected ? AppTheme.indigoCyanGradient() : null,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow:
                     isSelected
