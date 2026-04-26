@@ -4431,6 +4431,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Uploading progress is in progress. If you exit, the process will be cancelled. Are you sure you want to exit?'**
   String get uploading_progress_cancel_warning;
+
+  /// No description provided for @default_bg.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get default_bg;
+
+  /// No description provided for @pattern_1_bg.
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern 1'**
+  String get pattern_1_bg;
+
+  /// No description provided for @pattern_2_bg.
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern 2'**
+  String get pattern_2_bg;
+
+  /// No description provided for @primaryColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Color'**
+  String get primaryColor;
+
+  /// No description provided for @textFontSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Font Size'**
+  String get textFontSize;
+
+  /// No description provided for @background.
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get background;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @appearance_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize theme and appearance'**
+  String get appearance_description;
 }
 
 class _AppLocalizationsDelegate

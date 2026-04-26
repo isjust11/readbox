@@ -59,7 +59,7 @@ class _SettingScreenState extends State<SettingScreen> {
   Future<void> _loadThemeStatus() async {
     final themeCubit = context.read<ThemeCubit>();
     setState(() {
-      themeMode = themeCubit.state == 'light';
+      themeMode = themeCubit.state.themeMode == 'light';
     });
   }
 
@@ -327,22 +327,16 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           _buildDivider(),
           _buildSettingItem(
-            icon: Icons.palette,
-            title: AppLocalizations.current.theme,
-            subtitle: AppLocalizations.current.chooseAppAppearance,
-            trailing: LightDarkThemeToggle(
+            icon: Icons.format_paint,
+            title: AppLocalizations.current.appearance,
+            subtitle: AppLocalizations.current.appearance_description,
+            onTap: () {
+              Navigator.of(context).pushNamed(Routes.themeCustomizationScreen);
+            },
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: AppDimens.SIZE_16,
               color: Theme.of(context).primaryColor,
-              themeIconType: ThemeIconType.expand,
-              highlightColor: Theme.of(
-                context,
-              ).primaryColor.withValues(alpha: 0.5),
-
-              value: context.read<ThemeCubit>().state == 'light',
-              onChanged: (value) {
-                context.read<ThemeCubit>().changeTheme(
-                  value ? 'light' : 'dark',
-                );
-              },
             ),
           ),
           _buildDivider(),

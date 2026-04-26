@@ -18,6 +18,7 @@ import 'services/revenuecat_service.dart';
 import 'utils/language_detector.dart';
 import 'utils/shared_preference.dart';
 import 'utils/tts_lock_screen_controller.dart';
+import 'blocs/theme_state.dart';
 
 /// Map locale hệ thống sang mã ngôn ngữ app hỗ trợ (vi, en).
 String _languageFromSystemLocale() {
@@ -36,6 +37,8 @@ void main() async {
   await dotenv.load(fileName: '.env');
   RevenueCatService.instance.init();
   ApiConstant().init();
+  // init theme data
+  await ThemeCubit.init();
   await initLanguageDetector();
   await di.init();
   // Initialize Firebase
@@ -53,7 +56,15 @@ void main() async {
   } else {
     language = savedLanguage;
   }
-  String theme = await SharedPreferenceUtil.getTheme();
+  final themeStateJson = await SharedPreferenceUtil.getAppThemeStateJson();
+  AppThemeState themeState;
+  if (themeStateJson != null) {
+    themeState = AppThemeState.fromJson(themeStateJson);
+  } else {
+    String themeStr = await SharedPreferenceUtil.getTheme();
+    themeState = AppThemeState(themeMode: themeStr);
+  }
+
   runApp(
     MultiBlocProvider(
       providers: [
@@ -62,7 +73,7 @@ void main() async {
           create: (_) => AuthCubit(repository: di.getIt<AuthRepository>()),
         ),
         BlocProvider(create: (_) => BookRefreshCubit()),
-        BlocProvider(create: (_) => ThemeCubit(theme)),
+        BlocProvider(create: (_) => ThemeCubit(themeState)),
         BlocProvider(
           create:
               (_) => UserInteractionCubit(

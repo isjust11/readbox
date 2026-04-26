@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/routes.dart';
+import 'package:readbox/blocs/theme_state.dart';
 import 'package:readbox/blocs/theme_cubit.dart';
 import 'package:readbox/ui/widget/locale_widget.dart';
 import 'package:readbox/utils/navigator.dart';
@@ -75,10 +76,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return LocaleWidget(
       builder: (languageState) {
-        return BlocBuilder<ThemeCubit, String>(
+        return BlocBuilder<ThemeCubit, AppThemeState>(
           builder: (context, themeState) {
             return MaterialApp(
-              key: ValueKey('${languageState}_$themeState'),
+              key: ValueKey('${languageState}_${themeState.themeMode}'),
               debugShowCheckedModeBanner: false,
               navigatorObservers: [routeObserver],
               navigatorKey: NavigationService.instance.navigatorKey,
@@ -91,9 +92,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               locale: Locale(languageState),
               supportedLocales: AppLocalizations.delegate.supportedLocales,
               localeResolutionCallback: (locale, supportedLocales) => _localeCallback(locale, supportedLocales),
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
-              themeMode: themeState == 'dark' ? ThemeMode.dark : ThemeMode.light,
+              theme: AppTheme.getLightTheme(themeState),
+              darkTheme: AppTheme.getDarkTheme(themeState),
+              themeMode: themeState.themeMode == 'dark' ? ThemeMode.dark : ThemeMode.light,
               initialRoute: Routes.initScreen(),
               onGenerateRoute: Routes.generateRoute,
               builder: (context, child) {
@@ -106,7 +107,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                     }
                   });
                 }
-                return child ?? const SizedBox.shrink();
+                final scaledChild = MediaQuery(
+                  data: MediaQuery.of(context).copyWith(
+                    textScaler: TextScaler.linear(themeState.textScaleFactor),
+                  ),
+                  child: child ?? const SizedBox.shrink(),
+                );
+                return scaledChild;
               },
             );
           },

@@ -69,6 +69,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
     "app_version": MessageLookupByLibrary.simpleMessage("Phiên bản ứng dụng"),
+    "appearance": MessageLookupByLibrary.simpleMessage("Giao diện"),
+    "appearance_description": MessageLookupByLibrary.simpleMessage(
+      "Tùy chỉnh màu sắc, cỡ chữ, hình nền",
+    ),
     "apply_filters": MessageLookupByLibrary.simpleMessage("Áp dụng bộ lọc"),
     "archived_books": MessageLookupByLibrary.simpleMessage("Sách đã lưu"),
     "archived_count": MessageLookupByLibrary.simpleMessage("Lưu Trữ"),
@@ -98,6 +102,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "backToHome": MessageLookupByLibrary.simpleMessage("Về trang chủ"),
     "back_to_login": MessageLookupByLibrary.simpleMessage("Quay lại đăng nhập"),
+    "background": MessageLookupByLibrary.simpleMessage("Hình nền"),
     "biometricDisabled": MessageLookupByLibrary.simpleMessage(
       "Đã tắt sinh trắc học",
     ),
@@ -246,6 +251,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "days_ago": MessageLookupByLibrary.simpleMessage("ngày trước"),
     "days_remaining": MessageLookupByLibrary.simpleMessage("Số Ngày Còn Lại"),
     "defaultVoice": MessageLookupByLibrary.simpleMessage("Giọng mặc định"),
+    "default_bg": MessageLookupByLibrary.simpleMessage("Mặc định"),
     "delete": MessageLookupByLibrary.simpleMessage("Xóa"),
     "deleteAll": MessageLookupByLibrary.simpleMessage("Xóa tất cả"),
     "deleteAllNotificationsFailed": MessageLookupByLibrary.simpleMessage(
@@ -825,6 +831,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "paste_drive_folder_url": MessageLookupByLibrary.simpleMessage(
       "Hoặc dán URL thư mục Drive",
     ),
+    "pattern_1_bg": MessageLookupByLibrary.simpleMessage("Mẫu 1"),
+    "pattern_2_bg": MessageLookupByLibrary.simpleMessage("Mẫu 2"),
     "payment": MessageLookupByLibrary.simpleMessage("Thanh toán"),
     "paymentFailed": MessageLookupByLibrary.simpleMessage(
       "Thanh toán thất bại",
@@ -1085,6 +1093,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Vui lòng nhập tên đăng nhập",
     ),
     "popular": MessageLookupByLibrary.simpleMessage("Phổ biến"),
+    "primaryColor": MessageLookupByLibrary.simpleMessage("Màu chủ đạo"),
     "privacySettings": MessageLookupByLibrary.simpleMessage(
       "Cài đặt quyền riêng tư",
     ),
@@ -1281,6 +1290,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đã gửi thông báo thử nghiệm",
     ),
     "testTTS": MessageLookupByLibrary.simpleMessage("Kiểm tra đọc"),
+    "textFontSize": MessageLookupByLibrary.simpleMessage("Kích thước chữ"),
     "textToSpeech": MessageLookupByLibrary.simpleMessage("Text to speech"),
     "theme": MessageLookupByLibrary.simpleMessage("Giao diện"),
     "times": MessageLookupByLibrary.simpleMessage("lần"),

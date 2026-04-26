@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/auth/auth_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
+import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/enum.dart';
@@ -150,15 +151,7 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
         children: [
           Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Theme.of(context).primaryColor,
-                  Color(0xFF764ba2),
-                  Color(0xFFf093fb),
-                ],
-              ),
+              gradient: AppTheme.indigoCyanGradient(),
             ),
           ),
           SafeArea(
@@ -314,9 +307,12 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
     return TextFormField(
       controller: _newPasswordController,
       obscureText: true,
+      style: TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: AppLocalizations.current.new_password,
         hintText: AppLocalizations.current.enter_new_password,
+        hintStyle: TextStyle(color: Colors.grey.shade500),
+        labelStyle: TextStyle(color: Colors.grey.shade700),
         prefixIcon: Icon(
           Icons.lock_outline,
           color: Theme.of(context).primaryColor,
@@ -367,9 +363,12 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
     return TextFormField(
       controller: _confirmNewPasswordController,
       obscureText: true,
+      style: TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: AppLocalizations.current.confirm_new_password,
         hintText: AppLocalizations.current.enter_confirm_new_password,
+        hintStyle: TextStyle(color: Colors.grey.shade500),
+        labelStyle: TextStyle(color: Colors.grey.shade700),
         prefixIcon: Icon(
           Icons.lock_outline,
           color: Theme.of(context).primaryColor,
@@ -418,9 +417,12 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
     return TextFormField(
       controller: _usernameController,
       keyboardType: TextInputType.text,
+      style: TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: AppLocalizations.current.username,
         hintText: AppLocalizations.current.enter_username,
+        hintStyle: TextStyle(color: Colors.grey.shade500),
+        labelStyle: TextStyle(color: Colors.grey.shade700),
         prefixIcon: Icon(
           Icons.person_outline,
           color: Theme.of(context).primaryColor,

@@ -2261,4 +2261,28 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get uploading_progress_cancel_warning =>
       'Đang trong quá trình tải lên. Nếu thoát, quá trình sẽ bị hủy. Bạn có chắc muốn thoát?';
+
+  @override
+  String get default_bg => 'Mặc định';
+
+  @override
+  String get pattern_1_bg => 'Mẫu 1';
+
+  @override
+  String get pattern_2_bg => 'Mẫu 2';
+
+  @override
+  String get primaryColor => 'Màu chủ đạo';
+
+  @override
+  String get textFontSize => 'Kích thước chữ';
+
+  @override
+  String get background => 'Hình nền';
+
+  @override
+  String get appearance => 'Giao diện';
+
+  @override
+  String get appearance_description => 'Tùy chỉnh màu sắc, cỡ chữ, hình nền';
 }

@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:light_dark_theme_toggle/light_dark_theme_toggle.dart';
+import 'package:readbox/blocs/theme_cubit.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/domain/data/models/models.dart';
@@ -118,14 +120,36 @@ class AppProfile extends StatelessWidget {
                           ),
 
                         SizedBox(height: 6),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              Routes.subscriptionPlanScreen,
-                            );
-                          },
-                          child: _buildSubscriptionBadge(userSubscription),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.subscriptionPlanScreen,
+                                );
+                              },
+                              child: _buildSubscriptionBadge(userSubscription),
+                            ),
+                            LightDarkThemeToggle(
+                              color:
+                                  context.read<ThemeCubit>().state.themeMode ==
+                                          'light'
+                                      ? Colors.white
+                                      : Colors.yellow,
+                              themeIconType: ThemeIconType.expand,
+
+                              value:
+                                  context.read<ThemeCubit>().state.themeMode ==
+                                  'light',
+                              onChanged: (value) {
+                                context.read<ThemeCubit>().changeTheme(
+                                  value ? 'light' : 'dark',
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),

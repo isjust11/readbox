@@ -4,6 +4,7 @@ import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:readbox/ui/screen/tools/tools_screen.dart';
+import 'package:readbox/ui/screen/settings/page/theme_customization_screen.dart';
 
 class Routes {
   Routes._();
@@ -36,6 +37,7 @@ class Routes {
   static const String dataStorageScreen = "/dataStorageScreen";
   static const String subscriptionPlanScreen = "/subscriptionPlanScreen";
   static const String paymentHistoryScreen = "/paymentHistoryScreen";
+  static const String themeCustomizationScreen = "/themeCustomizationScreen";
 
   static const String search = "/search";
   //init screen name
@@ -195,6 +197,11 @@ class Routes {
       case paymentHistoryScreen:
         return PageTransition(
           child: PaymentHistoryScreen(),
+          type: PageTransitionType.rightToLeft,
+        );
+      case themeCustomizationScreen:
+        return PageTransition(
+          child: const ThemeCustomizationScreen(),
           type: PageTransitionType.rightToLeft,
         );
       default:

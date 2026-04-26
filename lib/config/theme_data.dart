@@ -1,50 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:readbox/res/colors.dart';
+import 'package:readbox/blocs/theme_state.dart';
 
 class AppTheme {
-  static final ThemeData lightTheme = ThemeData(
-    brightness: Brightness.light,
-    primarySwatch: Colors.indigo,
-    primaryColor: Colors.indigo,
-    colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-    useMaterial3: true,
-    dividerTheme: DividerThemeData(
-      color: AppColors.lightBackgroundAlt.withValues(alpha: 0.2),
-    ),
-  );
+  late Color primaryColor;
 
-  static final ThemeData darkTheme = ThemeData(
-    brightness: Brightness.dark,
-    primarySwatch: Colors.indigo,
-    primaryColor: Colors.indigo,
-    useMaterial3: true,
-    textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: AppColors.lightBackgroundAlt),
-      bodyMedium: TextStyle(color: AppColors.lightBackgroundAlt),
-      bodySmall: TextStyle(color: AppColors.lightBackgroundAlt),
-      titleLarge: TextStyle(color: AppColors.lightBackgroundAlt),
-      titleMedium: TextStyle(color: AppColors.lightBackgroundAlt),
-      titleSmall: TextStyle(color: AppColors.lightBackgroundAlt),
-      headlineLarge: TextStyle(color: AppColors.lightBackgroundAlt),
-      headlineMedium: TextStyle(color: AppColors.lightBackgroundAlt),
-      headlineSmall: TextStyle(color: AppColors.lightBackgroundAlt),
-      displayLarge: TextStyle(color: AppColors.lightBackgroundAlt),
-      displayMedium: TextStyle(color: AppColors.lightBackgroundAlt),
-      displaySmall: TextStyle(color: AppColors.lightBackgroundAlt),
-    ),
-    appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.white,
-      titleTextStyle: TextStyle(color: AppColors.black),
+  AppTheme.init() {
+    primaryColor = Colors.indigo;
+  }
+
+  static ThemeData getLightTheme(AppThemeState state) {
+    final Color primary = Color(state.primaryColorValue);
+    final textTheme = Typography.material2021().black;
+
+    return ThemeData(
+      brightness: Brightness.light,
+      primaryColor: primary,
+      colorScheme: ColorScheme.fromSeed(seedColor: primary, primary: primary),
+      useMaterial3: true,
+      textTheme: textTheme,
+      dividerTheme: DividerThemeData(
+        color: AppColors.lightBackgroundAlt.withValues(alpha: 0.2),
+      ),
+      chipTheme: ChipThemeData(backgroundColor: primary),
+    );
+  }
+
+  static ThemeData getDarkTheme(AppThemeState state) {
+    final Color primary = Color(state.primaryColorValue);
+    final textTheme = Typography.material2021().white.apply(
+      bodyColor: AppColors.lightBackgroundAlt,
+      displayColor: AppColors.lightBackgroundAlt,
+    );
+
+    return ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: primary,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primary,
+        brightness: Brightness.dark,
+        primary: primary,
+      ),
+      useMaterial3: true,
+      textTheme: textTheme,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.white,
+        titleTextStyle: TextStyle(color: AppColors.black, fontSize: 20),
+        iconTheme: IconThemeData(color: AppColors.black),
+      ),
+      scaffoldBackgroundColor:
+          AppColors.white, // In dark theme? (Kept original logic)
+      cardColor: AppColors.white,
+      cardTheme: CardThemeData(color: AppColors.white),
       iconTheme: IconThemeData(color: AppColors.black),
-    ),
-    scaffoldBackgroundColor: AppColors.white,
-    cardColor: AppColors.white,
-    cardTheme: CardThemeData(color: AppColors.white),
-    iconTheme: IconThemeData(color: AppColors.black),
-    dividerTheme: DividerThemeData(
-      color: AppColors.lightBackgroundAlt.withValues(alpha: 0.2),
-    ),
-  );
+      dividerTheme: DividerThemeData(
+        color: AppColors.lightBackgroundAlt.withValues(alpha: 0.2),
+      ),
+    );
+  }
 
   // gradient theme
   static LinearGradient indigoCyanGradient({

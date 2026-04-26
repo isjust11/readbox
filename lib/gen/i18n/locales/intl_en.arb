@@ -779,5 +779,13 @@
   "subscription_success": "Subscription success",
   "no_data_description": "No data available to display",
   "please_select_ebook_file": "Please select ebook file",
-  "uploading_progress_cancel_warning": "Uploading progress is in progress. If you exit, the process will be cancelled. Are you sure you want to exit?"
+  "uploading_progress_cancel_warning": "Uploading progress is in progress. If you exit, the process will be cancelled. Are you sure you want to exit?",
+  "default_bg": "Default",
+  "pattern_1_bg": "Pattern 1",
+  "pattern_2_bg": "Pattern 2",
+  "primaryColor": "Primary Color",
+  "textFontSize": "Text Font Size",
+  "background": "Background",
+  "appearance": "Appearance",
+  "appearance_description": "Customize theme and appearance"
 }

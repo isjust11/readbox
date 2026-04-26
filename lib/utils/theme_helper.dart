@@ -54,7 +54,7 @@ class ThemeHelper {
   /// final isDark = ThemeHelper.isDarkModeFromCubit(themeCubit);
   /// ```
   static bool isDarkModeFromCubit(ThemeCubit themeCubit) {
-    return themeCubit.state == 'dark';
+    return themeCubit.state.themeMode == 'dark';
   }
 
   /// Kiểm tra theme từ ThemeCubit state (dùng context)
@@ -64,7 +64,7 @@ class ThemeHelper {
   /// ```
   static bool isDarkModeFromContext(BuildContext context) {
     final themeCubit = context.read<ThemeCubit>();
-    return themeCubit.state == 'dark';
+    return themeCubit.state.themeMode == 'dark';
   }
 
   /// Lấy theme string từ ThemeCubit ('dark' hoặc 'light')
@@ -75,7 +75,7 @@ class ThemeHelper {
   /// ```
   static String getThemeString(BuildContext context) {
     final themeCubit = context.read<ThemeCubit>();
-    return themeCubit.state;
+    return themeCubit.state.themeMode;
   }
 
   /// Thay đổi theme
@@ -98,7 +98,7 @@ class ThemeHelper {
   /// ```
   static void toggleTheme(BuildContext context) {
     final themeCubit = context.read<ThemeCubit>();
-    final currentTheme = themeCubit.state;
+    final currentTheme = themeCubit.state.themeMode;
     themeCubit.changeTheme(currentTheme == 'dark' ? 'light' : 'dark');
   }
 }

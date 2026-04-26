@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
+import 'package:readbox/blocs/theme_cubit.dart';
+import 'package:readbox/blocs/theme_state.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/resources.dart';
@@ -137,19 +139,37 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                   fit: StackFit.expand,
                   children: [
                     // Màu nền
-                    Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                            Theme.of(context).brightness == Brightness.light
-                                ? Assets.images.mainbgLight.path
-                                : Assets.images.mainbgDart.path,
+                    BlocBuilder<ThemeCubit, AppThemeState>(
+                      builder: (context, themeState) {
+                        DecorationImage? bgImage;
+                        Color? bgColor = colorBg;
+
+                        if (themeState.backgroundType == 'pattern_1') {
+                          bgImage = DecorationImage(
+                            image: AssetImage(
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Assets.images.mainbgLight.path
+                                  : Assets.images.mainbgDart.path,
+                            ),
+                            fit: BoxFit.cover,
+                          );
+                        } else if (themeState.backgroundType == 'pattern_2') {
+                          bgImage = DecorationImage(
+                            image: AssetImage(Assets.images.mainbgStyle2.path),
+                            fit: BoxFit.cover,
+                          );
+                        } else {
+                          bgColor = Colors.white;
+                        }
+
+                        return Container(
+                          decoration: BoxDecoration(
+                            image: bgImage,
+                            color: bgColor,
+                            gradient: gradientBg,
                           ),
-                          fit: BoxFit.cover,
-                        ),
-                        color: colorBg,
-                        gradient: gradientBg,
-                      ),
+                        );
+                      },
                     ),
                     //  build error state
 

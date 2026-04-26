@@ -46,12 +46,13 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Drawer(
       child: Container(
         decoration: BoxDecoration(
           gradient: AppTheme.indigoCyanGradient(
-            opacity: 0.6,
-            colors: [Colors.indigoAccent, Colors.cyan, Colors.white],
+            opacity: 0.1,
+            colors: [theme.primaryColor, Colors.white],
           ),
         ),
         child: Column(

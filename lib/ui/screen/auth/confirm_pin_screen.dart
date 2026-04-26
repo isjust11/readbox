@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/blocs/utils.dart';
+import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
@@ -233,17 +234,7 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
         children: [
           // Gradient Background
           Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  theme.primaryColor,
-                  Color(0xFF764ba2),
-                  Color(0xFFf093fb),
-                ],
-              ),
-            ),
+            decoration: BoxDecoration(gradient: AppTheme.indigoCyanGradient()),
           ),
 
           // Main Content

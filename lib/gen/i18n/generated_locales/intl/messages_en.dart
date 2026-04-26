@@ -64,6 +64,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "all_data_loaded": MessageLookupByLibrary.simpleMessage("All data loaded"),
     "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
     "app_version": MessageLookupByLibrary.simpleMessage("App Version"),
+    "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
+    "appearance_description": MessageLookupByLibrary.simpleMessage(
+      "Customize theme and appearance",
+    ),
     "apply_filters": MessageLookupByLibrary.simpleMessage("Apply filters"),
     "archived_books": MessageLookupByLibrary.simpleMessage("Archived books"),
     "archived_count": MessageLookupByLibrary.simpleMessage("Archived"),
@@ -91,6 +95,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "average_rating": MessageLookupByLibrary.simpleMessage("Average rating"),
     "backToHome": MessageLookupByLibrary.simpleMessage("Back to Home"),
     "back_to_login": MessageLookupByLibrary.simpleMessage("Back to login"),
+    "background": MessageLookupByLibrary.simpleMessage("Background"),
     "biometricDisabled": MessageLookupByLibrary.simpleMessage(
       "Biometric disabled",
     ),
@@ -237,6 +242,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "days_ago": MessageLookupByLibrary.simpleMessage("days ago"),
     "days_remaining": MessageLookupByLibrary.simpleMessage("Days Remaining"),
     "defaultVoice": MessageLookupByLibrary.simpleMessage("Default voice"),
+    "default_bg": MessageLookupByLibrary.simpleMessage("Default"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "deleteAll": MessageLookupByLibrary.simpleMessage("Delete all"),
     "deleteAllNotificationsFailed": MessageLookupByLibrary.simpleMessage(
@@ -787,6 +793,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "paste_drive_folder_url": MessageLookupByLibrary.simpleMessage(
       "Or paste Drive folder URL",
     ),
+    "pattern_1_bg": MessageLookupByLibrary.simpleMessage("Pattern 1"),
+    "pattern_2_bg": MessageLookupByLibrary.simpleMessage("Pattern 2"),
     "payment": MessageLookupByLibrary.simpleMessage("Payment"),
     "paymentFailed": MessageLookupByLibrary.simpleMessage("Payment Failed"),
     "paymentMethodMomo": MessageLookupByLibrary.simpleMessage("Momo"),
@@ -1032,6 +1040,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Please enter username",
     ),
     "popular": MessageLookupByLibrary.simpleMessage("Popular"),
+    "primaryColor": MessageLookupByLibrary.simpleMessage("Primary Color"),
     "privacySettings": MessageLookupByLibrary.simpleMessage("Privacy settings"),
     "privacy_and_security": MessageLookupByLibrary.simpleMessage(
       "Privacy and security",
@@ -1222,6 +1231,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Test notification sent",
     ),
     "testTTS": MessageLookupByLibrary.simpleMessage("Test reading"),
+    "textFontSize": MessageLookupByLibrary.simpleMessage("Text Font Size"),
     "textToSpeech": MessageLookupByLibrary.simpleMessage("Text to speech"),
     "theme": MessageLookupByLibrary.simpleMessage("Theme"),
     "times": MessageLookupByLibrary.simpleMessage("times"),

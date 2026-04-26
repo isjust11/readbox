@@ -2258,4 +2258,28 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get uploading_progress_cancel_warning =>
       'Uploading progress is in progress. If you exit, the process will be cancelled. Are you sure you want to exit?';
+
+  @override
+  String get default_bg => 'Default';
+
+  @override
+  String get pattern_1_bg => 'Pattern 1';
+
+  @override
+  String get pattern_2_bg => 'Pattern 2';
+
+  @override
+  String get primaryColor => 'Primary Color';
+
+  @override
+  String get textFontSize => 'Text Font Size';
+
+  @override
+  String get background => 'Background';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get appearance_description => 'Customize theme and appearance';
 }

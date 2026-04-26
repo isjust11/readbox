@@ -323,6 +323,10 @@ class $AssetsImagesGen {
   AssetGenImage get mainbgLight =>
       const AssetGenImage('assets/images/mainbg_light.png');
 
+  /// File path: assets/images/mainbg_style2.png
+  AssetGenImage get mainbgStyle2 =>
+      const AssetGenImage('assets/images/mainbg_style2.png');
+
   /// File path: assets/images/momo.png
   AssetGenImage get momo => const AssetGenImage('assets/images/momo.png');
 
@@ -356,6 +360,7 @@ class $AssetsImagesGen {
     logoThumbnail,
     mainbgDart,
     mainbgLight,
+    mainbgStyle2,
     momo,
     paymentBg,
     payos,

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/auth/auth_cubit.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
@@ -115,15 +116,7 @@ class RegisterScreenState extends State<RegisterBody>
             // Gradient Background
             Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Theme.of(context).primaryColor,
-                    Color(0xFF764ba2),
-                    Color(0xFFf093fb),
-                  ],
-                ),
+                gradient: AppTheme.indigoCyanGradient(),
               ),
             ),
 
@@ -340,9 +333,12 @@ class RegisterScreenState extends State<RegisterBody>
   Widget _buildUsernameField() {
     return TextFormField(
       controller: _usernameController,
+      style: TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: AppLocalizations.current.username,
         hintText: AppLocalizations.current.enter_username,
+        hintStyle: TextStyle(color: Colors.grey.shade500),
+        labelStyle: TextStyle(color: Colors.grey.shade700),
         prefixIcon: Icon(
           Icons.person_outline,
           color: Theme.of(context).primaryColor,
@@ -393,9 +389,12 @@ class RegisterScreenState extends State<RegisterBody>
     return TextFormField(
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
+      style: TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: AppLocalizations.current.email,
         hintText: AppLocalizations.current.enter_email,
+        hintStyle: TextStyle(color: Colors.grey.shade500),
+        labelStyle: TextStyle(color: Colors.grey.shade700),
         prefixIcon: Icon(
           Icons.email_outlined,
           color: Theme.of(context).primaryColor,
@@ -444,9 +443,12 @@ class RegisterScreenState extends State<RegisterBody>
     return TextFormField(
       controller: _passwordController,
       obscureText: _obscurePassword,
+      style: TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: AppLocalizations.current.password,
         hintText: AppLocalizations.current.enter_password,
+        hintStyle: TextStyle(color: Colors.grey.shade500),
+        labelStyle: TextStyle(color: Colors.grey.shade700),
         prefixIcon: Icon(
           Icons.lock_outline,
           color: Theme.of(context).primaryColor,
@@ -510,9 +512,12 @@ class RegisterScreenState extends State<RegisterBody>
     return TextFormField(
       controller: _confirmPasswordController,
       obscureText: _obscureConfirmPassword,
+      style: TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: AppLocalizations.current.confirm_password,
         hintText: AppLocalizations.current.enter_confirm_password,
+        hintStyle: TextStyle(color: Colors.grey.shade500),
+        labelStyle: TextStyle(color: Colors.grey.shade700),
         prefixIcon: Icon(
           Icons.lock_outline,
           color: Theme.of(context).primaryColor,

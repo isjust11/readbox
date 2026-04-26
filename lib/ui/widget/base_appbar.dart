@@ -50,12 +50,15 @@ class _BaseAppBarState extends State<BaseAppBar> {
     return AppBar(
       title: _buildTitle(context, _isSearching),
       centerTitle: widget.centerTitle,
-      backgroundColor: widget.backgroundColor ?? theme.primaryColor.withValues(alpha: 0.8),
+      backgroundColor: widget.backgroundColor ?? theme.primaryColor,
       elevation: 0,
       automaticallyImplyLeading: false,
       leadingWidth: AppDimens.SIZE_40,
       leading: _buildLeading(context),
-      actions: [ if (widget.showSearch ?? false) _buildSearchAction(),...(widget.actions ?? []), ],
+      actions: [
+        if (widget.showSearch ?? false) _buildSearchAction(),
+        ...(widget.actions ?? []),
+      ],
     );
   }
 
@@ -66,25 +69,33 @@ class _BaseAppBarState extends State<BaseAppBar> {
     }
     return SizedBox(
       width: 250.sw,
-      child: showSearch ? TextField(
-        controller: TextEditingController(),
-        autofocus: true,
-        decoration: InputDecoration(
-          hintText: widget.searchHint ?? AppLocalizations.current.search,
-          hintStyle: TextStyle(color: theme.colorScheme.secondary.withValues(alpha: 0.6)),
-          border: InputBorder.none,
-        ),
-        style: TextStyle(color: theme.colorScheme.secondary.withValues(alpha: 0.8)),
-        onChanged: (value) {
-          widget.onSearchChanged?.call(value);
-        },
-      ) : CustomTextLabel(
-        widget.title,
-        color: theme.colorScheme.onInverseSurface,
-        fontSize: AppDimens.SIZE_14,
-        fontWeight: FontWeight.w600,
-        maxLines: 1,
-      ),
+      child:
+          showSearch
+              ? TextField(
+                controller: TextEditingController(),
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText:
+                      widget.searchHint ?? AppLocalizations.current.search,
+                  hintStyle: TextStyle(
+                    color: theme.colorScheme.secondary.withValues(alpha: 0.6),
+                  ),
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(
+                  color: theme.colorScheme.secondary.withValues(alpha: 0.8),
+                ),
+                onChanged: (value) {
+                  widget.onSearchChanged?.call(value);
+                },
+              )
+              : CustomTextLabel(
+                widget.title,
+                color: theme.colorScheme.onInverseSurface,
+                fontSize: AppDimens.SIZE_14,
+                fontWeight: FontWeight.w600,
+                maxLines: 1,
+              ),
     );
   }
 
@@ -118,6 +129,7 @@ class _BaseAppBarState extends State<BaseAppBar> {
     }
     return null;
   }
+
   Widget _buildSearchAction() {
     return IconButton(
       icon: Icon(_isSearching ? Icons.close : Icons.search),

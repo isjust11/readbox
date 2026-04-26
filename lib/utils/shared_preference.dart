@@ -247,6 +247,20 @@ class SharedPreferenceUtil {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(SPrefCache.PREF_KEY_THEME, theme);
   }
+  
+  static Future<Map<String, dynamic>?> getAppThemeStateJson() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final jsonStr = prefs.getString('pref_key_app_theme_state');
+    if (jsonStr != null) {
+      return jsonDecode(jsonStr);
+    }
+    return null;
+  }
+  
+  static Future<void> saveAppThemeStateJson(Map<String, dynamic> json) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('pref_key_app_theme_state', jsonEncode(json));
+  }
 
   // ==================== CLEAR DATA ====================
 

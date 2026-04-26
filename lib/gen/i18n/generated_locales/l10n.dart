@@ -6542,6 +6542,61 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Mặc định`
+  String get default_bg {
+    return Intl.message('Mặc định', name: 'default_bg', desc: '', args: []);
+  }
+
+  /// `Mẫu 1`
+  String get pattern_1_bg {
+    return Intl.message('Mẫu 1', name: 'pattern_1_bg', desc: '', args: []);
+  }
+
+  /// `Mẫu 2`
+  String get pattern_2_bg {
+    return Intl.message('Mẫu 2', name: 'pattern_2_bg', desc: '', args: []);
+  }
+
+  /// `Màu chủ đạo`
+  String get primaryColor {
+    return Intl.message(
+      'Màu chủ đạo',
+      name: 'primaryColor',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Kích thước chữ`
+  String get textFontSize {
+    return Intl.message(
+      'Kích thước chữ',
+      name: 'textFontSize',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hình nền`
+  String get background {
+    return Intl.message('Hình nền', name: 'background', desc: '', args: []);
+  }
+
+  /// `Giao diện`
+  String get appearance {
+    return Intl.message('Giao diện', name: 'appearance', desc: '', args: []);
+  }
+
+  /// `Tùy chỉnh màu sắc, cỡ chữ, hình nền`
+  String get appearance_description {
+    return Intl.message(
+      'Tùy chỉnh màu sắc, cỡ chữ, hình nền',
+      name: 'appearance_description',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

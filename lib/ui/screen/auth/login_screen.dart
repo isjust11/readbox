@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
@@ -125,17 +126,7 @@ class LoginScreenState extends State<LoginBody>
         children: [
           // Gradient Background
           Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  theme.primaryColor,
-                  Color(0xFF764ba2),
-                  Color(0xFFf093fb),
-                ],
-              ),
-            ),
+            decoration: BoxDecoration(gradient: AppTheme.indigoCyanGradient()),
           ),
 
           // Main Content
@@ -212,7 +203,7 @@ class LoginScreenState extends State<LoginBody>
           style: TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Theme.of(context).primaryColor,
             letterSpacing: 1.5,
           ),
         ),
@@ -220,7 +211,7 @@ class LoginScreenState extends State<LoginBody>
           AppLocalizations.current.login_to_continue,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white.withValues(alpha: 0.9),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.9),
             fontWeight: FontWeight.w300,
           ),
         ),
@@ -332,7 +323,7 @@ class LoginScreenState extends State<LoginBody>
               AppLocalizations.current.forgot_password,
               fontSize: AppDimens.SIZE_14,
               fontWeight: FontWeight.w500,
-              color: AppColors.baseColor,
+              color: Theme.of(context).primaryColor,
               textAlign: TextAlign.end,
             ),
           ),
@@ -345,9 +336,12 @@ class LoginScreenState extends State<LoginBody>
     final theme = Theme.of(context);
     return TextFormField(
       controller: _usernameController,
+      style: TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: AppLocalizations.current.username,
         hintText: AppLocalizations.current.enter_username,
+        hintStyle: TextStyle(color: Colors.grey.shade500),
+        labelStyle: TextStyle(color: Colors.grey.shade700),
         prefixIcon: Icon(Icons.person_outline, color: theme.primaryColor),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -388,9 +382,12 @@ class LoginScreenState extends State<LoginBody>
     return TextFormField(
       controller: _passwordController,
       obscureText: _obscurePassword,
+      style: TextStyle(color: Colors.black87),
       decoration: InputDecoration(
         labelText: AppLocalizations.current.password,
         hintText: AppLocalizations.current.enter_password,
+        hintStyle: TextStyle(color: Colors.grey.shade500),
+        labelStyle: TextStyle(color: Colors.grey.shade700),
         prefixIcon: Icon(Icons.lock_outline, color: theme.primaryColor),
         suffixIcon: IconButton(
           icon: Icon(

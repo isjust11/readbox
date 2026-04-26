@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/secure_storage_service.dart';
@@ -84,19 +85,12 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return BaseScreen(
       hideAppBar: true,
       useSafeAreaTop: false,
       useSafeAreaBottom: false,
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [theme.primaryColor, Color(0xFF764ba2), Color(0xFFf093fb)],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: AppTheme.indigoCyanGradient()),
         child: SafeArea(
           child: Stack(
             children: [
