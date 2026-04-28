@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/services.dart';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
@@ -18,7 +18,6 @@ import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/screen/settings/page/payment_webview_screen.dart';
 import 'package:readbox/ui/screen/settings/page/payment_result_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
-import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:readbox/routes.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -83,7 +82,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   }
 
   String _getPriceDisplay(SubscriptionPlanModel plan) {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isAndroid) {
       final package = _getPackageForPlan(plan);
       if (package != null) {
         return package.storeProduct.priceString;
@@ -802,7 +801,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (Platform.isIOS) ...[
+                    if (Platform.isIOS || Platform.isAndroid) ...[
                       _buildFooterLink(
                         context,
                         AppLocalizations.current.restore_purchases,
@@ -916,76 +915,63 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
       return;
     }
 
-    if (Platform.isIOS) {
-      final package = _getPackageForPlan(plan);
+    final package = _getPackageForPlan(plan);
 
-      if (package != null) {
-        final purchaseParams = PurchaseParams.package(package);
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder:
-              (context) => const Center(child: CircularProgressIndicator()),
-        );
-        try {
-          final result = await Purchases.purchase(purchaseParams);
-          if (context.mounted) Navigator.pop(context); // hide loading
+    // Prioritize RevenueCat for both iOS and Android if package exists
+    if ((Platform.isIOS || Platform.isAndroid) && package != null) {
+      final purchaseParams = PurchaseParams.package(package);
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder:
+            (context) => Center(
+              child:
+                  Platform.isIOS
+                      ? CupertinoActivityIndicator()
+                      : CircularProgressIndicator(),
+            ),
+      );
+      try {
+        final result = await Purchases.purchase(purchaseParams);
+        if (context.mounted) Navigator.pop(context); // hide loading
 
-          final isActive =
-              result.customerInfo.entitlements.all.isNotEmpty &&
-              result.customerInfo.entitlements.all.values.any(
-                (e) => e.isActive,
-              );
+        final isActive =
+            result.customerInfo.entitlements.all.isNotEmpty &&
+            result.customerInfo.entitlements.all.values.any((e) => e.isActive);
 
-          if (isActive && context.mounted) {
-            // 1. Cập nhật thông tin subscription của user
-            await context.read<UserSubscriptionCubit>().loadMe();
+        if (isActive && context.mounted) {
+          // 1. Cập nhật thông tin subscription của user
+          await context.read<UserSubscriptionCubit>().loadMe();
 
-            if (context.mounted) {
-              _showMessage(
-                context,
-                AppLocalizations.current.subscription_success,
-              );
-            }
-          }
-        } on PlatformException catch (e) {
-          if (context.mounted) Navigator.pop(context); // hide loading
-          final errorCode = PurchasesErrorHelper.getErrorCode(e);
-          if (errorCode != PurchasesErrorCode.purchaseCancelledError) {
-            if (context.mounted) {
-              _showMessage(
-                context,
-                e.message ?? 'Purchase failed',
-                isError: true,
-              );
-            }
-          }
-        } catch (e) {
-          if (context.mounted) Navigator.pop(context); // hide loading
           if (context.mounted) {
             _showMessage(
               context,
-              'An unexpected error occurred.',
+              AppLocalizations.current.subscription_success,
+            );
+          }
+        }
+      } on PlatformException catch (e) {
+        if (context.mounted) Navigator.pop(context); // hide loading
+        final errorCode = PurchasesErrorHelper.getErrorCode(e);
+        if (errorCode != PurchasesErrorCode.purchaseCancelledError) {
+          if (context.mounted) {
+            _showMessage(
+              context,
+              e.message ?? 'Purchase failed',
               isError: true,
             );
           }
         }
-        return;
-      }
-
-      await Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (context) => const PaywallView()));
-      // Lấy trạng thái mới nhất để refresh
-      if (context.mounted) {
-        // Refresh danh sách gói
-        context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
-        // QUAN TRỌNG: Refresh thông tin đăng ký của User để UI biết đã mua thành công
-        context.read<UserSubscriptionCubit>().loadMe();
+      } catch (e) {
+        if (context.mounted) Navigator.pop(context); // hide loading
+        if (context.mounted) {
+          _showMessage(context, 'An unexpected error occurred.', isError: true);
+        }
       }
       return;
     }
 
+    // Fallback for custom payment methods (PayOS, VNPAY, etc.)
     final paymentMethod = await _showPaymentMethodDialog(context);
     if (paymentMethod == null) return;
 
