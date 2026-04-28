@@ -13,7 +13,6 @@ import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/injection_container.dart';
 import 'package:readbox/res/colors.dart';
-import 'package:readbox/res/dimens.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/screen/settings/page/payment_webview_screen.dart';
 import 'package:readbox/ui/screen/settings/page/payment_result_screen.dart';
@@ -121,7 +120,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
           return BaseScreen<SubscriptionPlanCubit>(
             useSafeAreaTop: false,
             useSafeAreaBottom: false,
-            autoHandleState: true,
+            autoHandleState: false,
             emptyIcon: Assets.icons.walletEmpty,
             emptyMessage: AppLocalizations.current.noSubscriptionPlans,
             hideAppBar: true,
