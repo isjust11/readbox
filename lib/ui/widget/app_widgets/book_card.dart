@@ -527,194 +527,177 @@ class _BookCardState extends State<BookCard> {
                 ),
               ),
               child: InkWell(
-            onTap: () => widget.onRead(widget.book),
-            onLongPress: () {
-              _loadUserInteractionStatus();
-              // Long press: Hiển thị menu options
-              _showBookOptions(context, widget.book);
-            },
-            borderRadius: BorderRadius.circular(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Book Cover
-                Expanded(
-                  flex: 6,
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        margin: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Stack(
-                            children: [
-                              widget.book.coverImageUrl != null
-                                  ? (Platform.isAndroid
-                                      ? Image.network(
-                                        _getImageUrl(widget.book.coverImageUrl),
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                      )
-                                      : BaseNetworkImage(
-                                        url: _getImageUrl(
-                                          widget.book.coverImageUrl,
-                                        ),
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                      ))
-                                  : Container(
-                                    color: theme.colorScheme.surfaceVariant,
-                                    child: _buildErrorCover(),
-                                  ),
-                              // Spine effect
-                              Positioned(
-                                left: 0,
-                                top: 0,
-                                bottom: 0,
-                                child: Container(
-                                  width: 4,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Colors.black.withValues(alpha: 0.3),
-                                        Colors.black.withValues(alpha: 0.0),
-                                      ],
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Favorite badge
-                      if (_favoriteStatus &&
-                          widget.filterType == FilterType.favorite)
-                        Positioned(
-                          top: 16,
-                          right: 16,
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
+                onTap: () => widget.onRead(widget.book),
+                onLongPress: () {
+                  _loadUserInteractionStatus();
+                  // Long press: Hiển thị menu options
+                  _showBookOptions(context, widget.book);
+                },
+                borderRadius: BorderRadius.circular(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Book Cover
+                    Expanded(
+                      flex: 6,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.9),
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.1),
-                                  blurRadius: 4,
-                                ),
-                              ],
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(
-                              Icons.favorite,
-                              size: 14,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                // Book Info
-                Expanded(
-                  flex: 4,
-                  child: Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.book.displayTitle,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 13,
-                                height: 1.2,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 4),
-
-                            if (widget.book.author != null) ...[
-                              _authorWidget(widget.book.author!),
-                            ],
-                            // Category
-                            if (widget.book.category != null)
-                              _categoryWidget(widget.book.category?.name ?? ''),
-                          ],
-                        ),
-                        // Rating
-                        Row(
-                          children: [
-                            if (widget.book.totalPages != null &&
-                                widget.book.totalPages! > 0) ...[
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: theme.colorScheme.primaryContainer
-                                      .withValues(alpha: 0.5),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Text(
-                                  '${widget.book.totalPages}p',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                    color: theme.colorScheme.onPrimaryContainer,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                            ],
-                            if (_rating != null && _rating! > 0) ...[
-                              Row(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Stack(
                                 children: [
-                                  const Icon(
-                                    Icons.star_rounded,
-                                    size: 14,
-                                    color: Colors.amber,
-                                  ),
-                                  const SizedBox(width: 2),
-                                  Text(
-                                    '$_rating',
-                                    style: const TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
+                                  widget.book.coverImageUrl != null
+                                      ? (Platform.isAndroid
+                                          ? Image.network(
+                                            _getImageUrl(
+                                              widget.book.coverImageUrl,
+                                            ),
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          )
+                                          : BaseNetworkImage(
+                                            url: _getImageUrl(
+                                              widget.book.coverImageUrl,
+                                            ),
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          ))
+                                      : Container(
+                                        color: theme.colorScheme.surfaceVariant,
+                                        child: _buildErrorCover(),
+                                      ),
+                                  // Spine effect
+                                  Positioned(
+                                    left: 0,
+                                    top: 0,
+                                    bottom: 0,
+                                    child: Container(
+                                      width: 4,
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.black.withValues(alpha: 0.3),
+                                            Colors.black.withValues(alpha: 0.0),
+                                          ],
+                                          begin: Alignment.centerLeft,
+                                          end: Alignment.centerRight,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
+                          ),
+                          // Favorite badge
+                          if (_favoriteStatus &&
+                              widget.filterType == FilterType.favorite)
+                            Positioned(
+                              top: 16,
+                              right: 16,
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  Icons.favorite,
+                                  size: 14,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    // Book Info
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.book.displayTitle,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 13,
+                                    height: 1.2,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 4),
+
+                                if (widget.book.author != null) ...[
+                                  _authorWidget(widget.book.author!),
+                                ],
+                                // Category
+                                if (widget.book.category != null)
+                                  _categoryWidget(
+                                    widget.book.category?.name ?? '',
+                                  ),
+                              ],
+                            ),
+                            // Rating
+                            Row(
+                              children: [
+                                if (_rating != null && _rating! > 0) ...[
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.star_rounded,
+                                        size: 14,
+                                        color: Colors.amber,
+                                      ),
+                                      const SizedBox(width: 2),
+                                      Text(
+                                        '$_rating',
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ],
+                            ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-  ),
-);
-}
+    );
+  }
 
   Widget _authorWidget(String author) {
     return Row(

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -92,6 +95,12 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLightMode = Theme.of(context).brightness == Brightness.light;
+
+    final Color bgColor =
+        !isLightMode
+            ? (gradientBg != null ? Colors.transparent : Colors.black26)
+            : (gradientBg != null ? Colors.transparent : Colors.white);
     Widget content = PopScope(
       canPop: onBackPress == null,
       onPopInvokedWithResult: (didPop, result) {
@@ -159,7 +168,7 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                             fit: BoxFit.cover,
                           );
                         } else {
-                          bgColor = Colors.white;
+                          bgColor = bgColor;
                         }
 
                         return Container(
@@ -192,13 +201,15 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                                   height: double.infinity,
                                   alignment: Alignment.center,
                                   child:
-                                      LoadingAnimationWidget.threeArchedCircle(
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.primary,
-                                        size: AppDimens.SIZE_32,
-                                      ),
+                                      Platform.isIOS
+                                          ? CupertinoActivityIndicator()
+                                          : LoadingAnimationWidget.threeArchedCircle(
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.primary,
+                                            size: AppDimens.SIZE_32,
+                                          ),
                                 ),
                               );
                             }
@@ -239,7 +250,8 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
             }
           } else if (state is ErrorState) {
             final dynamic messData = state.message ?? state.data;
-            final messString = messData?.toString() ?? 'Có lỗi xảy ra!';
+            final messString =
+                messData?.toString() ?? AppLocalizations.current.error_occurred;
             if (messString.isNotEmpty) {
               AppSnackBar.show(
                 context,
@@ -268,7 +280,7 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
         title?.toString(),
         maxLines: 2,
         fontWeight: FontWeight.w600,
-        fontSize: AppDimens.SIZE_14,
+        fontSize: AppDimens.SIZE_16,
         textAlign: TextAlign.center,
         color: theme.colorScheme.onInverseSurface,
       );
@@ -277,6 +289,7 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
       elevation: 0,
       toolbarHeight: toolbarHeight,
       title: widgetTitle,
+
       backgroundColor: theme.primaryColor.withValues(alpha: 0.8),
       leading:
           hiddenIconBack

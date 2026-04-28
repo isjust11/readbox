@@ -100,9 +100,9 @@ class _SettingScreenState extends State<SettingScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          AppProfile(user: widget.user),
-          const SizedBox(height: AppDimens.SIZE_12),
-          _buildQuickActions(),
+          AppProfile(user: widget.user, settingScreen: true),
+          // const SizedBox(height: AppDimens.SIZE_12),
+          // _buildQuickActions(),
           const SizedBox(height: AppDimens.SIZE_12),
           _buildUsageAndPayment(context),
           const SizedBox(height: AppDimens.SIZE_12),
@@ -131,38 +131,38 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  Widget _buildQuickActions() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildQuickActionCard(
-              icon: Icons.edit,
-              title: AppLocalizations.current.editProfile,
-              subtitle: AppLocalizations.current.updateYourInfo,
-              color: Theme.of(context).colorScheme.primary,
-              onTap: () {
-                Navigator.of(context).pushNamed(Routes.editProfile);
-              },
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _buildQuickActionCard(
-              icon: Icons.security,
-              title: AppLocalizations.current.security,
-              subtitle: AppLocalizations.current.privacySettings,
-              color: Colors.green,
-              onTap: () {
-                Navigator.of(context).pushNamed(Routes.privacySecurityScreen);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildQuickActions() {
+  //   return Container(
+  //     margin: const EdgeInsets.symmetric(horizontal: AppDimens.SIZE_12),
+  //     child: Row(
+  //       children: [
+  //         Expanded(
+  //           child: _buildQuickActionCard(
+  //             icon: Icons.edit,
+  //             title: AppLocalizations.current.editProfile,
+  //             subtitle: AppLocalizations.current.updateYourInfo,
+  //             color: Theme.of(context).colorScheme.primary,
+  //             onTap: () {
+  //               Navigator.of(context).pushNamed(Routes.editProfile);
+  //             },
+  //           ),
+  //         ),
+  //         const SizedBox(width: 12),
+  //         Expanded(
+  //           child: _buildQuickActionCard(
+  //             icon: Icons.security,
+  //             title: AppLocalizations.current.security,
+  //             subtitle: AppLocalizations.current.privacySettings,
+  //             color: Colors.green,
+  //             onTap: () {
+  //               Navigator.of(context).pushNamed(Routes.privacySecurityScreen);
+  //             },
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildQuickActionCard({
     required IconData icon,

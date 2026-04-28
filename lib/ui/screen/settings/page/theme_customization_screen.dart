@@ -14,6 +14,9 @@ class ThemeCustomizationScreen extends StatelessWidget {
   const ThemeCustomizationScreen({super.key});
 
   final List<Color> _availableColors = const [
+    Colors.lightBlue,
+    Colors.amber,
+    Colors.cyan,
     Colors.indigo,
     Colors.blue,
     Colors.teal,
@@ -22,6 +25,7 @@ class ThemeCustomizationScreen extends StatelessWidget {
     Colors.red,
     Colors.purple,
     Colors.pink,
+    Colors.grey,
   ];
 
   final List<String> _backgroundTypes = const [

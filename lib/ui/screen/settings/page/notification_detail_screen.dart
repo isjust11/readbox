@@ -49,40 +49,43 @@ class NotificationDetailBody extends StatelessWidget {
   Widget _buildTime(BuildContext context) {
     final notificationHandler = NotificationHandler();
     final theme = Theme.of(context);
-    return Row(
-      children: [
-        Icon(
-          Icons.access_time,
-          size: 14,
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-        const SizedBox(width: 4),
-        Text(
-          notification.formattedDate,
-          style: TextStyle(fontSize: 12, color: theme.colorScheme.secondary),
-        ),
-        const SizedBox(width: 16),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          decoration: BoxDecoration(
-            color: notificationHandler
-                .getNotificationColor(
-                  notification.type?.toString().split('.').last,
-                )
-                .withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16),
+      child: Row(
+        children: [
+          Icon(
+            Icons.access_time,
+            size: 14,
+            color: theme.colorScheme.onSurfaceVariant,
           ),
-          child: Text(
-            notification.typeDisplay,
-            style: TextStyle(
-              fontSize: 11,
-              color: notificationHandler.getNotificationColor(
-                notification.type?.toString().split('.').last,
+          const SizedBox(width: 4),
+          Text(
+            notification.formattedDate,
+            style: TextStyle(fontSize: 12, color: theme.colorScheme.secondary),
+          ),
+          const SizedBox(width: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: notificationHandler
+                  .getNotificationColor(
+                    notification.type?.toString().split('.').last,
+                  )
+                  .withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              notification.typeDisplay,
+              style: TextStyle(
+                fontSize: 11,
+                color: notificationHandler.getNotificationColor(
+                  notification.type?.toString().split('.').last,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

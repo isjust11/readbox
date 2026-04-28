@@ -59,10 +59,11 @@ class CustomSmartRefresher extends StatelessWidget {
         shrinkWrap: true,
         padding: padding,
         itemCount: listData.length,
-        separatorBuilder: (context, index) => Container(
-          margin: marginSeparator,
-          child: Divider(height: heightSeparator, color: colorSeparator),
-        ),
+        separatorBuilder:
+            (context, index) => Container(
+              margin: marginSeparator,
+              child: Divider(height: heightSeparator, color: colorSeparator),
+            ),
         itemBuilder: itemBuilder,
       ),
     );

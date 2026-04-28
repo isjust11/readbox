@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
@@ -11,6 +12,7 @@ import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
@@ -410,7 +412,8 @@ class MainBodyState extends State<MainBody> {
             )
             : IconButton(
               icon: Icon(
-                Icons.notifications,
+                Icons.notifications_none_sharp,
+                size: AppSize.iconSizeXXLarge,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
               onPressed: () {
@@ -471,12 +474,19 @@ class MainBodyState extends State<MainBody> {
                   ),
                 ),
         actions: [
-          IconButton(
-            icon: Icon(
-              _isSearching ? Icons.close : Icons.search,
-              color: colorScheme.onSurface,
+          GestureDetector(
+            onTap: _toggleSearch,
+            child: SvgPicture.asset(
+              _isSearching
+                  ? Assets.icons.icCloseCircle
+                  : Assets.images.icSearch,
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                colorScheme.onSurface,
+                BlendMode.srcIn,
+              ),
             ),
-            onPressed: _toggleSearch,
           ),
           if (filterType == FilterType.uploaded)
             IconButton(

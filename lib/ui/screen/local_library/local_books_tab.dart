@@ -107,7 +107,11 @@ class _LocalBooksTabState extends State<LocalBooksTab>
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const PdfScannerScreen(multiSelect: true),
+        builder:
+            (context) => const PdfScannerScreen(
+              multiSelect: true,
+              scanFormat: ScanFormatEnum.pdf,
+            ),
       ),
     );
 

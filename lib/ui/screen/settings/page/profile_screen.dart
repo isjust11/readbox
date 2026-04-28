@@ -9,6 +9,7 @@ import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/dimens.dart';
+import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -87,11 +88,29 @@ class ProfileScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomTextLabel(
-                            userModel?.fullName ?? '',
-                            color: theme.colorScheme.onPrimary,
-                            fontSize: AppDimens.SIZE_20,
-                            fontWeight: FontWeight.bold,
+                          Row(
+                            children: [
+                              CustomTextLabel(
+                                userModel?.fullName ?? '',
+                                color: theme.colorScheme.onPrimary,
+                                fontSize: AppDimens.SIZE_20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              const SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.editProfile,
+                                    arguments: user,
+                                  );
+                                },
+                                child: Icon(
+                                  Icons.edit_square,
+                                  color: Colors.grey[200],
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: AppDimens.SIZE_4),
                           // Email

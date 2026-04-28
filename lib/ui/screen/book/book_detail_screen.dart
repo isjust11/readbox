@@ -140,6 +140,11 @@ class BookDetailBodyState extends State<BookDetailBody> {
         useSafeAreaTop: false,
         title: AppLocalizations.current.view_details,
         body: _buildBody(context),
+        onStateChanged: (_, state) {
+          if (state is ErrorState) {
+            Navigator.pop(context);
+          }
+        },
         bottomNavigationBar: bottomNavigation(),
         hideAppBar: true,
       ),

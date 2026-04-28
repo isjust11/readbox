@@ -13,7 +13,8 @@ import 'package:readbox/ui/widget/base_network_image.dart';
 
 class AppProfile extends StatelessWidget {
   final UserModel? user;
-  const AppProfile({super.key, this.user});
+  final bool settingScreen;
+  const AppProfile({super.key, this.user, this.settingScreen = false});
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +34,7 @@ class AppProfile extends StatelessWidget {
         ),
       ),
       child: Container(
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top + 12,
-          bottom: 12,
-        ),
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 12),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -132,22 +130,37 @@ class AppProfile extends StatelessWidget {
                               },
                               child: _buildSubscriptionBadge(userSubscription),
                             ),
-                            LightDarkThemeToggle(
-                              color:
-                                  context.read<ThemeCubit>().state.themeMode ==
-                                          'light'
-                                      ? Colors.white
-                                      : Colors.yellow,
-                              themeIconType: ThemeIconType.expand,
+                            Visibility(
+                              visible: settingScreen,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  LightDarkThemeToggle(
+                                    color:
+                                        context
+                                                    .read<ThemeCubit>()
+                                                    .state
+                                                    .themeMode ==
+                                                'light'
+                                            ? Colors.white
+                                            : Colors.yellow,
+                                    themeIconType: ThemeIconType.expand,
 
-                              value:
-                                  context.read<ThemeCubit>().state.themeMode ==
-                                  'light',
-                              onChanged: (value) {
-                                context.read<ThemeCubit>().changeTheme(
-                                  value ? 'light' : 'dark',
-                                );
-                              },
+                                    value:
+                                        context
+                                            .read<ThemeCubit>()
+                                            .state
+                                            .themeMode ==
+                                        'light',
+                                    onChanged: (value) {
+                                      context.read<ThemeCubit>().changeTheme(
+                                        value ? 'light' : 'dark',
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),

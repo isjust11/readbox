@@ -12,8 +12,14 @@ import 'package:readbox/ui/widget/app_widgets/app_profile.dart';
 
 class AppDrawer extends StatefulWidget {
   final UserModel? user;
+  final bool settingScreen;
   final Function(String, String) onSelected;
-  const AppDrawer({super.key, required this.onSelected, this.user});
+  const AppDrawer({
+    super.key,
+    required this.onSelected,
+    this.user,
+    this.settingScreen = false,
+  });
 
   @override
   State<AppDrawer> createState() => _AppDrawerState();
@@ -58,7 +64,7 @@ class _AppDrawerState extends State<AppDrawer> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppProfile(user: widget.user),
+            AppProfile(user: widget.user, settingScreen: widget.settingScreen),
             SizedBox(height: 8),
             Expanded(
               child: ListView(
@@ -90,7 +96,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       width: AppDimens.SIZE_22,
                       height: AppDimens.SIZE_22,
                       colorFilter: ColorFilter.mode(
-                        Theme.of(context).colorScheme.error,
+                        Theme.of(context).primaryColor,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -101,7 +107,7 @@ class _AppDrawerState extends State<AppDrawer> {
                           'favorite',
                           AppLocalizations.current.favorite_books,
                         ),
-                    iconColor: Theme.of(context).colorScheme.error,
+                    iconColor: Theme.of(context).primaryColor,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   _buildDrawerItem(
@@ -110,7 +116,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       width: AppDimens.SIZE_24,
                       height: AppDimens.SIZE_24,
                       colorFilter: ColorFilter.mode(
-                        const Color.fromARGB(255, 228, 228, 228),
+                        Theme.of(context).colorScheme.primary,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -130,7 +136,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       width: AppDimens.SIZE_20,
                       height: AppDimens.SIZE_20,
                       colorFilter: ColorFilter.mode(
-                        const Color.fromARGB(255, 230, 252, 255),
+                        Theme.of(context).primaryColor,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -151,7 +157,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, Routes.localLibraryScreen);
                     },
-                    iconColor: Colors.green,
+                    iconColor: Theme.of(context).primaryColor,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   _buildDrawerItem(
@@ -170,7 +176,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       width: AppDimens.SIZE_22,
                       height: AppDimens.SIZE_22,
                       colorFilter: ColorFilter.mode(
-                        const Color.fromARGB(255, 228, 228, 228),
+                        Theme.of(context).primaryColor,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -179,19 +185,8 @@ class _AppDrawerState extends State<AppDrawer> {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, Routes.toolsScreen);
                     },
-                    iconColor:
-                        Theme.of(context).colorScheme.onPrimaryFixedVariant,
-                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
-                  ),
-                  _buildDrawerItem(
-                    icon: Icons.feedback,
-                    title: AppLocalizations.current.feedback,
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, Routes.feedbackScreen);
-                    },
                     iconColor: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).colorScheme.onSurface,
+                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                   _buildDrawerItem(
                     svgIcon: SvgPicture.asset(
@@ -199,7 +194,7 @@ class _AppDrawerState extends State<AppDrawer> {
                       width: AppDimens.SIZE_22,
                       height: AppDimens.SIZE_22,
                       colorFilter: ColorFilter.mode(
-                        Colors.blueGrey,
+                        Theme.of(context).primaryColor,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -212,7 +207,7 @@ class _AppDrawerState extends State<AppDrawer> {
                         arguments: widget.user,
                       );
                     },
-                    iconColor: Colors.blueGrey,
+                    iconColor: Theme.of(context).primaryColor,
                     textColor: Theme.of(context).textTheme.bodyLarge?.color,
                   ),
                 ],
@@ -264,7 +259,7 @@ class _AppDrawerState extends State<AppDrawer> {
           bottom: BorderSide(
             color: Theme.of(
               context,
-            ).colorScheme.onSecondary.withValues(alpha: 0.3),
+            ).colorScheme.onSecondary.withValues(alpha: 0.2),
             width: 1,
           ),
         ),
@@ -279,15 +274,15 @@ class _AppDrawerState extends State<AppDrawer> {
                     Theme.of(
                       context,
                     ).colorScheme.onSurface.withValues(alpha: 0.15),
-                iconColor?.withValues(alpha: 0.55) ??
+                iconColor?.withValues(alpha: 0.25) ??
                     Theme.of(
                       context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.55),
+                    ).colorScheme.onSurface.withValues(alpha: 0.25),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           child: SizedBox(
             width: 22,
