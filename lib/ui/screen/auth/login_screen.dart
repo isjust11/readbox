@@ -96,6 +96,13 @@ class LoginScreenState extends State<LoginBody>
 
   void _handleLogin() {
     if (_formKey.currentState?.validate() ?? false) {
+      SharedPreferenceUtil.setRememberPassword(_rememberMe);
+      if (_rememberMe) {
+        BiometricAuthService.storeCredentials(
+          _usernameController.text.trim().toLowerCase(),
+          _passwordController.text,
+        );
+      }
       BlocProvider.of<AuthCubit>(context).doLogin(
         username: _usernameController.text.trim().toLowerCase(),
         password: _passwordController.text,

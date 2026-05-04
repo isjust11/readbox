@@ -57,9 +57,9 @@ class ApiConstant {
     return int.tryParse(v) ?? 15000;
   }
 
-  static String get apiHost => "http://$_baseHost:$apiPort/";
-  static String get apiHostStorage => "http://$_baseHost:$storagePort";
-  static String get storageHost => "http://$_baseHost:$storagePort";
+  static String get apiHost => "$_baseHost:$apiPort/";
+  static String get apiHostStorage => "$_baseHost:$storagePort";
+  static String get storageHost => "$_baseHost:$storagePort";
   static final verifyToken = "auth/verify-token";
   static final login = "auth/login";
   static final register = "auth/register";

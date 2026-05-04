@@ -35,8 +35,14 @@ class UserSubscriptionModel {
           json['plan'] != null
               ? SubscriptionPlanModel.fromJson(json['plan'])
               : null,
-      startedAt: DateTime.parse(json['startedAt']),
-      expiresAt: DateTime.parse(json['expiresAt']),
+      startedAt:
+          json['startedAt'] != null
+              ? DateTime.parse(json['startedAt'])
+              : DateTime.now(),
+      expiresAt:
+          json['expiresAt'] != null
+              ? DateTime.parse(json['expiresAt'])
+              : DateTime.now(),
       storageUsedBytes: _parseBigInt(json['storageUsedBytes']),
       ttsUsedInPeriod: _parseBigInt(json['ttsUsedInPeriod']),
       convertUsedInPeriod: _parseBigInt(json['convertUsedInPeriod']),

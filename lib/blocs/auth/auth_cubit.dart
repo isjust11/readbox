@@ -26,7 +26,7 @@ class AuthCubit extends Cubit<BaseState> {
       final fcmToken = fcmService.fcmToken;
 
       AuthenModel userModel = await repository.login({
-        "username": username,
+        "username": username?.trim().toLowerCase(),
         "password": password,
         if (fcmToken != null) "fcmToken": fcmToken,
         if (fcmService.deviceId != null) "deviceId": fcmService.deviceId,
@@ -34,9 +34,6 @@ class AuthCubit extends Cubit<BaseState> {
         if (fcmService.platform == 'ios') "platform": 'ios',
         if (fcmService.platform == 'android') "platform": 'android',
       });
-
-      //save secure storage
-      await BiometricAuthService.storeCredentials(username!, password!);
 
       if (userModel.user != null && userModel.user!.id != null) {
         RevenueCatService.instance.login(userModel.user!.id.toString());
@@ -52,11 +49,35 @@ class AuthCubit extends Cubit<BaseState> {
     try {
       emit(LoadingState());
 
+      // Kiểm tra trạng thái nhớ tài khoản trước khi xóa dữ liệu
+      final bool rememberMe = await SharedPreferenceUtil.getRememberPassword();
+      Map<String, String>? credentials;
+      if (rememberMe) {
+        credentials = await BiometricAuthService.getStoredCredentials();
+      }
+
       // Xóa tất cả dữ liệu nhạy cảm từ secure storage
       await _secureStorage.clearAllSecureData();
 
       // Xóa preferences (non-sensitive data)
       await SharedPreferenceUtil.clearData();
+
+      // Nếu có nhớ tài khoản, khôi phục lại cờ và thông tin đăng nhập
+      if (rememberMe) {
+        await SharedPreferenceUtil.setRememberPassword(true);
+        if (credentials != null &&
+            credentials['username'] != null &&
+            credentials['password'] != null) {
+          await BiometricAuthService.storeCredentials(
+            credentials['username']!,
+            credentials['password']!,
+          );
+        }
+      } else {
+        // Đảm bảo xóa sạch thông tin đăng nhập nếu không chọn remember me
+        await BiometricAuthService.clearStoredCredentials();
+      }
+
       await RevenueCatService.instance.logout();
       emit(LoadedState(null));
     } catch (e) {

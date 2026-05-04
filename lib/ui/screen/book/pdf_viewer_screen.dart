@@ -177,8 +177,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
   }
 
-  /// URL đầy đủ cho PDF từ mạng
-  String get _networkPdfUrl => '${ApiConstant.apiHostStorage}${widget.fileUrl}';
+  String get _networkPdfUrl =>
+      widget.fileUrl.startsWith('http')
+          ? widget.fileUrl
+          : '${ApiConstant.apiHostStorage}${widget.fileUrl}';
 
   /// Tải bytes PDF khi cần (TTS, Share, Download) — chỉ gọi cho file network
   Future<Uint8List?> _ensurePdfBytesForNetwork() async {
@@ -196,7 +198,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
   Future<Uint8List> _downloadPdf() async {
     final response = await _dio.get<List<int>>(
-      '${ApiConstant.apiHostStorage}${widget.fileUrl}',
+      _networkPdfUrl,
       options: Options(responseType: ResponseType.bytes),
     );
     return Uint8List.fromList(response.data!);
