@@ -33,6 +33,11 @@ class BookRepository {
     );
   }
 
+  // generate book cover
+  Future<String> generateBookCover(Map<String, String> bookData) async {
+    return await remoteDataSource.generateBookCover(bookData);
+  }
+
   Future<BookModel> getBookById(String id) async {
     return await remoteDataSource.getBookById(id);
   }

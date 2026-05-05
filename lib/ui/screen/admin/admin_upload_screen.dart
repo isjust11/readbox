@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
@@ -207,6 +209,24 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
     }
   }
 
+  // void _generateAICover() {
+  //   final title = _titleController.text.trim();
+  //   final author = _authorController.text.trim();
+  //   if (title.isEmpty || author.isEmpty) {
+  //     AppSnackBar.show(
+  //       context,
+  //       message: "Vui lòng nhập tên sách và tác giả trước khi tạo ảnh bìa",
+  //       snackBarType: SnackBarType.warning,
+  //     );
+  //     return;
+  //   }
+
+  //   context.read<LibraryCubit>().generateBookCover(
+  //     title: title,
+  //     author: author,
+  //   );
+  // }
+
   Future<void> _pickEbookFile() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -306,15 +326,6 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
       return;
     }
 
-    if (_ebookFile == null) {
-      AppSnackBar.show(
-        context,
-        message: AppLocalizations.current.please_select_ebook_file,
-        snackBarType: SnackBarType.warning,
-      );
-      return;
-    }
-
     final cubit = context.read<LibraryCubit>();
     final isEditMode = widget.book.id != null;
 
@@ -350,6 +361,14 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                 .coverImageUrl, // Cover URL từ server nếu không upload mới
       );
     } else {
+      if (_ebookFile == null) {
+        AppSnackBar.show(
+          context,
+          message: AppLocalizations.current.please_select_ebook_file,
+          snackBarType: SnackBarType.warning,
+        );
+        return;
+      }
       // Thêm mới
       await cubit.createBookWithUpload(
         ebookFile: _ebookFile!,
@@ -452,24 +471,25 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
         }
       },
       onStateChanged: (context, state) {
-        if (state is ErrorState) {
-          AppSnackBar.show(
-            context,
-            message: state.data ?? AppLocalizations.current.error_occurred,
-            snackBarType: SnackBarType.error,
-          );
-        } else if (state is LoadedState) {
+        if (state is LoadedState) {
+          // if (state.data is String && state.data.startsWith('data:image')) {
+          //   final String base64Data = state.data;
+          //   final encodedStr = base64Data.split(',').last;
+          //   final bytes = base64Decode(encodedStr);
+          //   getTemporaryDirectory().then((tempDir) {
+          //     final file = File(
+          //       '${tempDir.path}/ai_cover_${DateTime.now().millisecondsSinceEpoch}.jpg',
+          //     );
+          //     file.writeAsBytesSync(bytes);
+          //     setState(() {
+          //       _coverImageFile = file;
+          //     });
+          //   });
+          //   return;
+          // }
+
           final cubit = context.read<LibraryCubit>();
           if (cubit.uploadEbookSuccess) {
-            AppSnackBar.show(
-              context,
-              message:
-                  isEditMode
-                      ? AppLocalizations.current.update_book_success
-                      : AppLocalizations.current.create_book_success,
-              snackBarType: SnackBarType.success,
-            );
-
             if (!isEditMode) {
               _resetForm();
             } else {
@@ -1150,6 +1170,23 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                   ),
                                 ),
                               ),
+                              SizedBox(width: 8),
+                              // ElevatedButton.icon(
+                              //   onPressed: _generateAICover,
+                              //   icon: const Icon(Icons.auto_awesome, size: 16),
+                              //   label: Text(
+                              //     'AI Cover',
+                              //     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                              //   ),
+                              //   style: ElevatedButton.styleFrom(
+                              //     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                              //     minimumSize: Size(0, 32),
+                              //     backgroundColor: theme.primaryColor,
+                              //     foregroundColor: Colors.white,
+                              //     elevation: 0,
+                              //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              //   ),
+                              // ),
                             ],
                           ),
                           SizedBox(height: 16),
@@ -1165,40 +1202,11 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16),
-                                  child: Image.network(
-                                    '${ApiConstant.apiHostStorage}${widget.book.coverImageUrl!}',
-                                    height: 250,
+                                  child: BaseNetworkImage(
+                                    url: widget.book.coverImageUrl!,
+                                    height: 450,
                                     width: double.infinity,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        height: 200,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                          color: theme.primaryColor.withValues(
-                                            alpha: 0.02,
-                                          ),
-                                          border: Border.all(
-                                            color: theme.primaryColor
-                                                .withValues(alpha: 0.3),
-                                            width: 2,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          AppLocalizations
-                                              .current
-                                              .select_cover_image,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: theme.primaryColor,
-                                          ),
-                                        ),
-                                      );
-                                    },
                                   ),
                                 ),
                               )

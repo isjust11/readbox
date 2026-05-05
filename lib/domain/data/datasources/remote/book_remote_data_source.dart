@@ -42,6 +42,19 @@ class BookRemoteDataSource {
     return Future.error(apiResponse.errMessage);
   }
 
+  // generate book cover
+  Future<String> generateBookCover(Map<String, String> bookData) async {
+    ApiResponse apiResponse = await network.post(
+      url: '${ApiConstant.apiHost}ai/generate-book-cover',
+      body: bookData,
+    );
+
+    if (apiResponse.status == 200 || apiResponse.status == 201) {
+      return apiResponse.data['data'];
+    }
+    return Future.error(apiResponse.errMessage);
+  }
+
   Future<BookModel> getBookById(String id) async {
     ApiResponse apiResponse = await network.get(
       url: '${ApiConstant.apiHost}${ApiConstant.books}/$id',

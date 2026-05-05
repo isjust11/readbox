@@ -5,6 +5,11 @@ import 'package:readbox/domain/data/models/models.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:readbox/ui/screen/tools/tools_screen.dart';
 import 'package:readbox/ui/screen/settings/page/theme_customization_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:readbox/blocs/library/library_cubit.dart';
+import 'package:readbox/domain/repositories/repositories.dart';
+import 'package:readbox/domain/data/datasources/remote/admin_remote_data_source.dart';
+import 'package:readbox/injection_container.dart' as di;
 
 class Routes {
   Routes._();
@@ -85,13 +90,25 @@ class Routes {
       case adminUploadScreen:
         if (settings.arguments == null) {
           return PageTransition(
-            child: AdminUploadScreen(),
+            child: BlocProvider(
+              create: (context) => LibraryCubit(
+                repository: di.getIt<BookRepository>(),
+                adminRemoteDataSource: di.getIt<AdminRemoteDataSource>(),
+              ),
+              child: AdminUploadScreen(),
+            ),
             type: PageTransitionType.fade,
           );
         }
         final book = settings.arguments as BookModel;
         return PageTransition(
-          child: AdminUploadScreen(book: book),
+          child: BlocProvider(
+            create: (context) => LibraryCubit(
+              repository: di.getIt<BookRepository>(),
+              adminRemoteDataSource: di.getIt<AdminRemoteDataSource>(),
+            ),
+            child: AdminUploadScreen(book: book),
+          ),
           type: PageTransitionType.fade,
         );
       case bookDetailScreen:

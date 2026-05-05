@@ -125,6 +125,24 @@ class LibraryCubit extends Cubit<BaseState> {
     }
   }
 
+  // generate book cover
+  Future<void> generateBookCover({
+    required String title,
+    required String author,
+  }) async {
+    try {
+      emit(LoadingState());
+      final bookData = {
+        'title': title,
+        'author': author,
+      };
+      final response = await repository.generateBookCover(bookData);
+      emit(LoadedState(response));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+    }
+  }
+
   void resetErrorUpload() {
     _errorUploadEbook = null;
     _errorUploadCoverImage = null;

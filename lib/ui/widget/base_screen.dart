@@ -152,11 +152,11 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                       builder: (context, themeState) {
                         DecorationImage? bgImage;
                         Color? bgColor = colorBg;
-
+                        final themeMode = Theme.of(context).brightness;
                         if (themeState.backgroundType == 'pattern_1') {
                           bgImage = DecorationImage(
                             image: AssetImage(
-                              Theme.of(context).brightness == Brightness.light
+                              themeMode == Brightness.light
                                   ? Assets.images.mainbgLight.path
                                   : Assets.images.mainbgDart.path,
                             ),
@@ -166,9 +166,17 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                           bgImage = DecorationImage(
                             image: AssetImage(Assets.images.mainbgStyle2.path),
                             fit: BoxFit.cover,
+                            colorFilter: ColorFilter.mode(
+                              themeMode == Brightness.light
+                                  ? colorBg
+                                  : const Color(0xFF050505),
+                              BlendMode.darken,
+                            ),
                           );
                         } else {
-                          bgColor = bgColor;
+                          bgColor = themeMode == Brightness.light
+                              ? colorBg
+                              : const Color(0xFF050505);
                         }
 
                         return Container(
