@@ -1050,9 +1050,17 @@ class MainBodyState extends State<MainBody> {
       return;
     }
 
+    final String route;
+    final extension = book.fileUrl!.toLowerCase().split('.').last;
+    if (extension == 'epub') {
+      route = Routes.epubViewerScreen;
+    } else {
+      route = Routes.pdfViewerScreen;
+    }
+
     final result = await Navigator.pushNamed(
       context,
-      Routes.pdfViewerScreen,
+      route,
       arguments: book,
     );
     if (result == true) {

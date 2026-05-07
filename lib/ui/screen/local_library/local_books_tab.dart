@@ -165,7 +165,12 @@ class _LocalBooksTabState extends State<LocalBooksTab>
   }
 
   void _openBook(BookModel book) {
-    Navigator.pushNamed(context, Routes.pdfViewerScreen, arguments: book);
+    final extension = book.fileUrl?.toLowerCase().split('.').last;
+    if (extension == 'epub') {
+      Navigator.pushNamed(context, Routes.epubViewerScreen, arguments: book);
+    } else {
+      Navigator.pushNamed(context, Routes.pdfViewerScreen, arguments: book);
+    }
   }
 
   void _showBookInfoDrawer(BookModel book) {

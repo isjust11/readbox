@@ -24,6 +24,7 @@ class Routes {
   static const String adminUploadScreen = "/adminUploadScreen";
   static const String bookDetailScreen = "/bookDetailScreen";
   static const String pdfViewerScreen = "/pdfViewerScreen";
+  static const String epubViewerScreen = "/epubViewerScreen";
   static const String settingsScreen = "/settingsScreen";
   static const String feedbackScreen = "/feedbackScreen";
   static const String forgotPassword = "/forgotPassword";
@@ -132,6 +133,17 @@ class Routes {
         final args = settings.arguments as BookModel;
         return PageTransition(
           child: PdfViewerScreen(
+            fileUrl: args.fileUrl!,
+            bookId: args.id,
+            title: args.displayTitle,
+            userIdCreate: args.createById,
+          ),
+          type: PageTransitionType.rightToLeft,
+        );
+      case epubViewerScreen:
+        final args = settings.arguments as BookModel;
+        return PageTransition(
+          child: EpubViewerScreen(
             fileUrl: args.fileUrl!,
             bookId: args.id,
             title: args.displayTitle,

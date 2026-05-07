@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:pdfx/pdfx.dart' as pdfx;
 import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'package:epubx/epubx.dart' as epub;
 
 /// Model chứa metadata cơ bản của sách được extract từ file.
 class BookMetadata {
@@ -138,15 +139,31 @@ class BookMetadataService {
     }
   }
 
-  /// Extract metadata từ file EPUB (cần thêm package epub_parser nếu muốn hỗ trợ).
-  /// Hiện tại chỉ trả về file size.
+  /// Extract metadata từ file EPUB.
   static Future<BookMetadata> extractFromEpub(String filePath) async {
     final file = File(filePath);
     final fileSize = await file.length();
 
-    return BookMetadata(
-      fileSize: fileSize,
-    );
+    try {
+      final bytes = await file.readAsBytes();
+      final epubBook = await epub.EpubReader.readBook(bytes);
+
+      return BookMetadata(
+        title: epubBook.Title,
+        author: epubBook.Author,
+        publisher: epubBook.Schema?.Package?.Metadata?.Publishers?.isNotEmpty == true 
+            ? epubBook.Schema!.Package!.Metadata!.Publishers!.first 
+            : null,
+        fileSize: fileSize,
+        // EpubBook doesn't directly provide total pages as it's reflowable,
+        // but we can count chapters/spine items as a rough proxy if needed.
+        totalPages: epubBook.Chapters?.length,
+      );
+    } catch (e) {
+      return BookMetadata(
+        fileSize: fileSize,
+      );
+    }
   }
 
   /// Extract metadata từ file MOBI (cần thêm package mobi_parser nếu muốn hỗ trợ).
