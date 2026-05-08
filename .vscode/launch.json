@@ -16,17 +16,24 @@
             ]
         },
         {
-            "name": "readbox (Debug)",
+            "name": "readbox (Development)",
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart",
-            "flutterMode": "debug"
+            "flutterMode": "debug",
+            "args": [
+                "--dart-define=APP_ENV=dev"
+            ]
         },
         {
-            "name": "readbox",
+            "name": "readbox (Production)",
             "request": "launch",
             "type": "dart",
-            "program": "lib/main.dart"
+            "program": "lib/main.dart",
+            "flutterMode": "release",
+            "args": [
+                "--dart-define=APP_ENV=prod"
+            ]
         },
         {
             "name": "readbox (profile mode)",

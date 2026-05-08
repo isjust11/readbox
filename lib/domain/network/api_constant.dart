@@ -57,9 +57,26 @@ class ApiConstant {
     return int.tryParse(v) ?? 15000;
   }
 
-  static String get apiHost => "$_baseHost:$apiPort/";
-  static String get apiHostStorage => "$_baseHost:$storagePort";
-  static String get storageHost => "$_baseHost:$storagePort";
+  /// Môi trường hiện tại: 'dev' hoặc 'prod' (đọc từ .env APP_ENV)
+  static String get appEnv =>
+      dotenv.get('APP_ENV', fallback: kDebugMode ? 'dev' : 'prod').trim();
+
+  static bool get isDev => appEnv == 'dev';
+
+  /// API Host thống nhất — tự chọn dev (có port) hoặc prod (không port)
+  /// Tất cả data sources dùng getter này
+  static String get apiHost => isDev ? apiHostDev : apiHostProduct;
+
+  /// Dev: host:port/  (ví dụ http://192.168.0.104:4000/)
+  static String get apiHostDev => "$_baseHost:$apiPort/";
+
+  /// Product: host/   (ví dụ https://readbox.pro.vn/)
+  static String get apiHostProduct => "$_baseHost/";
+
+  /// Storage Host — cũng theo env
+  static String get apiHostStorage =>
+      isDev ? "$_baseHost:$storagePort" : "$_baseHost";
+  static String get storageHost => apiHostStorage;
   static final verifyToken = "auth/verify-token";
   static final login = "auth/login";
   static final register = "auth/register";

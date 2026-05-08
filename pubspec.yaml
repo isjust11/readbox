@@ -123,6 +123,8 @@ flutter:
     - assets/images/
     - assets/icons/
     - .env
+    - .env.dev
+    - .env.prod
 
 flutter_launcher_icons:
   android: true

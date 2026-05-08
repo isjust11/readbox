@@ -2,6 +2,7 @@ import 'dart:ui' show PlatformDispatcher;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/datasources/remote/admin_remote_data_source.dart';
@@ -34,7 +35,14 @@ String _languageFromSystemLocale() {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
+  // Load .env theo build mode: dev (debug) hoặc prod (release)
+  // Fallback sang .env nếu file cụ thể không tồn tại
+  final envFile= kDebugMode ? '.env.dev' : '.env.prod';
+  try {
+    await dotenv.load(fileName: envFile);
+  } catch (_) {
+    await dotenv.load(fileName: '.env');
+  }
   RevenueCatService.instance.init();
   ApiConstant().init();
   // init theme data
