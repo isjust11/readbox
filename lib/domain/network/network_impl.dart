@@ -42,6 +42,11 @@ class Network {
             print("===token =====");
             debugPrint(token);
           }
+
+          // Lấy ngôn ngữ hiện tại và thêm vào header
+          String lang = await SharedPreferenceUtil.getCurrentLanguage();
+          myOption.headers["x-custom-lang"] = lang;
+
           return handler.next(myOption);
         },
         onError: (DioError error, ErrorInterceptorHandler handler) async {
@@ -304,10 +309,14 @@ class Network {
 
       // Sử dụng một Dio riêng không có interceptor để tránh vòng lặp 401
       final Dio refreshDio = Dio(options);
+      final String lang = await SharedPreferenceUtil.getCurrentLanguage();
       final Response response = await refreshDio.post(
         '${ApiConstant.apiHost}${ApiConstant.refreshToken}',
         data: {'refreshToken': refreshToken},
-        options: Options(responseType: ResponseType.json),
+        options: Options(
+          responseType: ResponseType.json,
+          headers: {'x-custom-lang': lang},
+        ),
       );
 
       final data = response.data;

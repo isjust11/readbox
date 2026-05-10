@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
-import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
@@ -159,7 +158,6 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final isLargeScreen = screenWidth >= 1024;
     const double headerMaxWidth = 420;
@@ -213,20 +211,9 @@ class ConfirmPinBodyState extends State<ConfirmPinBody>
               );
             }
           } else {
-            // Fallback: nếu data không phải Map (backward compatibility)
             _clearPin();
-            AppSnackBar.show(
-              context,
-              message: AppLocalizations.current.pin_verification_failed,
-              snackBarType: SnackBarType.error,
-            );
           }
         } else if (state is ErrorState) {
-          AppSnackBar.show(
-            context,
-            message: BlocUtils.getMessageError(state.data),
-            snackBarType: SnackBarType.error,
-          );
           _clearPin();
         }
       },
