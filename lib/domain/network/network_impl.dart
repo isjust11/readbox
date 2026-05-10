@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -39,13 +40,18 @@ class Network {
           String? token = await _secureStorage.getToken();
           if (token != null && token.isNotEmpty) {
             myOption.headers["Authorization"] = "Bearer $token";
-            print("===token =====");
-            debugPrint(token);
           }
 
           // Lấy ngôn ngữ hiện tại và thêm vào header
           String lang = await SharedPreferenceUtil.getCurrentLanguage();
           myOption.headers["x-custom-lang"] = lang;
+
+          // Lấy mã vùng (country code) từ thiết bị
+          final locale = ui.PlatformDispatcher.instance.locale;
+          if (locale.countryCode != null && locale.countryCode!.isNotEmpty) {
+            myOption.headers["x-country-code"] = locale.countryCode;
+            myOption.headers["x-region"] = locale.countryCode; 
+          }
 
           return handler.next(myOption);
         },

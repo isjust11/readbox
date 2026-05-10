@@ -69,6 +69,8 @@ class RegisterScreenState extends State<RegisterBody>
 
   void _handleRegister() {
     if (_formKey.currentState?.validate() ?? false) {
+      // unfocus keyboard
+      FocusManager.instance.primaryFocus?.unfocus();
       BlocProvider.of<AuthCubit>(context).doRegister(
         username: _usernameController.text.trim(),
         email: _emailController.text.trim(),

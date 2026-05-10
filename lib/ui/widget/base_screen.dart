@@ -174,9 +174,10 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                             ),
                           );
                         } else {
-                          bgColor = themeMode == Brightness.light
-                              ? colorBg
-                              : const Color(0xFF050505);
+                          bgColor =
+                              themeMode == Brightness.light
+                                  ? colorBg
+                                  : const Color(0xFF050505);
                         }
 
                         return Container(
@@ -203,7 +204,7 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                         child: BlocBuilder<T, BaseState>(
                           builder: (context, state) {
                             if (state is LoadingState) {
-                              return IgnorePointer(
+                              return AbsorbPointer(
                                 child: Container(
                                   width: double.infinity,
                                   height: double.infinity,

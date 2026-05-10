@@ -71,6 +71,8 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
     if (!_formKey.currentState!.validate()) {
       return;
     }
+    // unfocus keyboard
+    FocusManager.instance.primaryFocus?.unfocus();
     final username = _usernameController.text.trim();
     BlocProvider.of<AuthCubit>(context).forgotPassword(username: username);
   }
@@ -79,6 +81,8 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
     if (!_formKey.currentState!.validate()) {
       return;
     }
+    // unfocus keyboard
+    FocusManager.instance.primaryFocus?.unfocus();
     final username = BlocProvider.of<AuthCubit>(context).resetPasswordUsername;
     final newPassword = _newPasswordController.text.trim();
     final confirmNewPassword = _confirmNewPasswordController.text.trim();
@@ -150,9 +154,7 @@ class _ForgotPasswordBodyState extends State<_ForgotPasswordBody>
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
-              gradient: AppTheme.indigoCyanGradient(),
-            ),
+            decoration: BoxDecoration(gradient: AppTheme.indigoCyanGradient()),
           ),
           SafeArea(
             child: Column(

@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/utils.dart';
@@ -21,7 +22,7 @@ class AuthCubit extends Cubit<BaseState> {
   Future doLogin({String? username, String? password}) async {
     try {
       emit(LoadingState());
-
+      FocusManager.instance.primaryFocus?.unfocus();
       // Lấy FCM token để gửi kèm theo request
       final fcmToken = fcmService.fcmToken;
 
