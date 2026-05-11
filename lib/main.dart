@@ -37,7 +37,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Load .env theo build mode: dev (debug) hoặc prod (release)
   // Fallback sang .env nếu file cụ thể không tồn tại
-  final envFile= kDebugMode ? '.env.dev' : '.env.prod';
+  final envFile = kDebugMode ? '.env.dev' : '.env.prod';
   try {
     await dotenv.load(fileName: envFile);
   } catch (_) {

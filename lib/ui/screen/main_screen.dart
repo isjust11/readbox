@@ -17,6 +17,7 @@ import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/shared_preference.dart';
 import 'package:scale_size/scale_size.dart';
 
 import '../../domain/data/models/models.dart';
@@ -54,9 +55,11 @@ class MainBodyState extends State<MainBody> {
   FilterModel? _filterModel;
   UserModel? userInfo;
   List<CategoryModel> categories = [];
+  String? currentLanguage;
   @override
   void initState() {
     super.initState();
+    loadCurrentLanguage();
     title = AppLocalizations.current.book_discover;
     context.read<UserSubscriptionCubit>().loadMe();
     // Load initial data after first frame
@@ -68,6 +71,10 @@ class MainBodyState extends State<MainBody> {
     });
     loadUserInfo();
     loadCategories();
+  }
+
+  Future<void> loadCurrentLanguage() async {
+    currentLanguage = await SharedPreferenceUtil.getCurrentLanguage();
   }
 
   // load category
@@ -259,7 +266,10 @@ class MainBodyState extends State<MainBody> {
                     final id = category.id ?? '';
                     final idStr = id.toString();
                     final label =
-                        category.name ?? AppLocalizations.current.no_name;
+                        (currentLanguage == 'vi'
+                            ? category.name
+                            : category.nameEN) ??
+                        AppLocalizations.current.no_name;
                     return _buildCategoryChip(
                       colorScheme: colorScheme,
                       label: label,
