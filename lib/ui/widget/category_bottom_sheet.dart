@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/app_size.dart';
@@ -354,7 +355,15 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
     ColorScheme colorScheme,
   ) {
     final isSelected = _selectedCategoryId == category.id;
-
+    final currentLanguageCode = Localizations.localeOf(context).languageCode;
+    final categoryName =
+        currentLanguageCode == LanguageCode.en
+            ? category.nameEN
+            : category.name;
+    final categoryDescription =
+        currentLanguageCode == LanguageCode.en
+            ? category.descriptionEN
+            : category.description;
     return InkWell(
       onTap: () {
         setState(() {
@@ -401,7 +410,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    category.name ?? '',
+                    categoryName ?? '',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontSize: AppSize.fontSizeLarge,
                       fontWeight:
@@ -412,11 +421,11 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                               : colorScheme.onSurface,
                     ),
                   ),
-                  if (category.description != null &&
-                      category.description!.isNotEmpty) ...[
+                  if (categoryDescription != null &&
+                      categoryDescription.isNotEmpty) ...[
                     SizedBox(height: AppDimens.SIZE_2),
                     Text(
-                      category.description!,
+                      categoryDescription,
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontSize: AppSize.fontSizeMedium,
                         color: colorScheme.onSurface.withValues(

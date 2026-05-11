@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
@@ -193,7 +194,14 @@ class _BookCardState extends State<BookCard> {
                                   _authorWidget(book.author!),
                                 ],
                                 if (book.category != null) ...[
-                                  _categoryWidget(book.category?.name ?? ''),
+                                  _categoryWidget(
+                                    Localizations.localeOf(
+                                              context,
+                                            ).languageCode ==
+                                            LanguageCode.en
+                                        ? book.category?.nameEN ?? ''
+                                        : book.category?.name ?? '',
+                                  ),
                                 ],
                                 SizedBox(height: 4),
                                 // action delete and edit book
@@ -630,7 +638,12 @@ class _BookCardState extends State<BookCard> {
                               // Category
                               if (widget.book.category != null)
                                 _categoryWidget(
-                                  widget.book.category?.name ?? '',
+                                  Localizations.localeOf(
+                                            context,
+                                          ).languageCode ==
+                                          'en'
+                                      ? widget.book.category?.nameEN ?? ''
+                                      : widget.book.category?.name ?? '',
                                 ),
                             ],
                           ),
