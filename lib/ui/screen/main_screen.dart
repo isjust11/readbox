@@ -40,6 +40,8 @@ class MainBodyState extends State<MainBody> {
   final RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
+  // Thêm dòng này
+  final FocusNode _searchFocusNode = FocusNode();
   bool _isSearching = false;
   int page = 1;
   int limit = 10;
@@ -137,6 +139,7 @@ class MainBodyState extends State<MainBody> {
   void dispose() {
     _debounceTimer?.cancel();
     _searchController.dispose();
+    _searchFocusNode.dispose();
     _refreshController.dispose();
     super.dispose();
   }
@@ -144,7 +147,11 @@ class MainBodyState extends State<MainBody> {
   void _toggleSearch() {
     setState(() {
       _isSearching = !_isSearching;
-      if (!_isSearching) {
+      if (_isSearching) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _searchFocusNode.requestFocus();
+        });
+      } else {
         _debounceTimer?.cancel();
         _searchController.clear();
         _currentSearchQuery = null;
@@ -440,6 +447,9 @@ class MainBodyState extends State<MainBody> {
                 ? TextField(
                   controller: _searchController,
                   autofocus: true,
+                  focusNode: _searchFocusNode,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.search,
                   decoration: InputDecoration(
                     hintText: AppLocalizations.current.search_books,
                     border: InputBorder.none,
@@ -1058,11 +1068,7 @@ class MainBodyState extends State<MainBody> {
       route = Routes.pdfViewerScreen;
     }
 
-    final result = await Navigator.pushNamed(
-      context,
-      route,
-      arguments: book,
-    );
+    final result = await Navigator.pushNamed(context, route, arguments: book);
     if (result == true) {
       loadUserReadingBooks();
     }

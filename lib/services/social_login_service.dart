@@ -3,6 +3,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:readbox/config/google_signin_config.dart';
 import 'dart:io';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/utils/base_exception.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class SocialLoginService {
@@ -51,8 +52,9 @@ class SocialLoginService {
           .timeout(
             const Duration(seconds: 30),
             onTimeout: () {
-              throw Exception(
-                AppLocalizations.current.google_play_services_not_available,
+              throw BaseException(
+                message:
+                    AppLocalizations.current.google_play_services_not_available,
               );
             },
           );
@@ -60,7 +62,9 @@ class SocialLoginService {
       print('Google Sign-In result: ${googleUser?.email}');
 
       if (googleUser == null) {
-        throw Exception(AppLocalizations.current.user_cancelled_google_sign_in);
+        throw BaseException(
+          message: AppLocalizations.current.user_cancelled_google_sign_in,
+        );
       }
 
       final GoogleSignInAuthentication googleAuth =
@@ -78,50 +82,57 @@ class SocialLoginService {
       // Log chi tiết lỗi để debug
       print('❌ Google Sign-In Error: $error');
       print('❌ Error type: ${error.runtimeType}');
-      
-      // Xử lý ApiException 8 (INTERNAL_ERROR)
-      if (error.toString().contains('8:') || 
+
+      // Xử lý ApiBaseException 8 (INTERNAL_ERROR)
+      if (error.toString().contains('8:') ||
           error.toString().contains('INTERNAL_ERROR') ||
-          error.toString().contains('ApiException: 8')) {
-        print('⚠️ INTERNAL_ERROR (8) - Có thể do:');
-        print('   1. Google Play Services chưa được cập nhật');
-        print('   2. SHA-1 fingerprint chưa được thêm vào Google Cloud Console');
-        print('   3. Package name không khớp: com.hungvv.readbox');
-        print('   4. google-services.json chưa đúng hoặc chưa được sync');
-        print('   5. Google Sign-In API chưa được enable');
-        throw Exception(AppLocalizations.current.google_signin_failed);
+          error.toString().contains('ApiBaseException: 8')) {
+        throw BaseException(
+          message: AppLocalizations.current.google_signin_failed,
+        );
       }
-      
-      // Xử lý ApiException 12500 (DEVELOPER_ERROR)
-      if (error.toString().contains('12500') || 
+
+      // Xử lý ApiBaseException 12500 (DEVELOPER_ERROR)
+      if (error.toString().contains('12500') ||
           error.toString().contains('DEVELOPER_ERROR') ||
           error.toString().contains('developer_error')) {
         print('⚠️ DEVELOPER_ERROR (12500) - Cấu hình OAuth không đúng');
-        throw Exception(AppLocalizations.current.google_developer_error);
+        throw BaseException(
+          message: AppLocalizations.current.google_developer_error,
+        );
       }
-      
+
       // Xử lý các loại lỗi khác
       if (error.toString().contains('sign_in_failed')) {
-        throw Exception(AppLocalizations.current.google_signin_failed);
+        throw BaseException(
+          message: AppLocalizations.current.google_signin_failed,
+        );
       } else if (error.toString().contains('network_error') ||
-          error.toString().contains('SocketException') ||
+          error.toString().contains('SocketBaseException') ||
           error.toString().contains('Network is unreachable')) {
-        throw Exception(AppLocalizations.current.google_network_error);
+        throw BaseException(
+          message: AppLocalizations.current.google_network_error,
+        );
       } else if (error.toString().contains('invalid_client') ||
           error.toString().contains('10:')) {
-        throw Exception(AppLocalizations.current.google_invalid_client);
+        throw BaseException(
+          message: AppLocalizations.current.google_invalid_client,
+        );
       } else if (error.toString().contains('timeout')) {
-        throw Exception(AppLocalizations.current.google_timeout);
+        throw BaseException(message: AppLocalizations.current.google_timeout);
       } else if (error.toString().contains('SERVICE_DISABLED') ||
           error.toString().contains('SERVICE_MISSING') ||
           error.toString().contains('SERVICE_VERSION_UPDATE_REQUIRED')) {
-        throw Exception(
-          AppLocalizations.current.google_play_services_not_available,
+        throw BaseException(
+          message: AppLocalizations.current.google_play_services_not_available,
         );
       }
 
       // Re-throw với message chi tiết
-      throw Exception('Google Sign-In Error: $error');
+      throw BaseException(
+        message: error.toString(),
+        code: "google_error_other",
+      );
     }
   }
 
@@ -149,7 +160,9 @@ class SocialLoginService {
         final accessToken = result.accessToken?.tokenString;
 
         if (accessToken == null) {
-          throw Exception(AppLocalizations.current.facebook_access_token_is_null);
+          throw BaseException(
+            message: AppLocalizations.current.facebook_access_token_is_null,
+          );
         }
 
         print('✅ Facebook login successful: ${userData['email']}');
@@ -163,21 +176,29 @@ class SocialLoginService {
         };
       } else {
         print('❌ Facebook login failed with status: ${result.status}');
-        throw Exception(AppLocalizations.current.facebook_login_failed);
+        throw BaseException(
+          message: AppLocalizations.current.facebook_login_failed,
+        );
       }
     } catch (error) {
       // Xử lý lỗi AX Lookup cụ thể cho iOS Simulator
       if (error.toString().contains('AX Lookup problem') ||
           error.toString().contains('Permission denied portName') ||
           error.toString().contains('com.apple.iphone.axserver')) {
-        throw Exception(AppLocalizations.current.facebook_login_failed);
+        throw BaseException(
+          message: AppLocalizations.current.facebook_login_failed,
+        );
       } else if (error.toString().contains('network_error') ||
-          error.toString().contains('SocketException') ||
+          error.toString().contains('SocketBaseException') ||
           error.toString().contains('Network is unreachable')) {
-        throw Exception(AppLocalizations.current.facebook_network_error);
+        throw BaseException(
+          message: AppLocalizations.current.facebook_network_error,
+        );
       } else if (error.toString().contains('invalid_client') ||
           error.toString().contains('FacebookAppID')) {
-        throw Exception(AppLocalizations.current.facebook_invalid_client);
+        throw BaseException(
+          message: AppLocalizations.current.facebook_invalid_client,
+        );
       }
 
       rethrow;
@@ -203,7 +224,9 @@ class SocialLoginService {
                 ? '${credential.givenName} ${credential.familyName}'
                 : '',
         'platform': 'apple',
-        'accessToken': credential.identityToken, // Dùng identityToken làm accessToken để verify ở backend
+        'accessToken':
+            credential
+                .identityToken, // Dùng identityToken làm accessToken để verify ở backend
       };
     } catch (error) {
       print('❌ Apple Sign-In Error: $error');

@@ -6,6 +6,7 @@ import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/services/services.dart';
+import 'package:readbox/utils/base_exception.dart';
 import 'package:readbox/utils/navigator.dart';
 import 'package:readbox/utils/shared_preference.dart';
 import 'package:readbox/services/revenuecat_service.dart';
@@ -230,9 +231,14 @@ class AuthCubit extends Cubit<BaseState> {
       }
 
       emit(LoadedState(authModel));
+    } on BaseException catch (e) {
+      if (e.code != 'google_error_other') {
+        emit(ErrorState(e.message));
+      } else {
+        emit(InitState());
+      }
     } catch (e) {
-      String errorMessage = BlocUtils.getMessageError(e);
-      emit(ErrorState(errorMessage));
+      emit(ErrorState(BlocUtils.getMessageError(e)));
     }
   }
 

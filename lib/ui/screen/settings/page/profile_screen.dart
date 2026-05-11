@@ -63,70 +63,65 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 // Content
-                Padding(
-                  padding: const EdgeInsets.all(AppDimens.SIZE_24),
-                  child: Row(
-                    children: [
-                      // Avatar với border và shadow
-                      Container(
-                        padding: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 3),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 12,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: _buildAvatar(context),
-                      ),
-                      const SizedBox(width: AppDimens.SIZE_16),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              CustomTextLabel(
-                                userModel?.fullName ?? '',
-                                color: theme.colorScheme.onPrimary,
-                                fontSize: AppDimens.SIZE_20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              const SizedBox(width: 8),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    Routes.editProfile,
-                                    arguments: user,
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.edit_square,
-                                  color: Colors.grey[200],
-                                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.editProfile,
+                      arguments: user,
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppDimens.SIZE_24),
+                    child: Row(
+                      children: [
+                        // Avatar với border và shadow
+                        Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 3),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 12,
+                                offset: Offset(0, 4),
                               ),
                             ],
                           ),
-                          const SizedBox(height: AppDimens.SIZE_4),
-                          // Email
-                          CustomTextLabel(
-                            userModel?.email ?? '',
-                            color: theme.colorScheme.onPrimary.withValues(
-                              alpha: 0.9,
+                          child: _buildAvatar(context),
+                        ),
+                        const SizedBox(width: AppDimens.SIZE_16),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                CustomTextLabel(
+                                  userModel?.fullName ?? '',
+                                  color: theme.colorScheme.onPrimary,
+                                  fontSize: AppDimens.SIZE_20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ],
                             ),
-                            fontSize: AppDimens.SIZE_14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ],
-                      ),
+                            const SizedBox(height: AppDimens.SIZE_4),
+                            // Email
+                            CustomTextLabel(
+                              userModel?.email ?? '',
+                              color: theme.colorScheme.onPrimary.withValues(
+                                alpha: 0.9,
+                              ),
+                              fontSize: AppDimens.SIZE_14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ],
+                        ),
 
-                      // Tên user
-                    ],
+                        // Tên user
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -385,7 +380,7 @@ class ProfileScreen extends StatelessWidget {
         radius: 40,
         backgroundImage:
             Platform.isAndroid
-                ? AssetImage(avatarUrl)
+                ? NetworkImage(avatarUrl)
                 : CachedNetworkImageProvider(avatarUrl),
         backgroundColor: Colors.white,
         onBackgroundImageError: (_, __) {
@@ -442,7 +437,7 @@ class ProfileScreen extends StatelessWidget {
     final picture = user!.picture!;
 
     // Check if already a full URL (from social platforms)
-    if (picture.startsWith('http://') || picture.startsWith('https://')) {
+    if (picture.startsWith('http')) {
       return picture;
     }
 

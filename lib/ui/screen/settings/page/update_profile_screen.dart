@@ -62,6 +62,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
   String? _pathRelativeAvatar;
   bool _isLoading = false;
   bool isUpload = false;
+  UserModel? userModel;
   @override
   void initState() {
     super.initState();
@@ -100,21 +101,21 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
               );
             }
             if (state.data is UserModel) {
-              final userModel = state.data as UserModel;
-              _fullNameController.text = userModel.fullName ?? '';
-              _emailController.text = userModel.email ?? '';
+              userModel = state.data as UserModel;
+              _fullNameController.text = userModel?.fullName ?? '';
+              _emailController.text = userModel?.email ?? '';
               _currentAvatarUrl = _getAvatarUrl(
-                userModel.picture,
-                userModel.isSocialPlatform,
+                userModel?.picture,
+                userModel?.isSocialPlatform ?? false,
               );
-              _pathRelativeAvatar = userModel.picture ?? '';
-              _phoneNumberController.text = userModel.phoneNumber ?? '';
-              _addressController.text = userModel.address ?? '';
-              _birthDateController.text = userModel.birthDate ?? '';
-              _facebookLinkController.text = userModel.facebookLink ?? '';
-              _instagramLinkController.text = userModel.instagramLink ?? '';
-              _twitterLinkController.text = userModel.twitterLink ?? '';
-              _linkedinLinkController.text = userModel.linkedinLink ?? '';
+              _pathRelativeAvatar = userModel?.picture ?? '';
+              _phoneNumberController.text = userModel?.phoneNumber ?? '';
+              _addressController.text = userModel?.address ?? '';
+              _birthDateController.text = userModel?.birthDate ?? '';
+              _facebookLinkController.text = userModel?.facebookLink ?? '';
+              _instagramLinkController.text = userModel?.instagramLink ?? '';
+              _twitterLinkController.text = userModel?.twitterLink ?? '';
+              _linkedinLinkController.text = userModel?.linkedinLink ?? '';
               setState(() {
                 _isLoading = false;
               });
@@ -172,7 +173,10 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
                 Stack(
                   children: [
                     GestureDetector(
-                      onTap: _showImagePicker,
+                      onTap:
+                          (userModel?.isSocialPlatform ?? false)
+                              ? null
+                              : _showImagePicker,
                       child: Container(
                         width: AppDimens.SIZE_100,
                         height: AppDimens.SIZE_100,
@@ -200,25 +204,26 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
                         ),
                       ),
                     ),
-                    Positioned(
-                      right: AppDimens.SIZE_16,
-                      bottom: 0,
-                      child: Container(
-                        width: AppDimens.SIZE_20,
-                        height: AppDimens.SIZE_20,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(
-                            AppDimens.SIZE_10,
+                    if (!(userModel?.isSocialPlatform ?? false))
+                      Positioned(
+                        right: AppDimens.SIZE_16,
+                        bottom: 0,
+                        child: Container(
+                          width: AppDimens.SIZE_20,
+                          height: AppDimens.SIZE_20,
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.surface,
+                            borderRadius: BorderRadius.circular(
+                              AppDimens.SIZE_10,
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.camera_alt,
+                            color: theme.primaryColor,
+                            size: AppDimens.SIZE_16,
                           ),
                         ),
-                        child: Icon(
-                          Icons.camera_alt,
-                          color: theme.primaryColor,
-                          size: AppDimens.SIZE_16,
-                        ),
                       ),
-                    ),
                   ],
                 ),
               ],
@@ -557,7 +562,7 @@ class _UpdateProfileBodyState extends State<UpdateProfileBody> {
     }
 
     // Check if already a full URL (from social platforms)
-    if (picture.startsWith('http://') || picture.startsWith('https://')) {
+    if (picture.startsWith('http')) {
       return picture;
     }
 
