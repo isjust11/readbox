@@ -187,20 +187,14 @@ class LoginScreenState extends State<LoginBody>
     return Column(
       children: [
         // App Icon/Logo
-        Container(
-          padding: EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 20,
-                offset: Offset(0, 10),
-              ),
-            ],
+        ClipRRect(
+          borderRadius: BorderRadius.circular(42),
+          child: Image.asset(
+            Assets.images.appLogo.path,
+            width: 84,
+            height: 84,
+            fit: BoxFit.cover,
           ),
-          child: Image.asset(Assets.images.appLogo.path, width: 60, height: 60),
         ),
         SizedBox(height: 12),
 

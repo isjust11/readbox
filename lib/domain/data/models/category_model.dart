@@ -18,6 +18,8 @@ class CategoryModel extends CategoryEntity {
     super.createBy,
     super.createdAt,
     super.updatedAt,
+    super.nameEN,
+    super.descriptionEN,
   });
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,8 @@ class CategoryModel extends CategoryEntity {
       createBy: json['createBy']?.toString(),
       createdAt: json['createdAt']?.toString(),
       updatedAt: json['updatedAt']?.toString(),
+      nameEN: json['nameEN']?.toString(),
+      descriptionEN: json['descriptionEN']?.toString(),
     );
   }
 
@@ -59,6 +63,8 @@ class CategoryModel extends CategoryEntity {
       createBy: entity.createBy,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
+      nameEN: entity.nameEN,
+      descriptionEN: entity.descriptionEN,
     );
   }
 
@@ -80,6 +86,8 @@ class CategoryModel extends CategoryEntity {
       createBy: createBy,
       createdAt: createdAt,
       updatedAt: updatedAt,
+      nameEN: nameEN,
+      descriptionEN: descriptionEN,
     );
   }
 }

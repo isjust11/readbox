@@ -8,6 +8,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/config/theme_data.dart';
+import 'package:readbox/constants.dart';
 import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
@@ -17,7 +18,6 @@ import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/widget.dart';
-import 'package:readbox/utils/shared_preference.dart';
 import 'package:scale_size/scale_size.dart';
 
 import '../../domain/data/models/models.dart';
@@ -55,11 +55,9 @@ class MainBodyState extends State<MainBody> {
   FilterModel? _filterModel;
   UserModel? userInfo;
   List<CategoryModel> categories = [];
-  String? currentLanguage;
   @override
   void initState() {
     super.initState();
-    loadCurrentLanguage();
     title = AppLocalizations.current.book_discover;
     context.read<UserSubscriptionCubit>().loadMe();
     // Load initial data after first frame
@@ -71,10 +69,6 @@ class MainBodyState extends State<MainBody> {
     });
     loadUserInfo();
     loadCategories();
-  }
-
-  Future<void> loadCurrentLanguage() async {
-    currentLanguage = await SharedPreferenceUtil.getCurrentLanguage();
   }
 
   // load category
@@ -224,6 +218,8 @@ class MainBodyState extends State<MainBody> {
 
   Widget _buildCategoryBar(ColorScheme colorScheme) {
     final categoryCount = categories.length;
+    final currentLanguageCode = Localizations.localeOf(context).languageCode;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -266,7 +262,7 @@ class MainBodyState extends State<MainBody> {
                     final id = category.id ?? '';
                     final idStr = id.toString();
                     final label =
-                        (currentLanguage == 'vi'
+                        (currentLanguageCode == LanguageCode.vi
                             ? category.name
                             : category.nameEN) ??
                         AppLocalizations.current.no_name;
@@ -1072,7 +1068,7 @@ class MainBodyState extends State<MainBody> {
 
     final String route;
     final extension = book.fileUrl!.toLowerCase().split('.').last;
-    if (extension == 'epub') {
+    if (extension == EbookFormat.epub) {
       route = Routes.epubViewerScreen;
     } else {
       route = Routes.pdfViewerScreen;

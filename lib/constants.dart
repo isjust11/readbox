@@ -1,4 +1,3 @@
-
 class FormatDate {
   static const String full = "dd/MM/yyyy HH:mm:ss";
   static const String dayMonthYear = "dd/MM/yyyy";
@@ -6,4 +5,14 @@ class FormatDate {
   static const String hhMMss = "HH:mm ss";
   static const String formatTimeServer = "yyyy-MM-ddTHH:mm:ss";
   static const String yyyyMMdd = "yyyyMMdd";
+}
+
+class LanguageCode {
+  static const String en = "en";
+  static const String vi = "vi";
+}
+
+class EbookFormat {
+  static const String epub = "epub";
+  static const String pdf = "pdf";
 }

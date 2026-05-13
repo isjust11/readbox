@@ -46,9 +46,7 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
       categoryTypeCode: CategoryTypeEnum.BOOK_CATEGORY.name,
     );
     print(bookCategories);
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override
@@ -136,11 +134,15 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
                     // Category options
                     ...bookCategories.map((category) {
                       final categoryId = category.id.toString();
+                      final currentLanguageCode =
+                          Localizations.localeOf(context).languageCode;
                       final categoryName =
-                          category.name ?? AppLocalizations.current.no_name;
+                          currentLanguageCode == 'en'
+                              ? category.nameEN
+                              : category.name;
                       return _buildCategoryChip(
                         context,
-                        label: categoryName,
+                        label: categoryName ?? AppLocalizations.current.no_name,
                         isSelected: _selectedCategoryId == categoryId,
                         onTap: () {
                           setState(() {
@@ -207,7 +209,8 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
                     ...bookTypeCategories.map((bookType) {
                       return _buildFormatChip(
                         context,
-                        label: bookType.name ?? AppLocalizations.current.no_name,
+                        label:
+                            bookType.name ?? AppLocalizations.current.no_name,
                         isSelected: _selectedFormat == bookType.code,
                         onTap: () {
                           setState(() {
@@ -215,7 +218,7 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
                           });
                         },
                       );
-                    })
+                    }),
                   ],
                 ),
                 const SizedBox(height: 24),
