@@ -177,10 +177,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
   }
 
-  String get _networkPdfUrl =>
-      widget.fileUrl.startsWith('http')
-          ? widget.fileUrl
-          : '${ApiConstant.apiHostStorage}${widget.fileUrl}';
+  String get _networkPdfUrl {
+    if (widget.fileUrl.startsWith('http')) return widget.fileUrl;
+    // Google Drive proxy: đi qua API server (port 4000), không phải storage (port 3005)
+    if (widget.fileUrl.contains('google-drive/download/')) {
+      return '${ApiConstant.apiHost}${widget.fileUrl}';
+    }
+    return '${ApiConstant.apiHostStorage}${widget.fileUrl}';
+  }
 
   /// Tải bytes PDF khi cần (TTS, Share, Download) — chỉ gọi cho file network
   Future<Uint8List?> _ensurePdfBytesForNetwork() async {

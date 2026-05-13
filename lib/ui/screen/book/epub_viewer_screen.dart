@@ -140,10 +140,15 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
         document: EpubDocument.openData(_epubBytes!),
       );
     } else {
-      final networkUrl =
-          widget.fileUrl.startsWith('http')
-              ? widget.fileUrl
-              : '${ApiConstant.apiHostStorage}${widget.fileUrl}';
+      final String networkUrl;
+      if (widget.fileUrl.startsWith('http')) {
+        networkUrl = widget.fileUrl;
+      } else if (widget.fileUrl.contains('google-drive/download/')) {
+        // Google Drive proxy: đi qua API server (port 4000), không phải storage (port 3005)
+        networkUrl = '${ApiConstant.apiHost}${widget.fileUrl}';
+      } else {
+        networkUrl = '${ApiConstant.apiHostStorage}${widget.fileUrl}';
+      }
 
       // Wait, we should download it first if it's network.
       await _downloadAndLoadEpub(networkUrl);
