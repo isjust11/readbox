@@ -16,3 +16,14 @@ class EbookFormat {
   static const String epub = "epub";
   static const String pdf = "pdf";
 }
+
+class RoleCode {
+  static const String superAdmin = 'SUPER_ADMIN';
+  static const String supperAdmin = 'SUPPER_ADMIN';
+  static const String user = 'USER';
+  static const String admin = 'ADMIN';
+}
+
+class SubscriptionCode {
+  static const String freePlan = 'FREE_PLAN';
+}

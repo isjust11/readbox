@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/enums/payment_method.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
@@ -34,7 +35,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
   int _selectedDurationMonths = 1; // 1, 3, 6, 12
   Offerings? _offerings;
   late PageController _pageController;
-
+  String get languageCode => Localizations.localeOf(context).languageCode;
   @override
   void initState() {
     super.initState();
@@ -317,7 +318,11 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  plan.isFree ? "Gói miễn phí" : plan.name,
+                  plan.isFree
+                      ? AppLocalizations.current.freePlan
+                      : languageCode == LanguageCode.en
+                      ? plan.nameEn ?? ''
+                      : plan.name,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,

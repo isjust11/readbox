@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:light_dark_theme_toggle/light_dark_theme_toggle.dart';
 import 'package:readbox/blocs/theme_cubit.dart';
+import 'package:readbox/constants.dart';
 import 'package:readbox/domain/network/api_constant.dart';
+import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/assets.gen.dart';
@@ -128,7 +130,10 @@ class AppProfile extends StatelessWidget {
                                   Routes.subscriptionPlanScreen,
                                 );
                               },
-                              child: _buildSubscriptionBadge(userSubscription),
+                              child: _buildSubscriptionBadge(
+                                context,
+                                userSubscription,
+                              ),
                             ),
                             Visibility(
                               visible: settingScreen,
@@ -177,7 +182,10 @@ class AppProfile extends StatelessWidget {
   }
 
   /// Build avatar widget dựa trên thông tin user
-  Widget _buildSubscriptionBadge(UserSubscriptionModel? userSubscription) {
+  Widget _buildSubscriptionBadge(
+    BuildContext context,
+    UserSubscriptionModel? userSubscription,
+  ) {
     final plan = userSubscription?.plan;
     final isFree = plan == null || plan.isFree;
 
@@ -188,7 +196,13 @@ class AppProfile extends StatelessWidget {
     final Color iconColor = isFree ? Colors.white70 : const Color(0xFFFFD700);
     final IconData icon =
         isFree ? Icons.workspace_premium_outlined : Icons.star_rounded;
-    final String label = plan?.name ?? 'Free';
+    final String languageCode = Localizations.localeOf(context).languageCode;
+    final String? label =
+        isFree
+            ? AppLocalizations.of(context).freePlan
+            : languageCode == LanguageCode.en
+            ? plan.nameEn
+            : plan.name;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -203,7 +217,7 @@ class AppProfile extends StatelessWidget {
           Icon(icon, color: iconColor, size: 15),
           const SizedBox(width: 4),
           Text(
-            label,
+            label!,
             style: TextStyle(
               color: isFree ? Colors.white70 : const Color(0xFFFFD700),
               fontSize: 12,

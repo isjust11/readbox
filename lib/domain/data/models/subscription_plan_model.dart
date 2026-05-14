@@ -7,6 +7,8 @@ class SubscriptionPlanModel {
   final String code;
   final String name;
   final String? description;
+  final String? nameEn;
+  final String? descriptionEn;
   final int storageLimitBytes;
   final int ttsLimitPerPeriod;
   final int convertLimitPerPeriod;
@@ -24,6 +26,8 @@ class SubscriptionPlanModel {
     required this.code,
     required this.name,
     this.description,
+    this.nameEn,
+    this.descriptionEn,
     this.storageLimitBytes = 0,
     this.ttsLimitPerPeriod = 0,
     this.convertLimitPerPeriod = 0,

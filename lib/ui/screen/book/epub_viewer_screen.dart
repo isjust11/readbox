@@ -14,6 +14,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
@@ -89,7 +90,17 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
   late UserSubscriptionModel? _userSubscription;
 
   bool get isEnableAction => _error == null;
-  bool get isProPlan => !(_userSubscription?.isFree ?? true);
+
+  /// Super Admin luôn có quyền truy cập tính năng nâng cao
+  bool get isSuperAdmin =>
+      _currentUser?.roles.any(
+        (role) =>
+            role.code == RoleCode.superAdmin ||
+            role.code == RoleCode.supperAdmin,
+      ) ??
+      false;
+
+  bool get isProPlan => isSuperAdmin || !(_userSubscription?.isFree ?? true);
   bool get isOwner => _currentUser?.id == widget.userIdCreate;
 
   @override
@@ -1148,7 +1159,8 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
               final theme = Theme.of(context);
 
               return Padding(
-                padding: options.paragraphPadding as EdgeInsets? ??
+                padding:
+                    options.paragraphPadding as EdgeInsets? ??
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 child: RichText(
                   text: TextSpan(
@@ -1162,8 +1174,9 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
                         TextSpan(
                           text: plainText.substring(start, end),
                           style: TextStyle(
-                            backgroundColor:
-                                theme.primaryColor.withValues(alpha: 0.3),
+                            backgroundColor: theme.primaryColor.withValues(
+                              alpha: 0.3,
+                            ),
                             fontWeight: FontWeight.w600,
                             color: theme.primaryColor,
                           ),

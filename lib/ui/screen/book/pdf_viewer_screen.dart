@@ -6,6 +6,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
+import 'package:readbox/constants.dart';
 import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
@@ -98,7 +99,17 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   bool get isEnableAction => _error == null;
   UserModel? _currentUser;
   late UserSubscriptionModel? _userSubscription;
-  bool get isProPlan => !(_userSubscription?.isFree ?? true);
+
+  /// Super Admin luôn có quyền truy cập tính năng nâng cao
+  bool get isSuperAdmin =>
+      _currentUser?.roles.any(
+        (role) =>
+            role.code == RoleCode.superAdmin ||
+            role.code == RoleCode.supperAdmin,
+      ) ??
+      false;
+
+  bool get isProPlan => isSuperAdmin || !(_userSubscription?.isFree ?? true);
   @override
   void initState() {
     super.initState();
