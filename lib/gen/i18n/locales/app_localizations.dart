@@ -4479,6 +4479,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Customize theme and appearance'**
   String get appearance_description;
+
+  /// No description provided for @splash_get_started.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get splash_get_started;
+
+  /// No description provided for @splash_feature_discover_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover Books'**
+  String get splash_feature_discover_title;
+
+  /// No description provided for @splash_feature_discover_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Thousands of ebooks across all genres waiting to be discovered every day'**
+  String get splash_feature_discover_desc;
+
+  /// No description provided for @splash_feature_read_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Ebook Reading'**
+  String get splash_feature_read_title;
+
+  /// No description provided for @splash_feature_read_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF, EPUB support with an optimized reading interface easy on the eyes'**
+  String get splash_feature_read_desc;
+
+  /// No description provided for @splash_feature_ai_title.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-Powered Search'**
+  String get splash_feature_ai_title;
+
+  /// No description provided for @splash_feature_ai_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Summarize, explain content and instant translation with AI'**
+  String get splash_feature_ai_desc;
+
+  /// No description provided for @splash_feature_offline_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Read Offline'**
+  String get splash_feature_offline_title;
+
+  /// No description provided for @splash_feature_offline_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Save books to your device, read anytime without internet'**
+  String get splash_feature_offline_desc;
+
+  /// No description provided for @splash_feature_library_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Library'**
+  String get splash_feature_library_title;
+
+  /// No description provided for @splash_feature_library_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Save favorites and track your reading progress'**
+  String get splash_feature_library_desc;
 }
 
 class _AppLocalizationsDelegate

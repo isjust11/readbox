@@ -810,5 +810,16 @@
   "textFontSize": "Kích thước chữ",
   "background": "Hình nền",
   "appearance": "Giao diện",
-  "appearance_description": "Tùy chỉnh màu sắc, cỡ chữ, hình nền"
+  "appearance_description": "Tùy chỉnh màu sắc, cỡ chữ, hình nền",
+  "splash_get_started": "Bắt đầu",
+  "splash_feature_discover_title": "Khám phá kho sách",
+  "splash_feature_discover_desc": "Hàng nghìn ebook đa thể loại chờ bạn khám phá mỗi ngày",
+  "splash_feature_read_title": "Đọc ebook thông minh",
+  "splash_feature_read_desc": "Hỗ trợ PDF, EPUB với giao diện đọc sách tối ưu, dễ chịu mắt",
+  "splash_feature_ai_title": "Tra cứu bằng AI",
+  "splash_feature_ai_desc": "Tóm tắt, giải thích nội dung và dịch thuật tức thì với AI",
+  "splash_feature_offline_title": "Đọc sách offline",
+  "splash_feature_offline_desc": "Lưu sách về thiết bị,\nđọc mọi lúc không cần internet",
+  "splash_feature_library_title": "Thư viện cá nhân",
+  "splash_feature_library_desc": "Lưu yêu thích, theo dõi\ntiến độ đọc sách của bạn"
 }

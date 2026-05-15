@@ -136,52 +136,76 @@ class SocialLoginService {
     }
   }
 
-  /// Đăng nhập bằng Facebook
+  /// Đăng nhập bằng Facebook.
+  /// Hỗ trợ cả Classic Login (có Graph API) và Limited Login (iOS 14.5+ opt-out tracking).
   static Future<Map<String, dynamic>?> signInWithFacebook() async {
     try {
       print('Running on platform: ${Platform.operatingSystem}');
       print('Running on simulator: $isSimulator');
 
-      // Cảnh báo nếu đang chạy trên simulator
       if (isSimulator) {
         print('⚠️ WARNING: Running on iOS Simulator');
       }
 
-      // Thực hiện đăng nhập Facebook
       print('🔐 Starting Facebook login...');
       final LoginResult result = await FacebookAuth.instance.login(
         permissions: ['email', 'public_profile'],
       );
 
-      if (result.status == LoginStatus.success) {
+      if (result.status != LoginStatus.success) {
+        print('❌ Facebook login failed with status: ${result.status}');
+        throw BaseException(
+          message: AppLocalizations.current.facebook_login_failed,
+        );
+      }
+
+      final token = result.accessToken;
+
+      if (token == null) {
+        throw BaseException(
+          message: AppLocalizations.current.facebook_access_token_is_null,
+        );
+      }
+
+      // Classic Login — user cho phép tracking, token dùng được với Graph API
+      if (token is ClassicToken) {
         final userData = await FacebookAuth.instance.getUserData();
-
-        // Debug token chi tiết
-        final accessToken = result.accessToken?.tokenString;
-
-        if (accessToken == null) {
-          throw BaseException(
-            message: AppLocalizations.current.facebook_access_token_is_null,
-          );
-        }
-
-        print('✅ Facebook login successful: ${userData['email']}');
+        print('✅ Facebook Classic login: ${userData['email']}');
         return {
           'platformId': userData['id'],
           'email': userData['email'] ?? '',
           'fullName': userData['name'] ?? '',
           'picture': userData['picture']?['data']?['url'],
           'platform': 'facebook',
-          'accessToken': accessToken,
+          'accessToken': token.tokenString,
+          'tokenType': 'classic',
         };
-      } else {
-        print('❌ Facebook login failed with status: ${result.status}');
-        throw BaseException(
-          message: AppLocalizations.current.facebook_login_failed,
-        );
       }
+
+      // Limited Login — user từ chối tracking (iOS 14.5+)
+      // Token là JWT (OIDC), không dùng được với Graph API
+      // Backend sẽ verify qua Facebook JWKS endpoint
+      if (token is LimitedToken) {
+        print(
+          'ℹ️ Facebook Limited Login (ATT opt-out): userId=${token.userId}',
+        );
+        return {
+          'platformId': token.userId,
+          'email': '',
+          'fullName': '',
+          'platform': 'facebook',
+          'accessToken': token.tokenString,
+          'tokenType': 'limited',
+          'nonce': token.nonce,
+        };
+      }
+
+      throw BaseException(
+        message: AppLocalizations.current.facebook_access_token_is_null,
+      );
     } catch (error) {
-      // Xử lý lỗi AX Lookup cụ thể cho iOS Simulator
+      if (error is BaseException) rethrow;
+
       if (error.toString().contains('AX Lookup problem') ||
           error.toString().contains('Permission denied portName') ||
           error.toString().contains('com.apple.iphone.axserver')) {
