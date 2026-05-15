@@ -158,9 +158,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_no_document.svg
   String get icNoDocument => 'assets/icons/ic_no_document.svg';
 
-  /// File path: assets/icons/ic_no_image.svg
-  String get icNoImage => 'assets/icons/ic_no_image.svg';
-
   /// File path: assets/icons/ic_notification.png
   AssetGenImage get icNotification =>
       const AssetGenImage('assets/icons/ic_notification.png');
@@ -179,9 +176,6 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/ic_ring.svg
   String get icRing => 'assets/icons/ic_ring.svg';
-
-  /// File path: assets/icons/ic_search_empty.svg
-  String get icSearchEmpty => 'assets/icons/ic_search_empty.svg';
 
   /// File path: assets/icons/ic_setting.svg
   String get icSetting => 'assets/icons/ic_setting.svg';
@@ -263,14 +257,12 @@ class $AssetsIconsGen {
     icMobi,
     icNews,
     icNoDocument,
-    icNoImage,
     icNotification,
     icPdf,
     icPdfCover,
     icQrcode,
     icRemove,
     icRing,
-    icSearchEmpty,
     icSetting,
     icShare,
     icStar,
@@ -287,13 +279,13 @@ class $AssetsIconsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/app_bar_background.png
+  /// File path: assets/images/app_bar_background.webp
   AssetGenImage get appBarBackground =>
-      const AssetGenImage('assets/images/app_bar_background.png');
+      const AssetGenImage('assets/images/app_bar_background.webp');
 
-  /// File path: assets/images/app_logo.png
+  /// File path: assets/images/app_logo.webp
   AssetGenImage get appLogo =>
-      const AssetGenImage('assets/images/app_logo.png');
+      const AssetGenImage('assets/images/app_logo.webp');
 
   /// File path: assets/images/checkered_pattern.svg
   String get checkeredPattern => 'assets/images/checkered_pattern.svg';
@@ -304,42 +296,34 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_back_svg.svg
   String get icBackSvg => 'assets/images/ic_back_svg.svg';
 
-  /// File path: assets/images/ic_gallery.png
-  AssetGenImage get icGallery =>
-      const AssetGenImage('assets/images/ic_gallery.png');
-
   /// File path: assets/images/ic_search.svg
   String get icSearch => 'assets/images/ic_search.svg';
 
-  /// File path: assets/images/logo_thumbnail.png
-  AssetGenImage get logoThumbnail =>
-      const AssetGenImage('assets/images/logo_thumbnail.png');
-
-  /// File path: assets/images/mainbg_dart.png
+  /// File path: assets/images/mainbg_dart.webp
   AssetGenImage get mainbgDart =>
-      const AssetGenImage('assets/images/mainbg_dart.png');
+      const AssetGenImage('assets/images/mainbg_dart.webp');
 
-  /// File path: assets/images/mainbg_light.png
+  /// File path: assets/images/mainbg_light.webp
   AssetGenImage get mainbgLight =>
-      const AssetGenImage('assets/images/mainbg_light.png');
+      const AssetGenImage('assets/images/mainbg_light.webp');
 
-  /// File path: assets/images/mainbg_style2.png
+  /// File path: assets/images/mainbg_style2.webp
   AssetGenImage get mainbgStyle2 =>
-      const AssetGenImage('assets/images/mainbg_style2.png');
+      const AssetGenImage('assets/images/mainbg_style2.webp');
 
   /// File path: assets/images/momo.png
   AssetGenImage get momo => const AssetGenImage('assets/images/momo.png');
 
-  /// File path: assets/images/payment_bg.png
+  /// File path: assets/images/payment_bg.webp
   AssetGenImage get paymentBg =>
-      const AssetGenImage('assets/images/payment_bg.png');
+      const AssetGenImage('assets/images/payment_bg.webp');
 
   /// File path: assets/images/payos.png
   AssetGenImage get payos => const AssetGenImage('assets/images/payos.png');
 
-  /// File path: assets/images/profile_background.png
+  /// File path: assets/images/profile_background.webp
   AssetGenImage get profileBackground =>
-      const AssetGenImage('assets/images/profile_background.png');
+      const AssetGenImage('assets/images/profile_background.webp');
 
   /// File path: assets/images/revenuecat.png
   AssetGenImage get revenuecat =>
@@ -355,9 +339,7 @@ class $AssetsImagesGen {
     checkeredPattern,
     icBack,
     icBackSvg,
-    icGallery,
     icSearch,
-    logoThumbnail,
     mainbgDart,
     mainbgLight,
     mainbgStyle2,
@@ -374,11 +356,13 @@ class Assets {
   const Assets._();
 
   static const String aEnv = '.env';
+  static const String aEnvDev = '.env.dev';
+  static const String aEnvProd = '.env.prod';
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 
   /// List of all assets
-  static List<String> get values => [aEnv];
+  static List<String> get values => [aEnv, aEnv, aEnv];
 }
 
 class AssetGenImage {

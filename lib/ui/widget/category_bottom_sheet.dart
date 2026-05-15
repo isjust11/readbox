@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/res.dart';
+import 'package:readbox/utils/icon_mapper.dart';
 
 /// Opacity levels cho text/icon/background theo vai trò
 class _OpacityLevel {
@@ -466,51 +468,23 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
     bool isSelected,
     ColorScheme colorScheme,
   ) {
-    // Try to parse icon from category
+    // Use IconMapper to get icon data from string and type
     if (category.icon != null && category.icon!.isNotEmpty) {
-      final iconCode = int.tryParse(category.icon!);
-      if (iconCode != null) {
-        return Icon(
-          IconData(iconCode, fontFamily: 'MaterialIcons'),
-          size: AppSize.iconSizeLarge,
-          color:
-              isSelected
-                  ? Theme.of(context).primaryColor
-                  : Theme.of(context).textTheme.bodySmall?.color?.withValues(
-                    alpha: _OpacityLevel.secondary,
-                  ),
-        );
-      }
-    }
-
-    // Default icon based on category name
-    IconData defaultIcon = Icons.book_rounded;
-    final name = category.name?.toLowerCase() ?? '';
-
-    if (name.contains('fiction') || name.contains('tiểu thuyết')) {
-      defaultIcon = Icons.auto_stories_rounded;
-    } else if (name.contains('science') || name.contains('khoa học')) {
-      defaultIcon = Icons.science_rounded;
-    } else if (name.contains('history') || name.contains('lịch sử')) {
-      defaultIcon = Icons.history_edu_rounded;
-    } else if (name.contains('art') || name.contains('nghệ thuật')) {
-      defaultIcon = Icons.palette_rounded;
-    } else if (name.contains('business') || name.contains('kinh doanh')) {
-      defaultIcon = Icons.business_center_rounded;
-    } else if (name.contains('technology') || name.contains('công nghệ')) {
-      defaultIcon = Icons.computer_rounded;
-    } else if (name.contains('health') || name.contains('sức khỏe')) {
-      defaultIcon = Icons.health_and_safety_rounded;
-    } else if (name.contains('cooking') || name.contains('nấu ăn')) {
-      defaultIcon = Icons.restaurant_rounded;
-    } else if (name.contains('travel') || name.contains('du lịch')) {
-      defaultIcon = Icons.flight_rounded;
-    } else if (name.contains('children') || name.contains('thiếu nhi')) {
-      defaultIcon = Icons.child_care_rounded;
+      final iconData = IconMapper.getIcon(category.icon, category.iconType);
+      return Icon(
+        iconData,
+        size: AppSize.iconSizeXLarge,
+        color:
+            isSelected
+                ? colorScheme.onPrimary
+                : colorScheme.onSurface.withValues(
+                  alpha: _OpacityLevel.secondary,
+                ),
+      );
     }
 
     return Icon(
-      defaultIcon,
+      LucideIcons.book,
       size: AppSize.iconSizeXLarge,
       color:
           isSelected
