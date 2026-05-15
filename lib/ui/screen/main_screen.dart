@@ -10,7 +10,6 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/constants.dart';
 import 'package:readbox/domain/enums/enums.dart';
-import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/app_size.dart';
@@ -18,6 +17,7 @@ import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/utils.dart';
 import 'package:scale_size/scale_size.dart';
 
 import '../../domain/data/models/models.dart';
@@ -516,6 +516,7 @@ class MainBodyState extends State<MainBody> {
       ),
       drawer: AppDrawer(
         user: userInfo,
+        currentFilter: filterType.name,
         onSelected: (filter, title) {
           setState(() {
             filterType = FilterType.values.firstWhere((e) => e.name == filter);
@@ -856,7 +857,7 @@ class MainBodyState extends State<MainBody> {
             children: [
               Platform.isAndroid
                   ? Image.network(
-                    '${ApiConstant.apiHostStorage}${book.coverImageUrl}',
+                    UrlBuilder.buildUrl(book.coverImageUrl),
                     width: 80,
                     height: 120,
                     fit: BoxFit.cover,
@@ -865,7 +866,7 @@ class MainBodyState extends State<MainBody> {
                     borderRadius: 8,
                     height: 160.sh,
                     width: 120.sw,
-                    url: '${ApiConstant.apiHostStorage}${book.coverImageUrl}',
+                    url: UrlBuilder.buildUrl(book.coverImageUrl),
                     fit: BoxFit.cover,
                   ),
               const SizedBox(width: 12),

@@ -1010,6 +1010,27 @@ class MessageLookup extends MessageLookupByLibrary {
         "size": MessageLookupByLibrary.simpleMessage("Kích thước"),
         "slow": MessageLookupByLibrary.simpleMessage("Chậm"),
         "social_networks": MessageLookupByLibrary.simpleMessage("Mạng xã hội"),
+        "splash_feature_ai_desc": MessageLookupByLibrary.simpleMessage(
+            "Tóm tắt, giải thích nội dung và dịch thuật tức thì với AI"),
+        "splash_feature_ai_title":
+            MessageLookupByLibrary.simpleMessage("Tra cứu bằng AI"),
+        "splash_feature_discover_desc": MessageLookupByLibrary.simpleMessage(
+            "Hàng nghìn ebook đa thể loại chờ bạn khám phá mỗi ngày"),
+        "splash_feature_discover_title":
+            MessageLookupByLibrary.simpleMessage("Khám phá kho sách"),
+        "splash_feature_library_desc": MessageLookupByLibrary.simpleMessage(
+            "Lưu yêu thích, theo dõi\ntiến độ đọc sách của bạn"),
+        "splash_feature_library_title":
+            MessageLookupByLibrary.simpleMessage("Thư viện cá nhân"),
+        "splash_feature_offline_desc": MessageLookupByLibrary.simpleMessage(
+            "Lưu sách về thiết bị,\nđọc mọi lúc không cần internet"),
+        "splash_feature_offline_title":
+            MessageLookupByLibrary.simpleMessage("Đọc sách offline"),
+        "splash_feature_read_desc": MessageLookupByLibrary.simpleMessage(
+            "Hỗ trợ PDF, EPUB với giao diện đọc sách tối ưu, dễ chịu mắt"),
+        "splash_feature_read_title":
+            MessageLookupByLibrary.simpleMessage("Đọc ebook thông minh"),
+        "splash_get_started": MessageLookupByLibrary.simpleMessage("Bắt đầu"),
         "start": MessageLookupByLibrary.simpleMessage("Từ đầu"),
         "start_reading": MessageLookupByLibrary.simpleMessage("Bắt đầu đọc"),
         "started_at": MessageLookupByLibrary.simpleMessage("Bắt Đầu"),

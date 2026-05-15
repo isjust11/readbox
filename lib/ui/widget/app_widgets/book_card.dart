@@ -9,7 +9,6 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/enums/enums.dart';
-import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/app_size.dart';
@@ -17,6 +16,7 @@ import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/ui/widget/rating_dialog.dart';
+import 'package:readbox/utils/utils.dart';
 
 class BookCard extends StatefulWidget {
   final BookModel book;
@@ -161,13 +161,13 @@ class _BookCardState extends State<BookCard> {
                                 child:
                                     Platform.isAndroid
                                         ? Image.network(
-                                          _getImageUrl(book.coverImageUrl),
+                                          UrlBuilder.buildUrl(book.coverImageUrl),
                                           width: 80,
                                           height: 100,
                                           fit: BoxFit.cover,
                                         )
                                         : BaseNetworkImage(
-                                          url: _getImageUrl(book.coverImageUrl),
+                                          url: UrlBuilder.buildUrl(book.coverImageUrl),
                                           width: 80,
                                           height: 100,
                                           fit: BoxFit.cover,
@@ -410,13 +410,6 @@ class _BookCardState extends State<BookCard> {
     );
   }
 
-  String _getImageUrl(String? imagePath) {
-    if (imagePath == null || imagePath.isEmpty) return '';
-    if (imagePath.startsWith('http')) return imagePath;
-    // Otherwise, it's from our backend
-    return '${ApiConstant.apiHostStorage}$imagePath';
-  }
-
   Widget _buildActionButton({
     required IconData icon,
     required String label,
@@ -544,13 +537,13 @@ class _BookCardState extends State<BookCard> {
                               children: [
                                 (Platform.isAndroid
                                     ? Image.network(
-                                      _getImageUrl(widget.book.coverImageUrl),
+                                      UrlBuilder.buildUrl(widget.book.coverImageUrl),
                                       fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: double.infinity,
                                     )
                                     : BaseNetworkImage(
-                                      url: _getImageUrl(
+                                      url: UrlBuilder.buildUrl(
                                         widget.book.coverImageUrl,
                                       ),
                                       fit: BoxFit.cover,

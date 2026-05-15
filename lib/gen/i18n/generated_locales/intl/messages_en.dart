@@ -971,6 +971,28 @@ class MessageLookup extends MessageLookupByLibrary {
         "show_less": MessageLookupByLibrary.simpleMessage("Show less"),
         "size": MessageLookupByLibrary.simpleMessage("Size"),
         "slow": MessageLookupByLibrary.simpleMessage("Slow"),
+        "splash_feature_ai_desc": MessageLookupByLibrary.simpleMessage(
+            "Summarize, explain content and instant translation with AI"),
+        "splash_feature_ai_title":
+            MessageLookupByLibrary.simpleMessage("AI-Powered Search"),
+        "splash_feature_discover_desc": MessageLookupByLibrary.simpleMessage(
+            "Thousands of ebooks across all genres waiting to be discovered every day"),
+        "splash_feature_discover_title":
+            MessageLookupByLibrary.simpleMessage("Discover Books"),
+        "splash_feature_library_desc": MessageLookupByLibrary.simpleMessage(
+            "Save favorites and track your reading progress"),
+        "splash_feature_library_title":
+            MessageLookupByLibrary.simpleMessage("Personal Library"),
+        "splash_feature_offline_desc": MessageLookupByLibrary.simpleMessage(
+            "Save books to your device, read anytime without internet"),
+        "splash_feature_offline_title":
+            MessageLookupByLibrary.simpleMessage("Read Offline"),
+        "splash_feature_read_desc": MessageLookupByLibrary.simpleMessage(
+            "PDF, EPUB support with an optimized reading interface easy on the eyes"),
+        "splash_feature_read_title":
+            MessageLookupByLibrary.simpleMessage("Smart Ebook Reading"),
+        "splash_get_started":
+            MessageLookupByLibrary.simpleMessage("Get Started"),
         "start": MessageLookupByLibrary.simpleMessage("Start"),
         "start_reading": MessageLookupByLibrary.simpleMessage("Start reading"),
         "started_at": MessageLookupByLibrary.simpleMessage("Started At"),

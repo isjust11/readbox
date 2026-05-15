@@ -7583,6 +7583,116 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Bắt đầu`
+  String get splash_get_started {
+    return Intl.message(
+      'Bắt đầu',
+      name: 'splash_get_started',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Khám phá kho sách`
+  String get splash_feature_discover_title {
+    return Intl.message(
+      'Khám phá kho sách',
+      name: 'splash_feature_discover_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hàng nghìn ebook đa thể loại chờ bạn khám phá mỗi ngày`
+  String get splash_feature_discover_desc {
+    return Intl.message(
+      'Hàng nghìn ebook đa thể loại chờ bạn khám phá mỗi ngày',
+      name: 'splash_feature_discover_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đọc ebook thông minh`
+  String get splash_feature_read_title {
+    return Intl.message(
+      'Đọc ebook thông minh',
+      name: 'splash_feature_read_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hỗ trợ PDF, EPUB với giao diện đọc sách tối ưu, dễ chịu mắt`
+  String get splash_feature_read_desc {
+    return Intl.message(
+      'Hỗ trợ PDF, EPUB với giao diện đọc sách tối ưu, dễ chịu mắt',
+      name: 'splash_feature_read_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tra cứu bằng AI`
+  String get splash_feature_ai_title {
+    return Intl.message(
+      'Tra cứu bằng AI',
+      name: 'splash_feature_ai_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tóm tắt, giải thích nội dung và dịch thuật tức thì với AI`
+  String get splash_feature_ai_desc {
+    return Intl.message(
+      'Tóm tắt, giải thích nội dung và dịch thuật tức thì với AI',
+      name: 'splash_feature_ai_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đọc sách offline`
+  String get splash_feature_offline_title {
+    return Intl.message(
+      'Đọc sách offline',
+      name: 'splash_feature_offline_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lưu sách về thiết bị,\nđọc mọi lúc không cần internet`
+  String get splash_feature_offline_desc {
+    return Intl.message(
+      'Lưu sách về thiết bị,\nđọc mọi lúc không cần internet',
+      name: 'splash_feature_offline_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thư viện cá nhân`
+  String get splash_feature_library_title {
+    return Intl.message(
+      'Thư viện cá nhân',
+      name: 'splash_feature_library_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lưu yêu thích, theo dõi\ntiến độ đọc sách của bạn`
+  String get splash_feature_library_desc {
+    return Intl.message(
+      'Lưu yêu thích, theo dõi\ntiến độ đọc sách của bạn',
+      name: 'splash_feature_library_desc',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

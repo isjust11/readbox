@@ -787,5 +787,16 @@
   "textFontSize": "Text Font Size",
   "background": "Background",
   "appearance": "Appearance",
-  "appearance_description": "Customize theme and appearance"
+  "appearance_description": "Customize theme and appearance",
+  "splash_get_started": "Get Started",
+  "splash_feature_discover_title": "Discover Books",
+  "splash_feature_discover_desc": "Thousands of ebooks across all genres waiting to be discovered every day",
+  "splash_feature_read_title": "Smart Ebook Reading",
+  "splash_feature_read_desc": "PDF, EPUB support with an optimized reading interface easy on the eyes",
+  "splash_feature_ai_title": "AI-Powered Search",
+  "splash_feature_ai_desc": "Summarize, explain content and instant translation with AI",
+  "splash_feature_offline_title": "Read Offline",
+  "splash_feature_offline_desc": "Save books to your device, read anytime without internet",
+  "splash_feature_library_title": "Personal Library",
+  "splash_feature_library_desc": "Save favorites and track your reading progress"
 }

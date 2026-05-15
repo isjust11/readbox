@@ -66,6 +66,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   final TextToSpeechService _ttsService = TextToSpeechService();
   final Dio _dio = Dio(); // Singleton Dio, tránh tạo mới mỗi lần download
   bool _isReadingContinuous = false;
+  bool _isReadingNextPage = false;
   Timer? _ttsProgressTimer;
   bool _hasInternet = false;
   StreamSubscription?
@@ -1374,11 +1375,18 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     _ttsService.onSpeechError = (error) {
       TtsLockScreenController.instance.markError(error);
       _removePdfWordHighlight();
-      setState(() {
-        _isReadingContinuous = false;
-        _showTtsReadingPanel = false;
-        _currentPageWordBounds = null;
-      });
+      // Nếu đang đọc liên tục thì skip sang trang tiếp thay vì dừng hẳn
+      if (_isReadingContinuous && _currentPage < _totalPages) {
+        _readNextPage();
+        return;
+      }
+      if (mounted) {
+        setState(() {
+          _isReadingContinuous = false;
+          _showTtsReadingPanel = false;
+          _currentPageWordBounds = null;
+        });
+      }
       _ttsProgressTimer?.cancel();
       AppSnackBar.show(
         context,
@@ -1443,60 +1451,45 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   }
 
   Future<void> _readNextPage() async {
-    if (_currentPage >= _totalPages) {
-      if (!mounted) return;
-      setState(() {
-        _isReadingContinuous = false;
-      });
-      AppSnackBar.show(
-        context,
-        message: AppLocalizations.current.pdf_document_read_complete,
-        snackBarType: SnackBarType.success,
-      );
-      return;
-    }
-
-    // Lưu số trang cần đọc trước khi nextPage() (vì _onPageChanged sẽ cập nhật _currentPage ngay)
-    final nextPageNumber = _currentPage + 1;
-    _pdfController.nextPage();
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    if (!mounted || !_isReadingContinuous) return;
-
-    _removePdfWordHighlight();
-    if (mounted) setState(() => _currentPageWordBounds = null);
+    // Chặn gọi đồng thời trong giai đoạn setup (stop→navigate→extract→setLanguage)
+    // Flag phải được release TRƯỚC khi speak() để onSpeechComplete có thể gọi lại hàm này
+    if (_isReadingNextPage) return;
+    _isReadingNextPage = true;
 
     try {
+      if (_currentPage >= _totalPages) {
+        if (!mounted) return;
+        setState(() => _isReadingContinuous = false);
+        AppSnackBar.show(
+          context,
+          message: AppLocalizations.current.pdf_document_read_complete,
+          snackBarType: SnackBarType.success,
+        );
+        return;
+      }
+
+      // Stop engine trước để tránh Android TTS kích hoạt lại completionHandler
+      await _ttsService.stop();
+
+      // Lưu số trang cần đọc trước khi nextPage() (vì _onPageChanged sẽ cập nhật _currentPage ngay)
+      final nextPageNumber = _currentPage + 1;
+      _pdfController.nextPage();
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      if (!mounted || !_isReadingContinuous) return;
+
+      _removePdfWordHighlight();
+      if (mounted) setState(() => _currentPageWordBounds = null);
+
       // Đọc trang tiếp theo luôn lấy full trang, không dùng selection của trang cũ
       final pageText = await _extractPageText(
         nextPageNumber,
         useSelection: false,
       );
-      if (pageText != null && pageText.isNotEmpty) {
-        await _ttsService.setLanguageFromText(pageText);
-        if (_pdfBytes != null) {
-          final bounds =
-              await PdfTextExtractorService.extractPageTextWithWordBounds(
-                _pdfBytes!,
-                nextPageNumber - 1,
-              );
-          if (mounted) setState(() => _currentPageWordBounds = bounds);
-        }
-        if (mounted) {
-          setState(() {
-            _ttsReadingText = pageText;
-            _ttsWordStart = 0;
-            _ttsWordEnd = 0;
-            // _showTtsReadingPanel = true;
-          });
-        }
-        await TtsLockScreenController.instance.startReadingSession(
-          bookTitle: widget.title,
-          page: nextPageNumber,
-          text: pageText,
-        );
-        await _ttsService.speak(pageText);
-      } else {
+
+      if (pageText == null || pageText.isEmpty) {
+        // Trang trống → thử trang tiếp
+        _isReadingNextPage = false;
         if (nextPageNumber < _totalPages) {
           _readNextPage();
         } else {
@@ -1508,9 +1501,44 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             snackBarType: SnackBarType.success,
           );
         }
+        return;
       }
+
+      // Đổi ngôn ngữ rồi chờ engine ổn định trước khi speak
+      await _ttsService.setLanguageFromText(pageText);
+      await Future.delayed(const Duration(milliseconds: 150));
+
+      if (!mounted || !_isReadingContinuous) return;
+
+      if (_pdfBytes != null) {
+        final bounds =
+            await PdfTextExtractorService.extractPageTextWithWordBounds(
+              _pdfBytes!,
+              nextPageNumber - 1,
+            );
+        if (mounted) setState(() => _currentPageWordBounds = bounds);
+      }
+      if (mounted) {
+        setState(() {
+          _ttsReadingText = pageText;
+          _ttsWordStart = 0;
+          _ttsWordEnd = 0;
+        });
+      }
+      await TtsLockScreenController.instance.startReadingSession(
+        bookTitle: widget.title,
+        page: nextPageNumber,
+        text: pageText,
+      );
+
+      // Release lock TRƯỚC khi speak để onSpeechComplete có thể gọi _readNextPage() tiếp theo
+      // (trên Android, speak() có thể block và onSpeechComplete fire ngay trong await)
+      _isReadingNextPage = false;
+      await _ttsService.speak(pageText);
     } catch (_) {
-      if (nextPageNumber < _totalPages) {
+      // Lỗi trong setup → skip sang trang tiếp
+      _isReadingNextPage = false;
+      if (_isReadingContinuous && _currentPage < _totalPages) {
         _readNextPage();
       } else {
         if (mounted) setState(() => _isReadingContinuous = false);
