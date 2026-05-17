@@ -1460,24 +1460,24 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
                         Container(
                           decoration: BoxDecoration(
                             color:
-                                _ttsService.isSpeaking
+                                _isReadingContinuous
                                     ? Colors.red.withValues(alpha: 0.1)
                                     : theme.primaryColor.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
                           child: IconButton(
                             icon: Icon(
-                              _ttsService.isSpeaking
+                              _isReadingContinuous
                                   ? Icons.pause_rounded
                                   : Icons.play_arrow_rounded,
                               color:
-                                  _ttsService.isSpeaking
+                                  _isReadingContinuous
                                       ? Colors.red
                                       : theme.primaryColor,
                               size: 28,
                             ),
                             onPressed: () async {
-                              if (_ttsService.isSpeaking) {
+                              if (_isReadingContinuous) {
                                 await _ttsService.stop();
                                 setState(() => _isReadingContinuous = false);
                               } else {

@@ -10,6 +10,7 @@ import 'package:readbox/routes.dart';
 import 'package:readbox/services/secure_storage_service.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/shared_preference.dart';
 
 // Mô tả một tính năng hiển thị trên splash
 class _FeatureItem {
@@ -47,6 +48,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
   final PageController _pageController = PageController();
   Timer? _autoScrollTimer;
   int _currentFeaturePage = 0;
+  bool _isFirstLogin = false;
 
   bool _isReady = false;
   String? _nextRoute;
@@ -145,6 +147,12 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
     SchedulerBinding.instance.addPostFrameCallback(
       (_) => _prepareNavigation(context),
     );
+    checkFirstLogin();
+  }
+
+  Future<void> checkFirstLogin() async {
+    // check first login
+    _isFirstLogin = await SharedPreferenceUtil.getFirstLogin();
   }
 
   @override
@@ -502,11 +510,12 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
           results.isNotEmpty &&
           !(results.length == 1 && results.first == ConnectivityResult.none);
       if (!hasInternet) {
-        if (mounted)
+        if (mounted) {
           setState(() {
             _nextRoute = Routes.localLibraryScreen;
             _isReady = true;
           });
+        }
         return;
       }
     } catch (_) {
@@ -517,6 +526,15 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
     if (!context.mounted) return;
     final isTokenValid = await context.read<AuthCubit>().verifyToken();
     if (!mounted) return;
+    if (_isFirstLogin == false && isTokenValid) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.mainScreen,
+        (route) => false,
+      );
+      return;
+    }
+    SharedPreferenceUtil.saveFirstLogin(false);
     setState(() {
       _nextRoute = isTokenValid ? Routes.mainScreen : Routes.loginScreen;
       _isReady = true;

@@ -53,6 +53,7 @@ class AuthCubit extends Cubit<BaseState> {
 
       // Kiểm tra trạng thái nhớ tài khoản trước khi xóa dữ liệu
       final bool rememberMe = await SharedPreferenceUtil.getRememberPassword();
+      final bool isFirstLogin = await SharedPreferenceUtil.getFirstLogin();
       Map<String, String>? credentials;
       if (rememberMe) {
         credentials = await BiometricAuthService.getStoredCredentials();
@@ -63,7 +64,8 @@ class AuthCubit extends Cubit<BaseState> {
 
       // Xóa preferences (non-sensitive data)
       await SharedPreferenceUtil.clearData();
-
+      // restore isFirstLogin
+      await SharedPreferenceUtil.saveFirstLogin(isFirstLogin);
       // Nếu có nhớ tài khoản, khôi phục lại cờ và thông tin đăng nhập
       if (rememberMe) {
         await SharedPreferenceUtil.setRememberPassword(true);
