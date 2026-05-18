@@ -14,6 +14,7 @@ class SPrefCache {
   static const String PREF_KEY_LOCAL_BOOKS = "pref_key_local_books";
   static const String PREF_KEY_REMEMBER_PASSWORD = "pref_key_remember_password";
   static const String PREF_KEY_THEME = "pref_key_theme";
+  static const String PREF_KEY_FIRST_LOGIN = "pref_key_first_login";
   // DEPRECATED - Đã chuyển sang SecureStorage
   @Deprecated('Use SecureStorageService.saveToken() instead')
   static const String KEY_TOKEN = "auth_token";
@@ -191,6 +192,18 @@ class SharedPreferenceUtil {
     return [];
   }
 
+  // save first login
+  static Future<bool> saveFirstLogin(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setBool(SPrefCache.PREF_KEY_FIRST_LOGIN, value);
+  }
+
+  // get first login
+  static Future<bool> getFirstLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(SPrefCache.PREF_KEY_FIRST_LOGIN) ?? false;
+  }
+
   /// Lấy trang đã lưu của PDF, trả về null nếu chưa có
   static Future<int?> getPdfReadingPosition(String key) async {
     if (key.isEmpty) return null;
@@ -247,7 +260,7 @@ class SharedPreferenceUtil {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(SPrefCache.PREF_KEY_THEME, theme);
   }
-  
+
   static Future<Map<String, dynamic>?> getAppThemeStateJson() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final jsonStr = prefs.getString('pref_key_app_theme_state');
@@ -256,7 +269,7 @@ class SharedPreferenceUtil {
     }
     return null;
   }
-  
+
   static Future<void> saveAppThemeStateJson(Map<String, dynamic> json) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('pref_key_app_theme_state', jsonEncode(json));

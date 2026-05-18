@@ -2282,4 +2282,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appearance_description => 'Customize theme and appearance';
+
+  @override
+  String get splash_get_started => 'Get Started';
+
+  @override
+  String get splash_feature_discover_title => 'Discover Books';
+
+  @override
+  String get splash_feature_discover_desc =>
+      'Thousands of ebooks across all genres waiting to be discovered every day';
+
+  @override
+  String get splash_feature_read_title => 'Smart Ebook Reading';
+
+  @override
+  String get splash_feature_read_desc =>
+      'PDF, EPUB support with an optimized reading interface easy on the eyes';
+
+  @override
+  String get splash_feature_ai_title => 'AI-Powered Search';
+
+  @override
+  String get splash_feature_ai_desc =>
+      'Summarize, explain content and instant translation with AI';
+
+  @override
+  String get splash_feature_offline_title => 'Read Offline';
+
+  @override
+  String get splash_feature_offline_desc =>
+      'Save books to your device, read anytime without internet';
+
+  @override
+  String get splash_feature_library_title => 'Personal Library';
+
+  @override
+  String get splash_feature_library_desc =>
+      'Save favorites and track your reading progress';
 }

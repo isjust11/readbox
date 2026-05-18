@@ -2285,4 +2285,42 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get appearance_description => 'Tùy chỉnh màu sắc, cỡ chữ, hình nền';
+
+  @override
+  String get splash_get_started => 'Bắt đầu';
+
+  @override
+  String get splash_feature_discover_title => 'Khám phá kho sách';
+
+  @override
+  String get splash_feature_discover_desc =>
+      'Hàng nghìn ebook đa thể loại chờ bạn khám phá mỗi ngày';
+
+  @override
+  String get splash_feature_read_title => 'Đọc ebook thông minh';
+
+  @override
+  String get splash_feature_read_desc =>
+      'Hỗ trợ PDF, EPUB với giao diện đọc sách tối ưu, dễ chịu mắt';
+
+  @override
+  String get splash_feature_ai_title => 'Tra cứu bằng AI';
+
+  @override
+  String get splash_feature_ai_desc =>
+      'Tóm tắt, giải thích nội dung và dịch thuật tức thì với AI';
+
+  @override
+  String get splash_feature_offline_title => 'Đọc sách offline';
+
+  @override
+  String get splash_feature_offline_desc =>
+      'Lưu sách về thiết bị,\nđọc mọi lúc không cần internet';
+
+  @override
+  String get splash_feature_library_title => 'Thư viện cá nhân';
+
+  @override
+  String get splash_feature_library_desc =>
+      'Lưu yêu thích, theo dõi\ntiến độ đọc sách của bạn';
 }

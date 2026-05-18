@@ -788,7 +788,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               color: _isReadingContinuous ? Colors.red : Colors.white,
             ),
             onPressed: () async {
-              if (_isReadingContinuous && _userSubscription?.isFree == false) {
+              if (_isReadingContinuous) {
                 await _ttsService.stop();
                 await TtsLockScreenController.instance.stop();
                 _removePdfWordHighlight();
@@ -1791,24 +1791,24 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                         Container(
                           decoration: BoxDecoration(
                             color:
-                                _ttsService.isSpeaking
+                                _isReadingContinuous
                                     ? Colors.red.withValues(alpha: 0.1)
                                     : theme.primaryColor.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
                           child: IconButton(
                             icon: Icon(
-                              _ttsService.isSpeaking
+                              _isReadingContinuous
                                   ? Icons.pause_rounded
                                   : Icons.play_arrow_rounded,
                               color:
-                                  _ttsService.isSpeaking
+                                  _isReadingContinuous
                                       ? Colors.red
                                       : theme.primaryColor,
                               size: 28,
                             ),
                             onPressed: () async {
-                              if (_ttsService.isSpeaking) {
+                              if (_isReadingContinuous) {
                                 await _ttsService.stop();
                                 _removePdfWordHighlight();
                                 setState(() => _isReadingContinuous = false);
