@@ -136,142 +136,137 @@ class _BookCardState extends State<BookCard> {
                     ),
                     SizedBox(height: 8),
 
-                      // Book info
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 80,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.grey[200],
-                              border: Border.all(
-                                color: theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.3,
-                                ),
-                                width: 1,
+                    // Book info
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 80,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.grey[200],
+                            border: Border.all(
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.3,
                               ),
-                            ),
-                            child: Flexible(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child:
-                                    Platform.isAndroid
-                                        ? Image.network(
-                                          _getImageUrl(book.coverImageUrl),
-                                          width: 80,
-                                          height: 100,
-                                          fit: BoxFit.cover,
-                                        )
-                                        : BaseNetworkImage(
-                                          url: _getImageUrl(book.coverImageUrl),
-                                          width: 80,
-                                          height: 100,
-                                          fit: BoxFit.cover,
-                                        ),
-                              ),
+                              width: 1,
                             ),
                           ),
-                          SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  book.displayTitle,
-                                  style: TextStyle(
-                                    fontSize: AppSize.fontSizeLarge,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child:
+                                Platform.isAndroid
+                                    ? Image.network(
+                                      UrlBuilder.buildUrl(book.coverImageUrl),
+                                      width: 80,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    )
+                                    : BaseNetworkImage(
+                                      url: UrlBuilder.buildUrl(
+                                        book.coverImageUrl,
+                                      ),
+                                      width: 80,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                book.displayTitle,
+                                style: TextStyle(
+                                  fontSize: AppSize.fontSizeLarge,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                SizedBox(height: 4),
-                                if (book.author != null) ...[
-                                  _authorWidget(book.author!),
-                                ],
-                                if (book.category != null) ...[
-                                  _categoryWidget(
-                                    Localizations.localeOf(
-                                              context,
-                                            ).languageCode ==
-                                            LanguageCode.en
-                                        ? book.category?.nameEN ?? ''
-                                        : book.category?.name ?? '',
-                                  ),
-                                ],
-                                SizedBox(height: 4),
-                                // action delete and edit book
-                                if (book.createById == widget.ownerId) ...[
-                                  Row(
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          _editBook(context, book);
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.edit,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(height: 4),
+                              if (book.author != null) ...[
+                                _authorWidget(book.author!),
+                              ],
+                              if (book.category != null) ...[
+                                _categoryWidget(
+                                  Localizations.localeOf(
+                                            context,
+                                          ).languageCode ==
+                                          LanguageCode.en
+                                      ? book.category?.nameEN ?? ''
+                                      : book.category?.name ?? '',
+                                ),
+                              ],
+                              SizedBox(height: 4),
+                              // action delete and edit book
+                              if (book.createById == widget.ownerId) ...[
+                                Row(
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        _editBook(context, book);
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.edit,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                          SizedBox(width: 4),
+                                          Text(
+                                            AppLocalizations.current.edit_book,
+                                            style: TextStyle(
                                               color:
                                                   Theme.of(
                                                     context,
                                                   ).primaryColor,
                                             ),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              AppLocalizations
-                                                  .current
-                                                  .edit_book,
-                                              style: TextStyle(
-                                                color:
-                                                    Theme.of(
-                                                      context,
-                                                    ).primaryColor,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                      TextButton(
-                                        onPressed: () {
-                                          _deleteBook(context, book);
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.delete,
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        _deleteBook(context, book);
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.delete,
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.error,
+                                          ),
+                                          SizedBox(width: 4),
+                                          Text(
+                                            AppLocalizations
+                                                .current
+                                                .delete_book,
+                                            style: TextStyle(
                                               color:
                                                   Theme.of(
                                                     context,
                                                   ).colorScheme.error,
                                             ),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              AppLocalizations
-                                                  .current
-                                                  .delete_book,
-                                              style: TextStyle(
-                                                color:
-                                                    Theme.of(
-                                                      context,
-                                                    ).colorScheme.error,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ],
+                                    ),
+                                  ],
+                                ),
                               ],
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
 
@@ -525,7 +520,9 @@ class _BookCardState extends State<BookCard> {
                               children: [
                                 (Platform.isAndroid
                                     ? Image.network(
-                                      _getImageUrl(widget.book.coverImageUrl),
+                                      UrlBuilder.buildUrl(
+                                        widget.book.coverImageUrl,
+                                      ),
                                       fit: BoxFit.cover,
                                       width: double.infinity,
                                       height: double.infinity,

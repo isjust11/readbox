@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -11,6 +12,7 @@ import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -101,6 +103,40 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   UserModel? _currentUser;
   late UserSubscriptionModel? _userSubscription;
 
+  // ── Performance monitoring (chỉ chạy ở debug/profile mode) ──
+  late final DateTime _screenOpenTime;
+  Timer? _memoryMonitorTimer;
+  int _wordHighlightCount = 0;
+  final ValueNotifier<String?> _selectedTextNotifier = ValueNotifier(null);
+  // ValueNotifier cho (currentPage, totalPages) → tránh rebuild Scaffold mỗi lần cuộn trang
+  late final ValueNotifier<(int, int)> _pageStateNotifier;
+
+  void _startPerfMonitors() {
+    // Memory log mỗi 5 giây
+    _memoryMonitorTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+      final rss = ProcessInfo.currentRss;
+      dev.log(
+        'Memory RSS: ${(rss / 1024 / 1024).toStringAsFixed(1)} MB',
+        name: 'PdfMemory',
+      );
+    });
+
+    // FPS monitor — log mỗi 3 giây
+    int _frameCount = 0;
+    DateTime _fpsStart = DateTime.now();
+    WidgetsBinding.instance.addPersistentFrameCallback((_) {
+      if (!mounted) return;
+      _frameCount++;
+      final elapsed = DateTime.now().difference(_fpsStart).inMilliseconds;
+      if (elapsed >= 3000) {
+        final fps = (_frameCount * 1000 / elapsed).toStringAsFixed(1);
+        dev.log('FPS: $fps', name: 'PdfFPS');
+        _frameCount = 0;
+        _fpsStart = DateTime.now();
+      }
+    });
+  }
+
   /// Super Admin luôn có quyền truy cập tính năng nâng cao
   bool get isSuperAdmin =>
       _currentUser?.roles.any(
@@ -114,6 +150,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   @override
   void initState() {
     super.initState();
+    _screenOpenTime = DateTime.now();
+    _pageStateNotifier = ValueNotifier((1, 0));
+    if (kDebugMode || kProfileMode) _startPerfMonitors();
     _loadCurrentUser();
     _checkInternetConnection();
     context.read<SubscriptionPlanCubit>().checkUsage();
@@ -147,10 +186,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       // Không có UserInteractionCubit trong context => bỏ qua tracking server
     }
 
-    // Chuẩn bị bytes cho TTS khi đọc file local
-    if (_isLocal) {
-      _loadLocalBytesForTts();
-    }
+    // _pdfBytes được lazy-load khi user bắt đầu TTS (không load sẵn để tránh block main thread)
   }
 
   @override
@@ -295,24 +331,35 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   }
 
   Future<void> _loadLocalBytesForTts() async {
+    if (_pdfBytes != null) return; // đã có bytes, không load lại
+    final sw = Stopwatch()..start();
     try {
-      final file = File(widget.fileUrl);
-      if (await file.exists()) {
-        final bytes = await file.readAsBytes();
-        if (mounted) {
-          setState(() {
-            _pdfBytes = bytes;
-          });
-        }
-      }
+      final filePath = widget.fileUrl;
+      final exists = await File(filePath).exists();
+      if (!exists) return;
+      // Dùng compute() để đọc file trong isolate riêng, không block main thread
+      final bytes = await compute(
+        (String path) => File(path).readAsBytesSync(),
+        filePath,
+      );
+      sw.stop();
+      dev.log(
+        'loadLocalBytes: ${sw.elapsedMilliseconds}ms '
+        '(${(bytes.lengthInBytes / 1024 / 1024).toStringAsFixed(2)} MB)',
+        name: 'PdfPerf',
+      );
+      if (mounted) setState(() => _pdfBytes = bytes);
     } catch (_) {
       // Không cần hiển thị lỗi, chỉ ảnh hưởng tới TTS
     }
   }
 
   void _onDocumentLoaded(PdfDocumentLoadedDetails details) {
+    final loadMs = DateTime.now().difference(_screenOpenTime).inMilliseconds;
     final total = details.document.pages.count;
-    setState(() => _totalPages = total);
+    dev.log('documentLoaded: ${loadMs}ms | pages: $total', name: 'PdfPerf');
+    _totalPages = total;
+    _pageStateNotifier.value = (_currentPage, total);
 
     // Local reading position (SharedPreference)
     SharedPreferenceUtil.getPdfReadingPosition(widget.fileUrl).then((
@@ -323,16 +370,17 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           savedPage <= total &&
           mounted) {
         _pdfController.jumpToPage(savedPage);
-        setState(() => _currentPage = savedPage);
+        _currentPage = savedPage;
+        _pageStateNotifier.value = (savedPage, total);
       }
     });
   }
 
   void _onPageChanged(PdfPageChangedDetails details) {
     final page = details.newPageNumber;
-    setState(() {
-      _currentPage = page;
-    });
+    // Cập nhật field trực tiếp + notifier, KHÔNG setState → không rebuild Scaffold
+    _currentPage = page;
+    _pageStateNotifier.value = (page, _totalPages);
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, page);
     _onServerPageChanged(page);
   }
@@ -473,6 +521,23 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         snackBarType: SnackBarType.error,
       );
     }
+  }
+
+  /// Dừng đọc sách và giải phóng bộ nhớ PDF bytes
+  Future<void> _stopReading() async {
+    await _ttsService.stop();
+    await TtsLockScreenController.instance.stop();
+    _removePdfWordHighlight();
+    if (mounted) {
+      setState(() {
+        _isReadingContinuous = false;
+        _showTtsReadingPanel = false;
+        _currentPageWordBounds = null;
+      });
+    }
+    // Giải phóng ~600 MB bytes sau khi dừng TTS
+    _pdfBytes = null;
+    dev.log('_pdfBytes released after stopReading', name: 'PdfMemory');
   }
 
   Future<void> _readContinuousEbook() async {
@@ -641,9 +706,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     _ttsProgressTimer?.cancel();
     _saveProgressTimer?.cancel();
     _readingTimeTimer?.cancel();
-    _subscriptionPlanStream?.cancel(); // Tránh memory leak
+    _memoryMonitorTimer?.cancel();
+    _subscriptionPlanStream?.cancel();
     _ttsWordProgressNotifier.dispose();
+    _selectedTextNotifier.dispose();
+    _pageStateNotifier.dispose();
     _ttsScrollController.dispose();
+    _pdfBytes = null; // giải phóng memory khi rời màn hình
     _saveReadingProgressNow();
     if (_searchResult != null && _searchResultListener != null) {
       _searchResult!.removeListener(_searchResultListener!);
@@ -683,6 +752,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     setState(() => _isVisibleToolAction = false);
   }
 
+  void _onTextSelectionChanged(PdfTextSelectionChangedDetails details) {
+    // Dùng ValueNotifier thay setState → không rebuild toàn Scaffold khi chọn chữ
+    if (details.selectedText != null && details.selectedText!.isNotEmpty) {
+      _selectedText = details.selectedText;
+      _selectedTextNotifier.value = details.selectedText;
+    }
+  }
+
   Widget _buildPdfViewer() {
     return SfPdfViewer.file(
       File(widget.fileUrl),
@@ -691,13 +768,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       onPageChanged: _onPageChanged,
       onDocumentLoadFailed: _onDocumentLoadFailed,
       enableTextSelection: true,
-      onTextSelectionChanged: (details) {
-        if (details.selectedText != null && details.selectedText!.isNotEmpty) {
-          setState(() {
-            _selectedText = details.selectedText;
-          });
-        }
-      },
+      onTextSelectionChanged: _onTextSelectionChanged,
       canShowScrollHead: false,
       canShowScrollStatus: false,
       scrollDirection: PdfScrollDirection.vertical,
@@ -713,13 +784,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       onPageChanged: _onPageChanged,
       onDocumentLoadFailed: _onDocumentLoadFailed,
       enableTextSelection: true,
-      onTextSelectionChanged: (details) {
-        if (details.selectedText != null && details.selectedText!.isNotEmpty) {
-          setState(() {
-            _selectedText = details.selectedText;
-          });
-        }
-      },
+      onTextSelectionChanged: _onTextSelectionChanged,
       canShowScrollHead: false,
       canShowScrollStatus: false,
       scrollDirection: PdfScrollDirection.vertical,
@@ -789,13 +854,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             ),
             onPressed: () async {
               if (_isReadingContinuous) {
-                await _ttsService.stop();
-                await TtsLockScreenController.instance.stop();
-                _removePdfWordHighlight();
-                setState(() {
-                  _isReadingContinuous = false;
-                  _currentPageWordBounds = null;
-                });
+                await _stopReading();
               } else {
                 await _readContinuousEbook();
               }
@@ -819,16 +878,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           IconButton(
             icon: Icon(Icons.settings, color: Colors.white),
             onPressed: () async {
-              if (_isReadingContinuous) {
-                await _ttsService.stop();
-                await TtsLockScreenController.instance.stop();
-                _removePdfWordHighlight();
-                setState(() {
-                  _isReadingContinuous = false;
-                  _showTtsReadingPanel = false;
-                  _currentPageWordBounds = null;
-                });
-              }
+              if (_isReadingContinuous) await _stopReading();
               if (mounted) {
                 Navigator.of(
                   context,
@@ -1023,15 +1073,18 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                   color: Colors.white.withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: Text(
-                                  AppLocalizations.current.pdf_page_of(
-                                    _currentPage,
-                                    _totalPages,
-                                  ),
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.white.withValues(alpha: 0.9),
-                                    fontWeight: FontWeight.w500,
+                                child: ValueListenableBuilder<(int, int)>(
+                                  valueListenable: _pageStateNotifier,
+                                  builder: (_, pageState, __) => Text(
+                                    AppLocalizations.current.pdf_page_of(
+                                      pageState.$1,
+                                      pageState.$2,
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.white.withValues(alpha: 0.9),
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1236,66 +1289,64 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                     ),
                   ],
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildNavButton(
-                      icon: Icons.first_page_rounded,
-                      isEnabled: _currentPage > 1,
-                      onPressed: () => _pdfController.jumpToPage(1),
-                    ),
-                    _buildNavButton(
-                      icon: Icons.chevron_left_rounded,
-                      isEnabled: _currentPage > 1,
-                      onPressed: () => _pdfController.previousPage(),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Theme.of(
-                              context,
-                            ).primaryColor.withValues(alpha: 0.1),
-                            Theme.of(
-                              context,
-                            ).primaryColor.withValues(alpha: 0.05),
-                          ],
+                child: ValueListenableBuilder<(int, int)>(
+                  valueListenable: _pageStateNotifier,
+                  builder: (_, pageState, __) {
+                    final cur = pageState.$1;
+                    final total = pageState.$2;
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildNavButton(
+                          icon: Icons.first_page_rounded,
+                          isEnabled: cur > 1,
+                          onPressed: () => _pdfController.jumpToPage(1),
                         ),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Theme.of(
-                            context,
-                          ).primaryColor.withValues(alpha: 0.2),
-                          width: 1,
+                        _buildNavButton(
+                          icon: Icons.chevron_left_rounded,
+                          isEnabled: cur > 1,
+                          onPressed: () => _pdfController.previousPage(),
                         ),
-                      ),
-                      child: Text(
-                        AppLocalizations.current.pdf_page_of(
-                          _currentPage,
-                          _totalPages,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                                Theme.of(context).primaryColor.withValues(alpha: 0.05),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            AppLocalizations.current.pdf_page_of(cur, total),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
                         ),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: Theme.of(context).primaryColor,
+                        _buildNavButton(
+                          icon: Icons.chevron_right_rounded,
+                          isEnabled: cur < total,
+                          onPressed: () => _pdfController.nextPage(),
                         ),
-                      ),
-                    ),
-                    _buildNavButton(
-                      icon: Icons.chevron_right_rounded,
-                      isEnabled: _currentPage < _totalPages,
-                      onPressed: () => _pdfController.nextPage(),
-                    ),
-                    _buildNavButton(
-                      icon: Icons.last_page_rounded,
-                      isEnabled: _currentPage < _totalPages,
-                      onPressed: () => _pdfController.jumpToPage(_totalPages),
-                    ),
-                  ],
+                        _buildNavButton(
+                          icon: Icons.last_page_rounded,
+                          isEnabled: cur < total,
+                          onPressed: () => _pdfController.jumpToPage(total),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
     );
@@ -1433,6 +1484,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             .toList();
     if (overlapping.isEmpty) return;
 
+    final sw = Stopwatch()..start();
     _removePdfWordHighlight();
     final collection =
         overlapping
@@ -1448,6 +1500,15 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     annotation.color = Theme.of(context).primaryColor.withValues(alpha: 0.35);
     _pdfController.addAnnotation(annotation);
     _ttsCurrentWordAnnotation = annotation;
+    sw.stop();
+    _wordHighlightCount++;
+    // Cảnh báo nếu annotation chậm hơn 1 frame (16ms)
+    if (sw.elapsedMilliseconds > 16) {
+      dev.log(
+        'wordHighlight #$_wordHighlightCount SLOW: ${sw.elapsedMilliseconds}ms',
+        name: 'PdfPerf',
+      );
+    }
   }
 
   Future<void> _readNextPage() async {
@@ -1505,17 +1566,29 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       }
 
       // Đổi ngôn ngữ rồi chờ engine ổn định trước khi speak
+      final swLang = Stopwatch()..start();
       await _ttsService.setLanguageFromText(pageText);
       await Future.delayed(const Duration(milliseconds: 150));
+      swLang.stop();
+      dev.log(
+        'setLanguage p$nextPageNumber: ${swLang.elapsedMilliseconds}ms',
+        name: 'PdfPerf',
+      );
 
       if (!mounted || !_isReadingContinuous) return;
 
       if (_pdfBytes != null) {
+        final swBounds = Stopwatch()..start();
         final bounds =
             await PdfTextExtractorService.extractPageTextWithWordBounds(
               _pdfBytes!,
               nextPageNumber - 1,
             );
+        swBounds.stop();
+        dev.log(
+          'extractWordBounds p$nextPageNumber: ${swBounds.elapsedMilliseconds}ms',
+          name: 'PdfPerf',
+        );
         if (mounted) setState(() => _currentPageWordBounds = bounds);
       }
       if (mounted) {
@@ -1554,18 +1627,21 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       return _selectedText;
     }
 
-    if (_pdfBytes == null) {
-      return null;
-    }
+    if (_pdfBytes == null) return null;
 
+    final sw = Stopwatch()..start();
     try {
       final text = await PdfTextExtractorService.extractTextFromPage(
         _pdfBytes!,
         pageNumber - 1,
       );
-      if (text != null && text.isNotEmpty) {
-        return text;
-      }
+      sw.stop();
+      dev.log(
+        'extractText p$pageNumber: ${sw.elapsedMilliseconds}ms '
+        '(${text?.length ?? 0} chars)',
+        name: 'PdfPerf',
+      );
+      if (text != null && text.isNotEmpty) return text;
       return null;
     } catch (_) {
       return null;
