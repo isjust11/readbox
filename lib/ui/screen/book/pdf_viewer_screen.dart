@@ -3,6 +3,7 @@ import 'dart:developer' as dev;
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:readbox/blocs/base_bloc/base_state.dart';
@@ -48,6 +49,7 @@ class PdfViewerScreen extends StatefulWidget {
 
 class PdfViewerScreenState extends State<PdfViewerScreen> {
   final PdfViewerController _pdfController = PdfViewerController();
+  late final File _localFile; // Cache File object, tránh tạo mới mỗi lần rebuild
   final TextEditingController _searchQueryController = TextEditingController();
   bool _isLoading = true;
   bool _isLoadingText = false;
@@ -63,6 +65,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   bool showToolbar = true;
   bool showNavigationBar = true;
   String? actionToolbar = '';
+  PdfScrollDirection _pdfScrollDirection = PdfScrollDirection.vertical;
+  /// Tắt CircularProgressIndicator nội bộ của Syncfusion; dùng overlay Cupertino khi đổi trang.
+  Timer? _pageLoadingTimer;
+  bool _showPageCupertinoLoading = false;
   // Text selection & TTS
   String? _selectedText;
   final TextToSpeechService _ttsService = TextToSpeechService();
@@ -120,21 +126,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         name: 'PdfMemory',
       );
     });
-
-    // FPS monitor — log mỗi 3 giây
-    int _frameCount = 0;
-    DateTime _fpsStart = DateTime.now();
-    WidgetsBinding.instance.addPersistentFrameCallback((_) {
-      if (!mounted) return;
-      _frameCount++;
-      final elapsed = DateTime.now().difference(_fpsStart).inMilliseconds;
-      if (elapsed >= 3000) {
-        final fps = (_frameCount * 1000 / elapsed).toStringAsFixed(1);
-        dev.log('FPS: $fps', name: 'PdfFPS');
-        _frameCount = 0;
-        _fpsStart = DateTime.now();
-      }
-    });
+    // FPS monitor đã bỏ: addPersistentFrameCallback không thể gỡ bỏ,
+    // gây leak callback mỗi lần mở screen. Dùng Flutter DevTools thay thế.
   }
 
   /// Super Admin luôn có quyền truy cập tính năng nâng cao
@@ -166,8 +159,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             });
           }
         });
-    final file = File(widget.fileUrl);
-    _isLocal = file.existsSync();
+    _localFile = File(widget.fileUrl);
+    _isLocal = _localFile.existsSync();
     if (_isLocal) {
       setState(() => _isLoading = false);
     } else {
@@ -361,6 +354,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     _totalPages = total;
     _pageStateNotifier.value = (_currentPage, total);
 
+    // Scale page to fill viewport width
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _fitPageToViewportWidth(details);
+    });
+
     // Local reading position (SharedPreference)
     SharedPreferenceUtil.getPdfReadingPosition(widget.fileUrl).then((
       savedPage,
@@ -376,6 +374,40 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     });
   }
 
+  /// Tính toán và đặt zoom sao cho chiều rộng trang PDF khớp với viewport.
+  /// SfPdfViewer ở zoom=1.0 dùng "contain" (hiển thị toàn trang), nên khi trang
+  /// hẹp hơn viewport sẽ xuất hiện dải xám hai bên. Phương thức này zoom vào
+  /// để lấp đầy chiều rộng.
+  void _fitPageToViewportWidth(PdfDocumentLoadedDetails details) {
+    final pageWidth = details.document.pages[0].size.width;
+    final pageHeight = details.document.pages[0].size.height;
+    final mq = MediaQuery.of(context);
+    final viewportWidth = mq.size.width;
+    // Dùng chiều cao màn hình trừ safe-area (statusBar + bottomInset)
+    final viewportHeight =
+        mq.size.height - mq.padding.top - mq.padding.bottom;
+
+    // Tỉ lệ scale để vừa chiều rộng / chiều cao
+    final scaleX = viewportWidth / pageWidth;
+    final scaleY = viewportHeight / pageHeight;
+
+    // zoom=1.0 = contain fit → scale nhỏ nhất trong hai chiều
+    final containScale = scaleX < scaleY ? scaleX : scaleY;
+
+    // Zoom cần thiết để lấp đầy chiều rộng
+    final zoomToFitWidth = scaleX / containScale;
+
+    if (zoomToFitWidth > 1.01) {
+      _pdfController.zoomLevel = zoomToFitWidth;
+      dev.log(
+        'fitWidth: zoom=${zoomToFitWidth.toStringAsFixed(3)} '
+        '(page ${pageWidth.toInt()}×${pageHeight.toInt()}pt, '
+        'viewport ${viewportWidth.toInt()}×${viewportHeight.toInt()}px)',
+        name: 'PdfZoom',
+      );
+    }
+  }
+
   void _onPageChanged(PdfPageChangedDetails details) {
     final page = details.newPageNumber;
     // Cập nhật field trực tiếp + notifier, KHÔNG setState → không rebuild Scaffold
@@ -383,6 +415,16 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     _pageStateNotifier.value = (page, _totalPages);
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, page);
     _onServerPageChanged(page);
+    _flashPageCupertinoLoading();
+  }
+
+  void _flashPageCupertinoLoading() {
+    if (_isLoading || !mounted) return;
+    _pageLoadingTimer?.cancel();
+    setState(() => _showPageCupertinoLoading = true);
+    _pageLoadingTimer = Timer(const Duration(milliseconds: 500), () {
+      if (mounted) setState(() => _showPageCupertinoLoading = false);
+    });
   }
 
   void _onDocumentLoadFailed(PdfDocumentLoadFailedDetails details) {
@@ -582,9 +624,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       }
     }
     try {
-      final pageText = await _extractPageText(_currentPage);
-      if (pageText != null && pageText.isNotEmpty) {
-        await _ttsService.setLanguageFromText(pageText);
+      // Combined extraction: tránh parse PdfDocument 2 lần
+      String? pageText;
+      if (_selectedText != null && _selectedText!.isNotEmpty) {
+        pageText = _selectedText;
+        // Có selected text → chỉ cần bounds từ PDF
         if (_pdfBytes != null) {
           final bounds =
               await PdfTextExtractorService.extractPageTextWithWordBounds(
@@ -593,6 +637,20 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               );
           if (mounted) setState(() => _currentPageWordBounds = bounds);
         }
+      } else if (_pdfBytes != null) {
+        // Single parse cho cả text lẫn bounds
+        final (text, bounds) =
+            await PdfTextExtractorService.extractTextAndBounds(
+              _pdfBytes!,
+              _currentPage - 1,
+            );
+        pageText = text;
+        if (bounds != null && mounted) {
+          setState(() => _currentPageWordBounds = bounds);
+        }
+      }
+      if (pageText != null && pageText.isNotEmpty) {
+        await _ttsService.setLanguageFromText(pageText);
         if (mounted) {
           setState(() {
             _ttsReadingText = pageText;
@@ -707,6 +765,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     _saveProgressTimer?.cancel();
     _readingTimeTimer?.cancel();
     _memoryMonitorTimer?.cancel();
+    _pageLoadingTimer?.cancel();
     _subscriptionPlanStream?.cancel();
     _ttsWordProgressNotifier.dispose();
     _selectedTextNotifier.dispose();
@@ -760,34 +819,140 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
   }
 
+  void _setPdfScrollDirection(PdfScrollDirection direction) {
+    if (_pdfScrollDirection == direction) return;
+    setState(() => _pdfScrollDirection = direction);
+  }
+
   Widget _buildPdfViewer() {
-    return SfPdfViewer.file(
-      File(widget.fileUrl),
-      controller: _pdfController,
-      onDocumentLoaded: _onDocumentLoaded,
-      onPageChanged: _onPageChanged,
-      onDocumentLoadFailed: _onDocumentLoadFailed,
-      enableTextSelection: true,
-      onTextSelectionChanged: _onTextSelectionChanged,
-      canShowScrollHead: false,
-      canShowScrollStatus: false,
-      scrollDirection: PdfScrollDirection.vertical,
+    final Widget viewer;
+    if (_isLocal) {
+      viewer = SfPdfViewer.file(
+        _localFile,
+        controller: _pdfController,
+        onDocumentLoaded: _onDocumentLoaded,
+        onPageChanged: _onPageChanged,
+        onDocumentLoadFailed: _onDocumentLoadFailed,
+        enableTextSelection: true,
+        onTextSelectionChanged: _onTextSelectionChanged,
+        canShowScrollHead: false,
+        canShowScrollStatus: false,
+        canShowPageLoadingIndicator: false,
+        scrollDirection: _pdfScrollDirection,
+        pageLayoutMode: PdfPageLayoutMode.single,
+      );
+    } else {
+      viewer = SfPdfViewer.network(
+        _networkPdfUrl,
+        controller: _pdfController,
+        onDocumentLoaded: _onDocumentLoaded,
+        onPageChanged: _onPageChanged,
+        onDocumentLoadFailed: _onDocumentLoadFailed,
+        enableTextSelection: true,
+        onTextSelectionChanged: _onTextSelectionChanged,
+        canShowScrollHead: false,
+        canShowScrollStatus: false,
+        canShowPageLoadingIndicator: false,
+        scrollDirection: _pdfScrollDirection,
+        pageLayoutMode: PdfPageLayoutMode.single,
+      );
+    }
+    // KeyedSubtree buộc SfPdfViewer tạo lại khi đổi hướng cuộn
+    return KeyedSubtree(key: ValueKey(_pdfScrollDirection), child: viewer);
+  }
+
+  Widget _buildPdfViewerArea({required bool showNavBar}) {
+    return Stack(
+      children: [
+        _buildPdfViewer(),
+        if (_showPageCupertinoLoading && !_isLoading)
+          Positioned.fill(
+            child: IgnorePointer(
+              child: ColoredBox(
+                color: Colors.grey.withValues(alpha: 0.04),
+                child: const Center(
+                  child: CupertinoActivityIndicator(radius: 8),
+                ),
+              ),
+            ),
+          ),
+        _buildScrollDirectionControl(showNavBar: showNavBar),
+      ],
     );
   }
 
-  /// Hiển thị PDF từ URL — stream/on-demand, không cần tải full trước
-  Widget _buildPdfViewerFromNetwork() {
-    return SfPdfViewer.network(
-      _networkPdfUrl,
-      controller: _pdfController,
-      onDocumentLoaded: _onDocumentLoaded,
-      onPageChanged: _onPageChanged,
-      onDocumentLoadFailed: _onDocumentLoadFailed,
-      enableTextSelection: true,
-      onTextSelectionChanged: _onTextSelectionChanged,
-      canShowScrollHead: false,
-      canShowScrollStatus: false,
-      scrollDirection: PdfScrollDirection.vertical,
+  /// Nút nhỏ chuyển cuộn dọc / ngang (góc trái dưới)
+  Widget _buildScrollDirectionControl({required bool showNavBar}) {
+    final isVertical = _pdfScrollDirection == PdfScrollDirection.vertical;
+    final bottom = showNavBar ? 96.0 : 24.0;
+    final color = Theme.of(context).primaryColor;
+
+    return Positioned(
+      left: 12,
+      bottom: bottom,
+      child: Material(
+        color: Colors.white.withValues(alpha: 0.95),
+        elevation: 3,
+        shadowColor: Colors.black26,
+        borderRadius: BorderRadius.circular(22),
+        child: Padding(
+          padding: const EdgeInsets.all(3),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildDirChip(
+                icon: Icons.swap_vert_rounded,
+                label: AppLocalizations.current.pdf_scroll_vertical,
+                isSelected: isVertical,
+                color: color,
+                onTap: () => _setPdfScrollDirection(PdfScrollDirection.vertical),
+              ),
+              _buildDirChip(
+                icon: Icons.swap_horiz_rounded,
+                label: AppLocalizations.current.pdf_scroll_horizontal,
+                isSelected: !isVertical,
+                color: color,
+                onTap: () =>
+                    _setPdfScrollDirection(PdfScrollDirection.horizontal),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDirChip({
+    required IconData icon,
+    required String label,
+    required bool isSelected,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Tooltip(
+      message: label,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(18),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? color.withValues(alpha: 0.12)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(18),
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: isSelected ? color : Colors.grey[500],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -839,7 +1004,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             onPressed: () => _pdfController.zoomLevel -= 0.25,
           ),
           IconButton(
-            icon: Icon(Icons.fullscreen, color: Colors.white),
+            icon: Icon(Icons.fullscreen_exit_rounded, color: Colors.white),
             onPressed: () => _pdfController.zoomLevel = 1.0,
           ),
         ];
@@ -998,8 +1163,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             child: SizedBox(
               width: 16,
               height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
+              child: CupertinoActivityIndicator(
                 color: Colors.white70,
               ),
             ),
@@ -1221,10 +1385,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               ),
             )
           else if (showViewer)
-            Stack(
-              children: [
-                _isLocal ? _buildPdfViewer() : _buildPdfViewerFromNetwork(),
-              ],
+            _buildPdfViewerArea(
+              showNavBar: showNavigationBar && showToolbar,
             ),
           if (_isLoading)
             Container(
@@ -1233,7 +1395,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
+                    const CupertinoActivityIndicator(radius: 14),
                     SizedBox(height: 16),
                     Text(AppLocalizations.current.pdf_loading),
                     SizedBox(height: 8),
@@ -1248,7 +1410,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           if (_isLoadingText)
             Container(
               color: Colors.black45,
-              child: Center(child: CircularProgressIndicator()),
+              child: const Center(
+                child: CupertinoActivityIndicator(radius: 12),
+              ),
             ),
           // Toggle toolbar button
           if (!showToolbar)
@@ -1542,11 +1706,24 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       _removePdfWordHighlight();
       if (mounted) setState(() => _currentPageWordBounds = null);
 
-      // Đọc trang tiếp theo luôn lấy full trang, không dùng selection của trang cũ
-      final pageText = await _extractPageText(
-        nextPageNumber,
-        useSelection: false,
-      );
+      // Combined extraction: single PdfDocument parse cho cả text lẫn bounds
+      String? pageText;
+      PageTextWithBounds? pageBounds;
+      if (_pdfBytes != null) {
+        final sw = Stopwatch()..start();
+        final (text, bounds) =
+            await PdfTextExtractorService.extractTextAndBounds(
+              _pdfBytes!,
+              nextPageNumber - 1,
+            );
+        sw.stop();
+        dev.log(
+          'extractTextAndBounds p$nextPageNumber: ${sw.elapsedMilliseconds}ms',
+          name: 'PdfPerf',
+        );
+        pageText = text;
+        pageBounds = bounds;
+      }
 
       if (pageText == null || pageText.isEmpty) {
         // Trang trống → thử trang tiếp
@@ -1577,19 +1754,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
       if (!mounted || !_isReadingContinuous) return;
 
-      if (_pdfBytes != null) {
-        final swBounds = Stopwatch()..start();
-        final bounds =
-            await PdfTextExtractorService.extractPageTextWithWordBounds(
-              _pdfBytes!,
-              nextPageNumber - 1,
-            );
-        swBounds.stop();
-        dev.log(
-          'extractWordBounds p$nextPageNumber: ${swBounds.elapsedMilliseconds}ms',
-          name: 'PdfPerf',
-        );
-        if (mounted) setState(() => _currentPageWordBounds = bounds);
+      if (pageBounds != null && mounted) {
+        setState(() => _currentPageWordBounds = pageBounds);
       }
       if (mounted) {
         setState(() {
@@ -1616,35 +1782,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       } else {
         if (mounted) setState(() => _isReadingContinuous = false);
       }
-    }
-  }
-
-  Future<String?> _extractPageText(
-    int pageNumber, {
-    bool useSelection = true,
-  }) async {
-    if (useSelection && _selectedText != null && _selectedText!.isNotEmpty) {
-      return _selectedText;
-    }
-
-    if (_pdfBytes == null) return null;
-
-    final sw = Stopwatch()..start();
-    try {
-      final text = await PdfTextExtractorService.extractTextFromPage(
-        _pdfBytes!,
-        pageNumber - 1,
-      );
-      sw.stop();
-      dev.log(
-        'extractText p$pageNumber: ${sw.elapsedMilliseconds}ms '
-        '(${text?.length ?? 0} chars)',
-        name: 'PdfPerf',
-      );
-      if (text != null && text.isNotEmpty) return text;
-      return null;
-    } catch (_) {
-      return null;
     }
   }
 
@@ -1717,6 +1854,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       TextPosition(offset: start),
       Rect.zero,
     );
+    textPainter.dispose(); // Giải phóng native resource sau khi dùng
 
     final currentScroll = _ttsScrollController.offset;
     final viewportHeight = constraints.maxHeight;

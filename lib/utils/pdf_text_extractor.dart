@@ -135,6 +135,71 @@ class PdfTextExtractorService {
     }
   }
 
+  /// Combined: trích xuất text + word bounds trong một lần parse PdfDocument duy nhất.
+  /// Tránh parse PDF 2 lần khi TTS cần cả text lẫn bounds.
+  static Future<(String?, PageTextWithBounds?)> extractTextAndBounds(
+    Uint8List pdfBytes,
+    int pageIndex,
+  ) async {
+    try {
+      final PdfDocument document = PdfDocument(inputBytes: pdfBytes);
+      if (pageIndex < 0 || pageIndex >= document.pages.count) {
+        document.dispose();
+        return (null, null);
+      }
+
+      final PdfTextExtractor extractor = PdfTextExtractor(document);
+      final String rawText = extractor.extractText(
+        startPageIndex: pageIndex,
+        endPageIndex: pageIndex,
+      );
+      final String fullText = _cleanupText(rawText);
+
+      if (fullText.isEmpty) {
+        document.dispose();
+        return (null, null);
+      }
+
+      // Extract word bounds trong cùng document đã mở
+      final List<TextLine> lines = extractor.extractTextLines(
+        startPageIndex: pageIndex,
+        endPageIndex: pageIndex,
+      );
+      final List<WordBoundEntry> wordBounds = [];
+      int searchStart = 0;
+      final int pageNumber = pageIndex + 1;
+
+      for (final TextLine line in lines) {
+        for (final TextWord word in line.wordCollection) {
+          final String w = word.text;
+          if (w.isEmpty) continue;
+          final int idx = fullText.indexOf(w, searchStart);
+          if (idx >= 0) {
+            wordBounds.add(WordBoundEntry(
+              startIndex: idx,
+              endIndex: idx + w.length,
+              bounds: word.bounds,
+            ));
+            searchStart = idx + w.length;
+          }
+        }
+      }
+
+      document.dispose();
+
+      final bounds = PageTextWithBounds(
+        fullText: fullText,
+        pageNumber: pageNumber,
+        wordBounds: wordBounds,
+      );
+
+      return (fullText, bounds);
+    } catch (e) {
+      debugPrint('Error extracting text and bounds: $e');
+      return (null, null);
+    }
+  }
+
   /// Trích xuất text từ nhiều trang PDF
   /// 
   /// [pdfBytes] - Bytes của file PDF
