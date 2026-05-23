@@ -10,6 +10,7 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/constants.dart';
 import 'package:readbox/domain/enums/enums.dart';
+import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/app_size.dart';
@@ -55,6 +56,9 @@ class MainBodyState extends State<MainBody> {
   FilterModel? _filterModel;
   UserModel? userInfo;
   List<CategoryModel> categories = [];
+  // Stack các category cha mà user đã drill-in trên thanh chip.
+  // Rỗng = đang ở root (hiển thị các root category).
+  final List<CategoryModel> _chipNavStack = [];
   @override
   void initState() {
     super.initState();
@@ -217,13 +221,23 @@ class MainBodyState extends State<MainBody> {
   }
 
   Widget _buildCategoryBar(ColorScheme colorScheme) {
-    final categoryCount = categories.length;
-    final currentLanguageCode = Localizations.localeOf(context).languageCode;
+    // Dựng map parentId -> children để render nhanh theo cấp đang đứng
+    final childrenByParent = <String?, List<CategoryModel>>{};
+    for (final c in categories) {
+      final pId =
+          (c.parentId == null || c.parentId!.isEmpty) ? null : c.parentId;
+      childrenByParent.putIfAbsent(pId, () => []).add(c);
+    }
+
+    final isAtRoot = _chipNavStack.isEmpty;
+    final currentParent = isAtRoot ? null : _chipNavStack.last;
+    final visible = childrenByParent[currentParent?.id] ?? const [];
+    final showSeeAllButton =
+        categories.length > 3 || categories.any((c) => (c.parentId ?? '').isNotEmpty);
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8),
-
       decoration: BoxDecoration(
         color: colorScheme.surface,
         border: Border(
@@ -241,74 +255,76 @@ class MainBodyState extends State<MainBody> {
         children: [
           const SizedBox(width: 16),
           Expanded(
-            flex: categoryCount > 3 ? 10 : categoryCount,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildCategoryChip(
-                    colorScheme: colorScheme,
-                    label: AppLocalizations.current.all,
-                    isSelected: categoryId.isEmpty,
-                    onTap: () {
-                      setState(() {
-                        categoryId = '';
-                      });
-                      page = 1;
-                      getBooks(isLoadMore: false);
-                    },
+              // AnimatedSwitcher để có cảm giác "refill" mượt khi drill in/out
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 220),
+                transitionBuilder: (child, animation) {
+                  final offset = Tween<Offset>(
+                    begin: const Offset(0.06, 0),
+                    end: Offset.zero,
+                  ).animate(animation);
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(position: offset, child: child),
+                  );
+                },
+                child: Row(
+                  key: ValueKey<String>(
+                    'chips_lvl_${currentParent?.id ?? 'root'}',
                   ),
-                  ...categories.map((category) {
-                    final id = category.id ?? '';
-                    final idStr = id.toString();
-                    final label =
-                        (currentLanguageCode == LanguageCode.vi
-                            ? category.name
-                            : category.nameEN) ??
-                        AppLocalizations.current.no_name;
-                    return _buildCategoryChip(
-                      colorScheme: colorScheme,
-                      label: label,
-                      isSelected: categoryId == idStr,
-                      onTap: () {
-                        setState(() {
-                          categoryId = idStr;
-                        });
-                        page = 1;
-                        getBooks(isLoadMore: false);
-                      },
-                    );
-                  }),
-                ],
+                  children: [
+                    if (isAtRoot)
+                      _buildCategoryChip(
+                        colorScheme: colorScheme,
+                        label: AppLocalizations.current.all,
+                        isSelected: categoryId.isEmpty,
+                        onTap: () {
+                          _chipNavStack.clear();
+                          _onSelectCategoryById('');
+                        },
+                      )
+                    else ...[
+                      _buildBackChip(colorScheme),
+                      _buildParentSelfChip(colorScheme, currentParent!),
+                    ],
+                    ...visible.map((c) {
+                      final hasChildren =
+                          (childrenByParent[c.id] ?? const []).isNotEmpty;
+                      final isSelected = categoryId == c.id;
+                      return _buildCategoryChip(
+                        colorScheme: colorScheme,
+                        label: _localizedName(c),
+                        isSelected: isSelected,
+                        color: _resolveCategoryColor(c),
+                        imageUrl: _resolveCategoryImageUrl(c),
+                        hasChildren: hasChildren,
+                        onTap: () {
+                          if (hasChildren) {
+                            // Drill in: refill thành children của c
+                            setState(() {
+                              _chipNavStack.add(c);
+                            });
+                          } else {
+                            _onSelectCategoryById(c.id ?? '');
+                          }
+                        },
+                        onLongPress: hasChildren
+                            ? () => _onSelectCategoryById(c.id ?? '')
+                            : null,
+                      );
+                    }),
+                  ],
+                ),
               ),
             ),
           ),
-          Visibility(
-            visible: categoryCount > 3,
-            child: Padding(
+          if (showSeeAllButton)
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: GestureDetector(
-                onTap: () {
-                  // mo bottom sheet chon category
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    backgroundColor: Colors.transparent,
-                    builder:
-                        (context) => CategoryBottomSheet(
-                          categories: categories,
-                          selectedCategoryId:
-                              categoryId.isEmpty ? null : categoryId,
-                          onSelected: (category) {
-                            setState(() {
-                              categoryId = category.id.toString();
-                            });
-                            page = 1;
-                            getBooks(isLoadMore: false);
-                          },
-                        ),
-                  );
-                },
+                onTap: _openCategoryBottomSheet,
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -323,10 +339,126 @@ class MainBodyState extends State<MainBody> {
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
+  }
+
+  /// Chip "←" để pop chip nav stack (quay lại level cha).
+  Widget _buildBackChip(ColorScheme colorScheme) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 12),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            if (_chipNavStack.isNotEmpty) {
+              _chipNavStack.removeLast();
+            }
+          });
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: colorScheme.surface.withValues(alpha: 0.6),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: colorScheme.outline.withValues(alpha: 0.2),
+            ),
+          ),
+          child: Icon(
+            Icons.arrow_back_rounded,
+            size: 16,
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Chip "✓ <tên cha>" tương đương item "Chọn danh mục này" trong bottom sheet.
+  /// Cho phép filter ngay theo cha hiện tại mà không cần đi tới lá.
+  Widget _buildParentSelfChip(
+    ColorScheme colorScheme,
+    CategoryModel parent,
+  ) {
+    final isSelected = categoryId == parent.id;
+    final color = _resolveCategoryColor(parent);
+    return _buildCategoryChip(
+      colorScheme: colorScheme,
+      label: _localizedName(parent),
+      isSelected: isSelected,
+      color: color,
+      imageUrl: _resolveCategoryImageUrl(parent),
+      isParentSelfChip: true,
+      onTap: () => _onSelectCategoryById(parent.id ?? ''),
+    );
+  }
+
+  String _localizedName(CategoryModel c) {
+    final lang = Localizations.localeOf(context).languageCode;
+    final name = lang == LanguageCode.vi ? c.name : c.nameEN;
+    return name ?? c.name ?? AppLocalizations.current.no_name;
+  }
+
+  void _onSelectCategoryById(String id) {
+    setState(() {
+      categoryId = id;
+      // Khi clear filter, đưa chips về root
+      if (id.isEmpty) {
+        _chipNavStack.clear();
+      }
+    });
+    page = 1;
+    getBooks(isLoadMore: false);
+  }
+
+  void _openCategoryBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => CategoryBottomSheet(
+        categories: categories,
+        selectedCategoryId: categoryId.isEmpty ? null : categoryId,
+        onSelected: (category) {
+          final id = category.id ?? '';
+          _restoreChipNavStackForSelected(id);
+          _onSelectCategoryById(id);
+        },
+      ),
+    );
+  }
+
+  /// Đồng bộ stack chips với category vừa chọn từ bottom sheet.
+  /// Stack chứa các tổ tiên (KHÔNG bao gồm chính selected) → các chips hiển thị
+  /// = anh em + parent-self chip cho user thấy ngay context.
+  void _restoreChipNavStackForSelected(String selectedId) {
+    if (selectedId.isEmpty) {
+      _chipNavStack.clear();
+      return;
+    }
+    final byId = <String, CategoryModel>{
+      for (final c in categories)
+        if (c.id != null) c.id!: c,
+    };
+    final selected = byId[selectedId];
+    if (selected == null) {
+      _chipNavStack.clear();
+      return;
+    }
+    final ancestors = <CategoryModel>[];
+    final visited = <String>{};
+    String? cursorId = selected.parentId;
+    while (cursorId != null && cursorId.isNotEmpty && visited.add(cursorId)) {
+      final cursor = byId[cursorId];
+      if (cursor == null) break;
+      ancestors.insert(0, cursor);
+      cursorId = cursor.parentId;
+    }
+    _chipNavStack
+      ..clear()
+      ..addAll(ancestors);
   }
 
   Widget _buildCategoryChip({
@@ -334,7 +466,18 @@ class MainBodyState extends State<MainBody> {
     required String label,
     required bool isSelected,
     required VoidCallback onTap,
+    VoidCallback? onLongPress,
+    Color? color,
+    String? imageUrl,
+    bool hasChildren = false,
+    bool isParentSelfChip = false,
   }) {
+    final activeColor = color ?? colorScheme.primary;
+    final hasImage = imageUrl != null && imageUrl.isNotEmpty;
+    // Khi là chip "chọn cha hiện tại" → vẽ tone nhẹ với màu của cha kèm dấu ✓
+    // để user phân biệt với chip con bình thường, kể cả khi chưa được tap.
+    final isParentTone = isParentSelfChip && !isSelected;
+
     return Padding(
       padding: const EdgeInsets.only(right: 12),
       child: ClipRRect(
@@ -343,50 +486,141 @@ class MainBodyState extends State<MainBody> {
           filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
           child: InkWell(
             onTap: onTap,
+            onLongPress: onLongPress,
             borderRadius: BorderRadius.circular(16),
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(
+                horizontal: hasImage ? 8 : 14,
+                vertical: 6,
+              ),
               decoration: BoxDecoration(
-                color:
-                    isSelected
-                        ? null
-                        : colorScheme.surface.withValues(alpha: 0.6),
-                gradient: isSelected ? AppTheme.indigoCyanGradient() : null,
+                color: isSelected
+                    ? null
+                    : (isParentTone
+                        ? activeColor.withValues(alpha: 0.12)
+                        : colorScheme.surface.withValues(alpha: 0.6)),
+                gradient: isSelected
+                    ? (color != null
+                        ? LinearGradient(
+                            colors: [
+                              activeColor,
+                              Color.lerp(activeColor, Colors.black, 0.2) ??
+                                  activeColor,
+                            ],
+                          )
+                        : AppTheme.indigoCyanGradient())
+                    : null,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow:
-                    isSelected
-                        ? [
-                          BoxShadow(
-                            color: colorScheme.primary.withValues(alpha: 0.3),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ]
-                        : null,
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: activeColor.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                    : null,
                 border: Border.all(
-                  color:
-                      isSelected
-                          ? Colors.indigo.shade100
-                          : colorScheme.outline.withValues(alpha: 0.2),
+                  color: isSelected
+                      ? activeColor.withValues(alpha: 0.6)
+                      : (isParentTone
+                          ? activeColor.withValues(alpha: 0.4)
+                          : colorScheme.outline.withValues(alpha: 0.2)),
                   width: 1,
                 ),
               ),
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                  color:
-                      isSelected
-                          ? colorScheme.onPrimary
-                          : colorScheme.onSurfaceVariant,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (isParentSelfChip) ...[
+                    Icon(
+                      Icons.check_circle_outline_rounded,
+                      size: 14,
+                      color: isSelected ? Colors.white : activeColor,
+                    ),
+                    const SizedBox(width: 4),
+                  ] else if (hasImage) ...[
+                    ClipOval(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: BaseNetworkImage(
+                          url: imageUrl,
+                          fit: BoxFit.cover,
+                          showShimmer: false,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                  ],
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight:
+                          isSelected ? FontWeight.w700 : FontWeight.w500,
+                      color: isSelected
+                          ? Colors.white
+                          : (isParentTone
+                              ? activeColor
+                              : colorScheme.onSurfaceVariant),
+                    ),
+                  ),
+                  if (hasChildren && !isSelected) ...[
+                    const SizedBox(width: 4),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      size: 14,
+                      color: colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.7,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  /// Resolve URL ảnh đại diện. Hỗ trợ relative path (BE) lẫn URL tuyệt đối.
+  String? _resolveCategoryImageUrl(CategoryModel category) {
+    final raw = category.image;
+    if (raw == null || raw.trim().isEmpty) return null;
+    if (raw.startsWith('http://') || raw.startsWith('https://')) return raw;
+    return '${ApiConstant.storageHost}$raw';
+  }
+
+  /// Parse màu HEX từ BE; fallback theo hash để mỗi danh mục có tone riêng.
+  Color _resolveCategoryColor(CategoryModel category) {
+    final hex = category.color?.trim();
+    if (hex != null && hex.isNotEmpty) {
+      final parsed = _parseHexColor(hex);
+      if (parsed != null) return parsed;
+    }
+    const palette = <Color>[
+      Color(0xFF6366F1), // indigo
+      Color(0xFF22C55E), // green
+      Color(0xFFF97316), // orange
+      Color(0xFFEF4444), // red
+      Color(0xFF06B6D4), // cyan
+      Color(0xFFA855F7), // purple
+      Color(0xFFF59E0B), // amber
+      Color(0xFF10B981), // emerald
+    ];
+    final seed = (category.id ?? category.name ?? 'x').hashCode.abs();
+    return palette[seed % palette.length];
+  }
+
+  Color? _parseHexColor(String hex) {
+    var value = hex.startsWith('#') ? hex.substring(1) : hex;
+    if (value.length == 6) value = 'FF$value';
+    if (value.length != 8) return null;
+    final intVal = int.tryParse(value, radix: 16);
+    if (intVal == null) return null;
+    return Color(intVal);
   }
 
   Widget _buildNotificationButton() {

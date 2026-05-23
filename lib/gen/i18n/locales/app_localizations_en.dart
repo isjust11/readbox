@@ -1428,6 +1428,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdf_please_wait => 'Please wait';
 
   @override
+  String get pdf_scroll_vertical => 'Vertical scroll';
+
+  @override
+  String get pdf_scroll_horizontal => 'Horizontal scroll';
+
+  @override
+  String get pdf_scale_fit_width => 'Fit width';
+
+  @override
+  String get pdf_scale_fit_page => 'Fit page';
+
+  @override
+  String get pdf_scale_actual_size => 'Actual size';
+
+  @override
   String get pdf_reading => 'Reading';
 
   @override
@@ -1891,6 +1906,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get try_different_search => 'Try a different search term';
+
+  @override
+  String get subcategories => 'subcategories';
+
+  @override
+  String get select_this_category => 'Select this category';
+
+  @override
+  String get back => 'Back';
 
   @override
   String get usage_statistics => 'Usage Statistics';

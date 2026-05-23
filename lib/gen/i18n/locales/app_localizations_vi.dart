@@ -1429,6 +1429,21 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdf_please_wait => 'Vui lòng đợi';
 
   @override
+  String get pdf_scroll_vertical => 'Cuộn dọc';
+
+  @override
+  String get pdf_scroll_horizontal => 'Cuộn ngang';
+
+  @override
+  String get pdf_scale_fit_width => 'Tràn chiều ngang';
+
+  @override
+  String get pdf_scale_fit_page => 'Vừa trang';
+
+  @override
+  String get pdf_scale_actual_size => 'Kích thước gốc';
+
+  @override
   String get pdf_reading => 'Đang đọc';
 
   @override
@@ -1894,6 +1909,15 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get try_different_search => 'Thử từ khóa tìm kiếm khác';
+
+  @override
+  String get subcategories => 'danh mục con';
+
+  @override
+  String get select_this_category => 'Chọn danh mục này';
+
+  @override
+  String get back => 'Quay lại';
 
   @override
   String get usage_statistics => 'Thống Kê Sử Dụng';

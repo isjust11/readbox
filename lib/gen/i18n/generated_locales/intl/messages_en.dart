@@ -93,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Available languages",
     ),
     "average_rating": MessageLookupByLibrary.simpleMessage("Average rating"),
+    "back": MessageLookupByLibrary.simpleMessage("Back"),
     "backToHome": MessageLookupByLibrary.simpleMessage("Back to Home"),
     "back_to_login": MessageLookupByLibrary.simpleMessage("Back to login"),
     "background": MessageLookupByLibrary.simpleMessage("Background"),
@@ -1179,6 +1180,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_language": MessageLookupByLibrary.simpleMessage(
       "Please enter language",
     ),
+    "select_this_category": MessageLookupByLibrary.simpleMessage(
+      "Select this category",
+    ),
     "selected": MessageLookupByLibrary.simpleMessage("Selected"),
     "sendFeedback": MessageLookupByLibrary.simpleMessage("Send feedback"),
     "sendTestNotification": MessageLookupByLibrary.simpleMessage(
@@ -1242,6 +1246,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "stopTest": MessageLookupByLibrary.simpleMessage("Stop"),
     "storageLimit": MessageLookupByLibrary.simpleMessage("Storage space"),
     "storage_usage": MessageLookupByLibrary.simpleMessage("Storage Usage"),
+    "subcategories": MessageLookupByLibrary.simpleMessage("subcategories"),
     "submit_rating": MessageLookupByLibrary.simpleMessage("Submit Rating"),
     "subscriptionPlans": MessageLookupByLibrary.simpleMessage(
       "Subscription plans",

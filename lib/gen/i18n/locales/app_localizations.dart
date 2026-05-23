@@ -2846,6 +2846,36 @@ abstract class AppLocalizations {
   /// **'Please wait'**
   String get pdf_please_wait;
 
+  /// No description provided for @pdf_scroll_vertical.
+  ///
+  /// In en, this message translates to:
+  /// **'Vertical scroll'**
+  String get pdf_scroll_vertical;
+
+  /// No description provided for @pdf_scroll_horizontal.
+  ///
+  /// In en, this message translates to:
+  /// **'Horizontal scroll'**
+  String get pdf_scroll_horizontal;
+
+  /// No description provided for @pdf_scale_fit_width.
+  ///
+  /// In en, this message translates to:
+  /// **'Fit width'**
+  String get pdf_scale_fit_width;
+
+  /// No description provided for @pdf_scale_fit_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Fit page'**
+  String get pdf_scale_fit_page;
+
+  /// No description provided for @pdf_scale_actual_size.
+  ///
+  /// In en, this message translates to:
+  /// **'Actual size'**
+  String get pdf_scale_actual_size;
+
   /// No description provided for @pdf_reading.
   ///
   /// In en, this message translates to:
@@ -3727,6 +3757,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try a different search term'**
   String get try_different_search;
+
+  /// No description provided for @subcategories.
+  ///
+  /// In en, this message translates to:
+  /// **'subcategories'**
+  String get subcategories;
+
+  /// No description provided for @select_this_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Select this category'**
+  String get select_this_category;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
 
   /// No description provided for @usage_statistics.
   ///
