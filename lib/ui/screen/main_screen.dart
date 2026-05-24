@@ -73,6 +73,35 @@ class MainBodyState extends State<MainBody> {
     });
     loadUserInfo();
     loadCategories();
+    _wireFloatingActionCallbacks();
+  }
+
+  /// Đăng ký action cho cụm floating button toàn app:
+  /// - Continue Reading → mở bottom sheet danh sách ebook đang đọc.
+  /// - TTS background → mở lại book đang đọc nền (nếu match được).
+  void _wireFloatingActionCallbacks() {
+    FloatingActionsController.instance.onContinueReadingPressed = (
+      ctx,
+      interaction,
+    ) {
+      _showContinueReadingBottomSheet(ctx);
+    };
+
+    FloatingActionsController.instance.onTtsPressed = (ctx, info) {
+      final readingBooks = ctx.read<UserInteractionCubit>().readingBooks;
+      UserInteractionModel? matched;
+      for (final r in readingBooks) {
+        if (r.book?.id != null && r.book!.id == info.bookId) {
+          matched = r;
+          break;
+        }
+      }
+      if (matched?.book != null) {
+        _openBook(ctx, matched!.book!);
+      } else {
+        _showContinueReadingBottomSheet(ctx);
+      }
+    };
   }
 
   // load category
@@ -146,6 +175,9 @@ class MainBodyState extends State<MainBody> {
     _searchController.dispose();
     _searchFocusNode.dispose();
     _refreshController.dispose();
+    // Tránh giữ closure trỏ vào State đã dispose (logout / tab switch).
+    FloatingActionsController.instance.onContinueReadingPressed = null;
+    FloatingActionsController.instance.onTtsPressed = null;
     super.dispose();
   }
 
@@ -233,7 +265,8 @@ class MainBodyState extends State<MainBody> {
     final currentParent = isAtRoot ? null : _chipNavStack.last;
     final visible = childrenByParent[currentParent?.id] ?? const [];
     final showSeeAllButton =
-        categories.length > 3 || categories.any((c) => (c.parentId ?? '').isNotEmpty);
+        categories.length > 3 ||
+        categories.any((c) => (c.parentId ?? '').isNotEmpty);
 
     return Container(
       width: double.infinity,
@@ -310,9 +343,10 @@ class MainBodyState extends State<MainBody> {
                             _onSelectCategoryById(c.id ?? '');
                           }
                         },
-                        onLongPress: hasChildren
-                            ? () => _onSelectCategoryById(c.id ?? '')
-                            : null,
+                        onLongPress:
+                            hasChildren
+                                ? () => _onSelectCategoryById(c.id ?? '')
+                                : null,
                       );
                     }),
                   ],
@@ -378,10 +412,7 @@ class MainBodyState extends State<MainBody> {
 
   /// Chip "✓ <tên cha>" tương đương item "Chọn danh mục này" trong bottom sheet.
   /// Cho phép filter ngay theo cha hiện tại mà không cần đi tới lá.
-  Widget _buildParentSelfChip(
-    ColorScheme colorScheme,
-    CategoryModel parent,
-  ) {
+  Widget _buildParentSelfChip(ColorScheme colorScheme, CategoryModel parent) {
     final isSelected = categoryId == parent.id;
     final color = _resolveCategoryColor(parent);
     return _buildCategoryChip(
@@ -418,15 +449,16 @@ class MainBodyState extends State<MainBody> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => CategoryBottomSheet(
-        categories: categories,
-        selectedCategoryId: categoryId.isEmpty ? null : categoryId,
-        onSelected: (category) {
-          final id = category.id ?? '';
-          _restoreChipNavStackForSelected(id);
-          _onSelectCategoryById(id);
-        },
-      ),
+      builder:
+          (context) => CategoryBottomSheet(
+            categories: categories,
+            selectedCategoryId: categoryId.isEmpty ? null : categoryId,
+            onSelected: (category) {
+              final id = category.id ?? '';
+              _restoreChipNavStackForSelected(id);
+              _onSelectCategoryById(id);
+            },
+          ),
     );
   }
 
@@ -472,6 +504,10 @@ class MainBodyState extends State<MainBody> {
     bool hasChildren = false,
     bool isParentSelfChip = false,
   }) {
+    imageUrl = imageUrl?.trim();
+    final bool isSvg =
+        imageUrl != null &&
+        imageUrl.split('?').first.toLowerCase().endsWith('.svg');
     final activeColor = color ?? colorScheme.primary;
     final hasImage = imageUrl != null && imageUrl.isNotEmpty;
     // Khi là chip "chọn cha hiện tại" → vẽ tone nhẹ với màu của cha kèm dấu ✓
@@ -494,38 +530,42 @@ class MainBodyState extends State<MainBody> {
                 vertical: 6,
               ),
               decoration: BoxDecoration(
-                color: isSelected
-                    ? null
-                    : (isParentTone
-                        ? activeColor.withValues(alpha: 0.12)
-                        : colorScheme.surface.withValues(alpha: 0.6)),
-                gradient: isSelected
-                    ? (color != null
-                        ? LinearGradient(
-                            colors: [
-                              activeColor,
-                              Color.lerp(activeColor, Colors.black, 0.2) ??
-                                  activeColor,
-                            ],
-                          )
-                        : AppTheme.indigoCyanGradient())
-                    : null,
+                color:
+                    isSelected
+                        ? null
+                        : (isParentTone
+                            ? activeColor.withValues(alpha: 0.12)
+                            : colorScheme.surface.withValues(alpha: 0.6)),
+                gradient:
+                    isSelected
+                        ? (color != null
+                            ? LinearGradient(
+                              colors: [
+                                activeColor,
+                                Color.lerp(activeColor, Colors.black, 0.2) ??
+                                    activeColor,
+                              ],
+                            )
+                            : AppTheme.indigoCyanGradient())
+                        : null,
                 borderRadius: BorderRadius.circular(16),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: activeColor.withValues(alpha: 0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ]
-                    : null,
+                boxShadow:
+                    isSelected
+                        ? [
+                          BoxShadow(
+                            color: activeColor.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ]
+                        : null,
                 border: Border.all(
-                  color: isSelected
-                      ? activeColor.withValues(alpha: 0.6)
-                      : (isParentTone
-                          ? activeColor.withValues(alpha: 0.4)
-                          : colorScheme.outline.withValues(alpha: 0.2)),
+                  color:
+                      isSelected
+                          ? activeColor.withValues(alpha: 0.6)
+                          : (isParentTone
+                              ? activeColor.withValues(alpha: 0.4)
+                              : colorScheme.outline.withValues(alpha: 0.2)),
                   width: 1,
                 ),
               ),
@@ -544,11 +584,14 @@ class MainBodyState extends State<MainBody> {
                       child: SizedBox(
                         width: 20,
                         height: 20,
-                        child: BaseNetworkImage(
-                          url: imageUrl,
-                          fit: BoxFit.cover,
-                          showShimmer: false,
-                        ),
+                        child:
+                            isSvg
+                                ? SafeNetworkSvg(
+                                  url: imageUrl,
+                                  width: 20,
+                                  height: 20,
+                                )
+                                : BaseNetworkImage(url: imageUrl, fit: BoxFit.cover, showShimmer: false),
                       ),
                     ),
                     const SizedBox(width: 6),
@@ -559,11 +602,12 @@ class MainBodyState extends State<MainBody> {
                       fontSize: 12,
                       fontWeight:
                           isSelected ? FontWeight.w700 : FontWeight.w500,
-                      color: isSelected
-                          ? Colors.white
-                          : (isParentTone
-                              ? activeColor
-                              : colorScheme.onSurfaceVariant),
+                      color:
+                          isSelected
+                              ? Colors.white
+                              : (isParentTone
+                                  ? activeColor
+                                  : colorScheme.onSurfaceVariant),
                     ),
                   ),
                   if (hasChildren && !isSelected) ...[
@@ -918,57 +962,8 @@ class MainBodyState extends State<MainBody> {
           },
         ),
       ),
-      floatingButton: _buildContinueReadingFab(context),
-    );
-  }
-
-  Widget _buildContinueReadingFab(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return BlocBuilder<UserInteractionCubit, BaseState>(
-      buildWhen:
-          (prev, curr) => curr is LoadedState<List<UserInteractionModel>>,
-      builder: (context, state) {
-        if (state is LoadedState<List<UserInteractionModel>>) {
-          final readingBooks = state.data;
-          return readingBooks.isNotEmpty
-              ? FloatingActionButton.extended(
-                heroTag: 'continue-reading-fab',
-                onPressed: () => _showContinueReadingBottomSheet(context),
-                backgroundColor: theme.primaryColor.withValues(alpha: 0.8),
-                elevation: 4,
-                highlightElevation: 8,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                extendedPadding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
-                label: Row(
-                  children: [
-                    Icon(
-                      Icons.play_circle_fill_rounded,
-                      color: theme.colorScheme.onPrimary,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      AppLocalizations.current.continue_reading,
-                      style: TextStyle(
-                        color: theme.colorScheme.onPrimary,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-              : SizedBox.shrink();
-        }
-        return SizedBox.shrink();
-      },
+      // Continue Reading FAB đã chuyển sang GlobalFloatingActions ở BaseScreen
+      // (icon-only, có thể kéo thả + kéo để ẩn). Không cần khai báo ở đây nữa.
     );
   }
 

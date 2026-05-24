@@ -22,4 +22,6 @@ export 'app_widgets/search_filter_bottom_sheet.dart';
 export 'base_appbar.dart';
 export 'app_widgets/app_drawer_info.dart';
 export 'category_bottom_sheet.dart';
+export 'global_floating_actions.dart';
 export 'payment_icon_widget.dart';
+export 'safe_network_svg.dart';

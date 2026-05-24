@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
@@ -103,7 +104,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
   void _buildIndex() {
     _childrenByParent = <String?, List<CategoryModel>>{};
     for (final c in widget.categories) {
-      final pId = (c.parentId == null || c.parentId!.isEmpty) ? null : c.parentId;
+      final pId =
+          (c.parentId == null || c.parentId!.isEmpty) ? null : c.parentId;
       _childrenByParent.putIfAbsent(pId, () => []).add(c);
     }
   }
@@ -125,9 +127,10 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
     // (mở thẳng list con) — ngược lại drill tới cha gần nhất.
     final ancestors = <CategoryModel>[];
     final visited = <String>{};
-    var cursor = _hasChildren(selected)
-        ? selected
-        : (selected.parentId != null ? byId[selected.parentId!] : null);
+    var cursor =
+        _hasChildren(selected)
+            ? selected
+            : (selected.parentId != null ? byId[selected.parentId!] : null);
     while (cursor != null && cursor.id != null && visited.add(cursor.id!)) {
       ancestors.insert(0, cursor);
       final parentId = cursor.parentId;
@@ -156,8 +159,8 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
           (lang == LanguageCode.en ? c.nameEN : c.name)?.toLowerCase() ?? '';
       final desc =
           (lang == LanguageCode.en ? c.descriptionEN : c.description)
-                  ?.toLowerCase() ??
-              '';
+              ?.toLowerCase() ??
+          '';
       return name.contains(q) || desc.contains(q);
     }).toList();
   }
@@ -257,9 +260,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
       width: AppDimens.SIZE_40,
       height: AppDimens.SIZE_4,
       decoration: BoxDecoration(
-        color: colorScheme.onSurface.withValues(
-          alpha: _OpacityLevel.divider,
-        ),
+        color: colorScheme.onSurface.withValues(alpha: _OpacityLevel.divider),
         borderRadius: BorderRadius.circular(AppDimens.SIZE_2),
       ),
     );
@@ -267,13 +268,15 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
 
   Widget _buildHeader(ThemeData theme, ColorScheme colorScheme) {
     final parent = _currentParent;
-    final title = parent != null
-        ? _localizedName(parent)
-        : AppLocalizations.current.select_category;
+    final title =
+        parent != null
+            ? _localizedName(parent)
+            : AppLocalizations.current.select_category;
     final count = _visibleCategories.length;
-    final subtitle = parent != null
-        ? '$count ${AppLocalizations.current.subcategories}'
-        : '${widget.categories.length} ${AppLocalizations.current.categories}';
+    final subtitle =
+        parent != null
+            ? '$count ${AppLocalizations.current.subcategories}'
+            : '${widget.categories.length} ${AppLocalizations.current.categories}';
 
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -351,21 +354,22 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
             size: AppSize.iconSizeXLarge,
             color: colorScheme.primary,
           ),
-          suffixIcon: _searchQuery.isNotEmpty
-              ? IconButton(
-                  icon: Icon(
-                    Icons.clear_rounded,
-                    size: AppSize.iconSizeXLarge,
-                    color: colorScheme.onSurface.withValues(
-                      alpha: _OpacityLevel.secondary,
+          suffixIcon:
+              _searchQuery.isNotEmpty
+                  ? IconButton(
+                    icon: Icon(
+                      Icons.clear_rounded,
+                      size: AppSize.iconSizeXLarge,
+                      color: colorScheme.onSurface.withValues(
+                        alpha: _OpacityLevel.secondary,
+                      ),
                     ),
-                  ),
-                  onPressed: () {
-                    _searchController.clear();
-                    setState(() => _searchQuery = '');
-                  },
-                )
-              : null,
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() => _searchQuery = '');
+                    },
+                  )
+                  : null,
           filled: true,
           fillColor: colorScheme.surfaceContainerHighest.withValues(
             alpha: _OpacityLevel.searchBg,
@@ -435,11 +439,12 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
           vertical: AppDimens.SIZE_16,
         ),
         decoration: BoxDecoration(
-          color: isSelected
-              ? colorScheme.primary.withValues(
-                  alpha: _OpacityLevel.selectedBg,
-                )
-              : Colors.transparent,
+          color:
+              isSelected
+                  ? colorScheme.primary.withValues(
+                    alpha: _OpacityLevel.selectedBg,
+                  )
+                  : Colors.transparent,
         ),
         child: Row(
           children: [
@@ -460,9 +465,10 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                       fontSize: AppSize.fontSizeLarge,
                       fontWeight:
                           isSelected ? FontWeight.bold : FontWeight.w500,
-                      color: isSelected
-                          ? colorScheme.primary
-                          : colorScheme.onSurface,
+                      color:
+                          isSelected
+                              ? colorScheme.primary
+                              : colorScheme.onSurface,
                     ),
                   ),
                   SizedBox(height: AppDimens.SIZE_2),
@@ -508,11 +514,12 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
           vertical: AppDimens.SIZE_14,
         ),
         decoration: BoxDecoration(
-          color: isSelected
-              ? colorScheme.primary.withValues(
-                  alpha: _OpacityLevel.selectedBg,
-                )
-              : Colors.transparent,
+          color:
+              isSelected
+                  ? colorScheme.primary.withValues(
+                    alpha: _OpacityLevel.selectedBg,
+                  )
+                  : Colors.transparent,
         ),
         child: Row(
           children: [
@@ -584,7 +591,11 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
     final categoryName = _localizedName(category);
 
     final baseColor = _resolveCategoryColor(category, colorScheme);
-    final imageUrl = _resolveCategoryImageUrl(category);
+    final rawImageUrl = _resolveCategoryImageUrl(category);
+    final imageUrl = rawImageUrl?.trim();
+    final bool isSvg =
+        imageUrl != null &&
+        imageUrl.split('?').first.toLowerCase().endsWith('.svg');
 
     return Material(
       color: Colors.transparent,
@@ -611,9 +622,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
               ],
             ),
             border: Border.all(
-              color: isSelected
-                  ? colorScheme.primary
-                  : Colors.transparent,
+              color: isSelected ? colorScheme.primary : Colors.transparent,
               width: 2,
             ),
             boxShadow: [
@@ -630,32 +639,38 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
               fit: StackFit.expand,
               children: [
                 if (imageUrl != null)
-                  BaseNetworkImage(
-                    url: imageUrl,
-                    fit: BoxFit.cover,
-                    showShimmer: false,
-                  )
+                  if (isSvg)
+                    SvgPicture.network(
+                      imageUrl,
+                      width: 120,
+                      height: 120,
+                      fit: BoxFit.cover,
+                    )
+                  else
+                    BaseNetworkImage(
+                      url: imageUrl,
+                      fit: BoxFit.cover,
+                      showShimmer: false,
+                    )
                 else
-                  Center(
-                    child: _buildCategoryIconLarge(category, baseColor),
-                  ),
+                  Center(child: _buildCategoryIconLarge(category, baseColor)),
 
                 // Scrim gradient để chữ luôn rõ
-                Positioned.fill(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withValues(alpha: 0.55),
-                        ],
-                        stops: const [0.45, 1.0],
-                      ),
-                    ),
-                  ),
-                ),
+                // Positioned.fill(
+                //   child: DecoratedBox(
+                //     decoration: BoxDecoration(
+                //       gradient: LinearGradient(
+                //         begin: Alignment.topCenter,
+                //         end: Alignment.bottomCenter,
+                //         colors: [
+                //           Colors.transparent,
+                //           Colors.black.withValues(alpha: 0.55),
+                //         ],
+                //         stops: const [0.45, 1.0],
+                //       ),
+                //     ),
+                //   ),
+                // ),
 
                 // Badge "n mục con" góc trên trái
                 if (hasChildren)
@@ -774,28 +789,31 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
       width: AppDimens.SIZE_48,
       height: AppDimens.SIZE_48,
       decoration: BoxDecoration(
-        color: isSelected
-            ? colorScheme.primary
-            : colorScheme.surfaceContainerHighest,
+        color:
+            isSelected
+                ? colorScheme.primary
+                : colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(radius),
       ),
       child: Icon(
         icon,
         size: AppSize.iconSizeXLarge,
-        color: isSelected
-            ? colorScheme.onPrimary
-            : colorScheme.onSurface.withValues(
-                alpha: _OpacityLevel.secondary,
-              ),
+        color:
+            isSelected
+                ? colorScheme.onPrimary
+                : colorScheme.onSurface.withValues(
+                  alpha: _OpacityLevel.secondary,
+                ),
       ),
     );
   }
 
   /// Icon to dùng làm placeholder khi không có image — vẽ giữa card.
   Widget _buildCategoryIconLarge(CategoryModel category, Color baseColor) {
-    final iconData = (category.icon != null && category.icon!.isNotEmpty)
-        ? IconMapper.getIcon(category.icon, category.iconType)
-        : LucideIcons.book;
+    final iconData =
+        (category.icon != null && category.icon!.isNotEmpty)
+            ? IconMapper.getIcon(category.icon, category.iconType)
+            : LucideIcons.book;
     return Icon(
       iconData,
       size: AppDimens.SIZE_60,
@@ -814,10 +832,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
   /// Parse `color` HEX từ BE (`#RRGGBB` hoặc `#RRGGBBAA`).
   /// Nếu không có/sai format, tạo màu deterministic từ id/name để mỗi card vẫn
   /// có tone riêng thay vì xám đồng loạt.
-  Color _resolveCategoryColor(
-    CategoryModel category,
-    ColorScheme colorScheme,
-  ) {
+  Color _resolveCategoryColor(CategoryModel category, ColorScheme colorScheme) {
     final hex = category.color?.trim();
     if (hex != null && hex.isNotEmpty) {
       final parsed = _parseHexColor(hex);

@@ -46,7 +46,7 @@ class BaseNetworkImage extends StatelessWidget {
             errorWidget: (context, url, error) {
               // Log error để debug
               debugPrint('❌ BaseNetworkImage error for URL: $url');
-              debugPrint('❌ Error: $error');
+              debugPrint('❌ Error:! $error');
               return _buildErrorWidget(context, isDark);
             },
             httpHeaders: const {
