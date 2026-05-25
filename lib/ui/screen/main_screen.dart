@@ -541,9 +541,8 @@ class MainBodyState extends State<MainBody> {
                         ? (color != null
                             ? LinearGradient(
                               colors: [
-                                activeColor,
-                                Color.lerp(activeColor, Colors.black, 0.2) ??
-                                    activeColor,
+                                activeColor.withValues(alpha: 0.6),
+                                activeColor.withValues(alpha: 0.2),
                               ],
                             )
                             : AppTheme.indigoCyanGradient())
@@ -591,7 +590,11 @@ class MainBodyState extends State<MainBody> {
                                   width: 20,
                                   height: 20,
                                 )
-                                : BaseNetworkImage(url: imageUrl, fit: BoxFit.cover, showShimmer: false),
+                                : BaseNetworkImage(
+                                  url: imageUrl,
+                                  fit: BoxFit.cover,
+                                  showShimmer: false,
+                                ),
                       ),
                     ),
                     const SizedBox(width: 6),

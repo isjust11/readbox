@@ -1,13 +1,16 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/network/api_constant.dart';
+import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/res.dart';
 import 'package:readbox/ui/widget/base_network_image.dart';
+import 'package:readbox/ui/widget/safe_network_svg.dart';
 import 'package:readbox/utils/icon_mapper.dart';
 
 /// Opacity levels cho text/icon/background theo vai trò
@@ -396,18 +399,18 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
       key: ValueKey<String>('lvl_${_currentParent?.id ?? 'root'}'),
       builder: (context, constraints) {
         // 2 cột cho phone, 3 cột cho tablet
-        final crossAxisCount = constraints.maxWidth >= 600 ? 3 : 2;
+        final crossAxisCount = constraints.maxWidth >= 600 ? 4 : 3;
         return GridView.builder(
           padding: const EdgeInsets.fromLTRB(
-            AppDimens.SIZE_12,
-            AppDimens.SIZE_8,
-            AppDimens.SIZE_12,
-            AppDimens.SIZE_8,
+            AppDimens.SIZE_16,
+            AppDimens.SIZE_16,
+            AppDimens.SIZE_16,
+            AppDimens.SIZE_16,
           ),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
-            crossAxisSpacing: AppDimens.SIZE_12,
-            mainAxisSpacing: AppDimens.SIZE_12,
+            crossAxisSpacing: AppDimens.SIZE_16,
+            mainAxisSpacing: AppDimens.SIZE_16,
             childAspectRatio: 1, // ô vuông
           ),
           itemCount: categories.length,
@@ -612,18 +615,21 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
         onLongPress: hasChildren ? () => _selectAndClose(category) : null,
         child: Ink(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
+            borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                baseColor,
-                Color.lerp(baseColor, Colors.black, 0.25) ?? baseColor,
+                baseColor.withValues(alpha: _OpacityLevel.selectedBg),
+                baseColor.withValues(alpha: 0.25),
               ],
             ),
             border: Border.all(
-              color: isSelected ? colorScheme.primary : Colors.transparent,
-              width: 2,
+              color:
+                  isSelected
+                      ? colorScheme.primary.withValues(alpha: 0.6)
+                      : colorScheme.outline.withValues(alpha: 0.1),
+              width: 1,
             ),
             boxShadow: [
               BoxShadow(
@@ -634,43 +640,82 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
+            borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
             child: Stack(
               fit: StackFit.expand,
               children: [
                 if (imageUrl != null)
                   if (isSvg)
-                    SvgPicture.network(
-                      imageUrl,
-                      width: 120,
-                      height: 120,
-                      fit: BoxFit.cover,
+                    Container(
+                      padding: const EdgeInsets.all(AppDimens.SIZE_12),
+                      alignment: Alignment.center,
+                      child: SafeNetworkSvg(url: imageUrl, fit: BoxFit.cover),
                     )
                   else
-                    BaseNetworkImage(
-                      url: imageUrl,
-                      fit: BoxFit.cover,
-                      showShimmer: false,
+                    Container(
+                      padding: const EdgeInsets.all(AppDimens.SIZE_12),
+                      alignment: Alignment.center,
+                      child: BaseNetworkImage(
+                        url: imageUrl,
+                        fit: BoxFit.cover,
+                        showShimmer: false,
+                      ),
                     )
                 else
-                  Center(child: _buildCategoryIconLarge(category, baseColor)),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: AppDimens.SIZE_24),
+                      child: _buildCategoryIconLarge(category, baseColor),
+                    ),
+                  ),
 
-                // Scrim gradient để chữ luôn rõ
-                // Positioned.fill(
-                //   child: DecoratedBox(
-                //     decoration: BoxDecoration(
-                //       gradient: LinearGradient(
-                //         begin: Alignment.topCenter,
-                //         end: Alignment.bottomCenter,
-                //         colors: [
-                //           Colors.transparent,
-                //           Colors.black.withValues(alpha: 0.55),
-                //         ],
-                //         stops: const [0.45, 1.0],
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                // Glassmorphism Label at the bottom
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(AppDimens.SIZE_8),
+                    ),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppDimens.SIZE_12,
+                          vertical: AppDimens.SIZE_8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.4),
+                          border: Border(
+                            top: BorderSide(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                categoryName,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontSize: AppSize.fontSizeSmall,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
 
                 // Badge "n mục con" góc trên trái
                 if (hasChildren)
@@ -687,7 +732,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                     right: AppDimens.SIZE_8,
                     child: Container(
                       padding: const EdgeInsets.all(AppDimens.SIZE_2),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
@@ -698,47 +743,6 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
                       ),
                     ),
                   ),
-
-                // Tên + chevron ở đáy
-                Positioned(
-                  left: AppDimens.SIZE_10,
-                  right: AppDimens.SIZE_10,
-                  bottom: AppDimens.SIZE_10,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          categoryName,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: AppSize.fontSizeLarge,
-                            height: 1.2,
-                            shadows: const [
-                              Shadow(
-                                color: Colors.black54,
-                                blurRadius: 4,
-                                offset: Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      if (hasChildren)
-                        const Padding(
-                          padding: EdgeInsets.only(left: AppDimens.SIZE_4),
-                          child: Icon(
-                            Icons.chevron_right_rounded,
-                            color: Colors.white,
-                            size: AppSize.iconSizeXLarge,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
@@ -748,33 +752,47 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
   }
 
   Widget _buildChildrenBadge(int count) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimens.SIZE_8,
-        vertical: AppDimens.SIZE_2,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.85),
-        borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.layers_rounded,
-            size: AppSize.iconSizeMedium,
-            color: Colors.black87,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimens.SIZE_8,
+            vertical: AppDimens.SIZE_4,
           ),
-          const SizedBox(width: AppDimens.SIZE_4),
-          Text(
-            '$count',
-            style: const TextStyle(
-              color: Colors.black87,
-              fontWeight: FontWeight.w600,
-              fontSize: AppSize.fontSizeSmall,
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.2),
+              width: 1,
             ),
           ),
-        ],
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                Assets.icons.icCategory,
+                width: 12,
+                height: 12,
+                colorFilter: ColorFilter.mode(
+                  Colors.orange.shade400,
+                  BlendMode.srcIn,
+                ),
+              ),
+              const SizedBox(width: AppDimens.SIZE_4),
+              Text(
+                '$count',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: AppSize.fontSizeSmall,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -813,12 +831,19 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet>
     final iconData =
         (category.icon != null && category.icon!.isNotEmpty)
             ? IconMapper.getIcon(category.icon, category.iconType)
-            : LucideIcons.book;
-    return Icon(
-      iconData,
-      size: AppDimens.SIZE_60,
-      color: Colors.white.withValues(alpha: 0.85),
-    );
+            : null;
+    return iconData != null
+        ? Icon(
+          iconData,
+          size: AppSize.iconSizeXXLarge,
+          color: Colors.white.withValues(alpha: 0.85),
+        )
+        : SvgPicture.asset(
+          Assets.icons.icCategory,
+          width: AppSize.iconSizeXXLarge,
+          height: AppSize.iconSizeXXLarge,
+          colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+        );
   }
 
   /// Lấy URL ảnh đầy đủ. Hỗ trợ cả relative path (BE lưu) lẫn URL tuyệt đối.
