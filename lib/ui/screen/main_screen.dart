@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -674,21 +675,37 @@ class MainBodyState extends State<MainBody> {
     return ValueListenableBuilder<int>(
       valueListenable: context.read<NotificationCubit>().unreadCountNotifier,
       builder: (context, unreadCount, child) {
-        return unreadCount > 0
-            ? Stack(
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.notifications_active_sharp,
-                    color: Theme.of(context).colorScheme.primary,
+        return Stack(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppDimens.SIZE_12,
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.notificationScreen);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: SizedBox(
+                    width: AppSize.iconSizeXXLarge,
+                    height: AppSize.iconSizeXXLarge,
+                    child: SvgPicture.asset(
+                      Assets.icons.icRing,
+                      colorFilter: ColorFilter.mode(
+                        Theme.of(context).colorScheme.onSurface,
+                        BlendMode.srcIn,
+                      ),
+                    ),
                   ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.notificationScreen);
-                  },
                 ),
-                Positioned(
-                  top: 8,
-                  right: 8,
+              ),
+            ),
+            unreadCount > 0
+                ? Positioned(
+                  top: 0,
+                  right: 12,
                   child: InkWell(
                     onTap: () {
                       Navigator.pushNamed(context, Routes.notificationScreen);
@@ -701,19 +718,10 @@ class MainBodyState extends State<MainBody> {
                       ),
                     ),
                   ),
-                ),
-              ],
-            )
-            : IconButton(
-              icon: Icon(
-                Icons.notifications_none_sharp,
-                size: AppSize.iconSizeXXLarge,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, Routes.notificationScreen);
-              },
-            );
+                )
+                : SizedBox(),
+          ],
+        );
       },
     );
   }
@@ -873,8 +881,13 @@ class MainBodyState extends State<MainBody> {
                   // Check state từ cubit để hiển thị chính xác trạng thái
                   if (cubit.isLoadingMore) {
                     body = SizedBox(
-                      height: AppDimens.SIZE_48,
-                      child: Center(child: CircularProgressIndicator()),
+                      height: AppDimens.SIZE_18,
+                      child: Center(
+                        child:
+                            Platform.isIOS
+                                ? CupertinoActivityIndicator()
+                                : CircularProgressIndicator(),
+                      ),
                     );
                   } else if (!cubit.hasMore) {
                     body = SizedBox(

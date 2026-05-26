@@ -86,8 +86,8 @@ class _DataStorageScreenState extends State<DataStorageScreen>
     return RefreshIndicator(
       onRefresh: () async {
         await context.read<UserSubscriptionCubit>().loadMe();
-        final counts = await context.read<UserInteractionCubit>()
-            .getMyInteractionCounts();
+        final counts =
+            await context.read<UserInteractionCubit>().getMyInteractionCounts();
         if (mounted) {
           setState(() {
             interactionCounts = counts;
@@ -221,7 +221,7 @@ class _DataStorageScreenState extends State<DataStorageScreen>
                     const SizedBox(height: 4),
                     Text(
                       plan?.name ?? AppLocalizations.current.freePlan,
-                      style: theme.textTheme.titleLarge?.copyWith(
+                      style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: isFree ? colorScheme.onSecondary : Colors.white,
                       ),
