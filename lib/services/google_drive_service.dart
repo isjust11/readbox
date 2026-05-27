@@ -50,20 +50,25 @@ class DriveFileInfo {
 class GoogleDriveService {
   static final GoogleSignIn _googleSignIn = GoogleSignInConfig.googleSignIn;
 
-  /// Đăng nhập Google và lấy Drive API client
+  /// Đăng nhập Google và lấy Drive API client.
+  /// Drive scope là sensitive nên được xin riêng tại đây (lúc user dùng tính năng),
+  /// không nhét vào flow đăng nhập để tránh cảnh báo "unverified app".
   static Future<drive.DriveApi?> _getDriveApi() async {
     try {
-      // Kiểm tra đã đăng nhập chưa
       GoogleSignInAccount? account = _googleSignIn.currentUser;
       account ??= await _googleSignIn.signInSilently();
-      if (account == null) {
-        account = await _googleSignIn.signIn();
-      }
+      account ??= await _googleSignIn.signIn();
       if (account == null) {
         throw Exception('Không thể đăng nhập Google');
       }
 
-      // Lấy authenticated HTTP client
+      // Xin scope Drive (chỉ lần đầu user sẽ thấy consent screen Drive)
+      const driveScope = GoogleSignInConfig.driveReadonlyScope;
+      final hasScope = await _googleSignIn.requestScopes([driveScope]);
+      if (!hasScope) {
+        throw Exception('User đã từ chối quyền truy cập Google Drive');
+      }
+
       final httpClient = await _googleSignIn.authenticatedClient();
       if (httpClient == null) {
         throw Exception('Không thể xác thực với Google Drive');

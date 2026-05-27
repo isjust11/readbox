@@ -14,13 +14,15 @@ class GoogleSignInConfig {
   static const String androidClientId =
       '534175741610-np09i3oqbgpintqosdikvh6o5tl5od01.apps.googleusercontent.com';
 
-  // Cấu hình GoogleSignIn instance
+  /// Scope Drive (sensitive) — KHÔNG đặt ở đây để tránh hiện
+  /// cảnh báo "Google chưa xác minh ứng dụng này" khi user login.
+  /// Khi cần truy cập Drive, gọi `_googleSignIn.requestScopes([driveReadonlyScope])`.
+  static const String driveReadonlyScope =
+      'https://www.googleapis.com/auth/drive.readonly';
+
+  /// Cấu hình GoogleSignIn dùng cho đăng nhập — CHỈ scope non-sensitive.
   static GoogleSignIn get googleSignIn => GoogleSignIn(
-    scopes: [
-      'email',
-      'profile',
-      'https://www.googleapis.com/auth/drive.readonly',
-    ],
+    scopes: ['email', 'profile'],
     // Android: Client ID sẽ được đọc từ google-services.json
     // Web: Sử dụng webClientId cho web platform
     serverClientId: webClientId, // Cần thiết cho server-side verification
