@@ -15,7 +15,7 @@ class ThemeCustomizationScreen extends StatelessWidget {
 
   final List<Color> _availableColors = const [
     Colors.lightBlue,
-    Colors.amber,
+    Colors.lime,
     Colors.cyan,
     Colors.indigo,
     Colors.blue,
@@ -25,7 +25,7 @@ class ThemeCustomizationScreen extends StatelessWidget {
     Colors.red,
     Colors.purple,
     Colors.pink,
-    Colors.grey,
+    Colors.deepPurple,
   ];
 
   final List<String> _backgroundTypes = const [
@@ -105,46 +105,56 @@ class ThemeCustomizationScreen extends StatelessWidget {
   }
 
   Widget _buildColorPalette(BuildContext context, AppThemeState state) {
-    return Wrap(
-      spacing: AppDimens.SIZE_16,
-      runSpacing: AppDimens.SIZE_16,
-      children:
-          _availableColors.map((color) {
-            final isSelected = state.primaryColorValue == color.value;
-            return GestureDetector(
-              onTap: () {
-                context.read<ThemeCubit>().updateThemeState(
-                  state.copyWith(primaryColorValue: color.value),
-                );
-              },
-              child: Container(
-                width: AppDimens.SIZE_48,
-                height: AppDimens.SIZE_48,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color:
-                        isSelected
-                            ? Theme.of(context).colorScheme.onSurface
-                            : Colors.transparent,
-                    width: isSelected ? 3 : 0,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppDimens.SIZE_16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(AppDimens.SIZE_12),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.shadow.withValues(alpha: 0.05),
+            blurRadius: AppDimens.SIZE_10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Wrap(
+          spacing: AppDimens.SIZE_16,
+          runSpacing: AppDimens.SIZE_16,
+          children:
+              _availableColors.map((color) {
+                final isSelected = state.primaryColorValue == color.value;
+                return GestureDetector(
+                  onTap: () {
+                    context.read<ThemeCubit>().updateThemeState(
+                      state.copyWith(primaryColorValue: color.value),
+                    );
+                  },
+                  child: Container(
+                    width: AppDimens.SIZE_48,
+                    height: AppDimens.SIZE_48,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child:
-                    isSelected
-                        ? const Icon(Icons.check, color: Colors.white)
-                        : null,
-              ),
-            );
-          }).toList(),
+                    child:
+                        isSelected
+                            ? const Icon(Icons.check, color: Colors.white)
+                            : null,
+                  ),
+                );
+              }).toList(),
+        ),
+      ),
     );
   }
 

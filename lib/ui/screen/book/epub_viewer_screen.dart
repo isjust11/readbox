@@ -210,6 +210,10 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
 
   @override
   void dispose() {
+    // Khi rời màn EPUB, các parser/controller của màn bị dispose nên không thể
+    // đọc tiếp paragraph kế. Tắt continuous trước khi stop để callback TTS
+    // không publish lại icon "đang đọc" giả.
+    _isReadingContinuous = false;
     _ttsService.stop();
     TtsLockScreenController.instance.stop();
     _epubController.dispose();
@@ -369,6 +373,8 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
       if (_isReadingContinuous) {
         _readNextParagraph();
       } else {
+        // Hết session → đóng dứt khoát để mini-player ẩn.
+        TtsLockScreenController.instance.stop();
         if (mounted) {
           setState(() {
             _showTtsReadingPanel = false;
@@ -379,6 +385,8 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
 
     _ttsService.onSpeechError = (error) {
       TtsLockScreenController.instance.markError(error);
+      // EPUB không skip lỗi tự động → coi như session kết thúc.
+      TtsLockScreenController.instance.stop();
       if (mounted) {
         setState(() {
           _isReadingContinuous = false;
@@ -497,6 +505,7 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
         bookTitle: widget.title,
         page: _currentReadingParagraphIndex + 1,
         text: '$chapterTitle\n$paragraphText',
+        bookId: widget.bookId,
       );
 
       await _ttsService.speak(paragraphText);
@@ -525,6 +534,7 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     _currentReadingParagraphIndex++;
 
     if (_currentReadingParagraphIndex >= _parsedParagraphs.length) {
+      await TtsLockScreenController.instance.stop();
       if (mounted) {
         setState(() => _isReadingContinuous = false);
         AppSnackBar.show(

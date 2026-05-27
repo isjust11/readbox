@@ -41,6 +41,16 @@ class CategoryEntity {
   String? createBy;
   String? createdAt;
   String? updatedAt;
+  // Parent-child support: id của danh mục cha (null nếu là root)
+  String? parentId;
+  // Tuỳ response của BE: có thể là object cha lồng vào hoặc null
+  CategoryEntity? parent;
+  // Khi BE trả tree (get-tree-by-category-type), children chứa danh mục con
+  List<CategoryEntity>? children;
+  // Đường dẫn ảnh đại diện. BE trả relative path -> client prepend storageHost
+  String? image;
+  // Mã màu HEX (#RRGGBB hoặc #RRGGBBAA) dùng làm tone chính cho card UI
+  String? color;
 
   CategoryEntity({
     this.id,
@@ -61,6 +71,11 @@ class CategoryEntity {
     this.createBy,
     this.createdAt,
     this.updatedAt,
+    this.parentId,
+    this.parent,
+    this.children,
+    this.image,
+    this.color,
   });
   CategoryEntity.fromJson(Map<String, dynamic> json) {
     id = json['id']?.toString();
@@ -81,6 +96,20 @@ class CategoryEntity {
     createBy = json['createBy']?.toString();
     createdAt = json['createdAt']?.toString();
     updatedAt = json['updatedAt']?.toString();
+    parentId = json['parentId']?.toString();
+    if (json['parent'] is Map<String, dynamic>) {
+      parent = CategoryEntity.fromJson(
+        json['parent'] as Map<String, dynamic>,
+      );
+    }
+    if (json['children'] is List) {
+      children = (json['children'] as List)
+          .whereType<Map<String, dynamic>>()
+          .map(CategoryEntity.fromJson)
+          .toList();
+    }
+    image = json['image']?.toString();
+    color = json['color']?.toString();
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -102,6 +131,11 @@ class CategoryEntity {
     data['createBy'] = createBy;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
+    data['parentId'] = parentId;
+    data['parent'] = parent?.toJson();
+    data['children'] = children?.map((e) => e.toJson()).toList();
+    data['image'] = image;
+    data['color'] = color;
     return data;
   }
 }

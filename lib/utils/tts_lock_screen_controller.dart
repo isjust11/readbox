@@ -1,7 +1,51 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
+import 'package:readbox/utils/pdf_text_extractor.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
+
+/// Trạng thái TTS đang chạy nền (dùng cho floating mini-player toàn app).
+enum TtsBackgroundStatus { idle, playing, paused, completed, error }
+
+class TtsBackgroundInfo {
+  final TtsBackgroundStatus status;
+  final String bookTitle;
+  final String? bookId;
+  final int page;
+
+  const TtsBackgroundInfo({
+    required this.status,
+    required this.bookTitle,
+    this.bookId,
+    this.page = 0,
+  });
+
+  static const TtsBackgroundInfo idle = TtsBackgroundInfo(
+    status: TtsBackgroundStatus.idle,
+    bookTitle: '',
+  );
+
+  bool get isActive =>
+      status == TtsBackgroundStatus.playing ||
+      status == TtsBackgroundStatus.paused;
+
+  bool get isPlaying => status == TtsBackgroundStatus.playing;
+  bool get isPaused => status == TtsBackgroundStatus.paused;
+
+  TtsBackgroundInfo copyWith({
+    TtsBackgroundStatus? status,
+    String? bookTitle,
+    String? bookId,
+    int? page,
+  }) {
+    return TtsBackgroundInfo(
+      status: status ?? this.status,
+      bookTitle: bookTitle ?? this.bookTitle,
+      bookId: bookId ?? this.bookId,
+      page: page ?? this.page,
+    );
+  }
+}
 
 class TtsLockScreenController {
   TtsLockScreenController._();
@@ -9,10 +53,26 @@ class TtsLockScreenController {
 
   AudioHandler? _handler;
   Future<void>? _initializing;
+  _PdfBackgroundTtsRunner? _pdfBackgroundRunner;
 
   VoidCallback? onSkipForward;
   VoidCallback? onSkipBackward;
   VoidCallback? onRestartPage;
+
+  /// Notifier toàn app cho floating TTS button. UI listen để show/hide
+  /// nút điều khiển nhanh khi TTS đang chạy nền (đứng ở màn khác).
+  final ValueNotifier<TtsBackgroundInfo> backgroundInfo =
+      ValueNotifier<TtsBackgroundInfo>(TtsBackgroundInfo.idle);
+
+  void _publish(TtsBackgroundInfo info) {
+    if (backgroundInfo.value.status == info.status &&
+        backgroundInfo.value.bookId == info.bookId &&
+        backgroundInfo.value.bookTitle == info.bookTitle &&
+        backgroundInfo.value.page == info.page) {
+      return;
+    }
+    backgroundInfo.value = info;
+  }
 
   Future<void> initialize() async {
     if (_handler != null) return;
@@ -59,7 +119,16 @@ class TtsLockScreenController {
     required String bookTitle,
     required int page,
     required String text,
+    String? bookId,
   }) async {
+    _publish(
+      TtsBackgroundInfo(
+        status: TtsBackgroundStatus.playing,
+        bookTitle: bookTitle,
+        bookId: bookId,
+        page: page,
+      ),
+    );
     if (!await _ensureInitializedSafe()) return;
     final handler = _handler;
     if (handler is! _TtsAudioHandler) return;
@@ -69,6 +138,44 @@ class TtsLockScreenController {
       text: text,
     );
     await handler.setPlayingState();
+  }
+
+  /// Bàn giao đọc PDF liên tục từ `PdfViewerScreen` sang controller toàn app.
+  /// Dùng khi user back khỏi màn PDF nhưng vẫn muốn TTS tiếp tục dưới nền.
+  Future<void> continuePdfInBackground({
+    required Uint8List pdfBytes,
+    required String bookTitle,
+    required int currentPage,
+    required int totalPages,
+    String? bookId,
+  }) async {
+    _pdfBackgroundRunner?.cancel();
+    _pdfBackgroundRunner = _PdfBackgroundTtsRunner(
+      controller: this,
+      pdfBytes: pdfBytes,
+      bookTitle: bookTitle,
+      bookId: bookId,
+      nextPage: currentPage + 1,
+      totalPages: totalPages,
+    );
+    _pdfBackgroundRunner!.attachToCurrentSpeech();
+  }
+
+  /// Cho UI gọi để pause/resume/stop TTS từ floating mini-player.
+  Future<void> pauseFromUi() async {
+    final handler = _handler;
+    if (handler is! _TtsAudioHandler) return;
+    await handler.pause();
+    _publish(backgroundInfo.value.copyWith(status: TtsBackgroundStatus.paused));
+  }
+
+  Future<void> resumeFromUi() async {
+    final handler = _handler;
+    if (handler is! _TtsAudioHandler) return;
+    await handler.play();
+    _publish(
+      backgroundInfo.value.copyWith(status: TtsBackgroundStatus.playing),
+    );
   }
 
   Future<void> updateWordProgress({
@@ -86,6 +193,10 @@ class TtsLockScreenController {
     );
   }
 
+  /// Báo TTS engine hoàn tất 1 page. KHÔNG publish `idle` vì khi đang đọc liên
+  /// tục, viewer sẽ gọi tiếp `startReadingSession` cho page kế. Nếu publish
+  /// idle ở đây, mini-player sẽ tắt rồi bật lại → người dùng tưởng TTS đã dừng.
+  /// Khi hết sách, viewer phải gọi `stop()` để dứt khoát đóng session.
   Future<void> markCompleted() async {
     if (_handler == null) return;
     final handler = _handler;
@@ -93,6 +204,9 @@ class TtsLockScreenController {
     await handler.setCompletedState();
   }
 
+  /// Báo lỗi engine. Cũng KHÔNG publish idle: nhiều flow viewer xử lý lỗi bằng
+  /// cách skip sang page kế (vẫn tiếp tục đọc), nên giữ session active. Viewer
+  /// nào quyết định không tiếp tục cần gọi thêm `stop()`.
   Future<void> markError(String message) async {
     if (_handler == null) return;
     final handler = _handler;
@@ -101,7 +215,98 @@ class TtsLockScreenController {
   }
 
   Future<void> stop() async {
+    _pdfBackgroundRunner?.cancel();
+    _pdfBackgroundRunner = null;
+    _publish(TtsBackgroundInfo.idle);
     await _handler?.stop();
+  }
+}
+
+class _PdfBackgroundTtsRunner {
+  _PdfBackgroundTtsRunner({
+    required this.controller,
+    required this.pdfBytes,
+    required this.bookTitle,
+    required this.nextPage,
+    required this.totalPages,
+    this.bookId,
+  });
+
+  final TtsLockScreenController controller;
+  final Uint8List pdfBytes;
+  final String bookTitle;
+  final String? bookId;
+  int nextPage;
+  final int totalPages;
+
+  final TextToSpeechService _ttsService = TextToSpeechService();
+  bool _cancelled = false;
+  bool _readingNext = false;
+
+  void attachToCurrentSpeech() {
+    _ttsService.onSpeechWordProgress = (
+      String text,
+      int start,
+      int end,
+      String word,
+    ) {
+      controller.updateWordProgress(fullText: text, start: start, end: end);
+    };
+
+    _ttsService.onSpeechComplete = (_) {
+      _readNextPage();
+    };
+
+    _ttsService.onSpeechError = (error) {
+      debugPrint('[PDF Background TTS] $error');
+      _readNextPage();
+    };
+  }
+
+  void cancel() {
+    _cancelled = true;
+  }
+
+  Future<void> _readNextPage() async {
+    if (_cancelled || _readingNext) return;
+    _readingNext = true;
+
+    try {
+      while (!_cancelled && nextPage <= totalPages) {
+        final pageToRead = nextPage;
+        nextPage++;
+
+        final (text, _) = await PdfTextExtractorService.extractTextAndBounds(
+          pdfBytes,
+          pageToRead - 1,
+        );
+        final pageText = text?.trim();
+        if (_cancelled) return;
+        if (pageText == null || pageText.isEmpty) {
+          continue;
+        }
+
+        await _ttsService.setLanguageFromText(pageText);
+        if (_cancelled) return;
+
+        await controller.startReadingSession(
+          bookTitle: bookTitle,
+          page: pageToRead,
+          text: pageText,
+          bookId: bookId,
+        );
+        attachToCurrentSpeech();
+        await _ttsService.speak(pageText);
+        return;
+      }
+
+      await controller.stop();
+    } catch (e) {
+      debugPrint('[PDF Background TTS] read next failed: $e');
+      await controller.stop();
+    } finally {
+      _readingNext = false;
+    }
   }
 }
 
@@ -177,8 +382,8 @@ class _TtsAudioHandler extends BaseAudioHandler {
     required int end,
   }) async {
     _fullText = fullText;
-    _wordStart = start.clamp(0, _fullText.length);
-    _wordEnd = end.clamp(0, _fullText.length);
+    _wordStart = start.clamp(0, _fullText.length).toInt();
+    _wordEnd = end.clamp(0, _fullText.length).toInt();
 
     final snippet = _currentSnippet();
     final current = mediaItem.value;
@@ -234,7 +439,7 @@ class _TtsAudioHandler extends BaseAudioHandler {
   Future<void> play() async {
     if (_fullText.isEmpty) return;
 
-    final start = _wordEnd.clamp(0, _fullText.length);
+    final start = _wordEnd.clamp(0, _fullText.length).toInt();
     final remaining = _fullText.substring(start).trim();
     final toSpeak = remaining.isEmpty ? _fullText : remaining;
 
@@ -283,8 +488,8 @@ class _TtsAudioHandler extends BaseAudioHandler {
 
   String _currentSnippet() {
     if (_fullText.isEmpty) return '';
-    final start = _wordStart.clamp(0, _fullText.length);
-    final end = _wordEnd.clamp(0, _fullText.length);
+    final start = _wordStart.clamp(0, _fullText.length).toInt();
+    final end = _wordEnd.clamp(0, _fullText.length).toInt();
 
     if (start >= end) {
       return _shorten(_fullText);

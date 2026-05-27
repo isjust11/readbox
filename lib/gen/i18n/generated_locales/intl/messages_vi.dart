@@ -100,6 +100,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "average_rating": MessageLookupByLibrary.simpleMessage(
       "Đánh giá trung bình",
     ),
+    "back": MessageLookupByLibrary.simpleMessage("Quay lại"),
     "backToHome": MessageLookupByLibrary.simpleMessage("Về trang chủ"),
     "back_to_login": MessageLookupByLibrary.simpleMessage("Quay lại đăng nhập"),
     "background": MessageLookupByLibrary.simpleMessage("Hình nền"),
@@ -1235,6 +1236,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "select_language": MessageLookupByLibrary.simpleMessage(
       "Vui lòng nhập ngôn ngữ",
     ),
+    "select_this_category": MessageLookupByLibrary.simpleMessage(
+      "Chọn danh mục này",
+    ),
     "selected": MessageLookupByLibrary.simpleMessage("Đã chọn"),
     "sendFeedback": MessageLookupByLibrary.simpleMessage("Gửi phản hồi"),
     "sendTestNotification": MessageLookupByLibrary.simpleMessage(
@@ -1301,6 +1305,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "stopTest": MessageLookupByLibrary.simpleMessage("Dừng"),
     "storageLimit": MessageLookupByLibrary.simpleMessage("Dung lượng lưu trữ"),
     "storage_usage": MessageLookupByLibrary.simpleMessage("Dung Lượng Lưu Trữ"),
+    "subcategories": MessageLookupByLibrary.simpleMessage("danh mục con"),
     "submit_rating": MessageLookupByLibrary.simpleMessage("Gửi đánh giá"),
     "subscriptionPlans": MessageLookupByLibrary.simpleMessage("Gói dịch vụ"),
     "subscription_disclosure": MessageLookupByLibrary.simpleMessage(

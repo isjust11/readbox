@@ -20,6 +20,11 @@ class CategoryModel extends CategoryEntity {
     super.updatedAt,
     super.nameEN,
     super.descriptionEN,
+    super.parentId,
+    super.parent,
+    super.children,
+    super.image,
+    super.color,
   });
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
@@ -42,6 +47,18 @@ class CategoryModel extends CategoryEntity {
       updatedAt: json['updatedAt']?.toString(),
       nameEN: json['nameEN']?.toString(),
       descriptionEN: json['descriptionEN']?.toString(),
+      parentId: json['parentId']?.toString(),
+      parent: json['parent'] is Map<String, dynamic>
+          ? CategoryModel.fromJson(json['parent'] as Map<String, dynamic>)
+          : null,
+      children: json['children'] is List
+          ? (json['children'] as List)
+              .whereType<Map<String, dynamic>>()
+              .map(CategoryModel.fromJson)
+              .toList()
+          : null,
+      image: json['image']?.toString(),
+      color: json['color']?.toString(),
     );
   }
 
@@ -65,6 +82,11 @@ class CategoryModel extends CategoryEntity {
       updatedAt: entity.updatedAt,
       nameEN: entity.nameEN,
       descriptionEN: entity.descriptionEN,
+      parentId: entity.parentId,
+      parent: entity.parent,
+      children: entity.children,
+      image: entity.image,
+      color: entity.color,
     );
   }
 
@@ -88,6 +110,11 @@ class CategoryModel extends CategoryEntity {
       updatedAt: updatedAt,
       nameEN: nameEN,
       descriptionEN: descriptionEN,
+      parentId: parentId,
+      parent: parent,
+      children: children,
+      image: image,
+      color: color,
     );
   }
 }

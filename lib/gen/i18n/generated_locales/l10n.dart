@@ -5539,6 +5539,31 @@ class AppLocalizations {
     );
   }
 
+  /// `danh mục con`
+  String get subcategories {
+    return Intl.message(
+      'danh mục con',
+      name: 'subcategories',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn danh mục này`
+  String get select_this_category {
+    return Intl.message(
+      'Chọn danh mục này',
+      name: 'select_this_category',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quay lại`
+  String get back {
+    return Intl.message('Quay lại', name: 'back', desc: '', args: []);
+  }
+
   /// `Thống Kê Sử Dụng`
   String get usage_statistics {
     return Intl.message(

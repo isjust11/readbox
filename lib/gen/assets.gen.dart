@@ -287,6 +287,10 @@ class $AssetsImagesGen {
   AssetGenImage get appLogo =>
       const AssetGenImage('assets/images/app_logo.webp');
 
+  /// File path: assets/images/audio-play.gif
+  AssetGenImage get audioPlay =>
+      const AssetGenImage('assets/images/audio-play.gif');
+
   /// File path: assets/images/checkered_pattern.svg
   String get checkeredPattern => 'assets/images/checkered_pattern.svg';
 
@@ -336,6 +340,7 @@ class $AssetsImagesGen {
   List<dynamic> get values => [
     appBarBackground,
     appLogo,
+    audioPlay,
     checkeredPattern,
     icBack,
     icBackSvg,

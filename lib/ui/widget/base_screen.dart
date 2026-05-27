@@ -15,6 +15,7 @@ import 'package:readbox/res/resources.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/custom_snack_bar.dart';
 import 'package:readbox/ui/widget/custom_text_label.dart';
+import 'package:readbox/ui/widget/global_floating_actions.dart';
 
 class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
   static const double toolbarHeight = 50.0;
@@ -55,6 +56,10 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
   final bool autoHandleState;
   final void Function(BuildContext context, BaseState state)? onStateChanged;
   final void Function()? onRetry;
+
+  /// Tắt cụm nút floating toàn app (Continue Reading + TTS background) cho
+  /// các màn không phù hợp như PDF/EPUB viewer, full-screen camera...
+  final bool showGlobalFloatingActions;
   const BaseScreen({
     super.key,
     this.body,
@@ -87,6 +92,7 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
     this.errorDescription,
     this.implementErrorWidget = false,
     this.gradientBg,
+    this.showGlobalFloatingActions = true,
   });
 
   Type _typeOf<X>() => X;
@@ -95,12 +101,6 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLightMode = Theme.of(context).brightness == Brightness.light;
-
-    final Color bgColor =
-        !isLightMode
-            ? (gradientBg != null ? Colors.transparent : Colors.black26)
-            : (gradientBg != null ? Colors.transparent : Colors.white);
     Widget content = PopScope(
       canPop: onBackPress == null,
       onPopInvokedWithResult: (didPop, result) {
@@ -231,6 +231,11 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                       Positioned.fill(child: stateWidget!),
                     if (messageNotify != null)
                       Positioned.fill(child: messageNotify!),
+                    // Cụm nút floating toàn app: Continue Reading + TTS nền.
+                    // Đặt ở Stack body để không vướng FAB / bottomNavBar của
+                    // Scaffold mà vẫn nằm trên các layer khác.
+                    if (showGlobalFloatingActions)
+                      const Positioned.fill(child: GlobalFloatingActions()),
                   ],
                 ),
               ),

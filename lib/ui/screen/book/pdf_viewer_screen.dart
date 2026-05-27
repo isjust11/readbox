@@ -664,6 +664,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           bookTitle: widget.title,
           page: _currentPage,
           text: pageText,
+          bookId: widget.bookId,
         );
         await _ttsService.speak(pageText);
         // update tts interaction count
@@ -758,8 +759,24 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   @override
   void dispose() {
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, _currentPage);
-    _ttsService.stop();
-    TtsLockScreenController.instance.stop();
+    final shouldContinueTtsInBackground =
+        _isReadingContinuous && _pdfBytes != null && _currentPage < _totalPages;
+    if (shouldContinueTtsInBackground) {
+      TtsLockScreenController.instance.continuePdfInBackground(
+        pdfBytes: _pdfBytes!,
+        bookTitle: widget.title,
+        currentPage: _currentPage,
+        totalPages: _totalPages,
+        bookId: widget.bookId,
+      );
+    } else {
+      // Nếu không bàn giao được sang runner nền thì phải tắt hẳn, tránh icon
+      // global vẫn hiển thị "đang đọc" trong khi TTS đã bị dispose theo màn.
+      _isReadingContinuous = false;
+      _isReadingNextPage = false;
+      _ttsService.stop();
+      TtsLockScreenController.instance.stop();
+    }
     _removePdfWordHighlight();
     _ttsProgressTimer?.cancel();
     _saveProgressTimer?.cancel();
@@ -1576,6 +1593,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       if (_isReadingContinuous && _currentPage < _totalPages) {
         _readNextPage();
       } else {
+        // Hết session (hết sách hoặc user đã tắt continuous) → đóng dứt khoát
+        // session TTS nền để mini-player ẩn, tránh người dùng nghĩ TTS vẫn còn.
+        TtsLockScreenController.instance.stop();
         _isReadingContinuous = false;
         _ttsProgressTimer?.cancel();
         if (mounted) {
@@ -1595,6 +1615,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         _readNextPage();
         return;
       }
+      TtsLockScreenController.instance.stop();
       if (mounted) {
         setState(() {
           _isReadingContinuous = false;
@@ -1683,6 +1704,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
     try {
       if (_currentPage >= _totalPages) {
+        await TtsLockScreenController.instance.stop();
         if (!mounted) return;
         setState(() => _isReadingContinuous = false);
         AppSnackBar.show(
@@ -1731,6 +1753,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         if (nextPageNumber < _totalPages) {
           _readNextPage();
         } else {
+          await TtsLockScreenController.instance.stop();
           if (!mounted) return;
           setState(() => _isReadingContinuous = false);
           AppSnackBar.show(
@@ -1768,6 +1791,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         bookTitle: widget.title,
         page: nextPageNumber,
         text: pageText,
+        bookId: widget.bookId,
       );
 
       // Release lock TRƯỚC khi speak để onSpeechComplete có thể gọi _readNextPage() tiếp theo
