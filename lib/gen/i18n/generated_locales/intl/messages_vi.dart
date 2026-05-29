@@ -193,6 +193,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "clearAllNotifications": MessageLookupByLibrary.simpleMessage(
       "Xóa tất cả thông báo",
     ),
+    "clear_all": MessageLookupByLibrary.simpleMessage("Xóa tất cả"),
     "clear_and_reenter": MessageLookupByLibrary.simpleMessage(
       "Xóa và nhập lại",
     ),
@@ -767,6 +768,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_pdf_epub_mobi_found": MessageLookupByLibrary.simpleMessage(
       "Không tìm thấy file PDF, EPUB, hoặc MOBI",
     ),
+    "no_recent_searches": MessageLookupByLibrary.simpleMessage(
+      "Chưa có tìm kiếm nào",
+    ),
     "no_reviews_yet": MessageLookupByLibrary.simpleMessage("Chưa có nhận xét"),
     "no_word_file_found": MessageLookupByLibrary.simpleMessage(
       "Không tìm thấy file .docx",
@@ -1159,6 +1163,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "receiveSystemNotifications": MessageLookupByLibrary.simpleMessage(
       "Nhận thông báo về cập nhật ứng dụng",
     ),
+    "recent_searches": MessageLookupByLibrary.simpleMessage("Tìm kiếm gần đây"),
     "recommended_size": MessageLookupByLibrary.simpleMessage(
       "Khuyến nghị: 600x900px",
     ),

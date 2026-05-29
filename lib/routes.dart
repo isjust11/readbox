@@ -92,10 +92,11 @@ class Routes {
         if (settings.arguments == null) {
           return PageTransition(
             child: BlocProvider(
-              create: (context) => LibraryCubit(
-                repository: di.getIt<BookRepository>(),
-                adminRemoteDataSource: di.getIt<AdminRemoteDataSource>(),
-              ),
+              create:
+                  (context) => LibraryCubit(
+                    repository: di.getIt<BookRepository>(),
+                    adminRemoteDataSource: di.getIt<AdminRemoteDataSource>(),
+                  ),
               child: AdminUploadScreen(),
             ),
             type: PageTransitionType.fade,
@@ -104,10 +105,11 @@ class Routes {
         final book = settings.arguments as BookModel;
         return PageTransition(
           child: BlocProvider(
-            create: (context) => LibraryCubit(
-              repository: di.getIt<BookRepository>(),
-              adminRemoteDataSource: di.getIt<AdminRemoteDataSource>(),
-            ),
+            create:
+                (context) => LibraryCubit(
+                  repository: di.getIt<BookRepository>(),
+                  adminRemoteDataSource: di.getIt<AdminRemoteDataSource>(),
+                ),
             child: AdminUploadScreen(book: book),
           ),
           type: PageTransitionType.fade,

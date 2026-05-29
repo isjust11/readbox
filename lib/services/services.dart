@@ -5,3 +5,4 @@ export 'secure_storage_service.dart';
 export 'notification_handler.dart';
 export 'local_notification_service.dart';
 export 'google_drive_service.dart';
+export 'search_history_service.dart';

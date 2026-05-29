@@ -25,3 +25,4 @@ export 'category_bottom_sheet.dart';
 export 'global_floating_actions.dart';
 export 'payment_icon_widget.dart';
 export 'safe_network_svg.dart';
+export 'search_recent_panel.dart';

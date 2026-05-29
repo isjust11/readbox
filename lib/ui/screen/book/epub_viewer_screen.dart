@@ -876,12 +876,22 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
                   AppLocalizations.current.tools_save_as_pdf,
                   Colors.green,
                 ),
-                _buildMenuItem(
-                  'share',
-                  Icons.share,
-                  AppLocalizations.current.pdf_share,
-                  Colors.blue,
-                ),
+                if (isOwner || _isLocal)
+                  _buildMenuItem(
+                    'share',
+                    Icons.share_rounded,
+                    AppLocalizations.current.pdf_share,
+                    Colors.blue,
+                    isEnabled: _actionStatus?['canUseShare'] ?? false,
+                  )
+                else
+                  _buildMenuItem(
+                    'download',
+                    Icons.download_rounded,
+                    AppLocalizations.current.tools_save_as_pdf,
+                    Colors.green,
+                    isEnabled: _actionStatus?['canUseDownload'] ?? false,
+                  ),
               ],
         ),
       ],

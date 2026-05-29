@@ -806,5 +806,8 @@
   "splash_feature_offline_title": "Read Offline",
   "splash_feature_offline_desc": "Save books to your device, read anytime without internet",
   "splash_feature_library_title": "Personal Library",
-  "splash_feature_library_desc": "Save favorites and track your reading progress"
+  "splash_feature_library_desc": "Save favorites and track your reading progress",
+  "recent_searches": "Recent Searches",
+  "clear_all": "Clear All",
+  "no_recent_searches": "No recent searches"
 }

@@ -49,7 +49,8 @@ class PdfViewerScreen extends StatefulWidget {
 
 class PdfViewerScreenState extends State<PdfViewerScreen> {
   final PdfViewerController _pdfController = PdfViewerController();
-  late final File _localFile; // Cache File object, tránh tạo mới mỗi lần rebuild
+  late final File
+  _localFile; // Cache File object, tránh tạo mới mỗi lần rebuild
   final TextEditingController _searchQueryController = TextEditingController();
   bool _isLoading = true;
   bool _isLoadingText = false;
@@ -66,6 +67,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   bool showNavigationBar = true;
   String? actionToolbar = '';
   PdfScrollDirection _pdfScrollDirection = PdfScrollDirection.vertical;
+
   /// Tắt CircularProgressIndicator nội bộ của Syncfusion; dùng overlay Cupertino khi đổi trang.
   Timer? _pageLoadingTimer;
   bool _showPageCupertinoLoading = false;
@@ -384,8 +386,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     final mq = MediaQuery.of(context);
     final viewportWidth = mq.size.width;
     // Dùng chiều cao màn hình trừ safe-area (statusBar + bottomInset)
-    final viewportHeight =
-        mq.size.height - mq.padding.top - mq.padding.bottom;
+    final viewportHeight = mq.size.height - mq.padding.top - mq.padding.bottom;
 
     // Tỉ lệ scale để vừa chiều rộng / chiều cao
     final scaleX = viewportWidth / pageWidth;
@@ -639,11 +640,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         }
       } else if (_pdfBytes != null) {
         // Single parse cho cả text lẫn bounds
-        final (text, bounds) =
-            await PdfTextExtractorService.extractTextAndBounds(
-              _pdfBytes!,
-              _currentPage - 1,
-            );
+        final (
+          text,
+          bounds,
+        ) = await PdfTextExtractorService.extractTextAndBounds(
+          _pdfBytes!,
+          _currentPage - 1,
+        );
         pageText = text;
         if (bounds != null && mounted) {
           setState(() => _currentPageWordBounds = bounds);
@@ -706,48 +709,35 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     bool? isEnabled = true,
     bool? isPro = false,
   }) {
+    Color iconColor = color;
+    if (value == 'read_continuous_ebook' && _isReadingContinuous) {
+      iconColor = Colors.red;
+    }
     return PopupMenuItem(
       value: value,
       child: Row(
         children: [
-          Container(
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              icon,
-              color: isEnabled ?? false ? color : Colors.grey,
-              size: 20,
-            ),
+          Icon(
+            icon,
+            color: isEnabled == true ? iconColor : Colors.grey,
+            size: 20,
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Text(
             text,
-            style: TextStyle(
-              color:
-                  isEnabled ?? false
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.grey,
-            ),
+            style: TextStyle(color: isEnabled == true ? null : Colors.grey),
           ),
-          if ((isPro ?? false) && !isProPlan) ...[
+          if (isPro == true && !isProPlan) ...[
+            const SizedBox(width: 8),
             Container(
-              margin: EdgeInsets.only(left: 8),
-              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
               decoration: BoxDecoration(
-                color: Theme.of(
-                  context,
-                ).colorScheme.error.withValues(alpha: 0.825),
+                color: Colors.red,
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
                 AppLocalizations.current.pro,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSecondary,
-                  fontSize: AppSize.fontSizeSmall,
-                ),
+                style: const TextStyle(color: Colors.white, fontSize: 10),
               ),
             ),
           ],
@@ -922,15 +912,16 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                 label: AppLocalizations.current.pdf_scroll_vertical,
                 isSelected: isVertical,
                 color: color,
-                onTap: () => _setPdfScrollDirection(PdfScrollDirection.vertical),
+                onTap:
+                    () => _setPdfScrollDirection(PdfScrollDirection.vertical),
               ),
               _buildDirChip(
                 icon: Icons.swap_horiz_rounded,
                 label: AppLocalizations.current.pdf_scroll_horizontal,
                 isSelected: !isVertical,
                 color: color,
-                onTap: () =>
-                    _setPdfScrollDirection(PdfScrollDirection.horizontal),
+                onTap:
+                    () => _setPdfScrollDirection(PdfScrollDirection.horizontal),
               ),
             ],
           ),
@@ -957,9 +948,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: isSelected
-                  ? color.withValues(alpha: 0.12)
-                  : Colors.transparent,
+              color:
+                  isSelected
+                      ? color.withValues(alpha: 0.12)
+                      : Colors.transparent,
               borderRadius: BorderRadius.circular(18),
             ),
             child: Icon(
@@ -1180,9 +1172,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             child: SizedBox(
               width: 16,
               height: 16,
-              child: CupertinoActivityIndicator(
-                color: Colors.white70,
-              ),
+              child: CupertinoActivityIndicator(color: Colors.white70),
             ),
           ),
         )
@@ -1256,17 +1246,20 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                 ),
                                 child: ValueListenableBuilder<(int, int)>(
                                   valueListenable: _pageStateNotifier,
-                                  builder: (_, pageState, __) => Text(
-                                    AppLocalizations.current.pdf_page_of(
-                                      pageState.$1,
-                                      pageState.$2,
-                                    ),
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.white.withValues(alpha: 0.9),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
+                                  builder:
+                                      (_, pageState, __) => Text(
+                                        AppLocalizations.current.pdf_page_of(
+                                          pageState.$1,
+                                          pageState.$2,
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: Colors.white.withValues(
+                                            alpha: 0.9,
+                                          ),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
                                 ),
                               ),
                           ],
@@ -1301,14 +1294,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                           'ai_assistant',
                                           Icons.auto_awesome_rounded,
                                           AppLocalizations.current.ai_assistant,
-                                          theme.primaryColor,
+                                          Colors.purple,
                                           isPro: true,
                                         ),
                                         _buildMenuItem(
                                           'search',
                                           Icons.search_rounded,
                                           AppLocalizations.current.search,
-                                          theme.primaryColor,
+                                          Colors.blue,
                                         ),
                                         _buildMenuItem(
                                           'zoom_in_out',
@@ -1316,7 +1309,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                           AppLocalizations
                                               .current
                                               .pdf_zoom_in_out,
-                                          theme.primaryColor,
+                                          Colors.blueGrey,
                                         ),
                                         _buildMenuItem(
                                           'toolbar',
@@ -1331,7 +1324,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                             AppLocalizations
                                                 .current
                                                 .pdf_read_ebook,
-                                            theme.primaryColor,
+                                            Colors.orange,
                                             isEnabled:
                                                 _actionStatus?['canUseTts'] ??
                                                 false,
@@ -1342,7 +1335,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                             'share',
                                             Icons.share_rounded,
                                             AppLocalizations.current.pdf_share,
-                                            theme.primaryColor,
+                                            Colors.blue,
                                             isEnabled:
                                                 _actionStatus?['canUseShare'] ??
                                                 false,
@@ -1354,7 +1347,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                             AppLocalizations
                                                 .current
                                                 .tools_save_as_pdf,
-                                            Colors.blue,
+                                            Colors.green,
                                             isEnabled:
                                                 _actionStatus?['canUseDownload'] ??
                                                 false,
@@ -1402,9 +1395,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               ),
             )
           else if (showViewer)
-            _buildPdfViewerArea(
-              showNavBar: showNavigationBar && showToolbar,
-            ),
+            _buildPdfViewerArea(showNavBar: showNavigationBar && showToolbar),
           if (_isLoading)
             Container(
               color: Colors.white,
@@ -1496,13 +1487,19 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                                Theme.of(context).primaryColor.withValues(alpha: 0.05),
+                                Theme.of(
+                                  context,
+                                ).primaryColor.withValues(alpha: 0.1),
+                                Theme.of(
+                                  context,
+                                ).primaryColor.withValues(alpha: 0.05),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+                              color: Theme.of(
+                                context,
+                              ).primaryColor.withValues(alpha: 0.2),
                               width: 1,
                             ),
                           ),
@@ -1733,11 +1730,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       PageTextWithBounds? pageBounds;
       if (_pdfBytes != null) {
         final sw = Stopwatch()..start();
-        final (text, bounds) =
-            await PdfTextExtractorService.extractTextAndBounds(
-              _pdfBytes!,
-              nextPageNumber - 1,
-            );
+        final (
+          text,
+          bounds,
+        ) = await PdfTextExtractorService.extractTextAndBounds(
+          _pdfBytes!,
+          nextPageNumber - 1,
+        );
         sw.stop();
         dev.log(
           'extractTextAndBounds p$nextPageNumber: ${sw.elapsedMilliseconds}ms',

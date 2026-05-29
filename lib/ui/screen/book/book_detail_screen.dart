@@ -15,6 +15,7 @@ import 'package:readbox/routes.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/common.dart';
+import 'package:readbox/utils/url_builder.dart';
 
 class BookDetailScreen extends StatelessWidget {
   final String bookId;
@@ -189,19 +190,11 @@ class BookDetailBodyState extends State<BookDetailBody> {
                     children: [
                       // Cover Image
                       book.coverImageUrl != null
-                          ? Image.network(
-                            _getImageUrl(book.coverImageUrl),
+                          ? BaseNetworkImage(
+                            url: UrlBuilder.buildUrl(book.coverImageUrl),
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: Colors.grey[300],
-                                child: Icon(
-                                  Icons.book,
-                                  size: 100,
-                                  color: Colors.grey,
-                                ),
-                              );
-                            },
+                            width: double.infinity,
+                            height: double.infinity,
                           )
                           : Container(
                             color: Colors.grey[300],
@@ -737,32 +730,40 @@ class BookDetailBodyState extends State<BookDetailBody> {
           child: Wrap(
             spacing: 6,
             runSpacing: 6,
-            children: files.map((file) {
-              final label = file.format?.toUpperCase() ?? '?';
-              final isPrimary = file.isPrimary == true;
-              return Chip(
-                label: Text(
-                  isPrimary ? '$label ★' : label,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: isPrimary
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey[700],
-                  ),
-                ),
-                backgroundColor: isPrimary
-                    ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                    : Colors.grey[200],
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: VisualDensity.compact,
-                side: BorderSide(
-                  color: isPrimary
-                      ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
-                      : Colors.grey[300]!,
-                ),
-              );
-            }).toList(),
+            children:
+                files.map((file) {
+                  final label = file.format?.toUpperCase() ?? '?';
+                  final isPrimary = file.isPrimary == true;
+                  return Chip(
+                    label: Text(
+                      isPrimary ? '$label ★' : label,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color:
+                            isPrimary
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey[700],
+                      ),
+                    ),
+                    backgroundColor:
+                        isPrimary
+                            ? Theme.of(
+                              context,
+                            ).primaryColor.withValues(alpha: 0.1)
+                            : Colors.grey[200],
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                    side: BorderSide(
+                      color:
+                          isPrimary
+                              ? Theme.of(
+                                context,
+                              ).primaryColor.withValues(alpha: 0.3)
+                              : Colors.grey[300]!,
+                    ),
+                  );
+                }).toList(),
           ),
         ),
       ],
