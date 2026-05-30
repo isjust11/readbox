@@ -47,6 +47,7 @@ class MainBodyState extends State<MainBody> {
   // Thêm dòng này
   final FocusNode _searchFocusNode = FocusNode();
   bool _isSearching = false;
+  bool _showSearchRecent = false;
   int page = 1;
   int limit = 10;
   String title = "";
@@ -66,6 +67,10 @@ class MainBodyState extends State<MainBody> {
     super.initState();
     title = AppLocalizations.current.book_discover;
     context.read<UserSubscriptionCubit>().loadMe();
+    
+    // Thêm listener cho search focus để show/hide recent panel
+    _searchFocusNode.addListener(_onSearchFocusChanged);
+    
     // Load initial data after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NotificationCubit>().getUnreadCount();
@@ -76,6 +81,31 @@ class MainBodyState extends State<MainBody> {
     loadUserInfo();
     loadCategories();
     _wireFloatingActionCallbacks();
+  }
+
+  void _onSearchFocusChanged() {
+    if (_searchFocusNode.hasFocus && _searchController.text.isEmpty) {
+      setState(() {
+        _showSearchRecent = true;
+      });
+    } else {
+      setState(() {
+        _showSearchRecent = false;
+      });
+    }
+  }
+
+  void _onSearchSelected(String searchTerm) {
+    _searchController.text = searchTerm;
+    _currentSearchQuery = searchTerm;
+    setState(() {
+      _showSearchRecent = false;
+    });
+    _searchFocusNode.unfocus();
+    getBooks(isLoadMore: false);
+    
+    // Lưu vào history (sẽ đưa lên đầu danh sách)
+    SearchHistoryService().addSearchTerm(searchTerm);
   }
 
   /// Đăng ký action cho cụm floating button toàn app:
@@ -175,6 +205,7 @@ class MainBodyState extends State<MainBody> {
   void dispose() {
     _debounceTimer?.cancel();
     _searchController.dispose();
+    _searchFocusNode.removeListener(_onSearchFocusChanged);
     _searchFocusNode.dispose();
     _refreshController.dispose();
     // Tránh giữ closure trỏ vào State đã dispose (logout / tab switch).
@@ -186,6 +217,7 @@ class MainBodyState extends State<MainBody> {
   void _toggleSearch() {
     setState(() {
       _isSearching = !_isSearching;
+      _showSearchRecent = false;
       if (_isSearching) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _searchFocusNode.requestFocus();
@@ -757,14 +789,29 @@ class MainBodyState extends State<MainBody> {
                   ),
                   style: TextStyle(color: colorScheme.onSurface, fontSize: 16),
                   onChanged: (value) {
+                    // Ẩn search recent panel khi user bắt đầu gõ
+                    if (_showSearchRecent && value.isNotEmpty) {
+                      setState(() {
+                        _showSearchRecent = false;
+                      });
+                    } else if (!_showSearchRecent && value.isEmpty && _searchFocusNode.hasFocus) {
+                      setState(() {
+                        _showSearchRecent = true;
+                      });
+                    }
+                    
                     // Hủy timer trước đó nếu có
                     _debounceTimer?.cancel();
                     // Tạo timer mới, sau 700ms mới thực hiện search
                     _debounceTimer = Timer(
-                      const Duration(milliseconds: 700),
+                      const Duration(milliseconds: 2000),
                       () {
                         if (mounted) {
                           _currentSearchQuery = value;
+                          // Lưu vào history nếu có text và thực sự search
+                          if (value.trim().isNotEmpty) {
+                            SearchHistoryService().addSearchTerm(value.trim());
+                          }
                           getBooks(isLoadMore: false);
                         }
                       },
@@ -815,15 +862,17 @@ class MainBodyState extends State<MainBody> {
           getBooks(isLoadMore: false);
         },
       ),
-      body: BlocListener<BookRefreshCubit, int>(
-        listener: (context, state) {
-          // Lắng nghe sự thay đổi từ BookRefreshCubit
-          // Khi có sự thay đổi (thêm/sửa/xóa sách), tự động refresh
-          if (state > 0) {
-            getBooks(isLoadMore: true);
-          }
-        },
-        child: BlocBuilder<LibraryCubit, BaseState>(
+      body: Stack(
+        children: [
+          BlocListener<BookRefreshCubit, int>(
+            listener: (context, state) {
+              // Lắng nghe sự thay đổi từ BookRefreshCubit
+              // Khi có sự thay đổi (thêm/sửa/xóa sách), tự động refresh
+              if (state > 0) {
+                getBooks(isLoadMore: true);
+              }
+            },
+            child: BlocBuilder<LibraryCubit, BaseState>(
           builder: (context, state) {
             // Lấy books và cubit từ state
             final books = context.read<LibraryCubit>().books;
@@ -979,6 +1028,18 @@ class MainBodyState extends State<MainBody> {
           },
         ),
       ),
+      // Search Recent Panel
+      Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        child: SearchRecentPanel(
+          isVisible: _showSearchRecent,
+          onSearchSelected: _onSearchSelected,
+        ),
+      ),
+    ],
+  ),
       // Continue Reading FAB đã chuyển sang GlobalFloatingActions ở BaseScreen
       // (icon-only, có thể kéo thả + kéo để ẩn). Không cần khai báo ở đây nữa.
     );
@@ -1101,20 +1162,13 @@ class MainBodyState extends State<MainBody> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Platform.isAndroid
-                  ? Image.network(
-                    UrlBuilder.buildUrl(book.coverImageUrl),
-                    width: 80,
-                    height: 120,
-                    fit: BoxFit.cover,
-                  )
-                  : BaseNetworkImage(
-                    borderRadius: 8,
-                    height: 160.sh,
-                    width: 120.sw,
-                    url: UrlBuilder.buildUrl(book.coverImageUrl),
-                    fit: BoxFit.cover,
-                  ),
+              BaseNetworkImage(
+                borderRadius: 8,
+                height: 160.sh,
+                width: 120.sw,
+                url: UrlBuilder.buildUrl(book.coverImageUrl),
+                fit: BoxFit.cover,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(

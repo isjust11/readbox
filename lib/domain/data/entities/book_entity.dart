@@ -1,3 +1,5 @@
+import 'package:readbox/domain/data/entities/book_file_entity.dart';
+import 'package:readbox/domain/data/entities/user_entity.dart';
 import 'package:readbox/domain/data/models/models.dart';
 
 import 'base_entity.dart';
@@ -30,6 +32,20 @@ class BookEntity extends BaseEntity {
   String? categoryId;
   bool? isLocalBook;
   CategoryModel? category;
+
+  // --- Các trường mới đồng bộ từ backend ---
+  String? countryCode;
+  String? region;
+  bool? isPublic;
+  String? parentCategoryId;
+  CategoryModel? parentCategory;
+  String? statusId;
+  CategoryModel? status;
+  UserEntity? createBy;
+  String? matchKey;
+  List<BookFileEntity>? files;
+  DateTime? publishedDate;
+
   BookEntity({
     this.id,
     this.title,
@@ -54,6 +70,17 @@ class BookEntity extends BaseEntity {
     this.createAt,
     this.updatedAt,
     this.categoryId,
+    this.countryCode,
+    this.region,
+    this.isPublic,
+    this.parentCategoryId,
+    this.parentCategory,
+    this.statusId,
+    this.status,
+    this.createBy,
+    this.matchKey,
+    this.files,
+    this.publishedDate,
   });
 
   BookEntity.fromJson(Map<String, dynamic> json) {
@@ -92,6 +119,31 @@ class BookEntity extends BaseEntity {
     categoryId = json['categoryId'];
     isLocalBook = json['isLocalBook'] ?? false;
     category = json['category'] != null ? CategoryModel.fromJson(json['category']) : null;
+
+    // --- Các trường mới ---
+    countryCode = json['countryCode'];
+    region = json['region'];
+    isPublic = json['isPublic'];
+    parentCategoryId = json['parentCategoryId']?.toString();
+    parentCategory = json['parentCategory'] != null
+        ? CategoryModel.fromJson(json['parentCategory'])
+        : null;
+    statusId = json['statusId']?.toString();
+    status = json['status'] != null
+        ? CategoryModel.fromJson(json['status'])
+        : null;
+    createBy = json['createBy'] != null
+        ? UserEntity.fromJson(json['createBy'])
+        : null;
+    matchKey = json['matchKey'];
+    files = json['files'] != null
+        ? (json['files'] as List)
+            .map((f) => BookFileEntity.fromJson(f as Map<String, dynamic>))
+            .toList()
+        : null;
+    publishedDate = json['publishedDate'] != null
+        ? DateTime.tryParse(json['publishedDate'])
+        : null;
   }
 
   @override
@@ -120,7 +172,19 @@ class BookEntity extends BaseEntity {
     data['createdAt'] = createAt?.toIso8601String();
     data['updatedAt'] = updatedAt?.toIso8601String();
     data['category'] = category?.toJson();
+
+    // --- Các trường mới ---
+    data['countryCode'] = countryCode;
+    data['region'] = region;
+    data['isPublic'] = isPublic;
+    data['parentCategoryId'] = parentCategoryId;
+    data['parentCategory'] = parentCategory?.toJson();
+    data['statusId'] = statusId;
+    data['status'] = status?.toJson();
+    data['createBy'] = createBy?.toJson();
+    data['matchKey'] = matchKey;
+    data['files'] = files?.map((f) => f.toJson()).toList();
+    data['publishedDate'] = publishedDate?.toIso8601String();
     return data;
   }
 }
-

@@ -185,6 +185,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "clearAllNotifications": MessageLookupByLibrary.simpleMessage(
       "Clear all notifications",
     ),
+    "clear_all": MessageLookupByLibrary.simpleMessage("Clear All"),
     "clear_and_reenter": MessageLookupByLibrary.simpleMessage(
       "Clear and reenter",
     ),
@@ -734,6 +735,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "no_pdf_epub_mobi_found": MessageLookupByLibrary.simpleMessage(
       "No PDF, EPUB, or MOBI found",
     ),
+    "no_recent_searches": MessageLookupByLibrary.simpleMessage(
+      "No recent searches",
+    ),
     "no_reviews_yet": MessageLookupByLibrary.simpleMessage("No reviews yet"),
     "no_word_file_found": MessageLookupByLibrary.simpleMessage(
       "No file .docx found",
@@ -1106,6 +1110,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "receiveSystemNotifications": MessageLookupByLibrary.simpleMessage(
       "Receive app update notifications",
     ),
+    "recent_searches": MessageLookupByLibrary.simpleMessage("Recent Searches"),
     "recommended_size": MessageLookupByLibrary.simpleMessage(
       "Recommended size",
     ),

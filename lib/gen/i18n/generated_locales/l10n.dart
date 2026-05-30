@@ -6782,6 +6782,31 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Tìm kiếm gần đây`
+  String get recent_searches {
+    return Intl.message(
+      'Tìm kiếm gần đây',
+      name: 'recent_searches',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xóa tất cả`
+  String get clear_all {
+    return Intl.message('Xóa tất cả', name: 'clear_all', desc: '', args: []);
+  }
+
+  /// `Chưa có tìm kiếm nào`
+  String get no_recent_searches {
+    return Intl.message(
+      'Chưa có tìm kiếm nào',
+      name: 'no_recent_searches',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

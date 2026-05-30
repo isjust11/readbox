@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/domain/data/entities/entities.dart';
 import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
@@ -14,6 +15,7 @@ import 'package:readbox/routes.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/common.dart';
+import 'package:readbox/utils/url_builder.dart';
 
 class BookDetailScreen extends StatelessWidget {
   final String bookId;
@@ -188,19 +190,11 @@ class BookDetailBodyState extends State<BookDetailBody> {
                     children: [
                       // Cover Image
                       book.coverImageUrl != null
-                          ? Image.network(
-                            _getImageUrl(book.coverImageUrl),
+                          ? BaseNetworkImage(
+                            url: UrlBuilder.buildUrl(book.coverImageUrl),
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: Colors.grey[300],
-                                child: Icon(
-                                  Icons.book,
-                                  size: 100,
-                                  color: Colors.grey,
-                                ),
-                              );
-                            },
+                            width: double.infinity,
+                            height: double.infinity,
                           )
                           : Container(
                             color: Colors.grey[300],
@@ -414,6 +408,46 @@ class BookDetailBodyState extends State<BookDetailBody> {
                           AppLocalizations.current.isbn,
                           book.isbn!,
                         ),
+                        SizedBox(height: 8),
+                      ],
+                      // Trạng thái sách
+                      if (book.status != null &&
+                          (book.status!.name?.isNotEmpty ?? false)) ...[
+                        _buildStatusRow(book.status!),
+                        SizedBox(height: 8),
+                      ],
+                      // Ngày xuất bản
+                      if (book.publishedDate != null) ...[
+                        _buildDetailRow(
+                          'Ngày xuất bản',
+                          Common.formatDate(
+                            book.publishedDate!,
+                            format: 'dd/MM/yyyy',
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                      ],
+                      // Danh mục cha
+                      if (book.parentCategory != null &&
+                          (book.parentCategory!.name?.isNotEmpty ?? false)) ...[
+                        _buildDetailRow(
+                          'Danh mục cha',
+                          book.parentCategory!.name!,
+                        ),
+                        SizedBox(height: 8),
+                      ],
+                      // Người đăng tải
+                      if (book.createBy != null &&
+                          (book.createBy!.fullName?.isNotEmpty ?? false)) ...[
+                        _buildDetailRow(
+                          'Người đăng tải',
+                          book.createBy!.fullName!,
+                        ),
+                        SizedBox(height: 8),
+                      ],
+                      // Định dạng file
+                      if (book.files != null && book.files!.isNotEmpty) ...[
+                        _buildFileFormatsRow(book.files!),
                         SizedBox(height: 8),
                       ],
                       if (book.categories != null &&
@@ -631,6 +665,105 @@ class BookDetailBodyState extends State<BookDetailBody> {
           child: Text(
             value,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Hiển thị trạng thái sách dạng badge với màu theo code.
+  Widget _buildStatusRow(CategoryModel status) {
+    // Xác định màu theo code trạng thái
+    Color badgeColor;
+    final code = status.code?.toLowerCase() ?? '';
+    if (code.contains('approved')) {
+      badgeColor = Colors.green;
+    } else if (code.contains('rejected')) {
+      badgeColor = Colors.red;
+    } else {
+      badgeColor = Colors.orange;
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 120,
+          child: Text(
+            'Trạng thái',
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            color: badgeColor.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: badgeColor.withValues(alpha: 0.3)),
+          ),
+          child: Text(
+            status.name ?? '',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: badgeColor,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Hiển thị danh sách định dạng file dạng Chip.
+  Widget _buildFileFormatsRow(List<BookFileEntity> files) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 120,
+          child: Text(
+            'Định dạng',
+            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+          ),
+        ),
+        Expanded(
+          child: Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children:
+                files.map((file) {
+                  final label = file.format?.toUpperCase() ?? '?';
+                  final isPrimary = file.isPrimary == true;
+                  return Chip(
+                    label: Text(
+                      isPrimary ? '$label ★' : label,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color:
+                            isPrimary
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey[700],
+                      ),
+                    ),
+                    backgroundColor:
+                        isPrimary
+                            ? Theme.of(
+                              context,
+                            ).primaryColor.withValues(alpha: 0.1)
+                            : Colors.grey[200],
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                    side: BorderSide(
+                      color:
+                          isPrimary
+                              ? Theme.of(
+                                context,
+                              ).primaryColor.withValues(alpha: 0.3)
+                              : Colors.grey[300]!,
+                    ),
+                  );
+                }).toList(),
           ),
         ),
       ],

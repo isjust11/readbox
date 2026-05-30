@@ -347,15 +347,11 @@ class _GoogleDriveTabState extends State<GoogleDriveTab>
                 clipBehavior: Clip.antiAlias,
                 child:
                     driveFile.thumbnailLink != null
-                        ? Image.network(
-                          driveFile.thumbnailLink!,
+                        ? BaseNetworkImage(
+                          url: driveFile.thumbnailLink!,
                           fit: BoxFit.cover,
-                          errorBuilder:
-                              (_, __, ___) => Icon(
-                                _getFileIcon(ext),
-                                color: color,
-                                size: 24,
-                              ),
+                          width: double.infinity,
+                          height: double.infinity,
                         )
                         : Icon(_getFileIcon(ext), color: color, size: 24),
               ),

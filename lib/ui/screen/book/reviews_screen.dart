@@ -42,10 +42,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   int _currentPage = 1;
   int _totalCount = 0; // Total from API
   static const int _pageSize = 10;
-  bool _isLoading = false;
   bool _isLoadingMore = false;
   bool _hasMore = true;
-  bool _hasError = false;
   String? _errorMessage;
   UserModel? currentUser;
   @override
@@ -73,8 +71,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   Future<void> _loadReviews({bool isRefresh = false}) async {
     if (isRefresh) {
       setState(() {
-        _isLoading = true;
-        _hasError = false;
         _currentPage = 1;
         _reviews.clear();
         _hasMore = true;
@@ -106,7 +102,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
         _hasMore = cubit.hasMore;
         if (isRefresh) {
           _currentPage = 2;
-          _isLoading = false;
         } else {
           _currentPage++;
         }
@@ -115,7 +110,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       });
     } catch (e) {
       setState(() {
-        _hasError = true;
         _errorMessage = e.toString();
       });
     }
