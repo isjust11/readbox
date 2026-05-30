@@ -10,6 +10,7 @@ import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/constants.dart';
+import 'package:readbox/domain/data/entities/entities.dart';
 import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/assets.gen.dart';
@@ -1313,8 +1314,8 @@ class MainBodyState extends State<MainBody> {
     }
 
     final String route;
-    final extension = book.fileUrl!.toLowerCase().split('.').last;
-    if (extension == EbookFormat.epub) {
+    final ext = book.fileType;
+    if (ext == BookType.epub) {
       route = Routes.epubViewerScreen;
     } else {
       route = Routes.pdfViewerScreen;
