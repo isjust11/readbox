@@ -138,6 +138,16 @@ class MessageLookup extends MessageLookupByLibrary {
       "Book deleted successfully",
     ),
     "book_discover": MessageLookupByLibrary.simpleMessage("Discover"),
+    "all_ebooks": MessageLookupByLibrary.simpleMessage("All ebooks"),
+    "new_ebooks": MessageLookupByLibrary.simpleMessage("New ebooks"),
+    "popular_ebooks": MessageLookupByLibrary.simpleMessage("Popular ebooks"),
+    "recommended_for_you": MessageLookupByLibrary.simpleMessage(
+      "Recommended for you",
+    ),
+    "see_all": MessageLookupByLibrary.simpleMessage("See all"),
+    "no_books_for_section": MessageLookupByLibrary.simpleMessage(
+      "No books available",
+    ),
     "book_has_been_added_to_local_library":
         MessageLookupByLibrary.simpleMessage(
           "Book has been added to local library",

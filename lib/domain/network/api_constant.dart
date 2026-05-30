@@ -94,6 +94,10 @@ class ApiConstant {
   static final getPage = "pages";
   // Book endpoints
   static final getBooksPublic = "books/public";
+  // Discover sections (mới / phổ biến / gợi ý) — endpoint RIÊNG để không ảnh hưởng API cũ.
+  static final getDiscoverNewest = "books/discover/newest";
+  static final getDiscoverPopular = "books/discover/popular";
+  static final getDiscoverRecommended = "books/discover/recommended";
   static final books = "books";
   static final toggleFavorite = "user-interactions/toggle-favorite";
   static final getFavorite = "books/favorite";

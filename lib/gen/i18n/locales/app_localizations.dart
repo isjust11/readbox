@@ -416,6 +416,42 @@ abstract class AppLocalizations {
   /// **'Discover'**
   String get book_discover;
 
+  /// No description provided for @all_ebooks.
+  ///
+  /// In en, this message translates to:
+  /// **'All ebooks'**
+  String get all_ebooks;
+
+  /// No description provided for @new_ebooks.
+  ///
+  /// In en, this message translates to:
+  /// **'New ebooks'**
+  String get new_ebooks;
+
+  /// No description provided for @popular_ebooks.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular ebooks'**
+  String get popular_ebooks;
+
+  /// No description provided for @recommended_for_you.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for you'**
+  String get recommended_for_you;
+
+  /// No description provided for @see_all.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get see_all;
+
+  /// No description provided for @no_books_for_section.
+  ///
+  /// In en, this message translates to:
+  /// **'No books available'**
+  String get no_books_for_section;
+
   /// No description provided for @public_books.
   ///
   /// In en, this message translates to:
@@ -4593,6 +4629,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save favorites and track your reading progress'**
   String get splash_feature_library_desc;
+
+  /// No description provided for @recent_searches.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Searches'**
+  String get recent_searches;
+
+  /// No description provided for @clear_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clear_all;
+
+  /// No description provided for @no_recent_searches.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent searches'**
+  String get no_recent_searches;
 }
 
 class _AppLocalizationsDelegate

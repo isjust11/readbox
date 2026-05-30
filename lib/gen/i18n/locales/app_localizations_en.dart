@@ -170,6 +170,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get book_discover => 'Discover';
 
   @override
+  String get all_ebooks => 'All ebooks';
+
+  @override
+  String get new_ebooks => 'New ebooks';
+
+  @override
+  String get popular_ebooks => 'Popular ebooks';
+
+  @override
+  String get recommended_for_you => 'Recommended for you';
+
+  @override
+  String get see_all => 'See all';
+
+  @override
+  String get no_books_for_section => 'No books available';
+
+  @override
   String get public_books => 'Public books';
 
   @override
@@ -2344,4 +2362,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get splash_feature_library_desc =>
       'Save favorites and track your reading progress';
+
+  @override
+  String get recent_searches => 'Recent Searches';
+
+  @override
+  String get clear_all => 'Clear All';
+
+  @override
+  String get no_recent_searches => 'No recent searches';
 }

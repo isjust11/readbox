@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:readbox/ui/screen/auth/forgot_password_screen.dart';
 import 'package:readbox/ui/screen/screen.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/res/res.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:readbox/ui/screen/tools/tools_screen.dart';
 import 'package:readbox/ui/screen/settings/page/theme_customization_screen.dart';
@@ -20,6 +21,7 @@ class Routes {
   static const String registerScreen = "/registerScreen";
   static const String confirmPinScreen = "/confirmPinScreen";
   static const String mainScreen = "/mainScreen";
+  static const String allEbooksScreen = "/allEbooksScreen";
   static const String localLibraryScreen = "/localLibraryScreen";
   static const String adminUploadScreen = "/adminUploadScreen";
   static const String bookDetailScreen = "/bookDetailScreen";
@@ -53,7 +55,17 @@ class Routes {
     switch (settings.name) {
       case mainScreen:
         return PageTransition(
-          child: MainScreen(),
+          child: const DiscoverScreen(),
+          type: PageTransitionType.fade,
+        );
+      case allEbooksScreen:
+        // Cho phép truyền FilterType qua arguments để Discover điều hướng tới
+        // với filter tương ứng (vd: từ section "Yêu thích" → mở thẳng favorites).
+        final filter = settings.arguments is FilterType
+            ? settings.arguments as FilterType
+            : null;
+        return PageTransition(
+          child: AllEbooksScreen(initialFilter: filter),
           type: PageTransitionType.fade,
         );
       case splashScreen:

@@ -112,6 +112,9 @@ void main() async {
               ),
         ),
         BlocProvider(
+          create: (_) => DiscoverCubit(repository: di.getIt<BookRepository>()),
+        ),
+        BlocProvider(
           create:
               (_) => SubscriptionPlanCubit(
                 repository: di.getIt<SubscriptionRepository>(),

@@ -25,21 +25,30 @@ import 'package:scale_size/scale_size.dart';
 
 import '../../domain/data/models/models.dart';
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
+/// Màn "Tất cả ebook" - chứa toàn bộ logic search/filter/category cũ.
+/// Trước đây là `MainScreen` và đang được điều hướng tới qua `Routes.mainScreen`.
+/// Sau khi tách Discover, route `mainScreen` chuyển sang `DiscoverScreen` và
+/// màn này được expose qua `Routes.allEbooksScreen`.
+class AllEbooksScreen extends StatelessWidget {
+  /// Filter mặc định khi mở (cho phép Discover điều hướng tới với filter tương ứng,
+  /// vd: FilterType.favorite cho "Xem tất cả" của section favorite).
+  final FilterType? initialFilter;
+  const AllEbooksScreen({super.key, this.initialFilter});
+
   @override
   Widget build(BuildContext context) {
-    return MainBody();
+    return AllEbooksBody(initialFilter: initialFilter);
   }
 }
 
-class MainBody extends StatefulWidget {
-  const MainBody({super.key});
+class AllEbooksBody extends StatefulWidget {
+  final FilterType? initialFilter;
+  const AllEbooksBody({super.key, this.initialFilter});
   @override
-  MainBodyState createState() => MainBodyState();
+  AllEbooksBodyState createState() => AllEbooksBodyState();
 }
 
-class MainBodyState extends State<MainBody> {
+class AllEbooksBodyState extends State<AllEbooksBody> {
   final TextEditingController _searchController = TextEditingController();
   final RefreshController _refreshController = RefreshController(
     initialRefresh: false,
@@ -65,7 +74,11 @@ class MainBodyState extends State<MainBody> {
   @override
   void initState() {
     super.initState();
-    title = AppLocalizations.current.book_discover;
+    // Áp dụng filter khởi tạo nếu được truyền từ Discover ("Xem tất cả" của 1 section).
+    if (widget.initialFilter != null) {
+      filterType = widget.initialFilter!;
+    }
+    title = _resolveTitleForFilter(filterType);
     context.read<UserSubscriptionCubit>().loadMe();
     
     // Thêm listener cho search focus để show/hide recent panel
@@ -81,6 +94,21 @@ class MainBodyState extends State<MainBody> {
     loadUserInfo();
     loadCategories();
     _wireFloatingActionCallbacks();
+  }
+
+  /// Map FilterType → tiêu đề AppBar mặc định (khi mở qua Discover/See-all).
+  String _resolveTitleForFilter(FilterType filter) {
+    switch (filter) {
+      case FilterType.favorite:
+        return AppLocalizations.current.favorite_books;
+      case FilterType.archived:
+        return AppLocalizations.current.archived_books;
+      case FilterType.uploaded:
+        return AppLocalizations.current.my_uploaded_books;
+      case FilterType.discover:
+      case FilterType.all:
+        return AppLocalizations.current.book_discover;
+    }
   }
 
   void _onSearchFocusChanged() {
@@ -855,8 +883,22 @@ class MainBodyState extends State<MainBody> {
         user: userInfo,
         currentFilter: filterType.name,
         onSelected: (filter, title) {
+          // "Home" là mục riêng → trỏ về DiscoverScreen, không thuộc FilterType.
+          if (filter == 'home') {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacementNamed(context, Routes.mainScreen);
+            }
+            return;
+          }
+          // Các filter còn lại (all/favorite/archived/uploaded) giữ nguyên
+          // hành vi cũ: đổi filter tại chỗ + reload list.
           setState(() {
-            filterType = FilterType.values.firstWhere((e) => e.name == filter);
+            filterType = FilterType.values.firstWhere(
+              (e) => e.name == filter,
+              orElse: () => FilterType.all,
+            );
             this.title = title;
           });
           getBooks(isLoadMore: false);

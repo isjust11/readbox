@@ -3,6 +3,7 @@ export 'base_list_cubit.dart';
 export 'app_cubit.dart';
 export 'user_info_cubit.dart';
 export 'library/library_cubit.dart';
+export 'discover/discover_cubit.dart';
 export 'book/book_detail_cubit.dart';
 export 'admin/admin_cubit.dart';
 export 'book_refresh/book_refresh_cubit.dart';

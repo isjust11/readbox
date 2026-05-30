@@ -4,7 +4,7 @@ import 'package:readbox/domain/data/models/models.dart';
 
 import 'base_entity.dart';
 
-enum BookType { epub, pdf }
+enum BookType { epub, azw3, pdf }
 
 class BookEntity extends BaseEntity {
   String? id;
@@ -45,7 +45,7 @@ class BookEntity extends BaseEntity {
   String? matchKey;
   List<BookFileEntity>? files;
   DateTime? publishedDate;
-
+  bool isInvalid = false;
   BookEntity({
     this.id,
     this.title,
@@ -90,60 +90,79 @@ class BookEntity extends BaseEntity {
     description = json['description'];
     coverImageUrl = json['coverImageUrl'];
     fileUrl = json['fileUrl'];
-    fileType = json['fileType'] != null
-        ? BookType.values.firstWhere(
-            (e) => e.toString() == 'BookType.${json['fileType']}',
-            orElse: () => BookType.epub,
-          )
-        : BookType.epub;
-    fileSize = json['fileSize'] != null ? int.parse(json['fileSize'].toString()) : null;
-    categories = json['categories'] != null
-        ? List<String>.from(json['categories'])
-        : [];
+    fileType =
+        json['fileType'] != null
+            ? BookType.values.firstWhere(
+              (e) => e.toString() == 'BookType.${json['fileType']}',
+              orElse: () => BookType.epub,
+            )
+            : BookType.epub;
+    fileSize =
+        json['fileSize'] != null
+            ? int.parse(json['fileSize'].toString())
+            : null;
+    categories =
+        json['categories'] != null ? List<String>.from(json['categories']) : [];
     tags = json['tags'] != null ? List<String>.from(json['tags']) : [];
     rating = json['rating']?.toDouble();
-    dateAdded = json['dateAdded'] != null
-        ? DateTime.parse(json['dateAdded'])
-        : null;
+    dateAdded =
+        json['dateAdded'] != null ? DateTime.parse(json['dateAdded']) : null;
     lastRead =
         json['lastRead'] != null ? DateTime.parse(json['lastRead']) : null;
-    totalPages = json['totalPages'] != null ? int.parse(json['totalPages'].toString()) : null;
+    totalPages =
+        json['totalPages'] != null
+            ? int.parse(json['totalPages'].toString())
+            : null;
     // isFavorite = json['isFavorite'] ?? false;
     // isArchived = json['isArchived'] ?? false;
     publisher = json['publisher'];
     isbn = json['isbn'];
     language = json['language'];
     createById = json['createById'];
-    createAt = json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null;
-    updatedAt = json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null;
+    createAt =
+        json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null;
+    updatedAt =
+        json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null;
     categoryId = json['categoryId'];
     isLocalBook = json['isLocalBook'] ?? false;
-    category = json['category'] != null ? CategoryModel.fromJson(json['category']) : null;
+    category =
+        json['category'] != null
+            ? CategoryModel.fromJson(json['category'])
+            : null;
 
     // --- Các trường mới ---
     countryCode = json['countryCode'];
     region = json['region'];
     isPublic = json['isPublic'];
     parentCategoryId = json['parentCategoryId']?.toString();
-    parentCategory = json['parentCategory'] != null
-        ? CategoryModel.fromJson(json['parentCategory'])
-        : null;
+    parentCategory =
+        json['parentCategory'] != null
+            ? CategoryModel.fromJson(json['parentCategory'])
+            : null;
     statusId = json['statusId']?.toString();
-    status = json['status'] != null
-        ? CategoryModel.fromJson(json['status'])
-        : null;
-    createBy = json['createBy'] != null
-        ? UserEntity.fromJson(json['createBy'])
-        : null;
+    status =
+        json['status'] != null ? CategoryModel.fromJson(json['status']) : null;
+    createBy =
+        json['createBy'] != null ? UserEntity.fromJson(json['createBy']) : null;
     matchKey = json['matchKey'];
-    files = json['files'] != null
-        ? (json['files'] as List)
-            .map((f) => BookFileEntity.fromJson(f as Map<String, dynamic>))
-            .toList()
-        : null;
-    publishedDate = json['publishedDate'] != null
-        ? DateTime.tryParse(json['publishedDate'])
-        : null;
+    files =
+        json['files'] != null
+            ? (json['files'] as List)
+                .map((f) => BookFileEntity.fromJson(f as Map<String, dynamic>))
+                .toList()
+            : null;
+    // lấy thể loại ebook type theo danh sách file ưu tiên epub => pdf
+    if (files != null && files!.any((f) => f.ebookFormat == EbookFormat.epub)) {
+      fileType = BookType.epub;
+    } else if (files != null &&
+        files!.any((f) => f.ebookFormat == EbookFormat.pdf)) {
+      fileType = BookType.pdf;
+    }
+    publishedDate =
+        json['publishedDate'] != null
+            ? DateTime.tryParse(json['publishedDate'])
+            : null;
+    isInvalid = files?.isEmpty ?? false;
   }
 
   @override

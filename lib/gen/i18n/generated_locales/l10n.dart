@@ -399,6 +399,56 @@ class AppLocalizations {
     return Intl.message('Khám phá', name: 'book_discover', desc: '', args: []);
   }
 
+  /// `Tất cả ebook`
+  String get all_ebooks {
+    return Intl.message(
+      'Tất cả ebook',
+      name: 'all_ebooks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ebook mới`
+  String get new_ebooks {
+    return Intl.message('Ebook mới', name: 'new_ebooks', desc: '', args: []);
+  }
+
+  /// `Ebook được yêu thích`
+  String get popular_ebooks {
+    return Intl.message(
+      'Ebook được yêu thích',
+      name: 'popular_ebooks',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gợi ý cho bạn`
+  String get recommended_for_you {
+    return Intl.message(
+      'Gợi ý cho bạn',
+      name: 'recommended_for_you',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xem tất cả`
+  String get see_all {
+    return Intl.message('Xem tất cả', name: 'see_all', desc: '', args: []);
+  }
+
+  /// `Chưa có ebook nào`
+  String get no_books_for_section {
+    return Intl.message(
+      'Chưa có ebook nào',
+      name: 'no_books_for_section',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Sách công khai`
   String get public_books {
     return Intl.message(

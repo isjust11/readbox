@@ -90,6 +90,9 @@ void registerCubit(GetIt getIt) {
   getIt.registerFactory(
     () => UserSubscriptionCubit(repository: getIt.get<UserSubscriptionRepository>()),
   );
+  getIt.registerFactory(
+    () => DiscoverCubit(repository: getIt.get<BookRepository>()),
+  );
 }
 
 void registerRepositories(GetIt getIt) {

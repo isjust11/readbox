@@ -2,6 +2,7 @@ export 'auth/login_screen.dart';
 export 'auth/register_screen.dart';
 export 'auth/confirm_pin_screen.dart';
 export 'main_screen.dart';
+export 'discover_screen.dart';
 export 'splash_screen.dart';
 export 'local_library/local_library_screen.dart';
 export 'admin/admin_upload_screen.dart';

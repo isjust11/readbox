@@ -33,6 +33,18 @@ class BookRepository {
     );
   }
 
+  Future<List<BookModel>> getDiscoverNewest({int page = 1, int size = 10}) {
+    return remoteDataSource.getDiscoverNewest(page: page, size: size);
+  }
+
+  Future<List<BookModel>> getDiscoverPopular({int page = 1, int size = 10}) {
+    return remoteDataSource.getDiscoverPopular(page: page, size: size);
+  }
+
+  Future<List<BookModel>> getDiscoverRecommended({int page = 1, int size = 10}) {
+    return remoteDataSource.getDiscoverRecommended(page: page, size: size);
+  }
+
   // generate book cover
   Future<String> generateBookCover(Map<String, String> bookData) async {
     return await remoteDataSource.generateBookCover(bookData);

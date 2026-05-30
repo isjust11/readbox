@@ -171,6 +171,24 @@ class AppLocalizationsVi extends AppLocalizations {
   String get book_discover => 'Khám phá';
 
   @override
+  String get all_ebooks => 'Tất cả ebook';
+
+  @override
+  String get new_ebooks => 'Ebook mới';
+
+  @override
+  String get popular_ebooks => 'Ebook được yêu thích';
+
+  @override
+  String get recommended_for_you => 'Gợi ý cho bạn';
+
+  @override
+  String get see_all => 'Xem tất cả';
+
+  @override
+  String get no_books_for_section => 'Chưa có ebook nào';
+
+  @override
   String get public_books => 'Sách công khai';
 
   @override
@@ -2347,4 +2365,13 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get splash_feature_library_desc =>
       'Lưu yêu thích, theo dõi\ntiến độ đọc sách của bạn';
+
+  @override
+  String get recent_searches => 'Tìm kiếm gần đây';
+
+  @override
+  String get clear_all => 'Xóa tất cả';
+
+  @override
+  String get no_recent_searches => 'Chưa có tìm kiếm nào';
 }

@@ -47,21 +47,16 @@ class _AppDrawerState extends State<AppDrawer> {
     setState(() {
       _currentFilter = filter;
     });
-    switch (filter) {
-      case 'all':
-        widget.onSelected('all', title);
-        break;
-      case 'favorite':
-        widget.onSelected('favorite', title);
-        break;
-      case 'archived':
-        widget.onSelected('archived', title);
-        break;
-      case 'uploaded':
-        widget.onSelected('uploaded', title);
-        break;
-    }
-    Navigator.pop(context); // Close drawer
+    // Whitelist các filter hợp lệ. Lưu ý 'home' KHÔNG nằm trong FilterType,
+    // nó là mục riêng dẫn về DiscoverScreen (xử lý phía screen tiêu thụ).
+    const allowed = {'home', 'all', 'favorite', 'archived', 'uploaded'};
+    final isAllowed = allowed.contains(filter);
+    Navigator.pop(context); // Close drawer before running navigation callbacks.
+    if (!isAllowed) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onSelected(filter, title);
+    });
   }
 
   @override
@@ -96,6 +91,27 @@ class _AppDrawerState extends State<AppDrawer> {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
+                    // Mục Home riêng → trỏ về DiscoverScreen (3 section)
+                    _buildDrawerItem(
+                      svgIcon: SvgPicture.asset(
+                        Assets.icons.icHome,
+                        width: AppDimens.SIZE_28,
+                        height: AppDimens.SIZE_28,
+                        colorFilter: ColorFilter.mode(
+                          colorScheme.primary,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      title: AppLocalizations.current.home,
+                      isSelected: _currentFilter == 'home',
+                      onTap:
+                          () => _filterBooks(
+                            'home',
+                            AppLocalizations.current.home,
+                          ),
+                      iconColor: colorScheme.primary,
+                      textColor: colorScheme.onSurface,
+                    ),
                     _buildDrawerItem(
                       svgIcon: SvgPicture.asset(
                         Assets.icons.icGlobal,

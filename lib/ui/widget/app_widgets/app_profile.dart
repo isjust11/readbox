@@ -217,7 +217,7 @@ class AppProfile extends StatelessWidget {
           Icon(icon, color: iconColor, size: 15),
           const SizedBox(width: 4),
           Text(
-            label!,
+            label ?? '',
             style: TextStyle(
               color: isFree ? Colors.white70 : const Color(0xFFFFD700),
               fontSize: 12,

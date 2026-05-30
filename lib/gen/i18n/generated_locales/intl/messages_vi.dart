@@ -148,6 +148,18 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đã xóa sách thành công",
     ),
     "book_discover": MessageLookupByLibrary.simpleMessage("Khám phá"),
+    "all_ebooks": MessageLookupByLibrary.simpleMessage("Tất cả ebook"),
+    "new_ebooks": MessageLookupByLibrary.simpleMessage("Ebook mới"),
+    "popular_ebooks": MessageLookupByLibrary.simpleMessage(
+      "Ebook được yêu thích",
+    ),
+    "recommended_for_you": MessageLookupByLibrary.simpleMessage(
+      "Gợi ý cho bạn",
+    ),
+    "see_all": MessageLookupByLibrary.simpleMessage("Xem tất cả"),
+    "no_books_for_section": MessageLookupByLibrary.simpleMessage(
+      "Chưa có ebook nào",
+    ),
     "book_has_been_added_to_local_library":
         MessageLookupByLibrary.simpleMessage(
           "Sách đã được thêm vào thư viện local",

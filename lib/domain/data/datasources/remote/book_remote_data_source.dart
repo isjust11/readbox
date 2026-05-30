@@ -42,6 +42,54 @@ class BookRemoteDataSource {
     return Future.error(apiResponse.errMessage);
   }
 
+  /// Discover - Ebook mới (sort theo createdAt desc).
+  Future<List<BookModel>> getDiscoverNewest({int page = 1, int size = 10}) async {
+    return _fetchDiscoverList(
+      ApiConstant.getDiscoverNewest,
+      page: page,
+      size: size,
+    );
+  }
+
+  /// Discover - Ebook được yêu thích nhiều (sort theo số favorite desc).
+  Future<List<BookModel>> getDiscoverPopular({int page = 1, int size = 10}) async {
+    return _fetchDiscoverList(
+      ApiConstant.getDiscoverPopular,
+      page: page,
+      size: size,
+    );
+  }
+
+  /// Discover - Gợi ý cho bạn (dựa trên lịch sử tương tác của user).
+  Future<List<BookModel>> getDiscoverRecommended({int page = 1, int size = 10}) async {
+    return _fetchDiscoverList(
+      ApiConstant.getDiscoverRecommended,
+      page: page,
+      size: size,
+    );
+  }
+
+  Future<List<BookModel>> _fetchDiscoverList(
+    String path, {
+    required int page,
+    required int size,
+  }) async {
+    final ApiResponse apiResponse = await network.get(
+      url: '${ApiConstant.apiHost}$path',
+      params: {'page': page, 'size': size},
+    );
+    if (!apiResponse.isSuccess) {
+      return Future.error(apiResponse.errMessage);
+    }
+    final data = apiResponse.data;
+    if (data == null) return [];
+    final rawList = data is Map ? data['data'] : data;
+    if (rawList is! List) return [];
+    return rawList
+        .map((item) => BookModel.fromJson(item as Map<String, dynamic>))
+        .toList();
+  }
+
   // generate book cover
   Future<String> generateBookCover(Map<String, String> bookData) async {
     ApiResponse apiResponse = await network.post(
