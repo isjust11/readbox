@@ -793,6 +793,7 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
     return BaseScreen<LibraryCubit>(
       colorBg: colorScheme.surface,
       autoHandleState: true,
+      showContinueReadingFab: true,
       customAppBar: AppBar(
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -1022,11 +1023,11 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
                           return BookCard(
                             filterType: filterType,
                             book: filteredBooks[index],
-                            onRead: (book) => _openBook(context, book),
+                            onRead: (BookModel book, BookFileEntity? file) => _openBook(context, book, selectedFile: file),
                             ownerId: userInfo?.id,
                             userInteractionCubit:
                                 context.read<UserInteractionCubit>(),
-                            onDelete: (book) async {
+                            onDelete: (BookModel book) async {
                               final result = await context
                                   .read<LibraryCubit>()
                                   .deleteBook(book.id!);
@@ -1399,8 +1400,13 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
     );
   }
 
-  Future<void> _openBook(BuildContext context, BookModel book) async {
-    if (book.fileUrl == null) {
+  Future<void> _openBook(BuildContext context, BookModel book, {BookFileEntity? selectedFile}) async {
+    final String targetUrl = selectedFile?.fileUrl ?? book.fileUrl ?? '';
+    final targetType = selectedFile != null 
+        ? (selectedFile.format?.toLowerCase() == 'pdf' ? BookType.pdf : BookType.epub)
+        : book.fileType;
+
+    if (targetUrl.isEmpty) {
       AppSnackBar.show(
         context,
         message: AppLocalizations.current.file_ebook_not_found,
@@ -1410,14 +1416,18 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
     }
 
     final String route;
-    final ext = book.fileType;
-    if (ext == BookType.epub) {
+    if (targetType == BookType.epub) {
       route = Routes.epubViewerScreen;
     } else {
       route = Routes.pdfViewerScreen;
     }
 
-    final result = await Navigator.pushNamed(context, route, arguments: book);
+    // Clone book with the specific selected file details to pass to viewer
+    final bookToOpen = BookModel.fromJson(book.toJson());
+    bookToOpen.fileUrl = targetUrl;
+    bookToOpen.fileType = targetType;
+
+    final result = await Navigator.pushNamed(context, route, arguments: bookToOpen);
     if (result == true) {
       loadUserReadingBooks();
     }

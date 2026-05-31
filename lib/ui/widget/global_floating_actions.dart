@@ -54,7 +54,8 @@ class FloatingActionsController {
 /// - Snap về sát mép trái/phải sau khi nhả tay.
 /// - Kéo vào vùng "X" ở giữa-dưới để ẩn cho session hiện tại.
 class GlobalFloatingActions extends StatefulWidget {
-  const GlobalFloatingActions({super.key});
+  final bool showContinueReadingFab;
+  const GlobalFloatingActions({super.key, this.showContinueReadingFab = false});
 
   @override
   State<GlobalFloatingActions> createState() => _GlobalFloatingActionsState();
@@ -247,6 +248,7 @@ class _GlobalFloatingActionsState extends State<GlobalFloatingActions> {
             _lastReadingCount = readingBooks.length;
 
             final showReading =
+                widget.showContinueReadingFab &&
                 readingBooks.isNotEmpty &&
                 !FloatingActionsController
                     .instance

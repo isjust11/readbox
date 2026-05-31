@@ -60,6 +60,7 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
   /// Tắt cụm nút floating toàn app (Continue Reading + TTS background) cho
   /// các màn không phù hợp như PDF/EPUB viewer, full-screen camera...
   final bool showGlobalFloatingActions;
+  final bool showContinueReadingFab;
   const BaseScreen({
     super.key,
     this.body,
@@ -93,6 +94,7 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
     this.implementErrorWidget = false,
     this.gradientBg,
     this.showGlobalFloatingActions = true,
+    this.showContinueReadingFab = false,
   });
 
   Type _typeOf<X>() => X;
@@ -235,7 +237,7 @@ class BaseScreen<T extends Cubit<BaseState>> extends StatelessWidget {
                     // Đặt ở Stack body để không vướng FAB / bottomNavBar của
                     // Scaffold mà vẫn nằm trên các layer khác.
                     if (showGlobalFloatingActions)
-                      const Positioned.fill(child: GlobalFloatingActions()),
+                      Positioned.fill(child: GlobalFloatingActions(showContinueReadingFab: showContinueReadingFab)),
                   ],
                 ),
               ),

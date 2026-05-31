@@ -19,6 +19,8 @@ import 'package:readbox/utils/utils.dart';
 /// Màn "Khám phá" mới: hiển thị 3 section (Ebook mới, Yêu thích, Gợi ý)
 /// dưới dạng horizontal list. Mỗi section có nút "Xem tất cả" điều hướng
 /// sang `AllEbooksScreen` với filter tương ứng.
+import 'package:readbox/ui/widget/app_widgets/book_options_bottom_sheet.dart';
+
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
 
@@ -59,8 +61,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   Future<void> _onRefresh() => context.read<DiscoverCubit>().loadAll();
 
-  void _openBook(BookModel book) {
-    if (book.fileUrl == null) {
+  void _openBook(BookModel book, {BookFileEntity? selectedFile}) {
+    final String targetUrl = selectedFile?.fileUrl ?? book.fileUrl ?? '';
+    final targetType = selectedFile != null 
+        ? (selectedFile.format?.toLowerCase() == 'pdf' ? BookType.pdf : BookType.epub)
+        : book.fileType;
+
+    if (targetUrl.isEmpty) {
       AppSnackBar.show(
         context,
         message: AppLocalizations.current.file_ebook_not_found,
@@ -68,10 +75,15 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       );
       return;
     }
-    final route = book.fileType == BookType.epub
+    final route = targetType == BookType.epub
         ? Routes.epubViewerScreen
         : Routes.pdfViewerScreen;
-    Navigator.pushNamed(context, route, arguments: book);
+        
+    final bookToOpen = BookModel.fromJson(book.toJson());
+    bookToOpen.fileUrl = targetUrl;
+    bookToOpen.fileType = targetType;
+
+    Navigator.pushNamed(context, route, arguments: bookToOpen);
   }
 
   void _openAllEbooks({FilterType? filter}) {
@@ -140,7 +152,16 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   onRetry: () => context
                       .read<DiscoverCubit>()
                       .refreshSection(DiscoverSection.newest),
-                  onTapBook: _openBook,
+                  onTapBook: (book) => _openBook(book),
+                  onLongPressBook: (book) {
+                    BookOptionsBottomSheet.show(
+                      context,
+                      book: book,
+                      userInteractionCubit: context.read<UserInteractionCubit>(),
+                      ownerId: _userInfo?.id,
+                      onRead: (b, f) => _openBook(b, selectedFile: f),
+                    );
+                  },
                 ),
                 _DiscoverSectionView(
                   title: AppLocalizations.current.popular_ebooks,
@@ -151,7 +172,16 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   onRetry: () => context
                       .read<DiscoverCubit>()
                       .refreshSection(DiscoverSection.popular),
-                  onTapBook: _openBook,
+                  onTapBook: (book) => _openBook(book),
+                  onLongPressBook: (book) {
+                    BookOptionsBottomSheet.show(
+                      context,
+                      book: book,
+                      userInteractionCubit: context.read<UserInteractionCubit>(),
+                      ownerId: _userInfo?.id,
+                      onRead: (b, f) => _openBook(b, selectedFile: f),
+                    );
+                  },
                 ),
                 _DiscoverSectionView(
                   title: AppLocalizations.current.recommended_for_you,
@@ -162,7 +192,16 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   onRetry: () => context
                       .read<DiscoverCubit>()
                       .refreshSection(DiscoverSection.recommended),
-                  onTapBook: _openBook,
+                  onTapBook: (book) => _openBook(book),
+                  onLongPressBook: (book) {
+                    BookOptionsBottomSheet.show(
+                      context,
+                      book: book,
+                      userInteractionCubit: context.read<UserInteractionCubit>(),
+                      ownerId: _userInfo?.id,
+                      onRead: (b, f) => _openBook(b, selectedFile: f),
+                    );
+                  },
                 ),
               ],
             );
@@ -236,6 +275,7 @@ class _DiscoverSectionView extends StatelessWidget {
   final VoidCallback onSeeAll;
   final VoidCallback onRetry;
   final ValueChanged<BookModel> onTapBook;
+  final ValueChanged<BookModel>? onLongPressBook;
 
   const _DiscoverSectionView({
     required this.title,
@@ -245,6 +285,7 @@ class _DiscoverSectionView extends StatelessWidget {
     required this.onSeeAll,
     required this.onRetry,
     required this.onTapBook,
+    this.onLongPressBook,
   });
 
   @override
@@ -380,6 +421,7 @@ class _DiscoverSectionView extends StatelessWidget {
         itemBuilder: (context, index) => _DiscoverBookCard(
           book: state.books[index],
           onTap: () => onTapBook(state.books[index]),
+          onLongPress: onLongPressBook != null ? () => onLongPressBook!(state.books[index]) : null,
         ),
       ),
     );
@@ -392,14 +434,16 @@ class _DiscoverSectionView extends StatelessWidget {
 class _DiscoverBookCard extends StatelessWidget {
   final BookModel book;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
 
-  const _DiscoverBookCard({required this.book, required this.onTap});
+  const _DiscoverBookCard({required this.book, required this.onTap, this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: SizedBox(
         width: 130,
         child: Column(

@@ -3,16 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/cubit.dart';
-import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
 import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/gen/assets.gen.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
-import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
-import 'package:readbox/ui/widget/rating_dialog.dart';
+import 'package:readbox/ui/widget/app_widgets/book_options_bottom_sheet.dart';
+import 'package:readbox/domain/data/entities/book_file_entity.dart';
 import 'package:readbox/utils/utils.dart';
 
 class BookCard extends StatefulWidget {
@@ -21,7 +20,7 @@ class BookCard extends StatefulWidget {
   final String? ownerId;
   final FilterType? filterType;
   final Function(BookModel book) onDelete;
-  final Function(BookModel book) onRead;
+  final Function(BookModel book, BookFileEntity? file) onRead;
   const BookCard({
     super.key,
     required this.book,
@@ -38,7 +37,6 @@ class BookCard extends StatefulWidget {
 
 class _BookCardState extends State<BookCard> {
   bool? _isFavorite;
-  bool? _isArchive;
   double? _rating;
   @override
   void initState() {
@@ -58,11 +56,6 @@ class _BookCardState extends State<BookCard> {
     return widget.book.isFavorite == true;
   }
 
-  bool get _archiveStatus {
-    if (_isArchive != null) return _isArchive!;
-    return widget.book.isArchived == true;
-  }
-
   void _editBook(BuildContext context, BookModel book) {
     Navigator.pushNamed(context, Routes.adminUploadScreen, arguments: book);
   }
@@ -79,368 +72,15 @@ class _BookCardState extends State<BookCard> {
     );
   }
 
-  void _showRatingDialog(BookModel book) {
-    // Close the bottom sheet first
-    Navigator.pop(context);
-
-    showDialog(
-      context: context,
-      builder:
-          (context) => RatingDialog(
-            onSubmit: (rating, comment) async {
-              await widget.userInteractionCubit.rateAndComment(
-                targetType: 'book',
-                targetId: book.id!,
-                rating: rating,
-                comment: comment.isNotEmpty ? comment : null,
-              );
-
-              // Reload stats after rating
-              await _loadUserInteractionStatus();
-            },
-          ),
-    );
-  }
-
   void _showBookOptions(BuildContext context, BookModel book) {
-    final theme = Theme.of(context);
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: theme.colorScheme.surface,
-      builder: (context) {
-        return Container(
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                child: Column(
-                  children: [
-                    // Handle bar
-                    Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.3,
-                        ),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-
-                    // Book info
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.grey[200],
-                            border: Border.all(
-                              color: theme.colorScheme.onSurface.withValues(
-                                alpha: 0.3,
-                              ),
-                              width: 1,
-                            ),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: BaseNetworkImage(
-                              url: UrlBuilder.buildUrl(book.coverImageUrl),
-                              width: 80,
-                              height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                book.displayTitle,
-                                style: TextStyle(
-                                  fontSize: AppSize.fontSizeLarge,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(height: 4),
-                              if (book.author != null) ...[
-                                _authorWidget(book.author!),
-                              ],
-                              if (book.category != null) ...[
-                                _categoryWidget(
-                                  Localizations.localeOf(
-                                            context,
-                                          ).languageCode ==
-                                          LanguageCode.en
-                                      ? book.category?.nameEN ?? ''
-                                      : book.category?.name ?? '',
-                                ),
-                              ],
-                              SizedBox(height: 4),
-                              // action delete and edit book
-                              if (book.createById == widget.ownerId) ...[
-                                Row(
-                                  children: [
-                                    TextButton(
-                                      onPressed: () {
-                                        _editBook(context, book);
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.edit,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          SizedBox(width: 4),
-                                          Text(
-                                            AppLocalizations.current.edit_book,
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(
-                                                    context,
-                                                  ).primaryColor,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        _deleteBook(context, book);
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.delete,
-                                            color:
-                                                Theme.of(
-                                                  context,
-                                                ).colorScheme.error,
-                                          ),
-                                          SizedBox(width: 4),
-                                          Text(
-                                            AppLocalizations
-                                                .current
-                                                .delete_book,
-                                            style: TextStyle(
-                                              color:
-                                                  Theme.of(
-                                                    context,
-                                                  ).colorScheme.error,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              // Action buttons
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildActionButton(
-                        icon: Icons.menu_book_rounded,
-                        label: AppLocalizations.current.read_book,
-                        color: theme.primaryColor,
-                        onTap: () => widget.onRead(book),
-                      ),
-
-                      SizedBox(height: 12),
-
-                      _buildActionButton(
-                        icon: Icons.info_outline_rounded,
-                        label: AppLocalizations.current.view_details,
-                        color: Colors.lightBlueAccent,
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pushNamed(
-                            context,
-                            Routes.bookDetailScreen,
-                            arguments: book.id,
-                          );
-                        },
-                      ),
-
-                      SizedBox(height: 12),
-
-                      // Rate and Review button
-                      _buildActionButton(
-                        icon: Icons.star_rate_rounded,
-                        label: AppLocalizations.current.rate_and_review,
-                        color: Colors.amber,
-                        onTap: () {
-                          _showRatingDialog(book);
-                        },
-                      ),
-
-                      SizedBox(height: 12),
-
-                      BlocConsumer<UserInteractionCubit, BaseState>(
-                        bloc: widget.userInteractionCubit,
-                        listener: (context, state) {
-                          if (state is LoadedState) {
-                            if (state.data is Map<String, dynamic>) {
-                              final data = state.data as Map<String, dynamic>;
-                              setState(() {
-                                if (data.containsKey('favorite') == true) {
-                                  _isFavorite = data['favorite'] == true;
-                                }
-                                if (data.containsKey('archived') == true) {
-                                  _isArchive = data['archived'] == true;
-                                }
-                              });
-                            }
-                          }
-                        },
-                        builder: (context, state) {
-                          return Column(
-                            children: [
-                              _buildActionButton(
-                                icon:
-                                    _favoriteStatus
-                                        ? Icons.favorite_rounded
-                                        : Icons.favorite_border_rounded,
-                                label:
-                                    _favoriteStatus
-                                        ? AppLocalizations
-                                            .current
-                                            .remove_favorite
-                                        : AppLocalizations.current.add_favorite,
-                                color: Theme.of(context).colorScheme.error,
-                                onTap: () async {
-                                  Navigator.pop(context);
-                                  await widget.userInteractionCubit
-                                      .toggleFavorite(
-                                        targetType: 'book',
-                                        targetId: widget.book.id!,
-                                      );
-                                  // Reload stats after toggle
-                                  await _loadUserInteractionStatus();
-                                },
-                              ),
-                              SizedBox(height: 12),
-                              _buildActionButton(
-                                icon:
-                                    _archiveStatus
-                                        ? Icons.close_rounded
-                                        : Icons.archive_rounded,
-                                label:
-                                    _archiveStatus
-                                        ? AppLocalizations
-                                            .current
-                                            .remove_archive
-                                        : AppLocalizations.current.add_archive,
-                                color:
-                                    _archiveStatus
-                                        ? Theme.of(
-                                          context,
-                                        ).colorScheme.secondary
-                                        : Colors.grey[700]!,
-                                onTap: () async {
-                                  Navigator.pop(context);
-                                  await widget.userInteractionCubit
-                                      .toggleArchive(
-                                        targetType: 'book',
-                                        targetId: widget.book.id!,
-                                      );
-                                  // Reload stats after toggle
-                                  await _loadUserInteractionStatus();
-                                },
-                                isOutlined: false,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-
-                      SizedBox(height: MediaQuery.of(context).padding.bottom),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-    bool isOutlined = false,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        decoration: BoxDecoration(
-          // color: isOutlined ? Colors.white : color.withValues(alpha: 0.1),
-          // borderRadius: BorderRadius.circular(16),
-          border: Border(
-            bottom: BorderSide(color: color.withValues(alpha: 0.3), width: 1),
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color:
-                    isOutlined
-                        ? Colors.grey[100]
-                        : color.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: color, size: AppSize.iconSizeLarge),
-            ),
-            SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: AppSize.fontSizeLarge,
-                  fontWeight: FontWeight.w600,
-                  color: isOutlined ? Colors.grey[700] : color,
-                ),
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              color:
-                  isOutlined ? Colors.grey[400] : color.withValues(alpha: 0.5),
-              size: AppSize.iconSizeMedium,
-            ),
-          ],
-        ),
-      ),
+    BookOptionsBottomSheet.show(
+      context,
+      book: book,
+      userInteractionCubit: widget.userInteractionCubit,
+      ownerId: widget.ownerId,
+      onRead: widget.onRead,
+      onEdit: (book) => _editBook(context, book),
+      onDelete: (book) => _deleteBook(context, book),
     );
   }
 
@@ -457,9 +97,6 @@ class _BookCardState extends State<BookCard> {
             setState(() {
               if (data.containsKey('favorite') == true) {
                 _isFavorite = data['favorite'] == true;
-              }
-              if (data.containsKey('archived') == true) {
-                _isArchive = data['archived'] == true;
               }
             });
           }
@@ -489,7 +126,7 @@ class _BookCardState extends State<BookCard> {
               ),
             ),
             child: InkWell(
-              onTap: () => widget.onRead(widget.book),
+              onTap: () => widget.onRead(widget.book, null),
               onLongPress: () {
                 _loadUserInteractionStatus();
                 // Long press: Hiển thị menu options

@@ -7,6 +7,7 @@ import 'package:epub_view/src/data/models/paragraph.dart';
 
 import 'package:dio/dio.dart';
 import 'package:epub_view/epub_view.dart' hide Image;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -821,7 +822,12 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
                   if (_isLoadingText)
                     Container(
                       color: Colors.black45,
-                      child: const Center(child: CircularProgressIndicator()),
+                      child: Center(
+                        child:
+                            Platform.isIOS
+                                ? CupertinoActivityIndicator()
+                                : CircularProgressIndicator(),
+                      ),
                     ),
                   // Panel hiển thị text đang đọc (TTS)
                   if (_showTtsReadingPanel && _ttsReadingText != null)
