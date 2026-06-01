@@ -416,7 +416,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     _pageStateNotifier.value = (page, _totalPages);
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, page);
     _onServerPageChanged(page);
-    _flashPageCupertinoLoading();
+    // _flashPageCupertinoLoading();
   }
 
   void _flashPageCupertinoLoading() {

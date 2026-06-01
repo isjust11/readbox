@@ -342,7 +342,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 ),
                 _buildMiniFeature(
                   AppLocalizations.current.ai_assistant,
-                  plan.isFree ? "" : 'Unlimited',
+                  plan.isFree ? "" : AppLocalizations.current.unlimited,
                   theme,
                   plan,
                   icon: Icons.psychology_rounded,
@@ -350,7 +350,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 ),
                 _buildMiniFeature(
                   AppLocalizations.current.textToSpeech,
-                  plan.isFree ? "" : 'Unlimited',
+                  plan.isFree ? "" : AppLocalizations.current.unlimited,
                   theme,
                   plan,
                   icon: Icons.record_voice_over_rounded,
@@ -358,11 +358,41 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                 ),
                 _buildMiniFeature(
                   AppLocalizations.current.tools_word_to_pdf,
-                  plan.isFree ? "" : 'Unlimited',
+                  plan.isFree ? "" : AppLocalizations.current.unlimited,
                   theme,
                   plan,
                   icon: Icons.transform_rounded,
                   colors: [const Color(0xFFF093FB), const Color(0xFFF5576C)],
+                ),
+                _buildMiniFeature(
+                  AppLocalizations.current.download_limit,
+                  _getDownloadDisplay(plan),
+                  theme,
+                  plan,
+                  icon: Icons.download_rounded,
+                  colors: [const Color(0xFFFF9966), const Color(0xFFFF5E62)],
+                ),
+                _buildMiniFeature(
+                  plan.isFree
+                      ? AppLocalizations.current.has_ads
+                      : AppLocalizations.current.no_ads,
+                  '',
+                  theme,
+                  plan,
+                  icon:
+                      plan.isFree
+                          ? Icons.campaign_rounded
+                          : Icons.block_rounded,
+                  colors:
+                      plan.isFree
+                          ? [
+                            const Color(0xFFB0BEC5),
+                            const Color(0xFF78909C),
+                          ]
+                          : [
+                            const Color(0xFF11998E),
+                            const Color(0xFF38EF7D),
+                          ],
                 ),
               ],
             ),
@@ -370,6 +400,17 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         ),
       ),
     );
+  }
+
+  /// Hiển thị số lượt tải xuống của plan.
+  /// - Free / chưa cấu hình → trả về chuỗi rỗng (ẩn value, chỉ hiện title).
+  /// - 0 hoặc số âm với plan trả phí → coi như "Không giới hạn".
+  /// - Có giá trị dương → "<số> / kỳ".
+  String _getDownloadDisplay(SubscriptionPlanModel plan) {
+    if (plan.isFree) return '';
+    final limit = plan.downloadLimitPerPeriod;
+    if (limit <= 0) return AppLocalizations.current.unlimited;
+    return '$limit';
   }
 
   Widget _buildMiniFeature(
@@ -406,17 +447,40 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
               ),
             ),
           ),
-          if (value.isNotEmpty)
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                color: colors.last.withValues(alpha: 0.9),
-                letterSpacing: 0.3,
-              ),
-            ),
+          if (value.isNotEmpty) _buildValue(value, colors, theme),
         ],
+      ),
+    );
+  }
+
+  /// Render phần "value" của 1 row feature.
+  /// - Nếu value khớp với chuỗi "Unlimited" → hiển thị icon ∞ với gradient
+  ///   thay vì text (gọn + visual hơn cho gói Pro).
+  /// - Còn lại → text như cũ.
+  Widget _buildValue(String value, List<Color> colors, ThemeData theme) {
+    final isUnlimited = value == AppLocalizations.current.unlimited;
+    if (isUnlimited) {
+      return ShaderMask(
+        shaderCallback:
+            (bounds) => LinearGradient(
+              colors: colors,
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ).createShader(bounds),
+        child: const Icon(
+          Icons.all_inclusive_rounded,
+          size: 26,
+          color: Colors.white,
+        ),
+      );
+    }
+    return Text(
+      value,
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w800,
+        color: colors.last.withValues(alpha: 0.9),
+        letterSpacing: 0.3,
       ),
     );
   }
@@ -1047,7 +1111,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Text(
                     AppLocalizations.current.selectPaymentMethod,
                     style: TextStyle(

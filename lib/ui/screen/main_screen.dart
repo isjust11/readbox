@@ -79,7 +79,7 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
       filterType = widget.initialFilter!;
     }
     title = _resolveTitleForFilter(filterType);
-    context.read<UserSubscriptionCubit>().loadMe();
+    // context.read<UserSubscriptionCubit>().loadMe();
     
     // Thêm listener cho search focus để show/hide recent panel
     _searchFocusNode.addListener(_onSearchFocusChanged);

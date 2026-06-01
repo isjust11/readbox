@@ -62,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "all": MessageLookupByLibrary.simpleMessage("All"),
     "all_categories": MessageLookupByLibrary.simpleMessage("All Categories"),
     "all_data_loaded": MessageLookupByLibrary.simpleMessage("All data loaded"),
+    "all_ebooks": MessageLookupByLibrary.simpleMessage("All ebooks"),
     "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
     "app_version": MessageLookupByLibrary.simpleMessage("App Version"),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
@@ -138,16 +139,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Book deleted successfully",
     ),
     "book_discover": MessageLookupByLibrary.simpleMessage("Discover"),
-    "all_ebooks": MessageLookupByLibrary.simpleMessage("All ebooks"),
-    "new_ebooks": MessageLookupByLibrary.simpleMessage("New ebooks"),
-    "popular_ebooks": MessageLookupByLibrary.simpleMessage("Popular ebooks"),
-    "recommended_for_you": MessageLookupByLibrary.simpleMessage(
-      "Recommended for you",
-    ),
-    "see_all": MessageLookupByLibrary.simpleMessage("See all"),
-    "no_books_for_section": MessageLookupByLibrary.simpleMessage(
-      "No books available",
-    ),
     "book_has_been_added_to_local_library":
         MessageLookupByLibrary.simpleMessage(
           "Book has been added to local library",
@@ -307,6 +298,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "download_to_read": MessageLookupByLibrary.simpleMessage(
       "Download to read",
     ),
+    "download_usage": MessageLookupByLibrary.simpleMessage("Downloads"),
     "downloading_from_drive": MessageLookupByLibrary.simpleMessage(
       "Downloading from Drive...",
     ),
@@ -531,6 +523,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "grant_permission": MessageLookupByLibrary.simpleMessage(
       "Grant permission",
     ),
+    "has_ads": MessageLookupByLibrary.simpleMessage("Ads included"),
     "have_account": MessageLookupByLibrary.simpleMessage("Have account? "),
     "helpCenter": MessageLookupByLibrary.simpleMessage("Help center"),
     "high": MessageLookupByLibrary.simpleMessage("High"),
@@ -700,6 +693,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Need permission to access memory",
     ),
     "new_book": MessageLookupByLibrary.simpleMessage("New"),
+    "new_ebooks": MessageLookupByLibrary.simpleMessage("New ebooks"),
     "new_password": MessageLookupByLibrary.simpleMessage("New password"),
     "news": MessageLookupByLibrary.simpleMessage("News"),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
@@ -713,11 +707,15 @@ class MessageLookup extends MessageLookupByLibrary {
       "No plans available at the moment.",
     ),
     "no_account": MessageLookupByLibrary.simpleMessage("No account? "),
+    "no_ads": MessageLookupByLibrary.simpleMessage("Ad-free experience"),
     "no_available_camera": MessageLookupByLibrary.simpleMessage(
       "No available camera",
     ),
     "no_book_found": MessageLookupByLibrary.simpleMessage("No book found"),
     "no_books": MessageLookupByLibrary.simpleMessage("No books"),
+    "no_books_for_section": MessageLookupByLibrary.simpleMessage(
+      "No books available",
+    ),
     "no_books_found": MessageLookupByLibrary.simpleMessage("No books found"),
     "no_categories_found": MessageLookupByLibrary.simpleMessage(
       "No categories found",
@@ -918,6 +916,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "pdf_share_wait_download": MessageLookupByLibrary.simpleMessage(
       "PDF is loading, please wait and try again",
     ),
+    "pdf_text_select_off": MessageLookupByLibrary.simpleMessage(
+      "Text select: Off (saves RAM)",
+    ),
+    "pdf_text_select_on": MessageLookupByLibrary.simpleMessage(
+      "Text select: On",
+    ),
     "pdf_toolbar": MessageLookupByLibrary.simpleMessage("Toolbar"),
     "pdf_tts_read_error": m4,
     "pdf_undo": MessageLookupByLibrary.simpleMessage("Undo"),
@@ -1066,6 +1070,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Please enter username",
     ),
     "popular": MessageLookupByLibrary.simpleMessage("Popular"),
+    "popular_ebooks": MessageLookupByLibrary.simpleMessage("Popular ebooks"),
     "primaryColor": MessageLookupByLibrary.simpleMessage("Primary Color"),
     "privacySettings": MessageLookupByLibrary.simpleMessage("Privacy settings"),
     "privacy_and_security": MessageLookupByLibrary.simpleMessage(
@@ -1121,6 +1126,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Receive app update notifications",
     ),
     "recent_searches": MessageLookupByLibrary.simpleMessage("Recent Searches"),
+    "recommended_for_you": MessageLookupByLibrary.simpleMessage(
+      "Recommended for you",
+    ),
     "recommended_size": MessageLookupByLibrary.simpleMessage(
       "Recommended size",
     ),
@@ -1172,6 +1180,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_filter": MessageLookupByLibrary.simpleMessage("Search filter"),
     "seconds": MessageLookupByLibrary.simpleMessage("seconds"),
     "security": MessageLookupByLibrary.simpleMessage("Security"),
+    "see_all": MessageLookupByLibrary.simpleMessage("See all"),
     "selectPaymentMethod": MessageLookupByLibrary.simpleMessage(
       "Select Payment Method",
     ),

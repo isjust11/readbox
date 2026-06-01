@@ -929,12 +929,17 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
                   border: InputBorder.none,
                   suffixIcon:
                       _isSearching
-                          ? const Padding(
-                            padding: EdgeInsets.all(12),
+                          ? Padding(
+                            padding: const EdgeInsets.all(12),
                             child: SizedBox(
                               width: 16,
                               height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              child:
+                                  Platform.isIOS
+                                      ? CupertinoActivityIndicator()
+                                      : CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
                             ),
                           )
                           : IconButton(

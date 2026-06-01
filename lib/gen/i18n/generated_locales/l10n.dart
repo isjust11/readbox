@@ -401,12 +401,7 @@ class AppLocalizations {
 
   /// `Tất cả ebook`
   String get all_ebooks {
-    return Intl.message(
-      'Tất cả ebook',
-      name: 'all_ebooks',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tất cả ebook', name: 'all_ebooks', desc: '', args: []);
   }
 
   /// `Ebook mới`
@@ -4229,6 +4224,26 @@ class AppLocalizations {
     );
   }
 
+  /// `Chọn chữ: Bật`
+  String get pdf_text_select_on {
+    return Intl.message(
+      'Chọn chữ: Bật',
+      name: 'pdf_text_select_on',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn chữ: Tắt (tiết kiệm RAM)`
+  String get pdf_text_select_off {
+    return Intl.message(
+      'Chọn chữ: Tắt (tiết kiệm RAM)',
+      name: 'pdf_text_select_off',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Tràn chiều ngang`
   String get pdf_scale_fit_width {
     return Intl.message(
@@ -5679,6 +5694,16 @@ class AppLocalizations {
     );
   }
 
+  /// `Tải Xuống`
+  String get download_usage {
+    return Intl.message(
+      'Tải Xuống',
+      name: 'download_usage',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `lần`
   String get times {
     return Intl.message('lần', name: 'times', desc: '', args: []);
@@ -5802,6 +5827,26 @@ class AppLocalizations {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Tải Xuống`
+  String get download_limit {
+    return Intl.message(
+      'Tải Xuống',
+      name: 'download_limit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không quảng cáo`
+  String get no_ads {
+    return Intl.message('Không quảng cáo', name: 'no_ads', desc: '', args: []);
+  }
+
+  /// `Có quảng cáo`
+  String get has_ads {
+    return Intl.message('Có quảng cáo', name: 'has_ads', desc: '', args: []);
   }
 
   /// `Đang Đọc`
@@ -5938,16 +5983,6 @@ class AppLocalizations {
       'Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF',
       name:
           'upgrade_to_premium_to_use_this_feature_button_description_description_description',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Tải Xuống`
-  String get download_limit {
-    return Intl.message(
-      'Tải Xuống',
-      name: 'download_limit',
       desc: '',
       args: [],
     );

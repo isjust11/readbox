@@ -105,8 +105,6 @@ class AppProfile extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: 4),
-
                         // User Email
                         if (user?.email != null && user!.email!.isNotEmpty)
                           Text(
@@ -119,7 +117,7 @@ class AppProfile extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
 
-                        SizedBox(height: 6),
+                        SizedBox(height: 8),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

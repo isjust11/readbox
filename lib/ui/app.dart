@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/config/theme_data.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/routes.dart';
@@ -30,6 +31,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _initializeNotifications();
+    context.read<UserSubscriptionCubit>().loadMe();
   }
 
   @override

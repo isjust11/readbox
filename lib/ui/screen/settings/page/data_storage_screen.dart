@@ -127,8 +127,14 @@ class _DataStorageScreenState extends State<DataStorageScreen>
             // Convert Usage
             if (!subscription.isFree) ...[
               _buildConvertUsageCard(context, subscription, theme, colorScheme),
-              const SizedBox(height: AppDimens.SIZE_24),
+              const SizedBox(height: AppDimens.SIZE_16),
             ],
+
+            // Download Usage (hiện cho cả Free vì Free có giới hạn thật):
+            // - Free: limit > 0  → có progress bar
+            // - Pro:  limit <= 0 → hiển thị "Unlimited"
+            _buildDownloadUsageCard(context, subscription, theme, colorScheme),
+            const SizedBox(height: AppDimens.SIZE_24),
 
             // Activity Statistics
             if (interactionCounts.isNotEmpty) ...[
@@ -425,6 +431,39 @@ class _DataStorageScreenState extends State<DataStorageScreen>
       title: AppLocalizations.current.convert_usage,
       used: '$used',
       limit: AppLocalizations.current.unlimited,
+      percentage: percentage,
+      isUnlimited: isUnlimited,
+      unit: AppLocalizations.current.times,
+    );
+  }
+
+  /// Card thống kê số lượt tải xuống của user.
+  /// - `used` lấy từ `interactionCounts['download']` (đếm lifetime từ server).
+  /// - `limit` lấy từ `plan.downloadLimitPerPeriod`:
+  ///     • `<= 0`  → unlimited (Pro plan thường set 0 = không giới hạn).
+  ///     • `> 0`   → hiển thị progress bar `used / limit`.
+  Widget _buildDownloadUsageCard(
+    BuildContext context,
+    UserSubscriptionModel subscription,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
+    final plan = subscription.plan;
+    final used = interactionCounts['download'] ?? 0;
+    final limit = plan?.downloadLimitPerPeriod ?? 0;
+    final isUnlimited = limit <= 0;
+    final percentage =
+        isUnlimited ? 0.0 : (used / limit * 100).clamp(0.0, 100.0);
+
+    return _buildUsageCard(
+      context: context,
+      theme: theme,
+      colorScheme: colorScheme,
+      icon: Icons.download_rounded,
+      iconColor: Colors.teal,
+      title: AppLocalizations.current.download_usage,
+      used: '$used',
+      limit: isUnlimited ? AppLocalizations.current.unlimited : '$limit',
       percentage: percentage,
       isUnlimited: isUnlimited,
       unit: AppLocalizations.current.times,

@@ -67,6 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "all_data_loaded": MessageLookupByLibrary.simpleMessage(
       "Đã tải hết dữ liệu",
     ),
+    "all_ebooks": MessageLookupByLibrary.simpleMessage("Tất cả ebook"),
     "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
     "app_version": MessageLookupByLibrary.simpleMessage("Phiên bản ứng dụng"),
     "appearance": MessageLookupByLibrary.simpleMessage("Giao diện"),
@@ -148,18 +149,6 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đã xóa sách thành công",
     ),
     "book_discover": MessageLookupByLibrary.simpleMessage("Khám phá"),
-    "all_ebooks": MessageLookupByLibrary.simpleMessage("Tất cả ebook"),
-    "new_ebooks": MessageLookupByLibrary.simpleMessage("Ebook mới"),
-    "popular_ebooks": MessageLookupByLibrary.simpleMessage(
-      "Ebook được yêu thích",
-    ),
-    "recommended_for_you": MessageLookupByLibrary.simpleMessage(
-      "Gợi ý cho bạn",
-    ),
-    "see_all": MessageLookupByLibrary.simpleMessage("Xem tất cả"),
-    "no_books_for_section": MessageLookupByLibrary.simpleMessage(
-      "Chưa có ebook nào",
-    ),
     "book_has_been_added_to_local_library":
         MessageLookupByLibrary.simpleMessage(
           "Sách đã được thêm vào thư viện local",
@@ -314,6 +303,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "download_count": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
     "download_limit": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
     "download_to_read": MessageLookupByLibrary.simpleMessage("Tải về để đọc"),
+    "download_usage": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
     "downloading_from_drive": MessageLookupByLibrary.simpleMessage(
       "Đang tải từ Drive...",
     ),
@@ -536,6 +526,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Thời gian đăng nhập Google hết hạn",
     ),
     "grant_permission": MessageLookupByLibrary.simpleMessage("Cấp quyền"),
+    "has_ads": MessageLookupByLibrary.simpleMessage("Có quảng cáo"),
     "have_account": MessageLookupByLibrary.simpleMessage("Đã có tài khoản? "),
     "helpCenter": MessageLookupByLibrary.simpleMessage("Trung tâm trợ giúp"),
     "high": MessageLookupByLibrary.simpleMessage("Cao"),
@@ -724,6 +715,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Cần quyền truy cập bộ nhớ",
     ),
     "new_book": MessageLookupByLibrary.simpleMessage("Mới"),
+    "new_ebooks": MessageLookupByLibrary.simpleMessage("Ebook mới"),
     "new_password": MessageLookupByLibrary.simpleMessage("Mật khẩu mới"),
     "news": MessageLookupByLibrary.simpleMessage("Tin tức"),
     "next": MessageLookupByLibrary.simpleMessage("Tiếp theo"),
@@ -741,6 +733,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Hiện chưa có gói dịch vụ.",
     ),
     "no_account": MessageLookupByLibrary.simpleMessage("Chưa có tài khoản? "),
+    "no_ads": MessageLookupByLibrary.simpleMessage("Không quảng cáo"),
     "no_available_camera": MessageLookupByLibrary.simpleMessage(
       "Không có camera khả dụng",
     ),
@@ -748,6 +741,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Không tìm thấy sách",
     ),
     "no_books": MessageLookupByLibrary.simpleMessage("Chưa có sách nào"),
+    "no_books_for_section": MessageLookupByLibrary.simpleMessage(
+      "Chưa có ebook nào",
+    ),
     "no_books_found": MessageLookupByLibrary.simpleMessage(
       "Không tìm thấy sách",
     ),
@@ -960,6 +956,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "pdf_share_wait_download": MessageLookupByLibrary.simpleMessage(
       "Đang tải PDF, vui lòng đợi và thử lại",
     ),
+    "pdf_text_select_off": MessageLookupByLibrary.simpleMessage(
+      "Chọn chữ: Tắt (tiết kiệm RAM)",
+    ),
+    "pdf_text_select_on": MessageLookupByLibrary.simpleMessage("Chọn chữ: Bật"),
     "pdf_toolbar": MessageLookupByLibrary.simpleMessage("Thanh công cụ"),
     "pdf_tts_read_error": m4,
     "pdf_undo": MessageLookupByLibrary.simpleMessage("Hoàn tác"),
@@ -1119,6 +1119,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Vui lòng nhập tên đăng nhập",
     ),
     "popular": MessageLookupByLibrary.simpleMessage("Phổ biến"),
+    "popular_ebooks": MessageLookupByLibrary.simpleMessage(
+      "Ebook được yêu thích",
+    ),
     "primaryColor": MessageLookupByLibrary.simpleMessage("Màu chủ đạo"),
     "privacySettings": MessageLookupByLibrary.simpleMessage(
       "Cài đặt quyền riêng tư",
@@ -1176,6 +1179,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Nhận thông báo về cập nhật ứng dụng",
     ),
     "recent_searches": MessageLookupByLibrary.simpleMessage("Tìm kiếm gần đây"),
+    "recommended_for_you": MessageLookupByLibrary.simpleMessage(
+      "Gợi ý cho bạn",
+    ),
     "recommended_size": MessageLookupByLibrary.simpleMessage(
       "Khuyến nghị: 600x900px",
     ),
@@ -1232,6 +1238,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_filter": MessageLookupByLibrary.simpleMessage("Bộ lọc tìm kiếm"),
     "seconds": MessageLookupByLibrary.simpleMessage("giây"),
     "security": MessageLookupByLibrary.simpleMessage("Bảo mật"),
+    "see_all": MessageLookupByLibrary.simpleMessage("Xem tất cả"),
     "selectPaymentMethod": MessageLookupByLibrary.simpleMessage(
       "Chọn phương thức thanh toán",
     ),
