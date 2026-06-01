@@ -126,6 +126,7 @@ class LoginScreenState extends State<LoginBody>
       onStateChanged: (context, state) {
         if (state is LoadedState) {
           getIt.get<UserInfoCubit>().getUserInfo();
+          context.read<UserSubscriptionCubit>().loadMe();
           Navigator.pushReplacementNamed(context, Routes.mainScreen);
         }
       },
