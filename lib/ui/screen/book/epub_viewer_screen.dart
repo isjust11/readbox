@@ -23,6 +23,7 @@ import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/ai_assistant_sheet.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/ui/widgets/banner_ad_widget.dart';
 import 'package:readbox/utils/shared_preference.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 import 'package:readbox/utils/tts_lock_screen_controller.dart';
@@ -662,8 +663,11 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
               ? const Center(child: CircularProgressIndicator())
               : _error != null
               ? Center(child: Text(_error!))
-              : Stack(
-                children: [
+              : Column(
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        children: [
                   EpubView(
                     controller: _epubController,
                     onDocumentLoaded: _onDocumentLoaded,
@@ -834,6 +838,10 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
                     _buildTtsReadingPanel(),
                 ],
               ),
+            ),
+            const BannerAdWidget(),
+          ],
+        ),
     );
   }
 

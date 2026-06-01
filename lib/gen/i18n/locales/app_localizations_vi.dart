@@ -1453,6 +1453,12 @@ class AppLocalizationsVi extends AppLocalizations {
   String get pdf_scroll_horizontal => 'Cuộn ngang';
 
   @override
+  String get pdf_text_select_on => 'Chọn chữ: Bật';
+
+  @override
+  String get pdf_text_select_off => 'Chọn chữ: Tắt (tiết kiệm RAM)';
+
+  @override
   String get pdf_scale_fit_width => 'Tràn chiều ngang';
 
   @override
@@ -1959,6 +1965,9 @@ class AppLocalizationsVi extends AppLocalizations {
   String get convert_usage => 'Chuyển Đổi Tài Liệu';
 
   @override
+  String get download_usage => 'Tải Xuống';
+
+  @override
   String get times => 'lần';
 
   @override
@@ -2009,6 +2018,15 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get download_count => 'Tải Xuống';
+
+  @override
+  String get download_limit => 'Tải Xuống';
+
+  @override
+  String get no_ads => 'Không quảng cáo';
+
+  @override
+  String get has_ads => 'Có quảng cáo';
 
   @override
   String get reading_count => 'Đang Đọc';
@@ -2069,9 +2087,6 @@ class AppLocalizationsVi extends AppLocalizations {
   String
   get upgrade_to_premium_to_use_this_feature_button_description_description_description =>
       'Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF';
-
-  @override
-  String get download_limit => 'Tải Xuống';
 
   @override
   String get share_limit => 'Chia Sẻ';

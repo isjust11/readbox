@@ -2894,6 +2894,18 @@ abstract class AppLocalizations {
   /// **'Horizontal scroll'**
   String get pdf_scroll_horizontal;
 
+  /// No description provided for @pdf_text_select_on.
+  ///
+  /// In en, this message translates to:
+  /// **'Text select: On'**
+  String get pdf_text_select_on;
+
+  /// No description provided for @pdf_text_select_off.
+  ///
+  /// In en, this message translates to:
+  /// **'Text select: Off (saves RAM)'**
+  String get pdf_text_select_off;
+
   /// No description provided for @pdf_scale_fit_width.
   ///
   /// In en, this message translates to:
@@ -3854,6 +3866,12 @@ abstract class AppLocalizations {
   /// **'Document Conversion'**
   String get convert_usage;
 
+  /// No description provided for @download_usage.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads'**
+  String get download_usage;
+
   /// No description provided for @times.
   ///
   /// In en, this message translates to:
@@ -3955,6 +3973,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Downloads'**
   String get download_count;
+
+  /// No description provided for @download_limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get download_limit;
+
+  /// No description provided for @no_ads.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad-free experience'**
+  String get no_ads;
+
+  /// No description provided for @has_ads.
+  ///
+  /// In en, this message translates to:
+  /// **'Ads included'**
+  String get has_ads;
 
   /// No description provided for @reading_count.
   ///
@@ -4059,12 +4095,6 @@ abstract class AppLocalizations {
   /// **'Please upgrade to the PRO plan to use the Word to PDF converter'**
   String
   get upgrade_to_premium_to_use_this_feature_button_description_description_description;
-
-  /// No description provided for @download_limit.
-  ///
-  /// In en, this message translates to:
-  /// **'Download'**
-  String get download_limit;
 
   /// No description provided for @share_limit.
   ///

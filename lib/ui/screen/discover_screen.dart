@@ -20,6 +20,7 @@ import 'package:readbox/utils/utils.dart';
 /// dưới dạng horizontal list. Mỗi section có nút "Xem tất cả" điều hướng
 /// sang `AllEbooksScreen` với filter tương ứng.
 import 'package:readbox/ui/widget/app_widgets/book_options_bottom_sheet.dart';
+import 'package:readbox/ui/widgets/banner_ad_widget.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
@@ -136,8 +137,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           _openAllEbooks(filter: f);
         },
       ),
-      body: RefreshIndicator(
-        onRefresh: _onRefresh,
+      body: Column(
+        children: [
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: _onRefresh,
         child: BlocBuilder<DiscoverCubit, DiscoverState>(
           builder: (context, state) {
             return ListView(
@@ -207,6 +211,10 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             );
           },
         ),
+      ),
+          ),
+          const BannerAdWidget(),
+        ],
       ),
     );
   }

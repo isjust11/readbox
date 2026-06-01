@@ -28,6 +28,7 @@ import 'package:readbox/utils/tts_lock_screen_controller.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 import 'package:readbox/ui/widget/ai_assistant_sheet.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:readbox/ui/widgets/banner_ad_widget.dart';
 
 class PdfViewerScreen extends StatefulWidget {
   final String fileUrl;
@@ -1359,8 +1360,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                         ],
               )
               : null,
-      body: Stack(
+      body: Column(
         children: [
+          Expanded(
+            child: Stack(
+              children: [
           if (_error != null)
             Center(
               child: Column(
@@ -1442,6 +1446,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           // Nút AI Assistant - hiện khi user bôi đen văn bản
           if (isProPlan && _selectedText != null && _selectedText!.isNotEmpty)
             Positioned(bottom: 24, right: 16, child: _buildAiFloatingButton()),
+              ],
+            ),
+          ),
+          const BannerAdWidget(),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

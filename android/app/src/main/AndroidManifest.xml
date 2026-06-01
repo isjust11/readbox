@@ -22,6 +22,10 @@
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
+        <!-- AdMob Test App ID -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3618888231032837~7862388151"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

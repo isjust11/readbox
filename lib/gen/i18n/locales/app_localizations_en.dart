@@ -1452,6 +1452,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pdf_scroll_horizontal => 'Horizontal scroll';
 
   @override
+  String get pdf_text_select_on => 'Text select: On';
+
+  @override
+  String get pdf_text_select_off => 'Text select: Off (saves RAM)';
+
+  @override
   String get pdf_scale_fit_width => 'Fit width';
 
   @override
@@ -1956,6 +1962,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get convert_usage => 'Document Conversion';
 
   @override
+  String get download_usage => 'Downloads';
+
+  @override
   String get times => 'times';
 
   @override
@@ -2006,6 +2015,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get download_count => 'Downloads';
+
+  @override
+  String get download_limit => 'Download';
+
+  @override
+  String get no_ads => 'Ad-free experience';
+
+  @override
+  String get has_ads => 'Ads included';
 
   @override
   String get reading_count => 'Reading';
@@ -2066,9 +2084,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String
   get upgrade_to_premium_to_use_this_feature_button_description_description_description =>
       'Please upgrade to the PRO plan to use the Word to PDF converter';
-
-  @override
-  String get download_limit => 'Download';
 
   @override
   String get share_limit => 'Share';
