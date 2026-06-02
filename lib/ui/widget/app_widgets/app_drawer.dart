@@ -28,7 +28,7 @@ class AppDrawer extends StatefulWidget {
 
 class _AppDrawerState extends State<AppDrawer> {
   late String _currentFilter;
-
+  bool _isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -266,6 +266,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 iconColor: colorScheme.error,
                 textColor: colorScheme.error,
                 isDestructive: true,
+                itemId: 'logout',
               ),
             ),
           ],
@@ -275,12 +276,18 @@ class _AppDrawerState extends State<AppDrawer> {
   }
 
   void _handleLogout() async {
+    setState(() {
+      _isLoading = true;
+    });
     // 1. Perform central logout (RevenueCat, secure storage, etc.)
     await context.read<AuthCubit>().doLogout();
 
     // 2. Clear subscription data
     context.read<UserSubscriptionCubit>().clear();
     if (context.mounted) {
+      setState(() {
+        _isLoading = false;
+      });
       Navigator.of(
         context,
       ).pushNamedAndRemoveUntil(Routes.loginScreen, (route) => false);
@@ -296,6 +303,7 @@ class _AppDrawerState extends State<AppDrawer> {
     Color? iconColor,
     Color? textColor,
     bool isDestructive = false,
+    String itemId = "",
   }) {
     final colorScheme = Theme.of(context).colorScheme;
     final Color effectiveIconColor =
@@ -368,6 +376,17 @@ class _AppDrawerState extends State<AppDrawer> {
                           ),
                         ),
                       ),
+                      // Loading state when logout
+                      if (itemId == 'logout' && _isLoading) ...[
+                        SizedBox(
+                          width: 14,
+                          height: 14,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

@@ -28,7 +28,8 @@ import 'package:readbox/utils/tts_lock_screen_controller.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 import 'package:readbox/ui/widget/ai_assistant_sheet.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:readbox/ui/widgets/banner_ad_widget.dart';
+import 'package:readbox/ui/widget/banner_ad_widget.dart';
+import 'package:readbox/ui/widget/popup_ad_widget.dart';
 
 class PdfViewerScreen extends StatefulWidget {
   final String fileUrl;
@@ -437,7 +438,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     switch (value) {
       case 'ai_assistant':
         if (!isProPlan) {
-          Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
+          PopupAdWidget.showPrompt(context: context, onReward: () {
+            AiAssistantSheet.show(context);
+          });
           return;
         }
         AiAssistantSheet.show(context);
@@ -463,7 +466,13 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         break;
       case 'read_continuous_ebook':
         if (!isProPlan) {
-          Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
+          PopupAdWidget.showPrompt(context: context, onReward: () {
+            setState(() {
+              _isVisibleToolAction = !_isVisibleToolAction;
+            });
+            actionToolbar = 'read_continuous_ebook';
+            _readContinuousEbook();
+          });
           return;
         }
         setState(() {
@@ -474,7 +483,9 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         break;
       case 'download':
         if (!isProPlan && !(_actionStatus?['canUseDownload'] ?? false)) {
-          Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
+          PopupAdWidget.showPrompt(context: context, onReward: () {
+            _downloadAndSavePdf();
+          });
           return;
         }
         _downloadAndSavePdf();
@@ -1345,9 +1356,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                           _buildMenuItem(
                                             'download',
                                             Icons.download_rounded,
-                                            AppLocalizations
-                                                .current
-                                                .tools_save_as_pdf,
+                                            AppLocalizations.current.download,
                                             Colors.green,
                                             isEnabled:
                                                 _actionStatus?['canUseDownload'] ??
@@ -1365,87 +1374,102 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
           Expanded(
             child: Stack(
               children: [
-          if (_error != null)
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: Theme.of(context).colorScheme.error,
+                if (_error != null)
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 64,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          AppLocalizations.current.pdf_cannot_load,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 32),
+                          child: Text(
+                            AppLocalizations
+                                .current
+                                .cannot_load_pdf_description,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        ),
+                        SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed:
+                              _isLocal
+                                  ? null
+                                  : () => setState(() => _error = null),
+                          child: Text(AppLocalizations.current.retry),
+                        ),
+                      ],
+                    ),
+                  )
+                else if (showViewer)
+                  _buildPdfViewerArea(
+                    showNavBar: showNavigationBar && showToolbar,
                   ),
-                  SizedBox(height: 16),
-                  Text(
-                    AppLocalizations.current.pdf_cannot_load,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
-                    child: Text(
-                      AppLocalizations.current.cannot_load_pdf_description,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey[600]),
+                if (_isLoading)
+                  Container(
+                    color: Colors.white,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const CupertinoActivityIndicator(radius: 14),
+                          SizedBox(height: 16),
+                          Text(AppLocalizations.current.pdf_loading),
+                          SizedBox(height: 8),
+                          Text(
+                            AppLocalizations.current.pdf_please_wait,
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed:
-                        _isLocal ? null : () => setState(() => _error = null),
-                    child: Text(AppLocalizations.current.retry),
-                  ),
-                ],
-              ),
-            )
-          else if (showViewer)
-            _buildPdfViewerArea(showNavBar: showNavigationBar && showToolbar),
-          if (_isLoading)
-            Container(
-              color: Colors.white,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const CupertinoActivityIndicator(radius: 14),
-                    SizedBox(height: 16),
-                    Text(AppLocalizations.current.pdf_loading),
-                    SizedBox(height: 8),
-                    Text(
-                      AppLocalizations.current.pdf_please_wait,
-                      style: TextStyle(color: Colors.grey[600]),
+                if (_isLoadingText)
+                  Container(
+                    color: Colors.black45,
+                    child: const Center(
+                      child: CupertinoActivityIndicator(radius: 12),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          if (_isLoadingText)
-            Container(
-              color: Colors.black45,
-              child: const Center(
-                child: CupertinoActivityIndicator(radius: 12),
-              ),
-            ),
-          // Toggle toolbar button
-          if (!showToolbar)
-            Positioned(
-              top: 16,
-              right: 16,
-              child: FloatingActionButton.small(
-                onPressed: () {
-                  setState(() {
-                    showToolbar = !showToolbar;
-                  });
-                },
-                child: Icon(Icons.menu),
-              ),
-            ),
-          // Panel đánh dấu từ đang đọc (TTS)
-          if (_showTtsReadingPanel && _ttsReadingText != null)
-            _buildTtsReadingPanel(),
-          // Nút AI Assistant - hiện khi user bôi đen văn bản
-          if (isProPlan && _selectedText != null && _selectedText!.isNotEmpty)
-            Positioned(bottom: 24, right: 16, child: _buildAiFloatingButton()),
+                  ),
+                // Toggle toolbar button
+                if (!showToolbar)
+                  Positioned(
+                    top: 16,
+                    right: 16,
+                    child: FloatingActionButton.small(
+                      onPressed: () {
+                        setState(() {
+                          showToolbar = !showToolbar;
+                        });
+                      },
+                      child: Icon(Icons.menu),
+                    ),
+                  ),
+                // Panel đánh dấu từ đang đọc (TTS)
+                if (_showTtsReadingPanel && _ttsReadingText != null)
+                  _buildTtsReadingPanel(),
+                // Nút AI Assistant - hiện khi user bôi đen văn bản
+                if (isProPlan &&
+                    _selectedText != null &&
+                    _selectedText!.isNotEmpty)
+                  Positioned(
+                    bottom: 24,
+                    right: 16,
+                    child: _buildAiFloatingButton(),
+                  ),
               ],
             ),
           ),

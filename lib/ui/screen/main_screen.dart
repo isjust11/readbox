@@ -22,6 +22,8 @@ import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/utils.dart';
 import 'package:scale_size/scale_size.dart';
+import 'package:readbox/ui/widget/app_widgets/ad_book_card.dart';
+import 'package:readbox/blocs/user_subscription_cubit.dart';
 
 import '../../domain/data/models/models.dart';
 
@@ -1010,51 +1012,73 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
                         emptyDataEnum: EmptyDataEnum.no_filter,
                         title: AppLocalizations.current.no_book_found,
                       )
-                      : GridView.builder(
-                        padding: EdgeInsets.all(16),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: crossAxisCount,
-                          childAspectRatio: childAspectRatio,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                        ),
-                        itemCount: filteredBooks.length,
-                        itemBuilder: (context, index) {
-                          return BookCard(
-                            filterType: filterType,
-                            book: filteredBooks[index],
-                            onRead: (BookModel book, BookFileEntity? file) => _openBook(context, book, selectedFile: file),
-                            ownerId: userInfo?.id,
-                            userInteractionCubit:
-                                context.read<UserInteractionCubit>(),
-                            onDelete: (BookModel book) async {
-                              final result = await context
-                                  .read<LibraryCubit>()
-                                  .deleteBook(book.id!);
-                              if (result) {
-                                getBooks(isLoadMore: true);
-                                AppSnackBar.show(
-                                  context,
-                                  message:
-                                      AppLocalizations
-                                          .current
-                                          .book_deleted_successfully,
-                                  snackBarType: SnackBarType.success,
-                                );
-                              } else {
-                                AppSnackBar.show(
-                                  context,
-                                  message:
-                                      AppLocalizations
-                                          .current
-                                          .error_deleting_book,
-                                  snackBarType: SnackBarType.error,
-                                );
+                      : (() {
+                          final isFreeUser = context.watch<UserSubscriptionCubit>().isFreeUser();
+                          final int adInterval = 6;
+                          
+                          int totalCount = filteredBooks.length;
+                          if (isFreeUser && filteredBooks.isNotEmpty) {
+                            totalCount += filteredBooks.length ~/ adInterval;
+                          }
+
+                          return GridView.builder(
+                            padding: EdgeInsets.all(16),
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: crossAxisCount,
+                              childAspectRatio: childAspectRatio,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 16,
+                            ),
+                            itemCount: totalCount,
+                            itemBuilder: (context, index) {
+                              if (isFreeUser && index > 0 && (index + 1) % (adInterval + 1) == 0) {
+                                return const AdBookCard();
                               }
+
+                              int bookIndex = index;
+                              if (isFreeUser) {
+                                bookIndex = index - (index ~/ (adInterval + 1));
+                              }
+                              
+                              if (bookIndex >= filteredBooks.length) return const SizedBox.shrink();
+                              final book = filteredBooks[bookIndex];
+
+                              return BookCard(
+                                filterType: filterType,
+                                book: book,
+                                onRead: (BookModel book, BookFileEntity? file) => _openBook(context, book, selectedFile: file),
+                                ownerId: userInfo?.id,
+                                userInteractionCubit:
+                                    context.read<UserInteractionCubit>(),
+                                onDelete: (BookModel book) async {
+                                  final result = await context
+                                      .read<LibraryCubit>()
+                                      .deleteBook(book.id!);
+                                  if (result) {
+                                    getBooks(isLoadMore: true);
+                                    AppSnackBar.show(
+                                      context,
+                                      message:
+                                          AppLocalizations
+                                              .current
+                                              .book_deleted_successfully,
+                                      snackBarType: SnackBarType.success,
+                                    );
+                                  } else {
+                                    AppSnackBar.show(
+                                      context,
+                                      message:
+                                          AppLocalizations
+                                              .current
+                                              .error_deleting_book,
+                                      snackBarType: SnackBarType.error,
+                                    );
+                                  }
+                                },
+                              );
                             },
                           );
-                        },
-                      ),
+                        })(),
             );
             widgetView = filteredBooks.isNotEmpty ? content : widgetView;
             // Luôn dùng cùng một cấu trúc Column + Expanded để SmartRefresher

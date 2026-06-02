@@ -20,7 +20,7 @@ import 'package:readbox/utils/utils.dart';
 /// dưới dạng horizontal list. Mỗi section có nút "Xem tất cả" điều hướng
 /// sang `AllEbooksScreen` với filter tương ứng.
 import 'package:readbox/ui/widget/app_widgets/book_options_bottom_sheet.dart';
-import 'package:readbox/ui/widgets/banner_ad_widget.dart';
+import 'package:readbox/ui/widget/banner_ad_widget.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
