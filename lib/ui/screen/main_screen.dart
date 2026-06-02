@@ -979,11 +979,12 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
                       // Check state từ cubit để hiển thị chính xác trạng thái
                       if (cubit.isLoadingMore) {
                         body = SizedBox(
+                          height: AppDimens.SIZE_48,
                           child: Center(
                             child:
                                 Platform.isIOS
-                                    ? CupertinoActivityIndicator()
-                                    : CircularProgressIndicator(),
+                                    ? const CupertinoActivityIndicator()
+                                    : const CircularProgressIndicator(),
                           ),
                         );
                       } else if (!cubit.hasMore) {
@@ -1049,9 +1050,8 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
                                       index - (index ~/ (adInterval + 1));
                                 }
 
-                                if (bookIndex >= filteredBooks.length) {
+                                if (bookIndex >= filteredBooks.length)
                                   return const SizedBox.shrink();
-                                }
                                 final book = filteredBooks[bookIndex];
 
                                 return BookCard(
