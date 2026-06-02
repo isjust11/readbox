@@ -2386,4 +2386,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no_recent_searches => 'No recent searches';
+
+  @override
+  String get privacySettings_description => 'Manage ad & data choices';
+
+  @override
+  String get download => 'Download';
+
+  @override
+  String get ad_load_failed =>
+      'Failed to load ad at this time. Please try again later.';
+
+  @override
+  String get premium_feature_title => 'Premium Feature';
+
+  @override
+  String get premium_feature_desc =>
+      'Watch a short video ad to use this feature for free.';
+
+  @override
+  String get watch_ad => 'Watch Ad';
 }

@@ -14,7 +14,7 @@ class AdHelper {
       if (kDebugMode) {
         return 'ca-app-pub-3940256099942544/2934735716'; // Test ID iOS
       } else {
-        return 'ca-app-pub-3618888231032837/5820787980'; // Real ID iOS
+        return 'ca-app-pub-3618888231032837/5440450977'; // Real ID iOS
       }
     }
     throw UnsupportedError('Unsupported platform');
@@ -31,7 +31,7 @@ class AdHelper {
       if (kDebugMode) {
         return 'ca-app-pub-3940256099942544/4411468910'; // Test ID iOS
       } else {
-        return 'ca-app-pub-3618888231032837/1658181692'; // Real ID iOS
+        return 'ca-app-pub-3618888231032837/9282503381'; // Real ID iOS
       }
     }
     throw UnsupportedError('Unsupported platform');
@@ -48,7 +48,7 @@ class AdHelper {
       if (kDebugMode) {
         return 'ca-app-pub-3940256099942544/1712485313'; // Test ID iOS
       } else {
-        return 'ca-app-pub-3618888231032837/7936119350'; // Real ID iOS (placeholder, should be replaced by user)
+        return 'ca-app-pub-3618888231032837/1309634271'; // Real ID iOS (placeholder, should be replaced by user)
       }
     }
     throw UnsupportedError('Unsupported platform');

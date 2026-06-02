@@ -4677,6 +4677,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No recent searches'**
   String get no_recent_searches;
+
+  /// No description provided for @privacySettings_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage ad & data choices'**
+  String get privacySettings_description;
+
+  /// No description provided for @download.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get download;
+
+  /// No description provided for @ad_load_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load ad at this time. Please try again later.'**
+  String get ad_load_failed;
+
+  /// No description provided for @premium_feature_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Feature'**
+  String get premium_feature_title;
+
+  /// No description provided for @premium_feature_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch a short video ad to use this feature for free.'**
+  String get premium_feature_desc;
+
+  /// No description provided for @watch_ad.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Ad'**
+  String get watch_ad;
 }
 
 class _AppLocalizationsDelegate

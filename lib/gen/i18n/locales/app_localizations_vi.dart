@@ -2389,4 +2389,25 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get no_recent_searches => 'Chưa có tìm kiếm nào';
+
+  @override
+  String get privacySettings_description =>
+      'Quản lý lựa chọn quảng cáo & dữ liệu';
+
+  @override
+  String get download => 'Tải xuống';
+
+  @override
+  String get ad_load_failed =>
+      'Không thể tải quảng cáo lúc này. Vui lòng thử lại sau.';
+
+  @override
+  String get premium_feature_title => 'Tính năng Premium';
+
+  @override
+  String get premium_feature_desc =>
+      'Xem một video quảng cáo ngắn để sử dụng tính năng này miễn phí.';
+
+  @override
+  String get watch_ad => 'Xem quảng cáo';
 }
