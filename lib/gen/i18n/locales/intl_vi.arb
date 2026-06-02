@@ -845,5 +845,11 @@
   "splash_feature_library_desc": "Lưu yêu thích, theo dõi\ntiến độ đọc sách của bạn",
   "recent_searches": "Tìm kiếm gần đây",
   "clear_all": "Xóa tất cả", 
-  "no_recent_searches": "Chưa có tìm kiếm nào"
+  "no_recent_searches": "Chưa có tìm kiếm nào",
+  "privacySettings_description": "Quản lý lựa chọn quảng cáo & dữ liệu",
+  "download": "Tải xuống",
+  "ad_load_failed": "Không thể tải quảng cáo lúc này. Vui lòng thử lại sau.",
+  "premium_feature_title": "Tính năng Premium",
+  "premium_feature_desc": "Xem một video quảng cáo ngắn để sử dụng tính năng này miễn phí.",
+  "watch_ad": "Xem quảng cáo"
 }

@@ -47,6 +47,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "activity_statistics": MessageLookupByLibrary.simpleMessage(
       "Activity Statistics",
     ),
+    "ad_load_failed": MessageLookupByLibrary.simpleMessage(
+      "Failed to load ad at this time. Please try again later.",
+    ),
     "add_archive": MessageLookupByLibrary.simpleMessage("Add archive"),
     "add_book": MessageLookupByLibrary.simpleMessage("Add book"),
     "add_book_to_start_reading": MessageLookupByLibrary.simpleMessage(
@@ -293,6 +296,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disagree": MessageLookupByLibrary.simpleMessage("Disagree"),
     "done": MessageLookupByLibrary.simpleMessage("Done"),
+    "download": MessageLookupByLibrary.simpleMessage("Download"),
     "download_count": MessageLookupByLibrary.simpleMessage("Downloads"),
     "download_limit": MessageLookupByLibrary.simpleMessage("Download"),
     "download_to_read": MessageLookupByLibrary.simpleMessage(
@@ -1071,8 +1075,17 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "popular": MessageLookupByLibrary.simpleMessage("Popular"),
     "popular_ebooks": MessageLookupByLibrary.simpleMessage("Popular ebooks"),
+    "premium_feature_desc": MessageLookupByLibrary.simpleMessage(
+      "Watch a short video ad to use this feature for free.",
+    ),
+    "premium_feature_title": MessageLookupByLibrary.simpleMessage(
+      "Premium Feature",
+    ),
     "primaryColor": MessageLookupByLibrary.simpleMessage("Primary Color"),
     "privacySettings": MessageLookupByLibrary.simpleMessage("Privacy settings"),
+    "privacySettings_description": MessageLookupByLibrary.simpleMessage(
+      "Manage ad & data choices",
+    ),
     "privacy_and_security": MessageLookupByLibrary.simpleMessage(
       "Privacy and security",
     ),
@@ -1559,6 +1572,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "view_plans": MessageLookupByLibrary.simpleMessage("View Plans"),
     "voicePitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
     "warning": MessageLookupByLibrary.simpleMessage("Warning"),
+    "watch_ad": MessageLookupByLibrary.simpleMessage("Watch Ad"),
     "welcome_back": MessageLookupByLibrary.simpleMessage("Welcome back!"),
     "write_a_review": MessageLookupByLibrary.simpleMessage("Write a review"),
     "write_your_review_here": MessageLookupByLibrary.simpleMessage(

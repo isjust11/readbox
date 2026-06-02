@@ -9,6 +9,17 @@ class UserSubscriptionCubit extends Cubit<BaseState> {
 
   UserSubscriptionCubit({required this.repository}) : super(InitState());
   UserSubscriptionModel? userSubscription;
+  bool isProUser() {
+    if (userSubscription == null) return false;
+    final now = DateTime.now();
+    return userSubscription?.expiresAt != null &&
+        now.isBefore(userSubscription!.expiresAt);
+  }
+
+  bool isFreeUser() {
+    return userSubscription?.plan?.code.contains('FREE') ?? false;
+  }
+
   Future<void> loadMe() async {
     try {
       emit(LoadingState());

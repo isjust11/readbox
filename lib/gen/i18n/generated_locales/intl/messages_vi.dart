@@ -47,6 +47,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "activity_statistics": MessageLookupByLibrary.simpleMessage(
       "Thống Kê Hoạt Động",
     ),
+    "ad_load_failed": MessageLookupByLibrary.simpleMessage(
+      "Không thể tải quảng cáo lúc này. Vui lòng thử lại sau.",
+    ),
     "add_archive": MessageLookupByLibrary.simpleMessage(
       "Thêm lưu vào thư viện",
     ),
@@ -300,6 +303,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "disagree": MessageLookupByLibrary.simpleMessage("Không đồng ý"),
     "done": MessageLookupByLibrary.simpleMessage("Hoàn thành"),
+    "download": MessageLookupByLibrary.simpleMessage("Tải xuống"),
     "download_count": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
     "download_limit": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
     "download_to_read": MessageLookupByLibrary.simpleMessage("Tải về để đọc"),
@@ -1122,9 +1126,18 @@ class MessageLookup extends MessageLookupByLibrary {
     "popular_ebooks": MessageLookupByLibrary.simpleMessage(
       "Ebook được yêu thích",
     ),
+    "premium_feature_desc": MessageLookupByLibrary.simpleMessage(
+      "Xem một video quảng cáo ngắn để sử dụng tính năng này miễn phí.",
+    ),
+    "premium_feature_title": MessageLookupByLibrary.simpleMessage(
+      "Tính năng Premium",
+    ),
     "primaryColor": MessageLookupByLibrary.simpleMessage("Màu chủ đạo"),
     "privacySettings": MessageLookupByLibrary.simpleMessage(
       "Cài đặt quyền riêng tư",
+    ),
+    "privacySettings_description": MessageLookupByLibrary.simpleMessage(
+      "Quản lý lựa chọn quảng cáo & dữ liệu",
     ),
     "privacy_and_security": MessageLookupByLibrary.simpleMessage(
       "Quyền riêng tư và bảo mật",
@@ -1621,6 +1634,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "view_plans": MessageLookupByLibrary.simpleMessage("Xem Các Gói"),
     "voicePitch": MessageLookupByLibrary.simpleMessage("Cao độ giọng"),
     "warning": MessageLookupByLibrary.simpleMessage("Cảnh báo"),
+    "watch_ad": MessageLookupByLibrary.simpleMessage("Xem quảng cáo"),
     "welcome_back": MessageLookupByLibrary.simpleMessage("Chào mừng trở lại!"),
     "write_a_review": MessageLookupByLibrary.simpleMessage("Viết nhận xét"),
     "write_your_review_here": MessageLookupByLibrary.simpleMessage(

@@ -22,6 +22,8 @@ import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/utils.dart';
 import 'package:scale_size/scale_size.dart';
+import 'package:readbox/ui/widget/app_widgets/ad_book_card.dart';
+import 'package:readbox/blocs/user_subscription_cubit.dart';
 
 import '../../domain/data/models/models.dart';
 
@@ -80,10 +82,10 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
     }
     title = _resolveTitleForFilter(filterType);
     // context.read<UserSubscriptionCubit>().loadMe();
-    
+
     // Thêm listener cho search focus để show/hide recent panel
     _searchFocusNode.addListener(_onSearchFocusChanged);
-    
+
     // Load initial data after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NotificationCubit>().getUnreadCount();
@@ -131,7 +133,7 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
     });
     _searchFocusNode.unfocus();
     getBooks(isLoadMore: false);
-    
+
     // Lưu vào history (sẽ đưa lên đầu danh sách)
     SearchHistoryService().addSearchTerm(searchTerm);
   }
@@ -823,12 +825,14 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
                       setState(() {
                         _showSearchRecent = false;
                       });
-                    } else if (!_showSearchRecent && value.isEmpty && _searchFocusNode.hasFocus) {
+                    } else if (!_showSearchRecent &&
+                        value.isEmpty &&
+                        _searchFocusNode.hasFocus) {
                       setState(() {
                         _showSearchRecent = true;
                       });
                     }
-                    
+
                     // Hủy timer trước đó nếu có
                     _debounceTimer?.cancel();
                     // Tạo timer mới, sau 700ms mới thực hiện search
@@ -916,173 +920,210 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
               }
             },
             child: BlocBuilder<LibraryCubit, BaseState>(
-          builder: (context, state) {
-            // Lấy books và cubit từ state
-            final books = context.read<LibraryCubit>().books;
-            final cubit = context.read<LibraryCubit>();
-            Widget widgetView = SizedBox.shrink();
-            // Hiển thị empty state
-            if (state is LoadedState && books.isEmpty) {
-              widgetView = EmptyData(
-                emptyDataEnum: EmptyDataEnum.no_data,
-                title: AppLocalizations.current.no_books,
-                description: AppLocalizations.current.add_book_to_start_reading,
-              );
-            }
+              builder: (context, state) {
+                // Lấy books và cubit từ state
+                final books = context.read<LibraryCubit>().books;
+                final cubit = context.read<LibraryCubit>();
+                Widget widgetView = SizedBox.shrink();
+                // Hiển thị empty state
+                if (state is LoadedState && books.isEmpty) {
+                  widgetView = EmptyData(
+                    emptyDataEnum: EmptyDataEnum.no_data,
+                    title: AppLocalizations.current.no_books,
+                    description:
+                        AppLocalizations.current.add_book_to_start_reading,
+                  );
+                }
 
-            // Apply format filter client-side if needed
-            var filteredBooks = books;
-            if (_isSearching && _filterModel?.format != null) {
-              filteredBooks =
-                  books.where((book) {
-                    return book.fileType?.name == _filterModel?.format;
-                  }).toList();
-            }
+                // Apply format filter client-side if needed
+                var filteredBooks = books;
+                if (_isSearching && _filterModel?.format != null) {
+                  filteredBooks =
+                      books.where((book) {
+                        return book.fileType?.name == _filterModel?.format;
+                      }).toList();
+                }
 
-            // Responsive grid cho màn hình lớn/nhỏ
-            final screenWidth = MediaQuery.of(context).size.width;
-            int crossAxisCount;
-            double childAspectRatio;
-            if (screenWidth >= 1200) {
-              crossAxisCount = 5;
-              childAspectRatio = 0.7;
-            } else if (screenWidth >= 992) {
-              crossAxisCount = 4;
-              childAspectRatio = 0.7;
-            } else if (screenWidth >= 600) {
-              crossAxisCount = 3;
-              childAspectRatio = 0.7;
-            } else {
-              crossAxisCount = 2;
-              childAspectRatio = 0.6;
-            }
+                // Responsive grid cho màn hình lớn/nhỏ
+                final screenWidth = MediaQuery.of(context).size.width;
+                int crossAxisCount;
+                double childAspectRatio;
+                if (screenWidth >= 1200) {
+                  crossAxisCount = 5;
+                  childAspectRatio = 0.7;
+                } else if (screenWidth >= 992) {
+                  crossAxisCount = 4;
+                  childAspectRatio = 0.7;
+                } else if (screenWidth >= 600) {
+                  crossAxisCount = 3;
+                  childAspectRatio = 0.7;
+                } else {
+                  crossAxisCount = 2;
+                  childAspectRatio = 0.6;
+                }
 
-            // Khi không ở chế độ tìm kiếm: hiển thị thanh chọn category phía trên danh sách
-            final content = SmartRefresher(
-              enablePullDown: true,
-              enablePullUp: cubit.hasMore,
-              controller: _refreshController,
-              onRefresh: _onRefresh,
-              onLoading: () {
-                _onLoadMore();
-              },
-              header: WaterDropMaterialHeader(),
-              footer: CustomFooter(
-                builder: (BuildContext context, LoadStatus? mode) {
-                  Widget body = Container(height: 0);
+                // Khi không ở chế độ tìm kiếm: hiển thị thanh chọn category phía trên danh sách
+                final content = SmartRefresher(
+                  enablePullDown: true,
+                  enablePullUp: cubit.hasMore,
+                  controller: _refreshController,
+                  onRefresh: _onRefresh,
+                  onLoading: () {
+                    _onLoadMore();
+                  },
+                  header: WaterDropMaterialHeader(),
+                  footer: CustomFooter(
+                    builder: (BuildContext context, LoadStatus? mode) {
+                      Widget body = Container(height: 0);
 
-                  // Check state từ cubit để hiển thị chính xác trạng thái
-                  if (cubit.isLoadingMore) {
-                    body = SizedBox(
-                      height: AppDimens.SIZE_18,
-                      child: Center(
-                        child:
-                            Platform.isIOS
-                                ? CupertinoActivityIndicator()
-                                : CircularProgressIndicator(),
-                      ),
-                    );
-                  } else if (!cubit.hasMore) {
-                    body = SizedBox(
-                      height: AppDimens.SIZE_48,
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.current.all_data_loaded,
-                          style: TextStyle(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onSurface.withValues(alpha: 0.8),
+                      // Check state từ cubit để hiển thị chính xác trạng thái
+                      if (cubit.isLoadingMore) {
+                        body = SizedBox(
+                          child: Center(
+                            child:
+                                Platform.isIOS
+                                    ? CupertinoActivityIndicator()
+                                    : CircularProgressIndicator(),
                           ),
-                        ),
-                      ),
-                    );
-                  } else if (mode == LoadStatus.idle) {
-                    body = SizedBox(height: 0);
-                  }
-                  return body;
-                },
-              ),
-              child:
-                  filteredBooks.isEmpty &&
-                          _isSearching &&
-                          (_filterModel?.format != null)
-                      ? EmptyData(
-                        emptyDataEnum: EmptyDataEnum.no_filter,
-                        title: AppLocalizations.current.no_book_found,
-                      )
-                      : GridView.builder(
-                        padding: EdgeInsets.all(16),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: crossAxisCount,
-                          childAspectRatio: childAspectRatio,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                        ),
-                        itemCount: filteredBooks.length,
-                        itemBuilder: (context, index) {
-                          return BookCard(
-                            filterType: filterType,
-                            book: filteredBooks[index],
-                            onRead: (BookModel book, BookFileEntity? file) => _openBook(context, book, selectedFile: file),
-                            ownerId: userInfo?.id,
-                            userInteractionCubit:
-                                context.read<UserInteractionCubit>(),
-                            onDelete: (BookModel book) async {
-                              final result = await context
-                                  .read<LibraryCubit>()
-                                  .deleteBook(book.id!);
-                              if (result) {
-                                getBooks(isLoadMore: true);
-                                AppSnackBar.show(
+                        );
+                      } else if (!cubit.hasMore) {
+                        body = SizedBox(
+                          height: AppDimens.SIZE_48,
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.current.all_data_loaded,
+                              style: TextStyle(
+                                color: Theme.of(
                                   context,
-                                  message:
-                                      AppLocalizations
-                                          .current
-                                          .book_deleted_successfully,
-                                  snackBarType: SnackBarType.success,
+                                ).colorScheme.onSurface.withValues(alpha: 0.8),
+                              ),
+                            ),
+                          ),
+                        );
+                      } else if (mode == LoadStatus.idle) {
+                        body = SizedBox(height: 0);
+                      }
+                      return body;
+                    },
+                  ),
+                  child:
+                      filteredBooks.isEmpty &&
+                              _isSearching &&
+                              (_filterModel?.format != null)
+                          ? EmptyData(
+                            emptyDataEnum: EmptyDataEnum.no_filter,
+                            title: AppLocalizations.current.no_book_found,
+                          )
+                          : (() {
+                            final isFreeUser =
+                                context
+                                    .watch<UserSubscriptionCubit>()
+                                    .isFreeUser();
+                            final int adInterval = 6;
+
+                            int totalCount = filteredBooks.length;
+                            if (isFreeUser && filteredBooks.isNotEmpty) {
+                              totalCount += filteredBooks.length ~/ adInterval;
+                            }
+
+                            return GridView.builder(
+                              padding: EdgeInsets.all(16),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: crossAxisCount,
+                                    childAspectRatio: childAspectRatio,
+                                    crossAxisSpacing: 16,
+                                    mainAxisSpacing: 16,
+                                  ),
+                              itemCount: totalCount,
+                              itemBuilder: (context, index) {
+                                if (isFreeUser &&
+                                    index > 0 &&
+                                    (index + 1) % (adInterval + 1) == 0) {
+                                  return const AdBookCard();
+                                }
+
+                                int bookIndex = index;
+                                if (isFreeUser) {
+                                  bookIndex =
+                                      index - (index ~/ (adInterval + 1));
+                                }
+
+                                if (bookIndex >= filteredBooks.length) {
+                                  return const SizedBox.shrink();
+                                }
+                                final book = filteredBooks[bookIndex];
+
+                                return BookCard(
+                                  filterType: filterType,
+                                  book: book,
+                                  onRead:
+                                      (BookModel book, BookFileEntity? file) =>
+                                          _openBook(
+                                            context,
+                                            book,
+                                            selectedFile: file,
+                                          ),
+                                  ownerId: userInfo?.id,
+                                  userInteractionCubit:
+                                      context.read<UserInteractionCubit>(),
+                                  onDelete: (BookModel book) async {
+                                    final result = await context
+                                        .read<LibraryCubit>()
+                                        .deleteBook(book.id!);
+                                    if (result) {
+                                      getBooks(isLoadMore: true);
+                                      AppSnackBar.show(
+                                        context,
+                                        message:
+                                            AppLocalizations
+                                                .current
+                                                .book_deleted_successfully,
+                                        snackBarType: SnackBarType.success,
+                                      );
+                                    } else {
+                                      AppSnackBar.show(
+                                        context,
+                                        message:
+                                            AppLocalizations
+                                                .current
+                                                .error_deleting_book,
+                                        snackBarType: SnackBarType.error,
+                                      );
+                                    }
+                                  },
                                 );
-                              } else {
-                                AppSnackBar.show(
-                                  context,
-                                  message:
-                                      AppLocalizations
-                                          .current
-                                          .error_deleting_book,
-                                  snackBarType: SnackBarType.error,
-                                );
-                              }
-                            },
-                          );
-                        },
-                      ),
-            );
-            widgetView = filteredBooks.isNotEmpty ? content : widgetView;
-            // Luôn dùng cùng một cấu trúc Column + Expanded để SmartRefresher
-            // luôn nằm cùng một vị trí, tránh lỗi một RefreshController gắn nhiều SmartRefresher.
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                if (!_isSearching && categories.isNotEmpty)
-                  _buildCategoryBar(colorScheme),
-                Expanded(child: widgetView),
-              ],
-            );
-          },
-        ),
+                              },
+                            );
+                          })(),
+                );
+                widgetView = filteredBooks.isNotEmpty ? content : widgetView;
+                // Luôn dùng cùng một cấu trúc Column + Expanded để SmartRefresher
+                // luôn nằm cùng một vị trí, tránh lỗi một RefreshController gắn nhiều SmartRefresher.
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    if (!_isSearching && categories.isNotEmpty)
+                      _buildCategoryBar(colorScheme),
+                    Expanded(child: widgetView),
+                  ],
+                );
+              },
+            ),
+          ),
+          // Search Recent Panel
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: SearchRecentPanel(
+              isVisible: _showSearchRecent,
+              onSearchSelected: _onSearchSelected,
+            ),
+          ),
+        ],
       ),
-      // Search Recent Panel
-      Positioned(
-        top: 0,
-        left: 0,
-        right: 0,
-        child: SearchRecentPanel(
-          isVisible: _showSearchRecent,
-          onSearchSelected: _onSearchSelected,
-        ),
-      ),
-    ],
-  ),
       // Continue Reading FAB đã chuyển sang GlobalFloatingActions ở BaseScreen
       // (icon-only, có thể kéo thả + kéo để ẩn). Không cần khai báo ở đây nữa.
     );
@@ -1400,11 +1441,18 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
     );
   }
 
-  Future<void> _openBook(BuildContext context, BookModel book, {BookFileEntity? selectedFile}) async {
+  Future<void> _openBook(
+    BuildContext context,
+    BookModel book, {
+    BookFileEntity? selectedFile,
+  }) async {
     final String targetUrl = selectedFile?.fileUrl ?? book.fileUrl ?? '';
-    final targetType = selectedFile != null 
-        ? (selectedFile.format?.toLowerCase() == 'pdf' ? BookType.pdf : BookType.epub)
-        : book.fileType;
+    final targetType =
+        selectedFile != null
+            ? (selectedFile.format?.toLowerCase() == 'pdf'
+                ? BookType.pdf
+                : BookType.epub)
+            : book.fileType;
 
     if (targetUrl.isEmpty) {
       AppSnackBar.show(
@@ -1427,7 +1475,11 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
     bookToOpen.fileUrl = targetUrl;
     bookToOpen.fileType = targetType;
 
-    final result = await Navigator.pushNamed(context, route, arguments: bookToOpen);
+    final result = await Navigator.pushNamed(
+      context,
+      route,
+      arguments: bookToOpen,
+    );
     if (result == true) {
       loadUserReadingBooks();
     }

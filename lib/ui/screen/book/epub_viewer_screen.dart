@@ -17,13 +17,15 @@ import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/domain/enums/interaction_type.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/ai_assistant_sheet.dart';
 import 'package:readbox/ui/widget/widget.dart';
-import 'package:readbox/ui/widgets/banner_ad_widget.dart';
+import 'package:readbox/ui/widget/banner_ad_widget.dart';
+import 'package:readbox/ui/widget/popup_ad_widget.dart';
 import 'package:readbox/utils/shared_preference.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 import 'package:readbox/utils/tts_lock_screen_controller.dart';
@@ -230,7 +232,9 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     switch (value) {
       case 'ai_assistant':
         if (!isProPlan) {
-          Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
+          PopupAdWidget.showPrompt(context: context, onReward: () {
+            AiAssistantSheet.show(context);
+          });
           return;
         }
         AiAssistantSheet.show(context);
@@ -243,7 +247,9 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
         break;
       case 'download':
         if (!isProPlan && !(_actionStatus?['canUseDownload'] ?? false)) {
-          Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
+          PopupAdWidget.showPrompt(context: context, onReward: () {
+            _downloadAndSaveEpub();
+          });
           return;
         }
         _downloadAndSaveEpub();
@@ -253,7 +259,13 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
         break;
       case 'read_continuous_ebook':
         if (!isProPlan) {
-          Navigator.pushNamed(context, Routes.subscriptionPlanScreen);
+          PopupAdWidget.showPrompt(context: context, onReward: () {
+            setState(() {
+              _isVisibleToolAction = !_isVisibleToolAction;
+            });
+            actionToolbar = 'read_continuous_ebook';
+            _readContinuousEbook();
+          });
           return;
         }
         setState(() {
@@ -292,6 +304,14 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
           snackBarType: SnackBarType.success,
         );
       }
+      // update interaction action for download
+      context.read<UserInteractionCubit>().incrementUsage(
+        usage: IncrementUsageModel(downloadCount: 1),
+      );
+      context.read<UserInteractionCubit>().download(
+        targetType: InteractionType.download,
+        targetId: widget.bookId,
+      );
     } catch (e) {
       if (mounted) {
         AppSnackBar.show(
@@ -664,184 +684,197 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
               : _error != null
               ? Center(child: Text(_error!))
               : Column(
-                  children: [
-                    Expanded(
-                      child: Stack(
-                        children: [
-                  EpubView(
-                    controller: _epubController,
-                    onDocumentLoaded: _onDocumentLoaded,
-                    onExternalLinkPressed: (link) {},
-                    builders: EpubViewBuilders<DefaultBuilderOptions>(
-                      options: const DefaultBuilderOptions(),
-                      chapterBuilder: _buildChapterWithHighlight,
-                    ),
-                  ),
-                  // Search results overlay
-                  if (_showSearchResults && _searchResults.isNotEmpty)
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxHeight: MediaQuery.of(context).size.height * 0.35,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(16),
+                children: [
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        EpubView(
+                          controller: _epubController,
+                          onDocumentLoaded: _onDocumentLoaded,
+                          onExternalLinkPressed: (link) {},
+                          builders: EpubViewBuilders<DefaultBuilderOptions>(
+                            options: const DefaultBuilderOptions(),
+                            chapterBuilder: _buildChapterWithHighlight,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.15),
-                              blurRadius: 12,
-                              offset: const Offset(0, -4),
-                            ),
-                          ],
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
+                        // Search results overlay
+                        if (_showSearchResults && _searchResults.isNotEmpty)
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.of(context).size.height * 0.35,
                               ),
-                              child: Row(
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.surface,
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(16),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.15),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, -4),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(
-                                    '${_searchResults.length} ${AppLocalizations.current.found}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: theme.colorScheme.onSurface,
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          '${_searchResults.length} ${AppLocalizations.current.found}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: theme.colorScheme.onSurface,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.close,
+                                            size: 20,
+                                          ),
+                                          onPressed: () {
+                                            setState(
+                                              () => _showSearchResults = false,
+                                            );
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  const Spacer(),
-                                  IconButton(
-                                    icon: const Icon(Icons.close, size: 20),
-                                    onPressed: () {
-                                      setState(
-                                        () => _showSearchResults = false,
-                                      );
-                                    },
+                                  const Divider(height: 1),
+                                  Flexible(
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.zero,
+                                      shrinkWrap: true,
+                                      itemCount: _searchResults.length,
+                                      itemBuilder: (context, index) {
+                                        final result = _searchResults[index];
+                                        final isActive =
+                                            index == _currentSearchIndex;
+                                        return ListTile(
+                                          dense: true,
+                                          selected: isActive,
+                                          selectedTileColor: theme.primaryColor
+                                              .withValues(alpha: 0.1),
+                                          leading: Icon(
+                                            Icons.format_quote_rounded,
+                                            size: 18,
+                                            color:
+                                                isActive
+                                                    ? theme.primaryColor
+                                                    : theme
+                                                        .colorScheme
+                                                        .onSurface
+                                                        .withValues(alpha: 0.5),
+                                          ),
+                                          title: RichText(
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            text: _buildHighlightedSpan(
+                                              result.matchText,
+                                              _searchQuery,
+                                              TextStyle(
+                                                fontSize: 13,
+                                                color:
+                                                    theme.colorScheme.onSurface,
+                                              ),
+                                            ),
+                                          ),
+                                          subtitle:
+                                              result.chapterTitle.isNotEmpty
+                                                  ? Text(
+                                                    result.chapterTitle,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: theme
+                                                          .colorScheme
+                                                          .onSurface
+                                                          .withValues(
+                                                            alpha: 0.5,
+                                                          ),
+                                                    ),
+                                                  )
+                                                  : null,
+                                          onTap:
+                                              () =>
+                                                  _scrollToSearchResult(index),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                            const Divider(height: 1),
-                            Flexible(
-                              child: ListView.builder(
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                itemCount: _searchResults.length,
-                                itemBuilder: (context, index) {
-                                  final result = _searchResults[index];
-                                  final isActive = index == _currentSearchIndex;
-                                  return ListTile(
-                                    dense: true,
-                                    selected: isActive,
-                                    selectedTileColor: theme.primaryColor
-                                        .withValues(alpha: 0.1),
-                                    leading: Icon(
-                                      Icons.format_quote_rounded,
-                                      size: 18,
-                                      color:
-                                          isActive
-                                              ? theme.primaryColor
-                                              : theme.colorScheme.onSurface
-                                                  .withValues(alpha: 0.5),
-                                    ),
-                                    title: RichText(
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      text: _buildHighlightedSpan(
-                                        result.matchText,
-                                        _searchQuery,
-                                        TextStyle(
-                                          fontSize: 13,
-                                          color: theme.colorScheme.onSurface,
-                                        ),
-                                      ),
-                                    ),
-                                    subtitle:
-                                        result.chapterTitle.isNotEmpty
-                                            ? Text(
-                                              result.chapterTitle,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                color: theme
-                                                    .colorScheme
-                                                    .onSurface
-                                                    .withValues(alpha: 0.5),
-                                              ),
-                                            )
-                                            : null,
-                                    onTap: () => _scrollToSearchResult(index),
-                                  );
-                                },
+                          ),
+                        // No results message
+                        if (_showSearchResults &&
+                            _searchResults.isEmpty &&
+                            !_isSearching &&
+                            _searchController.text.isNotEmpty)
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.surface,
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(16),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.1),
+                                    blurRadius: 8,
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                AppLocalizations.current.no_book_found,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: theme.colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
+                                ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  // No results message
-                  if (_showSearchResults &&
-                      _searchResults.isEmpty &&
-                      !_isSearching &&
-                      _searchController.text.isNotEmpty)
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(16),
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 8,
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          AppLocalizations.current.no_book_found,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.6,
+                        // TTS loading overlay
+                        if (_isLoadingText)
+                          Container(
+                            color: Colors.black45,
+                            child: Center(
+                              child:
+                                  Platform.isIOS
+                                      ? CupertinoActivityIndicator()
+                                      : CircularProgressIndicator(),
                             ),
                           ),
-                        ),
-                      ),
+                        // Panel hiển thị text đang đọc (TTS)
+                        if (_showTtsReadingPanel && _ttsReadingText != null)
+                          _buildTtsReadingPanel(),
+                      ],
                     ),
-                  // TTS loading overlay
-                  if (_isLoadingText)
-                    Container(
-                      color: Colors.black45,
-                      child: Center(
-                        child:
-                            Platform.isIOS
-                                ? CupertinoActivityIndicator()
-                                : CircularProgressIndicator(),
-                      ),
-                    ),
-                  // Panel hiển thị text đang đọc (TTS)
-                  if (_showTtsReadingPanel && _ttsReadingText != null)
-                    _buildTtsReadingPanel(),
+                  ),
+                  const BannerAdWidget(),
                 ],
               ),
-            ),
-            const BannerAdWidget(),
-          ],
-        ),
     );
   }
 
@@ -884,12 +917,6 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
                   Colors.orange,
                   isPro: true,
                 ),
-                _buildMenuItem(
-                  'download',
-                  Icons.download,
-                  AppLocalizations.current.tools_save_as_pdf,
-                  Colors.green,
-                ),
                 if (isOwner || _isLocal)
                   _buildMenuItem(
                     'share',
@@ -902,7 +929,7 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
                   _buildMenuItem(
                     'download',
                     Icons.download_rounded,
-                    AppLocalizations.current.tools_save_as_pdf,
+                    AppLocalizations.current.download,
                     Colors.green,
                     isEnabled: _actionStatus?['canUseDownload'] ?? false,
                   ),

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:readbox/blocs/user_subscription_cubit.dart';
 import 'package:readbox/utils/ad_helper.dart';
 
 class BannerAdWidget extends StatefulWidget {
-  const BannerAdWidget({Key? key}) : super(key: key);
+  const BannerAdWidget({super.key});
 
   @override
-  _BannerAdWidgetState createState() => _BannerAdWidgetState();
+  BannerAdWidgetState createState() => BannerAdWidgetState();
 }
 
-class _BannerAdWidgetState extends State<BannerAdWidget> {
+class BannerAdWidgetState extends State<BannerAdWidget> {
   BannerAd? _bannerAd;
   bool _isLoaded = false;
 
@@ -46,7 +48,8 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoaded && _bannerAd != null) {
+    bool isFreeUser = context.read<UserSubscriptionCubit>().isFreeUser();
+    if (isFreeUser && _isLoaded && _bannerAd != null) {
       return Container(
         alignment: Alignment.center,
         width: _bannerAd!.size.width.toDouble(),

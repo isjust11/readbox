@@ -822,5 +822,11 @@
   "splash_feature_library_desc": "Save favorites and track your reading progress",
   "recent_searches": "Recent Searches",
   "clear_all": "Clear All",
-  "no_recent_searches": "No recent searches"
+  "no_recent_searches": "No recent searches",
+  "privacySettings_description": "Manage ad & data choices",
+  "download": "Download",
+  "ad_load_failed": "Failed to load ad at this time. Please try again later.",
+  "premium_feature_title": "Premium Feature",
+  "premium_feature_desc": "Watch a short video ad to use this feature for free.",
+  "watch_ad": "Watch Ad"
 }

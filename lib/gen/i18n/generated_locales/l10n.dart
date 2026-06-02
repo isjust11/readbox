@@ -6892,6 +6892,56 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Quản lý lựa chọn quảng cáo & dữ liệu`
+  String get privacySettings_description {
+    return Intl.message(
+      'Quản lý lựa chọn quảng cáo & dữ liệu',
+      name: 'privacySettings_description',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tải xuống`
+  String get download {
+    return Intl.message('Tải xuống', name: 'download', desc: '', args: []);
+  }
+
+  /// `Không thể tải quảng cáo lúc này. Vui lòng thử lại sau.`
+  String get ad_load_failed {
+    return Intl.message(
+      'Không thể tải quảng cáo lúc này. Vui lòng thử lại sau.',
+      name: 'ad_load_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tính năng Premium`
+  String get premium_feature_title {
+    return Intl.message(
+      'Tính năng Premium',
+      name: 'premium_feature_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xem một video quảng cáo ngắn để sử dụng tính năng này miễn phí.`
+  String get premium_feature_desc {
+    return Intl.message(
+      'Xem một video quảng cáo ngắn để sử dụng tính năng này miễn phí.',
+      name: 'premium_feature_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xem quảng cáo`
+  String get watch_ad {
+    return Intl.message('Xem quảng cáo', name: 'watch_ad', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

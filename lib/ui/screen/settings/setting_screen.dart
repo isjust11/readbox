@@ -15,6 +15,7 @@ import 'package:readbox/routes.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:light_dark_theme_toggle/light_dark_theme_toggle.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class SettingScreen extends StatefulWidget {
   final UserModel? user;
@@ -30,6 +31,8 @@ class _SettingScreenState extends State<SettingScreen> {
   bool _biometricEnabled = false;
   bool _biometricAvailable = false;
   String _appVersion = '';
+  bool _isPrivacyOptionsRequired = false;
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +40,21 @@ class _SettingScreenState extends State<SettingScreen> {
     _loadNotificationStatus();
     _loadAppVersion();
     _loadThemeStatus();
+    _checkPrivacyOptions();
+  }
+
+  Future<void> _checkPrivacyOptions() async {
+    try {
+      final status =
+          await ConsentInformation.instance
+              .getPrivacyOptionsRequirementStatus();
+      setState(() {
+        _isPrivacyOptionsRequired =
+            status == PrivacyOptionsRequirementStatus.required;
+      });
+    } catch (e) {
+      debugPrint('Error checking privacy options: $e');
+    }
   }
 
   Future<void> _loadBiometricStatus() async {
@@ -380,6 +398,26 @@ class _SettingScreenState extends State<SettingScreen> {
               activeColor: Theme.of(context).primaryColor,
             ),
           ),
+          if (_isPrivacyOptionsRequired) ...[
+            _buildDivider(),
+            _buildSettingItem(
+              icon: Icons.privacy_tip_outlined,
+              title: AppLocalizations.current.privacySettings,
+              subtitle: AppLocalizations.current.privacySettings_description,
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: AppDimens.SIZE_16,
+                color: Theme.of(context).primaryColor,
+              ),
+              onTap: () {
+                ConsentForm.showPrivacyOptionsForm((formError) {
+                  if (formError != null) {
+                    _showErrorMessage(formError.message);
+                  }
+                });
+              },
+            ),
+          ],
         ],
       ),
     );
