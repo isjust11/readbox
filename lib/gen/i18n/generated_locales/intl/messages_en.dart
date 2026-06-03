@@ -298,7 +298,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "done": MessageLookupByLibrary.simpleMessage("Done"),
     "download": MessageLookupByLibrary.simpleMessage("Download"),
     "download_count": MessageLookupByLibrary.simpleMessage("Downloads"),
-    "download_limit": MessageLookupByLibrary.simpleMessage("Download"),
+    "download_limit": MessageLookupByLibrary.simpleMessage("Download limit"),
     "download_to_read": MessageLookupByLibrary.simpleMessage(
       "Download to read",
     ),
@@ -1156,6 +1156,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "reminderTime": MessageLookupByLibrary.simpleMessage("Reminder Time"),
     "remove_archive": MessageLookupByLibrary.simpleMessage("Remove archive"),
     "remove_favorite": MessageLookupByLibrary.simpleMessage("Remove favorite"),
+    "report_broken_link": MessageLookupByLibrary.simpleMessage(
+      "Report broken link",
+    ),
+    "report_broken_link_failed": MessageLookupByLibrary.simpleMessage(
+      "Failed to submit report: ",
+    ),
+    "report_broken_link_hint": MessageLookupByLibrary.simpleMessage(
+      "Example: Cannot read PDF file...",
+    ),
+    "report_broken_link_optional_desc": MessageLookupByLibrary.simpleMessage(
+      "Detailed description (optional)",
+    ),
+    "report_broken_link_submit": MessageLookupByLibrary.simpleMessage("Submit"),
+    "report_broken_link_success": MessageLookupByLibrary.simpleMessage(
+      "Report submitted successfully. Thank you!",
+    ),
     "required_field": MessageLookupByLibrary.simpleMessage("Required"),
     "resend_code": MessageLookupByLibrary.simpleMessage("Resend code"),
     "resend_pin": MessageLookupByLibrary.simpleMessage("Resend pin"),

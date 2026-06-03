@@ -728,7 +728,6 @@
   "download_limit": "Lượt tải xuống",
   "no_ads": "Không quảng cáo",
   "has_ads": "Có quảng cáo",
-  "unlimited": "Không giới hạn",
   "reading_count": "Đang Đọc",
   "bookmark_count": "Đánh Dấu",
   "favorite_count": "Yêu Thích",
@@ -746,7 +745,6 @@
   "upgrade_to_premium_to_use_this_feature_button_description": "Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF",
   "upgrade_to_premium_to_use_this_feature_button_description_description": "Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF",
   "upgrade_to_premium_to_use_this_feature_button_description_description_description": "Vui lòng nâng cấp lên gói PRO để sử dụng chuyển đổi tài liệu Word sang PDF",
-  "download_limit": "Tải Xuống",
   "share_limit": "Chia Sẻ",
   "google_drive": "Google Drive",
   "link_google_drive": "Liên kết Google Drive",
@@ -851,5 +849,11 @@
   "ad_load_failed": "Không thể tải quảng cáo lúc này. Vui lòng thử lại sau.",
   "premium_feature_title": "Tính năng Premium",
   "premium_feature_desc": "Xem một video quảng cáo ngắn để sử dụng tính năng này miễn phí.",
-  "watch_ad": "Xem quảng cáo"
+  "watch_ad": "Xem quảng cáo",
+  "report_broken_link": "Báo link hỏng",
+  "report_broken_link_hint": "Ví dụ: Lỗi không đọc được file PDF...",
+  "report_broken_link_optional_desc": "Mô tả chi tiết (không bắt buộc)",
+  "report_broken_link_submit": "Gửi",
+  "report_broken_link_success": "Báo cáo thành công. Cảm ơn bạn!",
+  "report_broken_link_failed": "Lỗi báo cáo: "
 }

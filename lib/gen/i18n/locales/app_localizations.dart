@@ -3977,7 +3977,7 @@ abstract class AppLocalizations {
   /// No description provided for @download_limit.
   ///
   /// In en, this message translates to:
-  /// **'Download'**
+  /// **'Download limit'**
   String get download_limit;
 
   /// No description provided for @no_ads.
@@ -4713,6 +4713,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Watch Ad'**
   String get watch_ad;
+
+  /// No description provided for @report_broken_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Report broken link'**
+  String get report_broken_link;
+
+  /// No description provided for @report_broken_link_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Example: Cannot read PDF file...'**
+  String get report_broken_link_hint;
+
+  /// No description provided for @report_broken_link_optional_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed description (optional)'**
+  String get report_broken_link_optional_desc;
+
+  /// No description provided for @report_broken_link_submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get report_broken_link_submit;
+
+  /// No description provided for @report_broken_link_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Report submitted successfully. Thank you!'**
+  String get report_broken_link_success;
+
+  /// No description provided for @report_broken_link_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit report: '**
+  String get report_broken_link_failed;
 }
 
 class _AppLocalizationsDelegate

@@ -109,6 +109,51 @@ class _BookOptionsBottomSheetState extends State<BookOptionsBottomSheet> {
     );
   }
 
+  void _showReportBrokenLinkDialog(BookModel book) {
+    Navigator.pop(context);
+    final TextEditingController commentController = TextEditingController();
+    showDialog(
+      context: context,
+      builder:
+          (context) => CustomDialog(
+            title: AppLocalizations.current.report_broken_link,
+            titleSubmit: AppLocalizations.current.report_broken_link_submit,
+            titleCancel: AppLocalizations.current.close,
+            autoPopWhenPressSubmit: true,
+            contentWidget: CustomTextInput(
+              textController: commentController,
+              title: AppLocalizations.current.report_broken_link_optional_desc,
+              hintText: AppLocalizations.current.report_broken_link_hint,
+              maxLines: 3,
+              minLines: 3,
+              maxLength: 500,
+            ),
+            onSubmit: () async {
+              try {
+                await widget.userInteractionCubit.reportBrokenLink(
+                  targetType: 'book',
+                  targetId: book.id!,
+                  comment: commentController.text.isNotEmpty ? commentController.text : null,
+                );
+                if (mounted) {
+                  AppSnackBar.show(
+                    context,
+                    message: AppLocalizations.current.report_broken_link_success,
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  AppSnackBar.show(
+                    context,
+                    message: "${AppLocalizations.current.report_broken_link_failed}$e",
+                  );
+                }
+              }
+            },
+          ),
+    );
+  }
+
   Widget _authorWidget(String author) {
     return Row(
       children: [
@@ -450,6 +495,18 @@ class _BookOptionsBottomSheetState extends State<BookOptionsBottomSheet> {
                     color: Colors.amber,
                     onTap: () {
                       _showRatingDialog(book);
+                    },
+                  ),
+
+                  SizedBox(height: 12),
+
+                  // Report broken link button
+                  _buildActionButton(
+                    icon: Icons.report_problem_rounded,
+                    label: AppLocalizations.current.report_broken_link,
+                    color: Colors.deepOrangeAccent,
+                    onTap: () {
+                      _showReportBrokenLinkDialog(book);
                     },
                   ),
 

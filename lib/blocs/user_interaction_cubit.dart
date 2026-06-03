@@ -211,6 +211,25 @@ class UserInteractionCubit extends Cubit<BaseState> {
     }
   }
 
+  Future<void> reportBrokenLink({
+    required String targetType,
+    required dynamic targetId,
+    String? comment,
+  }) async {
+    try {
+      emit(LoadingState());
+      await repository.reportBrokenLink(
+        targetType: targetType,
+        targetId: targetId,
+        comment: comment,
+      );
+      emit(LoadedState(null));
+    } catch (e) {
+      emit(ErrorState(BlocUtils.getMessageError(e)));
+      rethrow;
+    }
+  }
+
   Future<void> loadInteractions({
     required InteractionTarget targetType,
     required dynamic targetId,

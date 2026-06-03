@@ -131,6 +131,16 @@ class UserInteractionRepository {
     readingProgress: readingProgress,
   );
 
+  Future<void> reportBrokenLink({
+    required String targetType,
+    required dynamic targetId,
+    String? comment,
+  }) => remoteDataSource.reportBrokenLink(
+    targetType: targetType,
+    targetId: targetId,
+    comment: comment,
+  );
+
   Future<List<UserInteractionModel>> getMyInteractions({
     Map<String, dynamic>? query,
   }) => remoteDataSource.getMyInteractions(query: query);

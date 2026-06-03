@@ -305,7 +305,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "done": MessageLookupByLibrary.simpleMessage("Hoàn thành"),
     "download": MessageLookupByLibrary.simpleMessage("Tải xuống"),
     "download_count": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
-    "download_limit": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
+    "download_limit": MessageLookupByLibrary.simpleMessage("Lượt tải xuống"),
     "download_to_read": MessageLookupByLibrary.simpleMessage("Tải về để đọc"),
     "download_usage": MessageLookupByLibrary.simpleMessage("Tải Xuống"),
     "downloading_from_drive": MessageLookupByLibrary.simpleMessage(
@@ -1211,6 +1211,20 @@ class MessageLookup extends MessageLookupByLibrary {
       "Bỏ lưu vào thư viện",
     ),
     "remove_favorite": MessageLookupByLibrary.simpleMessage("Bỏ yêu thích"),
+    "report_broken_link": MessageLookupByLibrary.simpleMessage("Báo link hỏng"),
+    "report_broken_link_failed": MessageLookupByLibrary.simpleMessage(
+      "Lỗi báo cáo: ",
+    ),
+    "report_broken_link_hint": MessageLookupByLibrary.simpleMessage(
+      "Ví dụ: Lỗi không đọc được file PDF...",
+    ),
+    "report_broken_link_optional_desc": MessageLookupByLibrary.simpleMessage(
+      "Mô tả chi tiết (không bắt buộc)",
+    ),
+    "report_broken_link_submit": MessageLookupByLibrary.simpleMessage("Gửi"),
+    "report_broken_link_success": MessageLookupByLibrary.simpleMessage(
+      "Báo cáo thành công. Cảm ơn bạn!",
+    ),
     "required_field": MessageLookupByLibrary.simpleMessage("Bắt buộc"),
     "resend_code": MessageLookupByLibrary.simpleMessage("Gửi lại mã"),
     "resend_pin": MessageLookupByLibrary.simpleMessage("Gửi lại"),

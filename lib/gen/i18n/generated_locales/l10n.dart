@@ -5829,10 +5829,10 @@ class AppLocalizations {
     );
   }
 
-  /// `Tải Xuống`
+  /// `Lượt tải xuống`
   String get download_limit {
     return Intl.message(
-      'Tải Xuống',
+      'Lượt tải xuống',
       name: 'download_limit',
       desc: '',
       args: [],
@@ -6941,6 +6941,66 @@ class AppLocalizations {
   /// `Xem quảng cáo`
   String get watch_ad {
     return Intl.message('Xem quảng cáo', name: 'watch_ad', desc: '', args: []);
+  }
+
+  /// `Báo link hỏng`
+  String get report_broken_link {
+    return Intl.message(
+      'Báo link hỏng',
+      name: 'report_broken_link',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ví dụ: Lỗi không đọc được file PDF...`
+  String get report_broken_link_hint {
+    return Intl.message(
+      'Ví dụ: Lỗi không đọc được file PDF...',
+      name: 'report_broken_link_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mô tả chi tiết (không bắt buộc)`
+  String get report_broken_link_optional_desc {
+    return Intl.message(
+      'Mô tả chi tiết (không bắt buộc)',
+      name: 'report_broken_link_optional_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Gửi`
+  String get report_broken_link_submit {
+    return Intl.message(
+      'Gửi',
+      name: 'report_broken_link_submit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Báo cáo thành công. Cảm ơn bạn!`
+  String get report_broken_link_success {
+    return Intl.message(
+      'Báo cáo thành công. Cảm ơn bạn!',
+      name: 'report_broken_link_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lỗi báo cáo: `
+  String get report_broken_link_failed {
+    return Intl.message(
+      'Lỗi báo cáo: ',
+      name: 'report_broken_link_failed',
+      desc: '',
+      args: [],
+    );
   }
 }
 

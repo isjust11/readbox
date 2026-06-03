@@ -2017,7 +2017,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get download_count => 'Downloads';
 
   @override
-  String get download_limit => 'Download';
+  String get download_limit => 'Download limit';
 
   @override
   String get no_ads => 'Ad-free experience';
@@ -2406,4 +2406,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get watch_ad => 'Watch Ad';
+
+  @override
+  String get report_broken_link => 'Report broken link';
+
+  @override
+  String get report_broken_link_hint => 'Example: Cannot read PDF file...';
+
+  @override
+  String get report_broken_link_optional_desc =>
+      'Detailed description (optional)';
+
+  @override
+  String get report_broken_link_submit => 'Submit';
+
+  @override
+  String get report_broken_link_success =>
+      'Report submitted successfully. Thank you!';
+
+  @override
+  String get report_broken_link_failed => 'Failed to submit report: ';
 }

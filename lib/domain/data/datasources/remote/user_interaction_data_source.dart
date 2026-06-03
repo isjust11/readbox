@@ -257,6 +257,19 @@ class UserInteractionRemoteDataSource {
     return Future.error(apiResponse.data);
   }
 
+  Future<void> reportBrokenLink({
+    required String targetType,
+    required dynamic targetId,
+    String? comment,
+  }) async {
+    final ApiResponse apiResponse = await network.post(
+      url: '${ApiConstant.apiHost}user-interactions/report-broken-link/$targetType/$targetId',
+      body: comment != null ? {'comment': comment} : null,
+    );
+    if (apiResponse.isSuccess) return;
+    return Future.error(apiResponse.data);
+  }
+
   Future<List<UserInteractionModel>> getMyInteractions({
     Map<String, dynamic>? query,
   }) async {

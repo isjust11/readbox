@@ -707,7 +707,6 @@
   "download_limit": "Download limit",
   "no_ads": "Ad-free experience",
   "has_ads": "Ads included",
-  "unlimited": "Unlimited",
   "reading_count": "Reading",
   "bookmark_count": "Bookmarks",
   "favorite_count": "Favorites",
@@ -725,7 +724,6 @@
   "upgrade_to_premium_to_use_this_feature_button_description": "Please upgrade to the PRO plan to use the Word to PDF converter",
   "upgrade_to_premium_to_use_this_feature_button_description_description": "Please upgrade to the PRO plan to use the Word to PDF converter",
   "upgrade_to_premium_to_use_this_feature_button_description_description_description": "Please upgrade to the PRO plan to use the Word to PDF converter",
-  "download_limit": "Download",
   "share_limit": "Share",
   "google_drive": "Google Drive",
   "link_google_drive": "Link Google Drive",
@@ -828,5 +826,11 @@
   "ad_load_failed": "Failed to load ad at this time. Please try again later.",
   "premium_feature_title": "Premium Feature",
   "premium_feature_desc": "Watch a short video ad to use this feature for free.",
-  "watch_ad": "Watch Ad"
+  "watch_ad": "Watch Ad",
+  "report_broken_link": "Report broken link",
+  "report_broken_link_hint": "Example: Cannot read PDF file...",
+  "report_broken_link_optional_desc": "Detailed description (optional)",
+  "report_broken_link_submit": "Submit",
+  "report_broken_link_success": "Report submitted successfully. Thank you!",
+  "report_broken_link_failed": "Failed to submit report: "
 }

@@ -2020,7 +2020,7 @@ class AppLocalizationsVi extends AppLocalizations {
   String get download_count => 'Tải Xuống';
 
   @override
-  String get download_limit => 'Tải Xuống';
+  String get download_limit => 'Lượt tải xuống';
 
   @override
   String get no_ads => 'Không quảng cáo';
@@ -2410,4 +2410,23 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get watch_ad => 'Xem quảng cáo';
+
+  @override
+  String get report_broken_link => 'Báo link hỏng';
+
+  @override
+  String get report_broken_link_hint => 'Ví dụ: Lỗi không đọc được file PDF...';
+
+  @override
+  String get report_broken_link_optional_desc =>
+      'Mô tả chi tiết (không bắt buộc)';
+
+  @override
+  String get report_broken_link_submit => 'Gửi';
+
+  @override
+  String get report_broken_link_success => 'Báo cáo thành công. Cảm ơn bạn!';
+
+  @override
+  String get report_broken_link_failed => 'Lỗi báo cáo: ';
 }
