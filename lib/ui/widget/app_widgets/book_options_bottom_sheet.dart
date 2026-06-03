@@ -129,26 +129,28 @@ class _BookOptionsBottomSheetState extends State<BookOptionsBottomSheet> {
               maxLength: 500,
             ),
             onSubmit: () async {
-              try {
-                await widget.userInteractionCubit.reportBrokenLink(
-                  targetType: 'book',
-                  targetId: book.id!,
-                  comment: commentController.text.isNotEmpty ? commentController.text : null,
-                );
-                if (mounted) {
+              await widget.userInteractionCubit.reportBrokenLink(
+                targetType: InteractionTarget.book.name,
+                targetId: book.id!,
+                comment:
+                    commentController.text.isNotEmpty
+                        ? commentController.text
+                        : null,
+                onSuccess: () {
                   AppSnackBar.show(
                     context,
-                    message: AppLocalizations.current.report_broken_link_success,
+                    message:
+                        AppLocalizations.current.report_broken_link_success,
                   );
-                }
-              } catch (e) {
-                if (mounted) {
+                },
+                onError: (message) {
                   AppSnackBar.show(
                     context,
-                    message: "${AppLocalizations.current.report_broken_link_failed}$e",
+                    message:
+                        "${AppLocalizations.current.report_broken_link_failed}$message",
                   );
-                }
-              }
+                },
+              );
             },
           ),
     );

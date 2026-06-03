@@ -114,7 +114,6 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
           // Error
           if (state is ErrorState) {
             _showMessage(context, state.data.toString(), isError: true);
-            context.read<SubscriptionPlanCubit>().loadPlans(activeOnly: true);
           }
         },
         builder: (context, state) {

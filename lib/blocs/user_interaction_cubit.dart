@@ -215,18 +215,19 @@ class UserInteractionCubit extends Cubit<BaseState> {
     required String targetType,
     required dynamic targetId,
     String? comment,
+    Function()? onSuccess,
+    Function(String)? onError,
   }) async {
     try {
-      emit(LoadingState());
       await repository.reportBrokenLink(
         targetType: targetType,
         targetId: targetId,
         comment: comment,
       );
+      onSuccess?.call();
       emit(LoadedState(null));
     } catch (e) {
-      emit(ErrorState(BlocUtils.getMessageError(e)));
-      rethrow;
+      onError?.call(BlocUtils.getMessageError(e));
     }
   }
 
