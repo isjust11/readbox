@@ -83,6 +83,10 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Are you sure you want to delete this notification?",
         ),
+    "askToAiAnything": MessageLookupByLibrary.simpleMessage("Ask AI Anything"),
+    "askToAiDescription": MessageLookupByLibrary.simpleMessage(
+      "Look up words, explain meanings, ask questions about the content you\'re reading...",
+    ),
     "authentication_error": MessageLookupByLibrary.simpleMessage(
       "Authentication error",
     ),
@@ -1207,6 +1211,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Search categories...",
     ),
     "search_filter": MessageLookupByLibrary.simpleMessage("Search filter"),
+    "search_web": MessageLookupByLibrary.simpleMessage("Search Web"),
     "seconds": MessageLookupByLibrary.simpleMessage("seconds"),
     "security": MessageLookupByLibrary.simpleMessage("Security"),
     "see_all": MessageLookupByLibrary.simpleMessage("See all"),

@@ -832,5 +832,8 @@
   "report_broken_link_optional_desc": "Detailed description (optional)",
   "report_broken_link_submit": "Submit",
   "report_broken_link_success": "Report submitted successfully. Thank you!",
-  "report_broken_link_failed": "Failed to submit report: "
+  "report_broken_link_failed": "Failed to submit report: ",
+  "askToAiAnything": "Ask AI Anything",
+  "search_web": "Search Web",
+  "askToAiDescription": "Look up words, explain meanings, ask questions about the content you're reading..."
 }

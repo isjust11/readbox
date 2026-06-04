@@ -21,6 +21,7 @@ import 'utils/language_detector.dart';
 import 'utils/shared_preference.dart';
 import 'utils/tts_lock_screen_controller.dart';
 import 'blocs/theme_state.dart';
+import 'services/deep_link_service.dart';
 
 /// Map locale hệ thống sang mã ngôn ngữ app hỗ trợ (vi, en).
 String _languageFromSystemLocale() {
@@ -52,6 +53,7 @@ void main() async {
   await di.init();
   // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await DeepLinkService().initialize();
 
   // Initialize Google Mobile Ads
   await MobileAds.instance.initialize();

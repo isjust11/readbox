@@ -4749,6 +4749,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to submit report: '**
   String get report_broken_link_failed;
+
+  /// No description provided for @askToAiAnything.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask AI Anything'**
+  String get askToAiAnything;
+
+  /// No description provided for @search_web.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Web'**
+  String get search_web;
+
+  /// No description provided for @askToAiDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Look up words, explain meanings, ask questions about the content you\'re reading...'**
+  String get askToAiDescription;
 }
 
 class _AppLocalizationsDelegate

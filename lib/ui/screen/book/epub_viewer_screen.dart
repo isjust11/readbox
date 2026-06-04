@@ -17,7 +17,7 @@ import 'package:readbox/blocs/base_bloc/base_state.dart';
 import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/constants.dart';
 import 'package:readbox/domain/data/models/models.dart';
-import 'package:readbox/domain/enums/interaction_type.dart';
+import 'package:readbox/domain/enums/enums.dart';
 import 'package:readbox/domain/network/api_constant.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/enum.dart';
@@ -93,6 +93,15 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
   UserModel? _currentUser;
   late UserSubscriptionModel? _userSubscription;
 
+  // Reading progress tracking (server side)
+  Timer? _saveProgressTimer;
+  Timer? _readingTimeTimer;
+  ReadingProgressModel? _currentProgress;
+  int _accumulatedReadingTime = 0;
+  DateTime? _readingStartTime;
+  int _lastSavedParagraphIndex = -1;
+  UserInteractionCubit? _userInteractionCubit;
+
   bool get isEnableAction => _error == null;
 
   /// Super Admin luôn có quyền truy cập tính năng nâng cao
@@ -124,10 +133,13 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
       }
     });
 
+    _userInteractionCubit = context.read<UserInteractionCubit>();
     if (widget.bookId != null) {
-      _loadReadingProgress();
+      _loadReadingProgressFromServer();
     }
   }
+
+
 
   void _loadCurrentUser() {
     final user = context.read<AppCubit>().getUser();
@@ -154,6 +166,7 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
       _epubController = EpubController(
         document: EpubDocument.openData(_epubBytes!),
       );
+      _setupControllerListener();
     } else {
       final String networkUrl;
       if (widget.fileUrl.startsWith('http')) {
@@ -177,6 +190,7 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     }
   }
 
+
   Future<void> _downloadAndLoadEpub(String url) async {
     try {
       final response = await _dio.get<List<int>>(
@@ -187,11 +201,13 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
       _epubController = EpubController(
         document: EpubDocument.openData(_epubBytes!),
       );
+      _setupControllerListener();
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
       }
+
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -202,9 +218,19 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     }
   }
 
-  void _loadReadingProgress() {
-    // Implement loading progress if needed
+  void _setupControllerListener() {
+    _epubController.currentValueListenable.addListener(_onEpubPositionChanged);
   }
+
+  void _onEpubPositionChanged() {
+    final value = _epubController.currentValueListenable.value;
+    if (value != null) {
+      final index = value.position.index;
+      _currentReadingParagraphIndex = index;
+      _onServerParagraphChanged(index);
+    }
+  }
+
 
   @override
   void didChangeDependencies() {
@@ -214,12 +240,34 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
 
   @override
   void dispose() {
-    // Khi rời màn EPUB, các parser/controller của màn bị dispose nên không thể
-    // đọc tiếp paragraph kế. Tắt continuous trước khi stop để callback TTS
-    // không publish lại icon "đang đọc" giả.
-    _isReadingContinuous = false;
-    _ttsService.stop();
-    TtsLockScreenController.instance.stop();
+    _saveProgressTimer?.cancel();
+    _readingTimeTimer?.cancel();
+    _saveReadingProgressNow();
+
+    final shouldContinueTtsInBackground =
+        _isReadingContinuous &&
+        _parsedParagraphs.isNotEmpty &&
+        _currentReadingParagraphIndex < _parsedParagraphs.length;
+
+
+    if (shouldContinueTtsInBackground) {
+      final paragraphsText =
+          _parsedParagraphs.map((p) => p.element.text.trim()).toList();
+      TtsLockScreenController.instance.continueEpubInBackground(
+        paragraphs: paragraphsText,
+        bookTitle: widget.title,
+        nextParagraphIndex: _currentReadingParagraphIndex,
+        bookId: widget.bookId,
+      );
+    } else {
+      // Khi rời màn EPUB, các parser/controller của màn bị dispose nên không thể
+      // đọc tiếp paragraph kế. Tắt continuous trước khi stop để callback TTS
+      // không publish lại icon "đang đọc" giả.
+      _isReadingContinuous = false;
+      _ttsService.stop();
+      TtsLockScreenController.instance.stop();
+    }
+
     _epubController.dispose();
     _ttsWordProgressNotifier.dispose();
     _ttsScrollController.dispose();
@@ -232,12 +280,15 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     switch (value) {
       case 'ai_assistant':
         if (!isProPlan) {
-          PopupAdWidget.showPrompt(context: context, onReward: () {
-            AiAssistantSheet.show(context);
-          });
+          PopupAdWidget.showPrompt(
+            context: context,
+            onReward: () {
+              AiAssistantSheet.show(context, ebookId: widget.bookId ?? '');
+            },
+          );
           return;
         }
-        AiAssistantSheet.show(context);
+        AiAssistantSheet.show(context, ebookId: widget.bookId ?? '');
         break;
       case 'search':
         actionToolbar = 'search';
@@ -247,9 +298,12 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
         break;
       case 'download':
         if (!isProPlan && !(_actionStatus?['canUseDownload'] ?? false)) {
-          PopupAdWidget.showPrompt(context: context, onReward: () {
-            _downloadAndSaveEpub();
-          });
+          PopupAdWidget.showPrompt(
+            context: context,
+            onReward: () {
+              _downloadAndSaveEpub();
+            },
+          );
           return;
         }
         _downloadAndSaveEpub();
@@ -259,13 +313,16 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
         break;
       case 'read_continuous_ebook':
         if (!isProPlan) {
-          PopupAdWidget.showPrompt(context: context, onReward: () {
-            setState(() {
-              _isVisibleToolAction = !_isVisibleToolAction;
-            });
-            actionToolbar = 'read_continuous_ebook';
-            _readContinuousEbook();
-          });
+          PopupAdWidget.showPrompt(
+            context: context,
+            onReward: () {
+              setState(() {
+                _isVisibleToolAction = !_isVisibleToolAction;
+              });
+              actionToolbar = 'read_continuous_ebook';
+              _readContinuousEbook();
+            },
+          );
           return;
         }
         setState(() {
@@ -324,20 +381,16 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
   }
 
   Future<void> _shareEbook() async {
+    final bookId = widget.bookId ?? '';
+    if (bookId.isEmpty) return;
+
+    final shareLink = 'https://readbox.pro.vn/book/$bookId';
+    final shareText =
+        '${AppLocalizations.current.pdf_share_text(widget.title)}\n\n$shareLink';
+
     try {
-      if (_epubBytes == null) return;
-
-      final tempDir = await getTemporaryDirectory();
-      final fileName = path.basename(widget.fileUrl);
-      final tempFile = File(path.join(tempDir.path, fileName));
-      await tempFile.writeAsBytes(_epubBytes!);
-
       await SharePlus.instance.share(
-        ShareParams(
-          text: AppLocalizations.current.pdf_share_text(widget.title),
-          subject: widget.title,
-          files: [XFile(tempFile.path)],
-        ),
+        ShareParams(text: shareText, subject: widget.title),
       );
     } catch (e) {
       if (mounted) {
@@ -680,7 +733,12 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
       appBar: _isVisibleToolAction ? _buildToolAppBar() : _buildDefaultAppBar(),
       body:
           _isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? Center(
+                child:
+                    Platform.isIOS
+                        ? CupertinoActivityIndicator()
+                        : CircularProgressIndicator(),
+              )
               : _error != null
               ? Center(child: Text(_error!))
               : Column(
@@ -887,7 +945,16 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     );
     _parsedParagraphs = parseResult.flatParagraphs;
     _chapterIndexes = parseResult.chapterIndexes;
+    if (_lastSavedParagraphIndex > 0) {
+      _currentReadingParagraphIndex = _lastSavedParagraphIndex;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _epubController.scrollTo(index: _lastSavedParagraphIndex);
+        }
+      });
+    }
   }
+
 
   AppBar _buildDefaultAppBar() {
     return AppBar(
@@ -1031,15 +1098,9 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
   AppBar _buildTtsToolAppBar() {
     return AppBar(
       leading: IconButton(
-        icon: const Icon(Icons.close),
-        onPressed: () async {
-          await _ttsService.stop();
-          await TtsLockScreenController.instance.stop();
-          setState(() {
-            _isReadingContinuous = false;
-            _showTtsReadingPanel = false;
-            _isVisibleToolAction = false;
-          });
+        icon: const Icon(Icons.arrow_back_rounded),
+        onPressed: () {
+          Navigator.pop(context);
         },
       ),
       title: Text(
@@ -1092,6 +1153,18 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
             if (mounted) {
               Navigator.of(context).pushNamed(Routes.textToSpeechSettingScreen);
             }
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.close_rounded),
+          onPressed: () async {
+            await _ttsService.stop();
+            await TtsLockScreenController.instance.stop();
+            setState(() {
+              _isReadingContinuous = false;
+              _showTtsReadingPanel = false;
+              _isVisibleToolAction = false;
+            });
           },
         ),
       ],
@@ -1712,7 +1785,114 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
       ),
     );
   }
+
+  // ====== Reading progress (server) ======
+
+  Future<void> _loadReadingProgressFromServer() async {
+    if (_userInteractionCubit == null || widget.bookId == null) return;
+    try {
+      final interaction = await _userInteractionCubit!.getInteractionAction(
+        targetType: InteractionTarget.book,
+        actionType: InteractionType.reading,
+        targetId: widget.bookId!,
+      );
+      if (!mounted) return;
+      if (interaction.isReading) {
+        _currentProgress = interaction.getReadingProgressForFormat('epub');
+        _accumulatedReadingTime = _currentProgress?.totalReadingTime ?? 0;
+        if (_currentProgress?.currentPage != null &&
+            _currentProgress!.currentPage! >= 0) {
+          _lastSavedParagraphIndex = _currentProgress!.currentPage!;
+          if (_parsedParagraphs.isNotEmpty && _lastSavedParagraphIndex > 0) {
+            _currentReadingParagraphIndex = _lastSavedParagraphIndex;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                _epubController.scrollTo(index: _lastSavedParagraphIndex);
+              }
+            });
+          }
+        }
+      }
+      _startReadingTimeTracker();
+    } catch (_) {
+      _startReadingTimeTracker();
+    }
+  }
+
+  void _startReadingTimeTracker() {
+    _readingStartTime = DateTime.now();
+    _readingTimeTimer?.cancel();
+    _readingTimeTimer = Timer.periodic(const Duration(seconds: 10), (_) {});
+  }
+
+  int _calculateTotalReadingTime() {
+    if (_readingStartTime == null) {
+      return _accumulatedReadingTime;
+    }
+    final currentSessionTime =
+        DateTime.now().difference(_readingStartTime!).inSeconds;
+    return _accumulatedReadingTime + currentSessionTime;
+  }
+
+  void _onServerParagraphChanged(int index) {
+    if (_userInteractionCubit == null || widget.bookId == null) return;
+    if (index == _lastSavedParagraphIndex) return;
+    _saveProgressTimer?.cancel();
+    _saveProgressTimer = Timer(const Duration(seconds: 5), () {
+      _saveReadingProgress(index);
+    });
+  }
+
+  Future<void> _saveReadingProgress(int index) async {
+    if (_userInteractionCubit == null || widget.bookId == null) return;
+    if (index == _lastSavedParagraphIndex) return;
+
+    try {
+      double progressValue = 0.0;
+      if (_parsedParagraphs.isNotEmpty) {
+        progressValue = index / _parsedParagraphs.length;
+      }
+      final totalReadingTime = _calculateTotalReadingTime();
+      final progressModel = ReadingProgressModel.fromJson({
+        'bookId': widget.bookId,
+        'currentPage': index,
+        'progress': progressValue,
+        'lastUpdated': DateTime.now().toIso8601String(),
+        'totalReadingTime': totalReadingTime,
+        'format': 'epub',
+      });
+
+      final savedProgress = await _userInteractionCubit!.saveReadingProgress(
+        targetType: InteractionTarget.book,
+        actionType: InteractionType.reading,
+        targetId: widget.bookId!,
+        readingProgress: progressModel,
+      );
+
+      if (mounted) {
+        final savedTime = savedProgress?.totalReadingTime ?? totalReadingTime;
+        _accumulatedReadingTime = savedTime;
+        _readingStartTime = DateTime.now();
+        _lastSavedParagraphIndex = index;
+      }
+    } catch (e) {
+      debugPrint('[EPUB Progress] Save failed: $e');
+    }
+  }
+
+  Future<void> _saveReadingProgressNow() async {
+    _saveProgressTimer?.cancel();
+    if (_userInteractionCubit == null || widget.bookId == null) return;
+    if (_currentReadingParagraphIndex < 0) return;
+
+    final totalReadingTime = _calculateTotalReadingTime();
+    if (_currentReadingParagraphIndex != _lastSavedParagraphIndex ||
+        totalReadingTime > _accumulatedReadingTime) {
+      await _saveReadingProgress(_currentReadingParagraphIndex);
+    }
+  }
 }
+
 
 class EpubSearchResult {
   final int paragraphIndex;

@@ -7,11 +7,11 @@ class AiRepository {
   /// Tra cứu / giải thích từ hoặc khái niệm bằng Gemini AI
   Future<String> lookup({
     required String query,
-    String language = 'vi',
+    required String ebookId,
   }) async {
     final response = await _network.post(
       url: ApiConstant.aiLookup,
-      body: {'query': query, 'language': language},
+      body: {'query': query, 'ebookId': ebookId},
     );
     if (response.status == 200 || response.status == 201) {
       final data = response.data;
@@ -20,7 +20,9 @@ class AiRepository {
       }
       return data?['message']?.toString() ?? 'Không có kết quả';
     }
-    throw Exception(response.errMessage.isNotEmpty ? response.errMessage : 'Lỗi khi tra cứu');
+    throw Exception(
+      response.errMessage.isNotEmpty ? response.errMessage : 'Lỗi khi tra cứu',
+    );
   }
 
   /// Dịch văn bản sang ngôn ngữ đích bằng Gemini AI
@@ -47,6 +49,10 @@ class AiRepository {
       }
       return data?['message']?.toString() ?? 'Không có kết quả';
     }
-    throw Exception(response.errMessage.isNotEmpty ? response.errMessage : 'Lỗi khi dịch thuật');
+    throw Exception(
+      response.errMessage.isNotEmpty
+          ? response.errMessage
+          : 'Lỗi khi dịch thuật',
+    );
   }
 }

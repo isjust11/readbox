@@ -2426,4 +2426,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get report_broken_link_failed => 'Failed to submit report: ';
+
+  @override
+  String get askToAiAnything => 'Ask AI Anything';
+
+  @override
+  String get search_web => 'Search Web';
+
+  @override
+  String get askToAiDescription =>
+      'Look up words, explain meanings, ask questions about the content you\'re reading...';
 }

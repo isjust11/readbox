@@ -7002,6 +7002,36 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Hỏi AI bất cứ điều gì`
+  String get askToAiAnything {
+    return Intl.message(
+      'Hỏi AI bất cứ điều gì',
+      name: 'askToAiAnything',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tìm kiếm trên web`
+  String get search_web {
+    return Intl.message(
+      'Tìm kiếm trên web',
+      name: 'search_web',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tra cứu từ, giải thích ý nghĩa,\nhỏi đáp về nội dung đang đọc...`
+  String get askToAiDescription {
+    return Intl.message(
+      'Tra cứu từ, giải thích ý nghĩa,\nhỏi đáp về nội dung đang đọc...',
+      name: 'askToAiDescription',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

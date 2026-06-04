@@ -437,12 +437,15 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     switch (value) {
       case 'ai_assistant':
         if (!isProPlan) {
-          PopupAdWidget.showPrompt(context: context, onReward: () {
-            AiAssistantSheet.show(context);
-          });
+          PopupAdWidget.showPrompt(
+            context: context,
+            onReward: () {
+              AiAssistantSheet.show(context, ebookId: widget.bookId ?? '');
+            },
+          );
           return;
         }
-        AiAssistantSheet.show(context);
+        AiAssistantSheet.show(context, ebookId: widget.bookId ?? '');
         break;
       case 'search':
         actionToolbar = 'search';
@@ -465,13 +468,16 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         break;
       case 'read_continuous_ebook':
         if (!isProPlan) {
-          PopupAdWidget.showPrompt(context: context, onReward: () {
-            setState(() {
-              _isVisibleToolAction = !_isVisibleToolAction;
-            });
-            actionToolbar = 'read_continuous_ebook';
-            _readContinuousEbook();
-          });
+          PopupAdWidget.showPrompt(
+            context: context,
+            onReward: () {
+              setState(() {
+                _isVisibleToolAction = !_isVisibleToolAction;
+              });
+              actionToolbar = 'read_continuous_ebook';
+              _readContinuousEbook();
+            },
+          );
           return;
         }
         setState(() {
@@ -482,9 +488,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         break;
       case 'download':
         if (!isProPlan && !(_actionStatus?['canUseDownload'] ?? false)) {
-          PopupAdWidget.showPrompt(context: context, onReward: () {
-            _downloadAndSavePdf();
-          });
+          PopupAdWidget.showPrompt(
+            context: context,
+            onReward: () {
+              _downloadAndSavePdf();
+            },
+          );
           return;
         }
         _downloadAndSavePdf();
@@ -503,62 +512,23 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
   }
 
-  /// Chia sẻ ebook qua mạng xã hội, messaging, email...
+  /// Chia sẻ ebook qua Universal Link
   Future<void> _shareEbook() async {
+    final bookId = widget.bookId ?? '';
+    if (bookId.isEmpty) return;
+
+    // Universal Link — clickable trong mọi ứng dụng chat/email
+    final shareLink = 'https://readbox.pro.vn/book/$bookId';
+    final shareText =
+        '${AppLocalizations.current.pdf_share_text(widget.title)}\n\n$shareLink';
+
     try {
-      String? filePath;
-      final shareText = AppLocalizations.current.pdf_share_text(widget.title);
-
-      if (_isLocal) {
-        final file = File(widget.fileUrl);
-        if (await file.exists()) {
-          filePath = widget.fileUrl;
-        }
-      } else {
-        final bytes = await _ensurePdfBytesForNetwork();
-        if (bytes != null && bytes.isNotEmpty) {
-          // File từ mạng: lưu tạm để chia sẻ
-          final dir = await getTemporaryDirectory();
-          final baseName = path.basename(widget.fileUrl);
-          final fileName =
-              (baseName.isNotEmpty && baseName.toLowerCase().endsWith('.pdf'))
-                  ? baseName
-                  : '${widget.title.replaceAll(RegExp(r'[^\w\s-]'), '_')}.pdf';
-          final tempFile = File(path.join(dir.path, fileName));
-          await tempFile.writeAsBytes(bytes);
-          filePath = tempFile.path;
-        }
-      }
-
-      if (filePath == null) {
-        if (!mounted) return;
-        AppSnackBar.show(
-          context,
-          message:
-              _isLocal
-                  ? AppLocalizations.current.pdf_share_file_not_found
-                  : AppLocalizations.current.pdf_share_wait_download,
-          snackBarType: SnackBarType.warning,
-        );
-        return;
-      }
-
       final result = await SharePlus.instance.share(
-        ShareParams(
-          text: shareText,
-          subject: widget.title,
-          files: [XFile(filePath)],
-        ),
+        ShareParams(text: shareText, subject: widget.title),
       );
 
       if (!mounted) return;
       if (result.status == ShareResultStatus.success) {
-        AppSnackBar.show(
-          context,
-          message: AppLocalizations.current.pdf_share_success,
-          snackBarType: SnackBarType.success,
-        );
-        // update interaction action for share
         context.read<UserInteractionCubit>().incrementUsage(
           usage: IncrementUsageModel(shareCount: 1),
         );
@@ -2221,7 +2191,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
       );
       if (!mounted) return;
       if (interaction.isReading) {
-        _currentProgress = interaction.readingProgress;
+        _currentProgress = interaction.getReadingProgressForFormat('pdf');
         _accumulatedReadingTime = _currentProgress?.totalReadingTime ?? 0;
         if (_currentProgress?.currentPage != null &&
             _currentProgress!.currentPage! > 0) {
@@ -2274,6 +2244,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         'progress': progressValue,
         'lastUpdated': DateTime.now().toIso8601String(),
         'totalReadingTime': totalReadingTime,
+        'format': 'pdf',
       });
 
       final savedProgress = await _userInteractionCubit!.saveReadingProgress(
@@ -2463,7 +2434,11 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
               await Clipboard.setData(ClipboardData(text: text));
               if (!mounted) return;
               setState(() => _selectedText = null);
-              AiAssistantSheet.show(context, selectedText: text);
+              AiAssistantSheet.show(
+                context,
+                selectedText: text,
+                ebookId: widget.bookId ?? '',
+              );
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),

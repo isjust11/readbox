@@ -24,6 +24,8 @@ class SPrefCache {
       "pref_key_hide_navigation_bar";
   static const String PREF_KEY_PDF_READING_POSITIONS =
       "pref_key_pdf_reading_positions";
+  static const String PREF_KEY_EPUB_READING_POSITIONS =
+      "pref_key_epub_reading_positions";
   static const String PREF_KEY_PDF_DRAWINGS = "pref_key_pdf_drawings";
   static const String PREF_KEY_PDF_NOTES = "pref_key_pdf_notes";
   static const String PREF_KEY_DRIVE_FOLDER_ID = "pref_key_drive_folder_id";
@@ -216,6 +218,9 @@ class SharedPreferenceUtil {
     if (v is num) return v.toInt();
     return null;
   }
+
+
+
 
   /// Xóa một sách local
   static Future<bool> removeLocalBook(String filePath) async {

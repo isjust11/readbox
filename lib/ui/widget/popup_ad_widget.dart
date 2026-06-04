@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
@@ -52,7 +54,13 @@ class PopupAdWidget {
       context: context,
       barrierDismissible: false,
       useRootNavigator: true,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
+      builder:
+          (_) => Center(
+            child:
+                Platform.isIOS
+                    ? const CupertinoActivityIndicator()
+                    : const CircularProgressIndicator(),
+          ),
     );
 
     var loadFinished = false;
@@ -108,40 +116,41 @@ class PopupAdWidget {
 
     showDialog(
       context: parentContext,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(AppLocalizations.current.premium_feature_title),
-        content: Text(AppLocalizations.current.premium_feature_desc),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(AppLocalizations.current.cancel),
+      builder:
+          (dialogContext) => AlertDialog(
+            title: Text(AppLocalizations.current.premium_feature_title),
+            content: Text(AppLocalizations.current.premium_feature_desc),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(AppLocalizations.current.cancel),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (!parentContext.mounted) return;
+                    showRewardedAdAndRunAction(parentContext, onReward);
+                  });
+                },
+                child: Text(AppLocalizations.current.watch_ad),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                  Navigator.pushNamed(
+                    parentContext,
+                    Routes.subscriptionPlanScreen,
+                  );
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(parentContext).colorScheme.primary,
+                  textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                child: Text(AppLocalizations.current.upgrade_now),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (!parentContext.mounted) return;
-                showRewardedAdAndRunAction(parentContext, onReward);
-              });
-            },
-            child: Text(AppLocalizations.current.watch_ad),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              Navigator.pushNamed(
-                parentContext,
-                Routes.subscriptionPlanScreen,
-              );
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: Theme.of(parentContext).colorScheme.primary,
-              textStyle: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            child: Text(AppLocalizations.current.upgrade_now),
-          ),
-        ],
-      ),
     );
   }
 }

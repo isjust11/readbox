@@ -9,6 +9,7 @@ class ReadingProgressEntity extends BaseEntity {
   double? progress; // 0.0 to 1.0
   DateTime? lastUpdated;
   int? totalReadingTime; // in seconds
+  String? format; // 'epub' | 'pdf'
 
   ReadingProgressEntity({
     this.id,
@@ -19,6 +20,7 @@ class ReadingProgressEntity extends BaseEntity {
     this.progress,
     this.lastUpdated,
     this.totalReadingTime,
+    this.format,
   });
 
   ReadingProgressEntity.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class ReadingProgressEntity extends BaseEntity {
         ? DateTime.parse(json['lastUpdated'])
         : null;
     totalReadingTime = json['totalReadingTime'];
+    format = json['format'];
   }
 
   @override
@@ -45,6 +48,7 @@ class ReadingProgressEntity extends BaseEntity {
     data['progress'] = progress;
     data['lastUpdated'] = lastUpdated?.toIso8601String();
     data['totalReadingTime'] = totalReadingTime;
+    data['format'] = format;
     return data;
   }
 }

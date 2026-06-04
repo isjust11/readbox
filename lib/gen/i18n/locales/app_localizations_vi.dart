@@ -2429,4 +2429,14 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get report_broken_link_failed => 'Lỗi báo cáo: ';
+
+  @override
+  String get askToAiAnything => 'Hỏi AI bất cứ điều gì';
+
+  @override
+  String get search_web => 'Tìm kiếm trên web';
+
+  @override
+  String get askToAiDescription =>
+      'Tra cứu từ, giải thích ý nghĩa,\nhỏi đáp về nội dung đang đọc...';
 }

@@ -8,5 +8,10 @@
 	<array>
 		<string>Default</string>
 	</array>
+	<!-- Universal Links: iOS sẽ fetch AASA tại https://readbox.pro.vn/.well-known/apple-app-site-association -->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:readbox.pro.vn</string>
+	</array>
 </dict>
 </plist>

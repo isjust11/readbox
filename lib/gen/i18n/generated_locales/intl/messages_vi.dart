@@ -88,6 +88,12 @@ class MessageLookup extends MessageLookupByLibrary {
         MessageLookupByLibrary.simpleMessage(
           "Bạn có chắc chắn muốn xóa thông báo này?",
         ),
+    "askToAiAnything": MessageLookupByLibrary.simpleMessage(
+      "Hỏi AI bất cứ điều gì",
+    ),
+    "askToAiDescription": MessageLookupByLibrary.simpleMessage(
+      "Tra cứu từ, giải thích ý nghĩa,\nhỏi đáp về nội dung đang đọc...",
+    ),
     "authentication_error": MessageLookupByLibrary.simpleMessage(
       "Lỗi xác thực",
     ),
@@ -1263,6 +1269,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tìm kiếm danh mục...",
     ),
     "search_filter": MessageLookupByLibrary.simpleMessage("Bộ lọc tìm kiếm"),
+    "search_web": MessageLookupByLibrary.simpleMessage("Tìm kiếm trên web"),
     "seconds": MessageLookupByLibrary.simpleMessage("giây"),
     "security": MessageLookupByLibrary.simpleMessage("Bảo mật"),
     "see_all": MessageLookupByLibrary.simpleMessage("Xem tất cả"),

@@ -842,7 +842,7 @@
   "splash_feature_library_title": "Thư viện cá nhân",
   "splash_feature_library_desc": "Lưu yêu thích, theo dõi\ntiến độ đọc sách của bạn",
   "recent_searches": "Tìm kiếm gần đây",
-  "clear_all": "Xóa tất cả", 
+  "clear_all": "Xóa tất cả",
   "no_recent_searches": "Chưa có tìm kiếm nào",
   "privacySettings_description": "Quản lý lựa chọn quảng cáo & dữ liệu",
   "download": "Tải xuống",
@@ -855,5 +855,8 @@
   "report_broken_link_optional_desc": "Mô tả chi tiết (không bắt buộc)",
   "report_broken_link_submit": "Gửi",
   "report_broken_link_success": "Báo cáo thành công. Cảm ơn bạn!",
-  "report_broken_link_failed": "Lỗi báo cáo: "
+  "report_broken_link_failed": "Lỗi báo cáo: ",
+  "askToAiAnything": "Hỏi AI bất cứ điều gì",
+  "search_web": "Tìm kiếm trên web",
+  "askToAiDescription": "Tra cứu từ, giải thích ý nghĩa,\nhỏi đáp về nội dung đang đọc..."
 }

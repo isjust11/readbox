@@ -2,33 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:readbox/domain/repositories/ai_repository.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
+import 'package:readbox/services/ai_chat_history_service.dart';
 
-/// Ngôn ngữ hỗ trợ dịch thuật
-const _supportedLanguages = [
-  ('🇻🇳 Tiếng Việt', 'vi'),
-  ('🇺🇸 English', 'en'),
-  ('🇯🇵 日本語', 'ja'),
-  ('🇨🇳 中文', 'zh'),
-  ('🇰🇷 한국어', 'ko'),
-  ('🇫🇷 Français', 'fr'),
-  ('🇩🇪 Deutsch', 'de'),
-  ('🇪🇸 Español', 'es'),
-  ('🇷🇺 Русский', 'ru'),
-];
-
-/// Bottom sheet AI Tra cứu & Dịch thuật
+/// Bottom sheet AI Assistant dạng chat
 /// Dùng: AiAssistantSheet.show(context, selectedText: text)
 class AiAssistantSheet extends StatefulWidget {
   final String? initialText;
+  final String ebookId;
 
-  const AiAssistantSheet({super.key, this.initialText});
+  const AiAssistantSheet({super.key, this.initialText, required this.ebookId});
 
-  static Future<void> show(BuildContext context, {String? selectedText}) {
+  static Future<void> show(
+    BuildContext context, {
+    required String ebookId,
+    String? selectedText,
+  }) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => AiAssistantSheet(initialText: selectedText),
+      builder:
+          (_) => AiAssistantSheet(ebookId: ebookId, initialText: selectedText),
     );
   }
 
@@ -36,81 +30,99 @@ class AiAssistantSheet extends StatefulWidget {
   State<AiAssistantSheet> createState() => _AiAssistantSheetState();
 }
 
-class _AiAssistantSheetState extends State<AiAssistantSheet>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _AiAssistantSheetState extends State<AiAssistantSheet> {
   final _aiRepo = AiRepository();
+  final _historyService = AiChatHistoryService();
+  final _inputController = TextEditingController();
+  final _scrollController = ScrollController();
 
-  // Lookup state
-  final _lookupController = TextEditingController();
-  String _lookupLang = 'vi';
-  String? _lookupResult;
-  bool _lookupLoading = false;
-  String? _lookupError;
-
-  // Translate state
-  final _translateController = TextEditingController();
-  String _translateTargetLang = 'en';
-  String? _translateResult;
-  bool _translateLoading = false;
-  String? _translateError;
+  final List<AiChatMessage> _messages = [];
+  bool _isLoading = false;
+  bool _historyLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _loadHistory();
     if (widget.initialText != null && widget.initialText!.isNotEmpty) {
-      final text = widget.initialText!.trim();
-      _lookupController.text = text;
-      _translateController.text = text;
+      _inputController.text = widget.initialText!.trim();
+    }
+  }
+
+  Future<void> _loadHistory() async {
+    final history = await _historyService.loadHistory(widget.ebookId);
+    if (mounted) {
+      setState(() {
+        _messages.addAll(history);
+        _historyLoaded = true;
+      });
+      if (history.isNotEmpty) _scrollToBottom();
     }
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
-    _lookupController.dispose();
-    _translateController.dispose();
+    _inputController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
-  Future<void> _doLookup() async {
-    final query = _lookupController.text.trim();
-    if (query.isEmpty) return;
+  Future<void> _sendMessage() async {
+    final query = _inputController.text.trim();
+    if (query.isEmpty || _isLoading) return;
+
+    final userMsg = AiChatMessage(
+      text: query,
+      isUser: true,
+      timestamp: DateTime.now(),
+    );
     setState(() {
-      _lookupLoading = true;
-      _lookupResult = null;
-      _lookupError = null;
+      _messages.add(userMsg);
+      _isLoading = true;
     });
+    _inputController.clear();
+    _scrollToBottom();
+
     try {
-      final result = await _aiRepo.lookup(query: query, language: _lookupLang);
-      if (mounted) setState(() => _lookupResult = result);
+      final result = await _aiRepo.lookup(
+        query: query,
+        ebookId: widget.ebookId,
+      );
+      if (mounted) {
+        final aiMsg = AiChatMessage(
+          text: result,
+          isUser: false,
+          timestamp: DateTime.now(),
+        );
+        setState(() => _messages.add(aiMsg));
+        _scrollToBottom();
+        await _historyService.saveHistory(widget.ebookId, _messages);
+      }
     } catch (e) {
-      if (mounted) setState(() => _lookupError = e.toString());
+      if (mounted) {
+        final errMsg = AiChatMessage(
+          text: '${AppLocalizations.current.error}: ${e.toString()}',
+          isUser: false,
+          timestamp: DateTime.now(),
+        );
+        setState(() => _messages.add(errMsg));
+        _scrollToBottom();
+      }
     } finally {
-      if (mounted) setState(() => _lookupLoading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  Future<void> _doTranslate() async {
-    final text = _translateController.text.trim();
-    if (text.isEmpty) return;
-    setState(() {
-      _translateLoading = true;
-      _translateResult = null;
-      _translateError = null;
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
     });
-    try {
-      final result = await _aiRepo.translate(
-        text: text,
-        targetLanguage: _translateTargetLang,
-      );
-      if (mounted) setState(() => _translateResult = result);
-    } catch (e) {
-      if (mounted) setState(() => _translateError = e.toString());
-    } finally {
-      if (mounted) setState(() => _translateLoading = false);
-    }
   }
 
   @override
@@ -137,13 +149,11 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
         children: [
           _buildHandle(),
           _buildHeader(theme),
-          _buildTabBar(theme),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [_buildLookupTab(theme), _buildTranslateTab(theme)],
-            ),
-          ),
+          const Divider(height: 1, thickness: 1),
+          // Messages area
+          Expanded(child: _buildMessageList(theme)),
+          // Input bar
+          _buildInputBar(theme),
         ],
       ),
     );
@@ -165,7 +175,7 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
 
   Widget _buildHeader(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+      padding: const EdgeInsets.fromLTRB(20, 0, 8, 12),
       child: Row(
         children: [
           Container(
@@ -206,6 +216,17 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
             ],
           ),
           const Spacer(),
+          if (_messages.isNotEmpty)
+            IconButton(
+              onPressed: () async {
+                await _historyService.clearHistory(widget.ebookId);
+                if (mounted) setState(() => _messages.clear());
+              },
+              icon: const Icon(Icons.delete_sweep_rounded),
+              iconSize: 20,
+              color: Colors.grey[500],
+              tooltip: 'Xoá hội thoại',
+            ),
           IconButton(
             onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.close_rounded),
@@ -217,430 +238,439 @@ class _AiAssistantSheetState extends State<AiAssistantSheet>
     );
   }
 
-  Widget _buildTabBar(ThemeData theme) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: TabBar(
-        controller: _tabController,
-        indicator: BoxDecoration(
-          color: theme.primaryColor,
-          borderRadius: BorderRadius.circular(10),
+  Widget _buildMessageList(ThemeData theme) {
+    if (!_historyLoaded) {
+      return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+    }
+    if (_messages.isEmpty && !_isLoading) {
+      return _buildEmptyState(theme);
+    }
+
+    return ListView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      itemCount: _messages.length + (_isLoading ? 1 : 0),
+      itemBuilder: (context, index) {
+        if (index == _messages.length) {
+          // Typing indicator
+          return _buildTypingIndicator(theme);
+        }
+        final msg = _messages[index];
+        return _buildMessageBubble(msg, theme);
+      },
+    );
+  }
+
+  Widget _buildEmptyState(ThemeData theme) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    theme.primaryColor.withValues(alpha: 0.12),
+                    theme.primaryColor.withValues(alpha: 0.06),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.auto_awesome_rounded,
+                size: 36,
+                color: theme.primaryColor,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              AppLocalizations.current.askToAiAnything,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              AppLocalizations.current.askToAiDescription,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey[500],
+                height: 1.5,
+              ),
+            ),
+          ],
         ),
-        indicatorSize: TabBarIndicatorSize.tab,
-        labelColor: Colors.white,
-        unselectedLabelColor: Colors.grey[600],
-        labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-        dividerColor: Colors.transparent,
-        tabs: [
-          Tab(
-            icon: Icon(Icons.search_rounded, size: 16),
-            text: AppLocalizations.current.lookup,
-          ),
-          Tab(
-            icon: Icon(Icons.translate_rounded, size: 16),
-            text: AppLocalizations.current.translation,
-          ),
-        ],
       ),
     );
   }
 
-  // ===================== LOOKUP TAB =====================
-  Widget _buildLookupTab(ThemeData theme) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 8),
-          // Input field
-          TextField(
-            controller: _lookupController,
-            maxLines: 3,
-            minLines: 1,
-            decoration: InputDecoration(
-              labelText: AppLocalizations.current.lookup_text,
-              hintText: AppLocalizations.current.lookup_hint,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(color: Colors.grey[300]!),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(color: Colors.grey[300]!),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(color: theme.primaryColor, width: 2),
-              ),
-              prefixIcon: Icon(Icons.search_rounded, color: theme.primaryColor),
-              suffixIcon:
-                  _lookupController.text.isNotEmpty
-                      ? IconButton(
-                        icon: const Icon(Icons.clear_rounded, size: 18),
-                        onPressed: () {
-                          _lookupController.clear();
-                          setState(() {
-                            _lookupResult = null;
-                            _lookupError = null;
-                          });
-                        },
-                      )
-                      : null,
-              filled: true,
-              fillColor: Colors.grey[50],
-            ),
-            onChanged: (_) => setState(() {}),
-            textInputAction: TextInputAction.search,
-            onSubmitted: (_) => _doLookup(),
-          ),
-          const SizedBox(height: 12),
-          // Language selector
-          Row(
-            children: [
-              Text(
-                AppLocalizations.current.lookup_language,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(width: 10),
-              _buildLanguageChips(
-                selected: _lookupLang,
-                langs: [('Tiếng Việt', 'vi'), ('English', 'en')],
-                onSelected: (v) => setState(() => _lookupLang = v),
-                theme: theme,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // Button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: _lookupLoading ? null : _doLookup,
-              icon:
-                  _lookupLoading
-                      ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                      : const Icon(Icons.auto_awesome_rounded, size: 18),
-              label: Text(
-                _lookupLoading
-                    ? AppLocalizations.current.loading
-                    : AppLocalizations.current.lookup_button,
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.primaryColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                elevation: 0,
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          // Result
-          if (_lookupError != null) _buildErrorCard(_lookupError!),
-          if (_lookupResult != null) _buildResultCard(_lookupResult!, theme),
-        ],
-      ),
-    );
-  }
+  Widget _buildMessageBubble(AiChatMessage msg, ThemeData theme) {
+    final isUser = msg.isUser;
+    final isError =
+        !isUser && msg.text.startsWith(AppLocalizations.current.error);
 
-  // ===================== TRANSLATE TAB =====================
-  Widget _buildTranslateTab(ThemeData theme) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment:
+            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          const SizedBox(height: 8),
-          // Input field
-          TextField(
-            controller: _translateController,
-            maxLines: 5,
-            minLines: 2,
-            decoration: InputDecoration(
-              labelText: AppLocalizations.current.translate_text,
-              hintText: AppLocalizations.current.translate_hint,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(color: Colors.grey[300]!),
+          if (!isUser) ...[
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    theme.primaryColor,
+                    theme.primaryColor.withValues(alpha: 0.7),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                shape: BoxShape.circle,
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(color: Colors.grey[300]!),
+              child: const Icon(
+                Icons.auto_awesome,
+                size: 15,
+                color: Colors.white,
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide(color: theme.primaryColor, width: 2),
-              ),
-              prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: 12, bottom: 60),
-                child: Icon(Icons.translate_rounded, color: theme.primaryColor),
-              ),
-              suffixIcon:
-                  _translateController.text.isNotEmpty
-                      ? Padding(
-                        padding: const EdgeInsets.only(bottom: 60),
-                        child: IconButton(
-                          icon: const Icon(Icons.clear_rounded, size: 18),
-                          onPressed: () {
-                            _translateController.clear();
-                            setState(() {
-                              _translateResult = null;
-                              _translateError = null;
-                            });
-                          },
-                        ),
-                      )
-                      : null,
-              filled: true,
-              fillColor: Colors.grey[50],
-              alignLabelWithHint: true,
             ),
-            onChanged: (_) => setState(() {}),
-          ),
-          const SizedBox(height: 12),
-          // Target language
-          Text(
-            AppLocalizations.current.translate_language,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 6,
-            children:
-                _supportedLanguages.map((lang) {
-                  final isSelected = _translateTargetLang == lang.$2;
-                  return GestureDetector(
-                    onTap: () => setState(() => _translateTargetLang = lang.$2),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 7,
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            isSelected ? theme.primaryColor : Colors.grey[100],
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color:
-                              isSelected
-                                  ? theme.primaryColor
-                                  : Colors.grey[300]!,
-                        ),
-                      ),
-                      child: Text(
-                        lang.$1,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.normal,
-                          color: isSelected ? Colors.white : Colors.grey[700],
-                        ),
-                      ),
+            const SizedBox(width: 8),
+          ],
+          Flexible(
+            child: Column(
+              crossAxisAlignment:
+                  isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              children: [
+                GestureDetector(
+                  onLongPress: () => _copyText(msg.text),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
                     ),
-                  );
-                }).toList(),
-          ),
-          const SizedBox(height: 16),
-          // Button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: _translateLoading ? null : _doTranslate,
-              icon:
-                  _translateLoading
-                      ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                      : const Icon(Icons.translate_rounded, size: 18),
-              label: Text(
-                _translateLoading
-                    ? AppLocalizations.current.loading
-                    : AppLocalizations.current.translate_button,
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.primaryColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                elevation: 0,
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          // Result
-          if (_translateError != null) _buildErrorCard(_translateError!),
-          if (_translateResult != null)
-            _buildResultCard(_translateResult!, theme),
-        ],
-      ),
-    );
-  }
-
-  // ===================== SHARED WIDGETS =====================
-
-  Widget _buildLanguageChips({
-    required String selected,
-    required List<(String, String)> langs,
-    required void Function(String) onSelected,
-    required ThemeData theme,
-  }) {
-    return Row(
-      children:
-          langs.map((lang) {
-            final isSelected = selected == lang.$2;
-            return Padding(
-              padding: const EdgeInsets.only(right: 6),
-              child: GestureDetector(
-                onTap: () => onSelected(lang.$2),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected ? theme.primaryColor : Colors.grey[100],
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
+                    decoration: BoxDecoration(
                       color:
-                          isSelected ? theme.primaryColor : Colors.grey[300]!,
+                          isUser
+                              ? theme.primaryColor
+                              : isError
+                              ? Colors.red[50]
+                              : theme.colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(18),
+                        topRight: const Radius.circular(18),
+                        bottomLeft: Radius.circular(isUser ? 18 : 4),
+                        bottomRight: Radius.circular(isUser ? 4 : 18),
+                      ),
+                      border:
+                          isError ? Border.all(color: Colors.red[200]!) : null,
                     ),
-                  ),
-                  child: Text(
-                    lang.$1,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.normal,
-                      color: isSelected ? Colors.white : Colors.grey[700],
+                    child: SelectableText(
+                      msg.text,
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.55,
+                        color:
+                            isUser
+                                ? Colors.white
+                                : isError
+                                ? Colors.red[700]
+                                : theme.colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }).toList(),
+                // Copy action — chỉ hiện với tin nhắn AI, không hiện với lỗi
+                if (!isUser && !isError)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4, left: 2),
+                    child: GestureDetector(
+                      onTap: () => _copyText(msg.text),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.copy_rounded,
+                            size: 13,
+                            color: Colors.grey[400],
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            AppLocalizations.current.copy,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (isUser) const SizedBox(width: 4),
+        ],
+      ),
     );
   }
 
-  Widget _buildErrorCard(String error) {
+  void _copyText(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.current.copy_result),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+
+  Widget _buildTypingIndicator(ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  theme.primaryColor,
+                  theme.primaryColor.withValues(alpha: 0.7),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.auto_awesome,
+              size: 15,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(18),
+                topRight: Radius.circular(18),
+                bottomLeft: Radius.circular(4),
+                bottomRight: Radius.circular(18),
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(3, (i) {
+                return _TypingDot(delay: Duration(milliseconds: i * 200));
+              }),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInputBar(ThemeData theme) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(
+        12,
+        8,
+        12,
+        MediaQuery.of(context).padding.bottom + 8,
+      ),
       decoration: BoxDecoration(
-        color: Colors.red[50],
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.red[200]!),
+        color: theme.colorScheme.surface,
+        border: Border(top: BorderSide(color: Colors.grey[200]!, width: 1)),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Icon(Icons.error_outline_rounded, color: Colors.red[400], size: 20),
-          const SizedBox(width: 10),
           Expanded(
-            child: Text(
-              '${AppLocalizations.current.error}: $error',
-              style: TextStyle(color: Colors.red[700], fontSize: 13),
+            child: Container(
+              constraints: const BoxConstraints(maxHeight: 120),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: TextField(
+                controller: _inputController,
+                maxLines: null,
+                minLines: 1,
+                textInputAction: TextInputAction.newline,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: theme.colorScheme.onSurface,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Nhập câu hỏi...',
+                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey[400]),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                ),
+                onChanged: (_) => setState(() {}),
+              ),
             ),
+          ),
+          const SizedBox(width: 8),
+          _SendButton(
+            enabled: _inputController.text.trim().isNotEmpty && !_isLoading,
+            loading: _isLoading,
+            primaryColor: theme.primaryColor,
+            onTap: _sendMessage,
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildResultCard(String result, ThemeData theme) {
-    return Container(
-      padding: const EdgeInsets.all(16),
+/// Nút gửi có animation
+class _SendButton extends StatelessWidget {
+  final bool enabled;
+  final bool loading;
+  final Color primaryColor;
+  final VoidCallback onTap;
+
+  const _SendButton({
+    required this.enabled,
+    required this.loading,
+    required this.primaryColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: 44,
+      height: 44,
       decoration: BoxDecoration(
-        color: theme.primaryColor.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: theme.primaryColor.withValues(alpha: 0.15)),
+        gradient:
+            enabled
+                ? LinearGradient(
+                  colors: [primaryColor, primaryColor.withValues(alpha: 0.75)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+                : null,
+        color: enabled ? null : Colors.grey[300],
+        shape: BoxShape.circle,
+        boxShadow:
+            enabled
+                ? [
+                  BoxShadow(
+                    color: primaryColor.withValues(alpha: 0.35),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+                : null,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header
-          Row(
-            children: [
-              Icon(
-                Icons.auto_awesome_rounded,
-                color: theme.primaryColor,
-                size: 16,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                AppLocalizations.current.result_from_gemini,
-                style: TextStyle(
-                  color: theme.primaryColor,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                ),
-              ),
-              const Spacer(),
-              IconButton(
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: result));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.current.copy_result),
-                      duration: Duration(seconds: 2),
-                      behavior: SnackBarBehavior.floating,
+      child: Material(
+        color: Colors.transparent,
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: enabled ? onTap : null,
+          child: Center(
+            child:
+                loading
+                    ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                    : Icon(
+                      Icons.send_rounded,
+                      size: 20,
+                      color: enabled ? Colors.white : Colors.grey[500],
                     ),
-                  );
-                },
-                icon: Icon(
-                  Icons.copy_rounded,
-                  size: 16,
-                  color: theme.primaryColor,
-                ),
-                tooltip: AppLocalizations.current.copy,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
-              ),
-            ],
           ),
-          const Divider(height: 16),
-          // Result text - selectable
-          SelectableText(
-            result,
-            style: const TextStyle(
-              fontSize: 14,
-              height: 1.6,
-              color: Color(0xFF1A1A2E),
+        ),
+      ),
+    );
+  }
+}
+
+/// Dot animation cho typing indicator
+class _TypingDot extends StatefulWidget {
+  final Duration delay;
+  const _TypingDot({required this.delay});
+
+  @override
+  State<_TypingDot> createState() => _TypingDotState();
+}
+
+class _TypingDotState extends State<_TypingDot>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _animation = Tween<double>(
+      begin: 0,
+      end: -6,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    Future.delayed(widget.delay, () {
+      if (mounted) _controller.repeat(reverse: true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder:
+          (_, __) => Transform.translate(
+            offset: Offset(0, _animation.value),
+            child: Container(
+              width: 7,
+              height: 7,
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              decoration: BoxDecoration(
+                color: Colors.grey[400],
+                shape: BoxShape.circle,
+              ),
             ),
           ),
-        ],
-      ),
     );
   }
 }

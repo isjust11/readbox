@@ -54,6 +54,7 @@ class TtsLockScreenController {
   AudioHandler? _handler;
   Future<void>? _initializing;
   _PdfBackgroundTtsRunner? _pdfBackgroundRunner;
+  _EpubBackgroundTtsRunner? _epubBackgroundRunner;
 
   VoidCallback? onSkipForward;
   VoidCallback? onSkipBackward;
@@ -161,6 +162,28 @@ class TtsLockScreenController {
     _pdfBackgroundRunner!.attachToCurrentSpeech();
   }
 
+  /// Bàn giao đọc EPUB liên tục từ `EpubViewerScreen` sang controller toàn app.
+  /// Dùng khi user back khỏi màn EPUB nhưng vẫn muốn TTS tiếp tục dưới nền.
+  Future<void> continueEpubInBackground({
+    required List<String> paragraphs,
+    required String bookTitle,
+    required int nextParagraphIndex,
+    String? bookId,
+  }) async {
+    _pdfBackgroundRunner?.cancel();
+    _pdfBackgroundRunner = null;
+    _epubBackgroundRunner?.cancel();
+    _epubBackgroundRunner = _EpubBackgroundTtsRunner(
+      controller: this,
+      paragraphs: paragraphs,
+      bookTitle: bookTitle,
+      nextParagraphIndex: nextParagraphIndex,
+      bookId: bookId,
+    );
+    _epubBackgroundRunner!.attachToCurrentSpeech();
+  }
+
+
   /// Cho UI gọi để pause/resume/stop TTS từ floating mini-player.
   Future<void> pauseFromUi() async {
     final handler = _handler;
@@ -217,10 +240,95 @@ class TtsLockScreenController {
   Future<void> stop() async {
     _pdfBackgroundRunner?.cancel();
     _pdfBackgroundRunner = null;
+    _epubBackgroundRunner?.cancel();
+    _epubBackgroundRunner = null;
     _publish(TtsBackgroundInfo.idle);
     await _handler?.stop();
   }
 }
+
+class _EpubBackgroundTtsRunner {
+  _EpubBackgroundTtsRunner({
+    required this.controller,
+    required this.paragraphs,
+    required this.bookTitle,
+    required this.nextParagraphIndex,
+    this.bookId,
+  });
+
+  final TtsLockScreenController controller;
+  final List<String> paragraphs;
+  final String bookTitle;
+  final String? bookId;
+  int nextParagraphIndex;
+
+  final TextToSpeechService _ttsService = TextToSpeechService();
+  bool _cancelled = false;
+  bool _readingNext = false;
+
+  void attachToCurrentSpeech() {
+    _ttsService.onSpeechWordProgress = (
+      String text,
+      int start,
+      int end,
+      String word,
+    ) {
+      controller.updateWordProgress(fullText: text, start: start, end: end);
+    };
+
+    _ttsService.onSpeechComplete = (_) {
+      _readNextParagraph();
+    };
+
+    _ttsService.onSpeechError = (error) {
+      debugPrint('[EPUB Background TTS] $error');
+      _readNextParagraph();
+    };
+  }
+
+  void cancel() {
+    _cancelled = true;
+  }
+
+  Future<void> _readNextParagraph() async {
+    if (_cancelled || _readingNext) return;
+    _readingNext = true;
+
+    try {
+      while (!_cancelled && nextParagraphIndex < paragraphs.length) {
+        final paragraphToRead = nextParagraphIndex;
+        nextParagraphIndex++;
+
+        final paragraphText = paragraphs[paragraphToRead].trim();
+        if (_cancelled) return;
+        if (paragraphText.isEmpty) {
+          continue;
+        }
+
+        await _ttsService.setLanguageFromText(paragraphText);
+        if (_cancelled) return;
+
+        await controller.startReadingSession(
+          bookTitle: bookTitle,
+          page: paragraphToRead + 1,
+          text: paragraphText,
+          bookId: bookId,
+        );
+        attachToCurrentSpeech();
+        await _ttsService.speak(paragraphText);
+        return;
+      }
+
+      await controller.stop();
+    } catch (e) {
+      debugPrint('[EPUB Background TTS] read next failed: $e');
+      await controller.stop();
+    } finally {
+      _readingNext = false;
+    }
+  }
+}
+
 
 class _PdfBackgroundTtsRunner {
   _PdfBackgroundTtsRunner({
