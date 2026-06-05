@@ -18,7 +18,6 @@ class ApiConstant {
 
   /// Host API: đọc từ .env (API_BASE_HOST), ưu tiên dùng khi có cấu hình (kể cả debug hay release)
   static String get _baseHost {
-    return 'https://readbox.pro.vn';
     final envHost = dotenv.get('API_BASE_HOST', fallback: '').trim();
     if (envHost.isNotEmpty) {
       return envHost;
@@ -66,7 +65,7 @@ class ApiConstant {
 
   /// API Host thống nhất — tự chọn dev (có port) hoặc prod (không port)
   /// Tất cả data sources dùng getter này
-  static String get apiHost => isDev ? apiHostProduct : apiHostProduct;
+  static String get apiHost => isDev ? apiHostDev : apiHostProduct;
 
   /// Dev: host:port/  (ví dụ http://192.168.0.104:4000/)
   static String get apiHostDev => "$_baseHost:$apiPort/";
@@ -76,7 +75,7 @@ class ApiConstant {
 
   /// Storage Host — cũng theo env
   static String get apiHostStorage =>
-      isDev ? "$_baseHost:$storagePort" : "$_baseHost";
+      isDev ? "$_baseHost:$storagePort" : _baseHost;
   static String get storageHost => apiHostStorage;
   static final verifyToken = "auth/verify-token";
   static final login = "auth/login";
