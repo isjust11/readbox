@@ -20,6 +20,8 @@ import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/navigator.dart';
+import 'package:readbox/utils/shared_preference.dart';
 import 'package:readbox/utils/utils.dart';
 import 'package:scale_size/scale_size.dart';
 import 'package:readbox/ui/widget/app_widgets/ad_book_card.dart';
@@ -95,7 +97,33 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
     });
     loadUserInfo();
     loadCategories();
+    navigateToBookFromDeeplink();
     _wireFloatingActionCallbacks();
+  }
+
+  @override
+  void didUpdateWidget(covariant AllEbooksBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Check lại deeplink khi widget được tạo lại
+    if (widget.initialFilter != oldWidget.initialFilter) {
+      navigateToBookFromDeeplink();
+    }
+  }
+
+  // Navigate to book detail from deeplink if user is logged in
+  Future navigateToBookFromDeeplink() async {
+    try {
+      final deepLinkId = await SharedPreferenceUtil.getDeepLinkId();
+      if (deepLinkId != null && deepLinkId.isNotEmpty) {
+        await SharedPreferenceUtil.removeDeepLinkId();
+        final navigator = NavigationService.instance.navigatorKey.currentState;
+        if (navigator == null) return;
+        // Nếu đang ở màn hình chi tiết sách khác → replace để tránh stack chồng
+        navigator.pushNamed(Routes.bookDetailScreen, arguments: deepLinkId);
+      }
+    } catch (e) {
+      debugPrint('❌ Error navigating to book from deeplink: $e');
+    }
   }
 
   /// Map FilterType → tiêu đề AppBar mặc định (khi mở qua Discover/See-all).

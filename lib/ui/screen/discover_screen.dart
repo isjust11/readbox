@@ -13,7 +13,10 @@ import 'package:readbox/res/app_size.dart';
 import 'package:readbox/res/res.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/services/services.dart';
+import 'package:readbox/ui/screen/main_screen.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/navigator.dart';
+import 'package:readbox/utils/shared_preference.dart';
 import 'package:readbox/utils/utils.dart';
 
 /// Màn "Khám phá" mới: hiển thị 3 section (Ebook mới, Yêu thích, Gợi ý)
@@ -40,7 +43,30 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       context.read<NotificationCubit>().getUnreadCount();
       context.read<DiscoverCubit>().loadAll();
       _loadUserReadingBooks();
+      navigateToBookFromDeeplink();
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant DiscoverScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    navigateToBookFromDeeplink();
+  }
+
+  // Navigate to book detail from deeplink if user is logged in
+  Future navigateToBookFromDeeplink() async {
+    try {
+      final deepLinkId = await SharedPreferenceUtil.getDeepLinkId();
+      if (deepLinkId != null && deepLinkId.isNotEmpty) {
+        await SharedPreferenceUtil.removeDeepLinkId();
+        final navigator = NavigationService.instance.navigatorKey.currentState;
+        if (navigator == null) return;
+        // Nếu đang ở màn hình chi tiết sách khác → replace để tránh stack chồng
+        navigator.pushNamed(Routes.bookDetailScreen, arguments: deepLinkId);
+      }
+    } catch (e) {
+      debugPrint('❌ Error navigating to book from deeplink: $e');
+    }
   }
 
   Future<void> _loadUserInfo() async {
@@ -52,21 +78,26 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   }
 
   Future<void> _loadUserReadingBooks() async {
-    await context.read<UserInteractionCubit>().getMyInteractions(query: {
-      'page': 1,
-      'limit': 10,
-      'interactionType': InteractionType.reading.name,
-      'targetType': InteractionTarget.book.name,
-    });
+    await context.read<UserInteractionCubit>().getMyInteractions(
+      query: {
+        'page': 1,
+        'limit': 10,
+        'interactionType': InteractionType.reading.name,
+        'targetType': InteractionTarget.book.name,
+      },
+    );
   }
 
   Future<void> _onRefresh() => context.read<DiscoverCubit>().loadAll();
 
   void _openBook(BookModel book, {BookFileEntity? selectedFile}) {
     final String targetUrl = selectedFile?.fileUrl ?? book.fileUrl ?? '';
-    final targetType = selectedFile != null 
-        ? (selectedFile.format?.toLowerCase() == 'pdf' ? BookType.pdf : BookType.epub)
-        : book.fileType;
+    final targetType =
+        selectedFile != null
+            ? (selectedFile.format?.toLowerCase() == 'pdf'
+                ? BookType.pdf
+                : BookType.epub)
+            : book.fileType;
 
     if (targetUrl.isEmpty) {
       AppSnackBar.show(
@@ -76,10 +107,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       );
       return;
     }
-    final route = targetType == BookType.epub
-        ? Routes.epubViewerScreen
-        : Routes.pdfViewerScreen;
-        
+    final route =
+        targetType == BookType.epub
+            ? Routes.epubViewerScreen
+            : Routes.pdfViewerScreen;
+
     final bookToOpen = BookModel.fromJson(book.toJson());
     bookToOpen.fileUrl = targetUrl;
     bookToOpen.fileType = targetType;
@@ -88,11 +120,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   }
 
   void _openAllEbooks({FilterType? filter}) {
-    Navigator.pushNamed(
-      context,
-      Routes.allEbooksScreen,
-      arguments: filter,
-    );
+    Navigator.pushNamed(context, Routes.allEbooksScreen, arguments: filter);
   }
 
   @override
@@ -114,9 +142,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             fontSize: 20,
           ),
         ),
-        actions: [
-          _buildNotificationButton(),
-        ],
+        actions: [_buildNotificationButton()],
       ),
       drawer: AppDrawer(
         user: _userInfo,
@@ -142,76 +168,82 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: _onRefresh,
-        child: BlocBuilder<DiscoverCubit, DiscoverState>(
-          builder: (context, state) {
-            return ListView(
-              padding: const EdgeInsets.only(bottom: 24),
-              children: [
-                _DiscoverSectionView(
-                  title: AppLocalizations.current.new_ebooks,
-                  icon: Icons.fiber_new_rounded,
-                  accent: const Color(0xFF6366F1),
-                  state: state.newest,
-                  onSeeAll: () => _openAllEbooks(filter: FilterType.all),
-                  onRetry: () => context
-                      .read<DiscoverCubit>()
-                      .refreshSection(DiscoverSection.newest),
-                  onTapBook: (book) => _openBook(book),
-                  onLongPressBook: (book) {
-                    BookOptionsBottomSheet.show(
-                      context,
-                      book: book,
-                      userInteractionCubit: context.read<UserInteractionCubit>(),
-                      ownerId: _userInfo?.id,
-                      onRead: (b, f) => _openBook(b, selectedFile: f),
-                    );
-                  },
-                ),
-                _DiscoverSectionView(
-                  title: AppLocalizations.current.popular_ebooks,
-                  icon: Icons.local_fire_department_rounded,
-                  accent: const Color(0xFFEF4444),
-                  state: state.popular,
-                  onSeeAll: () => _openAllEbooks(filter: FilterType.all),
-                  onRetry: () => context
-                      .read<DiscoverCubit>()
-                      .refreshSection(DiscoverSection.popular),
-                  onTapBook: (book) => _openBook(book),
-                  onLongPressBook: (book) {
-                    BookOptionsBottomSheet.show(
-                      context,
-                      book: book,
-                      userInteractionCubit: context.read<UserInteractionCubit>(),
-                      ownerId: _userInfo?.id,
-                      onRead: (b, f) => _openBook(b, selectedFile: f),
-                    );
-                  },
-                ),
-                _DiscoverSectionView(
-                  title: AppLocalizations.current.recommended_for_you,
-                  icon: Icons.auto_awesome_rounded,
-                  accent: const Color(0xFF06B6D4),
-                  state: state.recommended,
-                  onSeeAll: () => _openAllEbooks(filter: FilterType.all),
-                  onRetry: () => context
-                      .read<DiscoverCubit>()
-                      .refreshSection(DiscoverSection.recommended),
-                  onTapBook: (book) => _openBook(book),
-                  onLongPressBook: (book) {
-                    BookOptionsBottomSheet.show(
-                      context,
-                      book: book,
-                      userInteractionCubit: context.read<UserInteractionCubit>(),
-                      ownerId: _userInfo?.id,
-                      onRead: (b, f) => _openBook(b, selectedFile: f),
-                    );
-                  },
-                ),
-              ],
-            );
-          },
-        ),
-      ),
+              child: BlocBuilder<DiscoverCubit, DiscoverState>(
+                builder: (context, state) {
+                  return ListView(
+                    padding: const EdgeInsets.only(bottom: 24),
+                    children: [
+                      _DiscoverSectionView(
+                        title: AppLocalizations.current.new_ebooks,
+                        icon: Icons.fiber_new_rounded,
+                        accent: const Color(0xFF6366F1),
+                        state: state.newest,
+                        onSeeAll: () => _openAllEbooks(filter: FilterType.all),
+                        onRetry:
+                            () => context.read<DiscoverCubit>().refreshSection(
+                              DiscoverSection.newest,
+                            ),
+                        onTapBook: (book) => _openBook(book),
+                        onLongPressBook: (book) {
+                          BookOptionsBottomSheet.show(
+                            context,
+                            book: book,
+                            userInteractionCubit:
+                                context.read<UserInteractionCubit>(),
+                            ownerId: _userInfo?.id,
+                            onRead: (b, f) => _openBook(b, selectedFile: f),
+                          );
+                        },
+                      ),
+                      _DiscoverSectionView(
+                        title: AppLocalizations.current.popular_ebooks,
+                        icon: Icons.local_fire_department_rounded,
+                        accent: const Color(0xFFEF4444),
+                        state: state.popular,
+                        onSeeAll: () => _openAllEbooks(filter: FilterType.all),
+                        onRetry:
+                            () => context.read<DiscoverCubit>().refreshSection(
+                              DiscoverSection.popular,
+                            ),
+                        onTapBook: (book) => _openBook(book),
+                        onLongPressBook: (book) {
+                          BookOptionsBottomSheet.show(
+                            context,
+                            book: book,
+                            userInteractionCubit:
+                                context.read<UserInteractionCubit>(),
+                            ownerId: _userInfo?.id,
+                            onRead: (b, f) => _openBook(b, selectedFile: f),
+                          );
+                        },
+                      ),
+                      _DiscoverSectionView(
+                        title: AppLocalizations.current.recommended_for_you,
+                        icon: Icons.auto_awesome_rounded,
+                        accent: const Color(0xFF06B6D4),
+                        state: state.recommended,
+                        onSeeAll: () => _openAllEbooks(filter: FilterType.all),
+                        onRetry:
+                            () => context.read<DiscoverCubit>().refreshSection(
+                              DiscoverSection.recommended,
+                            ),
+                        onTapBook: (book) => _openBook(book),
+                        onLongPressBook: (book) {
+                          BookOptionsBottomSheet.show(
+                            context,
+                            book: book,
+                            userInteractionCubit:
+                                context.read<UserInteractionCubit>(),
+                            ownerId: _userInfo?.id,
+                            onRead: (b, f) => _openBook(b, selectedFile: f),
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
           ),
           const BannerAdWidget(),
         ],
@@ -231,8 +263,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
-                onTap: () =>
-                    Navigator.pushNamed(context, Routes.notificationScreen),
+                onTap:
+                    () =>
+                        Navigator.pushNamed(context, Routes.notificationScreen),
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: SizedBox(
@@ -254,10 +287,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 top: 0,
                 right: 12,
                 child: InkWell(
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    Routes.notificationScreen,
-                  ),
+                  onTap:
+                      () => Navigator.pushNamed(
+                        context,
+                        Routes.notificationScreen,
+                      ),
                   child: Badge(
                     backgroundColor: Theme.of(context).colorScheme.error,
                     label: Text(
@@ -363,9 +397,10 @@ class _DiscoverSectionView extends StatelessWidget {
       return SizedBox(
         height: 220,
         child: Center(
-          child: Platform.isIOS
-              ? const CupertinoActivityIndicator()
-              : const CircularProgressIndicator(),
+          child:
+              Platform.isIOS
+                  ? const CupertinoActivityIndicator()
+                  : const CircularProgressIndicator(),
         ),
       );
     }
@@ -411,10 +446,7 @@ class _DiscoverSectionView extends StatelessWidget {
         child: Center(
           child: Text(
             AppLocalizations.current.no_books_for_section,
-            style: TextStyle(
-              color: colorScheme.onSurfaceVariant,
-              fontSize: 13,
-            ),
+            style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 13),
           ),
         ),
       );
@@ -426,11 +458,15 @@ class _DiscoverSectionView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: state.books.length,
         separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (context, index) => _DiscoverBookCard(
-          book: state.books[index],
-          onTap: () => onTapBook(state.books[index]),
-          onLongPress: onLongPressBook != null ? () => onLongPressBook!(state.books[index]) : null,
-        ),
+        itemBuilder:
+            (context, index) => _DiscoverBookCard(
+              book: state.books[index],
+              onTap: () => onTapBook(state.books[index]),
+              onLongPress:
+                  onLongPressBook != null
+                      ? () => onLongPressBook!(state.books[index])
+                      : null,
+            ),
       ),
     );
   }
@@ -444,7 +480,11 @@ class _DiscoverBookCard extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
 
-  const _DiscoverBookCard({required this.book, required this.onTap, this.onLongPress});
+  const _DiscoverBookCard({
+    required this.book,
+    required this.onTap,
+    this.onLongPress,
+  });
 
   @override
   Widget build(BuildContext context) {

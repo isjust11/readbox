@@ -1,6 +1,8 @@
 import 'package:app_links/app_links.dart';
 import 'package:readbox/routes.dart';
+import 'package:readbox/services/secure_storage_service.dart';
 import 'package:readbox/utils/navigator.dart';
+import 'package:readbox/utils/shared_preference.dart';
 
 /// Service nhận và xử lý Universal Links / App Links
 /// URL pattern: https://readbox.pro.vn/book/{encodedBookId}
@@ -21,15 +23,14 @@ class DeepLinkService {
     } catch (_) {}
 
     // Hot/warm start: app đang chạy hoặc ở background
-    _appLinks.uriLinkStream.listen(
-      _handleLink,
-      onError: (_) {},
-    );
+    _appLinks.uriLinkStream.listen(_handleLink, onError: (_) {});
   }
 
   void _handleLink(Uri uri) {
-    // https://readbox.pro.vn/book/{bookId}
-    if (uri.host == 'readbox.pro.vn' && uri.pathSegments.isNotEmpty) {
+    // Universal/App link: https://readbox.pro.vn/book/{bookId}
+    if ((uri.scheme == 'https' || uri.scheme == 'http') &&
+        uri.host == 'readbox.pro.vn' &&
+        uri.pathSegments.isNotEmpty) {
       if (uri.pathSegments[0] == 'book' && uri.pathSegments.length >= 2) {
         final bookId = uri.pathSegments[1];
         if (bookId.isNotEmpty) {
@@ -37,13 +38,32 @@ class DeepLinkService {
         }
       }
     }
+    // Custom scheme: readbox://book/{bookId}
+    else if (uri.scheme == 'readbox' && uri.host == 'book') {
+      if (uri.pathSegments.isNotEmpty) {
+        final bookId = uri.pathSegments[0];
+        if (bookId.isNotEmpty) {
+          _navigateToBook(bookId);
+        }
+      }
+    }
   }
 
-  void _navigateToBook(String bookId) {
-    final navigator = NavigationService.instance.navigatorKey.currentState;
-    if (navigator == null) return;
-
-    // Nếu đang ở màn hình chi tiết sách khác → replace để tránh stack chồng
-    navigator.pushNamed(Routes.bookDetailScreen, arguments: bookId);
+  void _navigateToBook(String bookId) async {
+    final token = await SecureStorageService().getToken();
+    if (token == null || token.isEmpty) {
+      final navigator = NavigationService.instance.navigatorKey.currentState;
+      if (navigator == null) return;
+      // Nếu đang ở màn hình chi tiết sách khác → replace để tránh stack chồng
+      // save deeplink id
+      await SharedPreferenceUtil.saveDeepLinkId(bookId);
+      navigator.pushNamed(Routes.loginScreen);
+    } else {
+      final navigator = NavigationService.instance.navigatorKey.currentState;
+      if (navigator == null) return;
+      // đi từ main để push back không bị lỗi đen màn hình
+      await SharedPreferenceUtil.saveDeepLinkId(bookId);
+      navigator.pushNamed(Routes.mainScreen);
+    }
   }
 }

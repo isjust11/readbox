@@ -64,6 +64,14 @@
                     android:host="readbox.pro.vn"
                     android:pathPrefix="/book" />
             </intent-filter>
+            
+            <!-- Custom scheme: readbox://book/{id} -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="readbox" android:host="book" />
+            </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

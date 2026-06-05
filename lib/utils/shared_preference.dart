@@ -29,10 +29,25 @@ class SPrefCache {
   static const String PREF_KEY_PDF_DRAWINGS = "pref_key_pdf_drawings";
   static const String PREF_KEY_PDF_NOTES = "pref_key_pdf_notes";
   static const String PREF_KEY_DRIVE_FOLDER_ID = "pref_key_drive_folder_id";
+  static const String PREF_KEY_DEEP_LINK_ID = "pref_key_deep_link_id";
 }
 
 class SharedPreferenceUtil {
   // ==================== APP PREFERENCES ====================
+  static Future saveDeepLinkId(String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(SPrefCache.PREF_KEY_DEEP_LINK_ID, value);
+  }
+
+  static Future<String?> getDeepLinkId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(SPrefCache.PREF_KEY_DEEP_LINK_ID);
+  }
+
+  static Future removeDeepLinkId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(SPrefCache.PREF_KEY_DEEP_LINK_ID);
+  }
 
   /// Lưu trạng thái "Keep me logged in"
   static Future saveKeepLogin(bool value) async {
@@ -218,9 +233,6 @@ class SharedPreferenceUtil {
     if (v is num) return v.toInt();
     return null;
   }
-
-
-
 
   /// Xóa một sách local
   static Future<bool> removeLocalBook(String filePath) async {

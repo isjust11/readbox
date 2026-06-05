@@ -383,7 +383,7 @@ class AuthCubit extends Cubit<BaseState> {
           );
         }
       } else {
-        emit(ErrorState(result.message ?? 'Đăng nhập sinh trắc học thất bại'));
+        emit(ErrorState(result.message ?? AppLocalizations.current.biometric_not_available));
       }
     } catch (e) {
       emit(ErrorState(BlocUtils.getMessageError(e)));
