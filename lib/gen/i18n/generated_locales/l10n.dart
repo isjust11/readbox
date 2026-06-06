@@ -7032,6 +7032,201 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Ngày xuất bản`
+  String get published_date {
+    return Intl.message(
+      'Ngày xuất bản',
+      name: 'published_date',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Danh mục cha`
+  String get parent_category {
+    return Intl.message(
+      'Danh mục cha',
+      name: 'parent_category',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Người đăng tải`
+  String get posted_by {
+    return Intl.message(
+      'Người đăng tải',
+      name: 'posted_by',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nâng cao`
+  String get advanced {
+    return Intl.message('Nâng cao', name: 'advanced', desc: '', args: []);
+  }
+
+  /// `Không có giọng nói khả dụng`
+  String get noVoiceAvailable {
+    return Intl.message(
+      'Không có giọng nói khả dụng',
+      name: 'noVoiceAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tải giọng nâng cao (iOS)`
+  String get ttsDownloadAdvancedVoiceIos {
+    return Intl.message(
+      'Tải giọng nâng cao (iOS)',
+      name: 'ttsDownloadAdvancedVoiceIos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tải giọng nâng cao (Android)`
+  String get ttsDownloadAdvancedVoiceAndroid {
+    return Intl.message(
+      'Tải giọng nâng cao (Android)',
+      name: 'ttsDownloadAdvancedVoiceAndroid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Để tải thêm giọng đọc nâng cao chất lượng cao:`
+  String get ttsDownloadVoiceInstructionIos {
+    return Intl.message(
+      'Để tải thêm giọng đọc nâng cao chất lượng cao:',
+      name: 'ttsDownloadVoiceInstructionIos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Để tải thêm giọng đọc:`
+  String get ttsDownloadVoiceInstructionAndroid {
+    return Intl.message(
+      'Để tải thêm giọng đọc:',
+      name: 'ttsDownloadVoiceInstructionAndroid',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1. Cài đặt → Trợ năng`
+  String get ttsDownloadVoiceStepIos1 {
+    return Intl.message(
+      '1. Cài đặt → Trợ năng',
+      name: 'ttsDownloadVoiceStepIos1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2. Nội dung được đọc (Spoken Content)`
+  String get ttsDownloadVoiceStepIos2 {
+    return Intl.message(
+      '2. Nội dung được đọc (Spoken Content)',
+      name: 'ttsDownloadVoiceStepIos2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3. Giọng nói (Voices)`
+  String get ttsDownloadVoiceStepIos3 {
+    return Intl.message(
+      '3. Giọng nói (Voices)',
+      name: 'ttsDownloadVoiceStepIos3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `4. Chọn ngôn ngữ → Tải giọng mong muốn`
+  String get ttsDownloadVoiceStepIos4 {
+    return Intl.message(
+      '4. Chọn ngôn ngữ → Tải giọng mong muốn',
+      name: 'ttsDownloadVoiceStepIos4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1. Cài đặt → Quản lý ứng dụng chung`
+  String get ttsDownloadVoiceStepAndroid1 {
+    return Intl.message(
+      '1. Cài đặt → Quản lý ứng dụng chung',
+      name: 'ttsDownloadVoiceStepAndroid1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2. Chuyển văn bản thành giọng nói`
+  String get ttsDownloadVoiceStepAndroid2 {
+    return Intl.message(
+      '2. Chuyển văn bản thành giọng nói',
+      name: 'ttsDownloadVoiceStepAndroid2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3. Dữ liệu giọng nói → Cài đặt`
+  String get ttsDownloadVoiceStepAndroid3 {
+    return Intl.message(
+      '3. Dữ liệu giọng nói → Cài đặt',
+      name: 'ttsDownloadVoiceStepAndroid3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sau khi cài xong, nhấn nút Làm mới để cập nhật danh sách.`
+  String get ttsDownloadVoiceRefreshHint {
+    return Intl.message(
+      'Sau khi cài xong, nhấn nút Làm mới để cập nhật danh sách.',
+      name: 'ttsDownloadVoiceRefreshHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mở Cài đặt`
+  String get ttsOpenSettings {
+    return Intl.message(
+      'Mở Cài đặt',
+      name: 'ttsOpenSettings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tải thêm giọng nâng cao từ Cài đặt hệ thống`
+  String get ttsDownloadMoreVoicesIos {
+    return Intl.message(
+      'Tải thêm giọng nâng cao từ Cài đặt hệ thống',
+      name: 'ttsDownloadMoreVoicesIos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tải thêm giọng từ Cài đặt TTS`
+  String get ttsDownloadMoreVoicesAndroid {
+    return Intl.message(
+      'Tải thêm giọng từ Cài đặt TTS',
+      name: 'ttsDownloadMoreVoicesAndroid',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

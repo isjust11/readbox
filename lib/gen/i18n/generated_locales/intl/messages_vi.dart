@@ -63,6 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "added": MessageLookupByLibrary.simpleMessage("Đã thêm"),
     "address": MessageLookupByLibrary.simpleMessage("Địa chỉ"),
+    "advanced": MessageLookupByLibrary.simpleMessage("Nâng cao"),
     "agree": MessageLookupByLibrary.simpleMessage("Đồng ý"),
     "ai_assistant": MessageLookupByLibrary.simpleMessage("Trợ lý AI"),
     "all": MessageLookupByLibrary.simpleMessage("Tất cả"),
@@ -742,6 +743,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noSubscriptionPlans": MessageLookupByLibrary.simpleMessage(
       "Hiện chưa có gói dịch vụ.",
     ),
+    "noVoiceAvailable": MessageLookupByLibrary.simpleMessage(
+      "Không có giọng nói khả dụng",
+    ),
     "no_account": MessageLookupByLibrary.simpleMessage("Chưa có tài khoản? "),
     "no_ads": MessageLookupByLibrary.simpleMessage("Không quảng cáo"),
     "no_available_camera": MessageLookupByLibrary.simpleMessage(
@@ -843,6 +847,7 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "over_limit": MessageLookupByLibrary.simpleMessage("Vượt giới hạn"),
     "pages": MessageLookupByLibrary.simpleMessage("Trang"),
+    "parent_category": MessageLookupByLibrary.simpleMessage("Danh mục cha"),
     "password": MessageLookupByLibrary.simpleMessage("Mật khẩu"),
     "password_must_be_at_least_6_characters":
         MessageLookupByLibrary.simpleMessage(
@@ -1132,6 +1137,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "popular_ebooks": MessageLookupByLibrary.simpleMessage(
       "Ebook được yêu thích",
     ),
+    "posted_by": MessageLookupByLibrary.simpleMessage("Người đăng tải"),
     "premium_feature_desc": MessageLookupByLibrary.simpleMessage(
       "Xem một video quảng cáo ngắn để sử dụng tính năng này miễn phí.",
     ),
@@ -1157,6 +1163,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "profile": MessageLookupByLibrary.simpleMessage("Hồ sơ"),
     "public": MessageLookupByLibrary.simpleMessage("Công khai"),
     "public_books": MessageLookupByLibrary.simpleMessage("Sách công khai"),
+    "published_date": MessageLookupByLibrary.simpleMessage("Ngày xuất bản"),
     "publisher": MessageLookupByLibrary.simpleMessage("Nhà xuất bản"),
     "pull_to_refresh": MessageLookupByLibrary.simpleMessage(
       "Kéo xuống để làm mới",
@@ -1491,6 +1498,48 @@ class MessageLookup extends MessageLookupByLibrary {
     "try_different_search": MessageLookupByLibrary.simpleMessage(
       "Thử từ khóa tìm kiếm khác",
     ),
+    "ttsDownloadAdvancedVoiceAndroid": MessageLookupByLibrary.simpleMessage(
+      "Tải giọng nâng cao (Android)",
+    ),
+    "ttsDownloadAdvancedVoiceIos": MessageLookupByLibrary.simpleMessage(
+      "Tải giọng nâng cao (iOS)",
+    ),
+    "ttsDownloadMoreVoicesAndroid": MessageLookupByLibrary.simpleMessage(
+      "Tải thêm giọng từ Cài đặt TTS",
+    ),
+    "ttsDownloadMoreVoicesIos": MessageLookupByLibrary.simpleMessage(
+      "Tải thêm giọng nâng cao từ Cài đặt hệ thống",
+    ),
+    "ttsDownloadVoiceInstructionAndroid": MessageLookupByLibrary.simpleMessage(
+      "Để tải thêm giọng đọc:",
+    ),
+    "ttsDownloadVoiceInstructionIos": MessageLookupByLibrary.simpleMessage(
+      "Để tải thêm giọng đọc nâng cao chất lượng cao:",
+    ),
+    "ttsDownloadVoiceRefreshHint": MessageLookupByLibrary.simpleMessage(
+      "Sau khi cài xong, nhấn nút Làm mới để cập nhật danh sách.",
+    ),
+    "ttsDownloadVoiceStepAndroid1": MessageLookupByLibrary.simpleMessage(
+      "1. Cài đặt → Quản lý ứng dụng chung",
+    ),
+    "ttsDownloadVoiceStepAndroid2": MessageLookupByLibrary.simpleMessage(
+      "2. Chuyển văn bản thành giọng nói",
+    ),
+    "ttsDownloadVoiceStepAndroid3": MessageLookupByLibrary.simpleMessage(
+      "3. Dữ liệu giọng nói → Cài đặt",
+    ),
+    "ttsDownloadVoiceStepIos1": MessageLookupByLibrary.simpleMessage(
+      "1. Cài đặt → Trợ năng",
+    ),
+    "ttsDownloadVoiceStepIos2": MessageLookupByLibrary.simpleMessage(
+      "2. Nội dung được đọc (Spoken Content)",
+    ),
+    "ttsDownloadVoiceStepIos3": MessageLookupByLibrary.simpleMessage(
+      "3. Giọng nói (Voices)",
+    ),
+    "ttsDownloadVoiceStepIos4": MessageLookupByLibrary.simpleMessage(
+      "4. Chọn ngôn ngữ → Tải giọng mong muốn",
+    ),
     "ttsLanguageSettings": MessageLookupByLibrary.simpleMessage(
       "Cài đặt ngôn ngữ TTS",
     ),
@@ -1498,6 +1547,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "ttsNotInitialized": MessageLookupByLibrary.simpleMessage(
       "TTS chưa được khởi tạo",
     ),
+    "ttsOpenSettings": MessageLookupByLibrary.simpleMessage("Mở Cài đặt"),
     "ttsPitch": MessageLookupByLibrary.simpleMessage("Cao độ giọng nói"),
     "ttsSettings": MessageLookupByLibrary.simpleMessage("Cài đặt TTS"),
     "ttsSpeed": MessageLookupByLibrary.simpleMessage("Tốc độ đọc"),

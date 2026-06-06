@@ -4767,6 +4767,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Look up words, explain meanings, ask questions about the content you\'re reading...'**
   String get askToAiDescription;
+
+  /// No description provided for @published_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Published date'**
+  String get published_date;
+
+  /// No description provided for @parent_category.
+  ///
+  /// In en, this message translates to:
+  /// **'Parent category'**
+  String get parent_category;
+
+  /// No description provided for @posted_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted by'**
+  String get posted_by;
+
+  /// No description provided for @advanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced'**
+  String get advanced;
+
+  /// No description provided for @noVoiceAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No voice available'**
+  String get noVoiceAvailable;
+
+  /// No description provided for @ttsDownloadAdvancedVoiceIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Download enhanced voices (iOS)'**
+  String get ttsDownloadAdvancedVoiceIos;
+
+  /// No description provided for @ttsDownloadAdvancedVoiceAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Download enhanced voices (Android)'**
+  String get ttsDownloadAdvancedVoiceAndroid;
+
+  /// No description provided for @ttsDownloadVoiceInstructionIos.
+  ///
+  /// In en, this message translates to:
+  /// **'To download high-quality enhanced voices:'**
+  String get ttsDownloadVoiceInstructionIos;
+
+  /// No description provided for @ttsDownloadVoiceInstructionAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'To download more voices:'**
+  String get ttsDownloadVoiceInstructionAndroid;
+
+  /// No description provided for @ttsDownloadVoiceStepIos1.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Settings → Accessibility'**
+  String get ttsDownloadVoiceStepIos1;
+
+  /// No description provided for @ttsDownloadVoiceStepIos2.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Spoken Content'**
+  String get ttsDownloadVoiceStepIos2;
+
+  /// No description provided for @ttsDownloadVoiceStepIos3.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Voices'**
+  String get ttsDownloadVoiceStepIos3;
+
+  /// No description provided for @ttsDownloadVoiceStepIos4.
+  ///
+  /// In en, this message translates to:
+  /// **'4. Choose language → Download desired voice'**
+  String get ttsDownloadVoiceStepIos4;
+
+  /// No description provided for @ttsDownloadVoiceStepAndroid1.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Settings → General app management'**
+  String get ttsDownloadVoiceStepAndroid1;
+
+  /// No description provided for @ttsDownloadVoiceStepAndroid2.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Text-to-speech output'**
+  String get ttsDownloadVoiceStepAndroid2;
+
+  /// No description provided for @ttsDownloadVoiceStepAndroid3.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Voice data → Settings'**
+  String get ttsDownloadVoiceStepAndroid3;
+
+  /// No description provided for @ttsDownloadVoiceRefreshHint.
+  ///
+  /// In en, this message translates to:
+  /// **'After installing, tap Refresh to update the list.'**
+  String get ttsDownloadVoiceRefreshHint;
+
+  /// No description provided for @ttsOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get ttsOpenSettings;
+
+  /// No description provided for @ttsDownloadMoreVoicesIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Download more enhanced voices from System Settings'**
+  String get ttsDownloadMoreVoicesIos;
+
+  /// No description provided for @ttsDownloadMoreVoicesAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'Download more voices from TTS Settings'**
+  String get ttsDownloadMoreVoicesAndroid;
 }
 
 class _AppLocalizationsDelegate

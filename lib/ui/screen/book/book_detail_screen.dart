@@ -267,7 +267,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      SizedBox(height: 12),
                       // người đăng tải
                       // Author
                       Row(
@@ -361,21 +361,21 @@ class BookDetailBodyState extends State<BookDetailBody> {
                           AppLocalizations.current.pages,
                           '${book.totalPages ?? 0}',
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       if (book.fileSizeFormatted.isNotEmpty) ...[
                         _buildDetailRow(
                           AppLocalizations.current.size,
                           book.fileSizeFormatted,
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       if (book.language?.isNotEmpty ?? false) ...[
                         _buildDetailRow(
                           AppLocalizations.current.language,
                           book.language?.toUpperCase() ?? 'VI',
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       if (book.createAt != null) ...[
                         _buildDetailRow(
@@ -385,7 +385,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                             format: 'dd/MM/yyyy HH:mm',
                           ),
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       if (book.category != null &&
                           book.category!.name!.isNotEmpty) ...[
@@ -393,7 +393,7 @@ class BookDetailBodyState extends State<BookDetailBody> {
                           AppLocalizations.current.category,
                           book.category!.name!,
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       // Publisher & ISBN
                       if (book.publisher != null) ...[
@@ -401,54 +401,55 @@ class BookDetailBodyState extends State<BookDetailBody> {
                           AppLocalizations.current.publisher,
                           book.publisher!,
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       if (book.isbn != null) ...[
                         _buildDetailRow(
                           AppLocalizations.current.isbn,
                           book.isbn!,
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       // Trạng thái sách
                       if (book.status != null &&
-                          (book.status!.name?.isNotEmpty ?? false)) ...[
+                          (book.status!.name?.isNotEmpty ?? false) &&
+                          book.createById == currentUser?.id) ...[
                         _buildStatusRow(book.status!),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       // Ngày xuất bản
                       if (book.publishedDate != null) ...[
                         _buildDetailRow(
-                          'Ngày xuất bản',
+                          AppLocalizations.current.published_date,
                           Common.formatDate(
                             book.publishedDate!,
                             format: 'dd/MM/yyyy',
                           ),
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       // Danh mục cha
                       if (book.parentCategory != null &&
                           (book.parentCategory!.name?.isNotEmpty ?? false)) ...[
                         _buildDetailRow(
-                          'Danh mục cha',
+                          AppLocalizations.current.parent_category,
                           book.parentCategory!.name!,
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       // Người đăng tải
                       if (book.createBy != null &&
                           (book.createBy!.fullName?.isNotEmpty ?? false)) ...[
                         _buildDetailRow(
-                          'Người đăng tải',
+                          AppLocalizations.current.posted_by,
                           book.createBy!.fullName!,
                         ),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       // Định dạng file
                       if (book.files != null && book.files!.isNotEmpty) ...[
                         _buildFileFormatsRow(book.files!),
-                        SizedBox(height: 8),
+                        SizedBox(height: 12),
                       ],
                       if (book.categories != null &&
                           book.categories!.isNotEmpty) ...[

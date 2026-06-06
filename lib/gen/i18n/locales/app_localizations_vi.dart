@@ -2439,4 +2439,71 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get askToAiDescription =>
       'Tra cứu từ, giải thích ý nghĩa,\nhỏi đáp về nội dung đang đọc...';
+
+  @override
+  String get published_date => 'Ngày xuất bản';
+
+  @override
+  String get parent_category => 'Danh mục cha';
+
+  @override
+  String get posted_by => 'Người đăng tải';
+
+  @override
+  String get advanced => 'Nâng cao';
+
+  @override
+  String get noVoiceAvailable => 'Không có giọng nói khả dụng';
+
+  @override
+  String get ttsDownloadAdvancedVoiceIos => 'Tải giọng nâng cao (iOS)';
+
+  @override
+  String get ttsDownloadAdvancedVoiceAndroid => 'Tải giọng nâng cao (Android)';
+
+  @override
+  String get ttsDownloadVoiceInstructionIos =>
+      'Để tải thêm giọng đọc nâng cao chất lượng cao:';
+
+  @override
+  String get ttsDownloadVoiceInstructionAndroid => 'Để tải thêm giọng đọc:';
+
+  @override
+  String get ttsDownloadVoiceStepIos1 => '1. Cài đặt → Trợ năng';
+
+  @override
+  String get ttsDownloadVoiceStepIos2 =>
+      '2. Nội dung được đọc (Spoken Content)';
+
+  @override
+  String get ttsDownloadVoiceStepIos3 => '3. Giọng nói (Voices)';
+
+  @override
+  String get ttsDownloadVoiceStepIos4 =>
+      '4. Chọn ngôn ngữ → Tải giọng mong muốn';
+
+  @override
+  String get ttsDownloadVoiceStepAndroid1 =>
+      '1. Cài đặt → Quản lý ứng dụng chung';
+
+  @override
+  String get ttsDownloadVoiceStepAndroid2 =>
+      '2. Chuyển văn bản thành giọng nói';
+
+  @override
+  String get ttsDownloadVoiceStepAndroid3 => '3. Dữ liệu giọng nói → Cài đặt';
+
+  @override
+  String get ttsDownloadVoiceRefreshHint =>
+      'Sau khi cài xong, nhấn nút Làm mới để cập nhật danh sách.';
+
+  @override
+  String get ttsOpenSettings => 'Mở Cài đặt';
+
+  @override
+  String get ttsDownloadMoreVoicesIos =>
+      'Tải thêm giọng nâng cao từ Cài đặt hệ thống';
+
+  @override
+  String get ttsDownloadMoreVoicesAndroid => 'Tải thêm giọng từ Cài đặt TTS';
 }

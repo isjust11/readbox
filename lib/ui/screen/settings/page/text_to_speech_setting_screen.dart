@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/colors.dart';
@@ -9,6 +10,7 @@ import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
 import 'package:readbox/utils/text_to_speech_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TextToSpeechSettingScreen extends StatefulWidget {
   const TextToSpeechSettingScreen({super.key});
@@ -34,7 +36,12 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
 
   // Available voices
   List<dynamic> _availableVoices = [];
+  List<dynamic> _filteredVoices = [];
   Map<String, String>? _selectedVoice;
+  bool _isRefreshingVoices = false;
+
+  // Voice filter: 'enhanced' | 'locale' | 'all'
+  String _voiceFilter = Platform.isIOS ? 'enhanced' : 'locale';
 
   void _onVolumeChanged(double value) {
     setState(() {
@@ -93,6 +100,7 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
         _volume = _ttsService.volume;
         _pitch = _ttsService.pitch;
         _availableVoices = voices;
+        _filteredVoices = _filterVoices(voices, _voiceFilter);
         _isLoading = false;
       });
     } catch (e) {
@@ -187,6 +195,221 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
     await _ttsService.speak(AppLocalizations.current.ttsTestText);
   }
 
+  /// Reload lại danh sách giọng sau khi user cài thêm từ Settings hệ thống
+  Future<void> _refreshVoices() async {
+    setState(() => _isRefreshingVoices = true);
+    try {
+      final voices = await _ttsService.getVoices();
+      setState(() {
+        _availableVoices = voices;
+        _filteredVoices = _filterVoices(voices, _voiceFilter);
+      });
+    } catch (e) {
+      _showError(e.toString());
+    } finally {
+      setState(() => _isRefreshingVoices = false);
+    }
+  }
+
+  /// Mở trang cài đặt giọng nói của hệ thống
+  Future<void> _openVoiceSettings() async {
+    Uri uri;
+    if (Platform.isIOS) {
+      // iOS: Accessibility > Spoken Content > Voices
+      uri = Uri.parse('App-Prefs:ACCESSIBILITY&path=SPEECH');
+    } else {
+      // Android: TTS Settings
+      uri = Uri.parse('com.android.settings.TTS_SETTINGS');
+    }
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      // Fallback: mở Settings chung
+      final fallback = Uri.parse(
+        Platform.isIOS ? 'App-Prefs:' : 'package:com.android.settings',
+      );
+      if (await canLaunchUrl(fallback)) await launchUrl(fallback);
+    }
+  }
+
+  /// Dialog hướng dẫn tải giọng nâng cao
+  void _showDownloadVoiceDialog() {
+    showDialog<void>(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppDimens.SIZE_16),
+            ),
+            title: Row(
+              children: [
+                Icon(
+                  Icons.download_rounded,
+                  color: Theme.of(context).primaryColor,
+                  size: AppDimens.SIZE_24,
+                ),
+                const SizedBox(width: AppDimens.SIZE_8),
+                Expanded(
+                  child: CustomTextLabel(
+                    Platform.isIOS
+                        ? AppLocalizations.current.ttsDownloadAdvancedVoiceIos
+                        : AppLocalizations
+                            .current
+                            .ttsDownloadAdvancedVoiceAndroid,
+                    fontSize: AppDimens.SIZE_16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomTextLabel(
+                  Platform.isIOS
+                      ? AppLocalizations.current.ttsDownloadVoiceInstructionIos
+                      : AppLocalizations
+                          .current
+                          .ttsDownloadVoiceInstructionAndroid,
+                  fontSize: AppDimens.SIZE_14,
+                  fontWeight: FontWeight.w500,
+                ),
+                const SizedBox(height: AppDimens.SIZE_12),
+                ...(Platform.isIOS
+                        ? [
+                          AppLocalizations.current.ttsDownloadVoiceStepIos1,
+                          AppLocalizations.current.ttsDownloadVoiceStepIos2,
+                          AppLocalizations.current.ttsDownloadVoiceStepIos3,
+                          AppLocalizations.current.ttsDownloadVoiceStepIos4,
+                        ]
+                        : [
+                          AppLocalizations.current.ttsDownloadVoiceStepAndroid1,
+                          AppLocalizations.current.ttsDownloadVoiceStepAndroid2,
+                          AppLocalizations.current.ttsDownloadVoiceStepAndroid3,
+                        ])
+                    .map(
+                      (step) => Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.arrow_right,
+                              size: AppDimens.SIZE_16,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: CustomTextLabel(
+                                step,
+                                fontSize: AppDimens.SIZE_13,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium?.color ??
+                                    AppColors.colorTitle,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                const SizedBox(height: AppDimens.SIZE_8),
+                CustomTextLabel(
+                  AppLocalizations.current.ttsDownloadVoiceRefreshHint,
+                  fontSize: AppDimens.SIZE_12,
+                  color:
+                      Theme.of(context).textTheme.bodySmall?.color ??
+                      AppColors.colorTitle,
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: CustomTextLabel(
+                  AppLocalizations.current.cancel,
+                  color:
+                      Theme.of(context).textTheme.bodyMedium?.color ??
+                      AppColors.colorTitle,
+                  fontSize: AppDimens.SIZE_14,
+                ),
+              ),
+              FilledButton.icon(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  _openVoiceSettings();
+                },
+                icon: const Icon(Icons.open_in_new, size: AppDimens.SIZE_16),
+                label: CustomTextLabel(
+                  AppLocalizations.current.ttsOpenSettings,
+                  color: Colors.white,
+                  fontSize: AppDimens.SIZE_14,
+                  fontWeight: FontWeight.w600,
+                ),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
+                  ),
+                ),
+              ),
+            ],
+          ),
+    );
+  }
+
+  /// Lọc danh sách giọng nói theo chế độ:
+  /// - 'enhanced': chỉ lấy giọng nâng cao (iOS)
+  /// - 'locale'  : khớp ngôn ngữ thiết bị
+  /// - 'all'     : tất cả giọng
+  List<dynamic> _filterVoices(List<dynamic> voices, String filter) {
+    final deviceLang =
+        PlatformDispatcher.instance.locale.languageCode.toLowerCase();
+
+    List<dynamic> result;
+    if (filter == 'enhanced') {
+      result = voices.where((v) => v['quality'] == 'enhanced').toList();
+      // Fallback: nếu không có enhanced thì hiển thị tất cả
+      // if (result.isEmpty) result = List.from(voices);
+    } else if (filter == 'locale') {
+      result =
+          voices
+              .where(
+                (v) => (v['locale'] as String? ?? '').toLowerCase().startsWith(
+                  deviceLang,
+                ),
+              )
+              .toList();
+      // Fallback: nếu không khớp locale thì hiển thị tất cả
+      if (result.isEmpty) result = List.from(voices);
+    } else {
+      result = List.from(voices);
+    }
+
+    // Sắp xếp: locale khớp trước → enhanced trước → tên alphabet
+    result.sort((a, b) {
+      final aLocale = (a['locale'] as String).toLowerCase().startsWith(
+        deviceLang,
+      );
+      final bLocale = (b['locale'] as String).toLowerCase().startsWith(
+        deviceLang,
+      );
+      if (aLocale && !bLocale) return -1;
+      if (!aLocale && bLocale) return 1;
+
+      final aEnhanced = a['quality'] == 'enhanced';
+      final bEnhanced = b['quality'] == 'enhanced';
+      if (aEnhanced && !bEnhanced) return -1;
+      if (!aEnhanced && bEnhanced) return 1;
+
+      return (a['name'] as String).compareTo(b['name'] as String);
+    });
+
+    return result;
+  }
+
   String _getSpeedLabel(double rate) {
     if (rate < 0.3) return AppLocalizations.current.slow;
     if (rate < 0.6) return AppLocalizations.current.normal;
@@ -252,10 +475,10 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
           const SizedBox(height: AppDimens.SIZE_12),
           _buildPitchSection(),
           const SizedBox(height: AppDimens.SIZE_12),
-          if (_availableVoices.isNotEmpty) ...[
-            _buildVoiceSection(),
-            const SizedBox(height: AppDimens.SIZE_12),
-          ],
+          // if (_availableVoices.isNotEmpty) ...[
+          //   _buildVoiceSection(),
+          //   const SizedBox(height: AppDimens.SIZE_12),
+          // ],
         ],
       ),
     );
@@ -498,18 +721,50 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
       subtitle:
           _selectedVoice?['name'] ?? AppLocalizations.current.defaultVoice,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: AppDimens.SIZE_8),
-          CustomTextLabel(
-            '${_availableVoices.length} ${AppLocalizations.current.availableLanguages.toLowerCase()}',
-            fontSize: AppDimens.SIZE_12,
-            color:
-                Theme.of(context).textTheme.bodyMedium?.color ??
-                AppColors.colorTitle,
+          // Filter tabs
+          _buildVoiceFilterChips(),
+          const SizedBox(height: AppDimens.SIZE_8),
+          // Download banner (chỉ hiện khi filter = enhanced)
+          if (_voiceFilter == 'enhanced') _buildDownloadVoiceBanner(),
+          if (_voiceFilter == 'enhanced')
+            const SizedBox(height: AppDimens.SIZE_8),
+          // Voice count info + refresh button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomTextLabel(
+                '${_filteredVoices.length} / ${_availableVoices.length} ${AppLocalizations.current.availableLanguages.toLowerCase()}',
+                fontSize: AppDimens.SIZE_12,
+                color:
+                    Theme.of(context).textTheme.bodyMedium?.color ??
+                    AppColors.colorTitle,
+              ),
+              // Nút refresh để reload voices sau khi cài từ Settings
+              GestureDetector(
+                onTap: _isRefreshingVoices ? null : _refreshVoices,
+                child: AnimatedRotation(
+                  turns: _isRefreshingVoices ? 1 : 0,
+                  duration: const Duration(milliseconds: 600),
+                  child: Icon(
+                    Icons.refresh_rounded,
+                    size: AppDimens.SIZE_20,
+                    color:
+                        _isRefreshingVoices
+                            ? Theme.of(
+                              context,
+                            ).primaryColor.withValues(alpha: 0.4)
+                            : Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: AppDimens.SIZE_8),
           Container(
-            height: 200,
+            height: 220,
             decoration: BoxDecoration(
               border: Border.all(
                 color: Theme.of(
@@ -518,57 +773,212 @@ class _TextToSpeechSettingScreenState extends State<TextToSpeechSettingScreen> {
               ),
               borderRadius: BorderRadius.circular(AppDimens.SIZE_8),
             ),
-            child: ListView.separated(
-              physics: const BouncingScrollPhysics(),
-              itemCount: _availableVoices.length,
-              separatorBuilder:
-                  (context, index) => Divider(
-                    height: 1,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.1),
-                  ),
-              itemBuilder: (context, index) {
-                final voice = _availableVoices[index];
-                final voiceName = voice['name'];
-                final locale = voice['locale'];
-                return ListTile(
-                  dense: true,
-                  title: CustomTextLabel(
-                    '$voiceName - ($locale)',
-                    fontSize: AppDimens.SIZE_14,
-                    color:
-                        Theme.of(context).textTheme.bodyLarge?.color ??
-                        AppColors.colorTitle,
-                  ),
-                  trailing:
-                      _selectedVoice?['name'] == voice['name']
-                          ? Icon(
-                            Icons.check_circle,
-                            color: Theme.of(context).primaryColor,
-                          )
-                          : null,
-                  onTap: () async {
-                    Map<String, String> voiceMap = {
-                      'name': voice['name'] as String,
-                      // 'gender': voice['gender'] as String,
-                      'locale': voice['locale'] as String,
-                      'identifier':
-                          Platform.isIOS ? (voice['identifier'] as String) : '',
-                      'quality': voice['quality'] as String,
-                    };
-                    final prefs = await SharedPreferences.getInstance();
-                    await prefs.setString('tts_voice', jsonEncode(voiceMap));
-                    await _ttsService.setVoice(voiceMap);
-                    setState(() {
-                      _selectedVoice = voiceMap;
-                    });
-                  },
-                );
-              },
-            ),
+            child:
+                _filteredVoices.isEmpty
+                    ? Center(
+                      child: CustomTextLabel(
+                        AppLocalizations.current.empty,
+                        fontSize: AppDimens.SIZE_14,
+                        color:
+                            Theme.of(context).textTheme.bodyMedium?.color ??
+                            AppColors.colorTitle,
+                      ),
+                    )
+                    : ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: _filteredVoices.length,
+                      separatorBuilder:
+                          (context, index) => Divider(
+                            height: 1,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.1),
+                          ),
+                      itemBuilder: (context, index) {
+                        final voice = _filteredVoices[index];
+                        final voiceName = voice['name'] as String;
+                        final locale = voice['locale'] as String;
+                        final quality = voice['quality'] as String? ?? '';
+                        final isEnhanced = quality == 'enhanced';
+                        final isSelected = _selectedVoice?['name'] == voiceName;
+
+                        return ListTile(
+                          dense: true,
+                          title: Row(
+                            children: [
+                              if (isEnhanced) ...[
+                                Icon(
+                                  Icons.auto_awesome,
+                                  size: AppDimens.SIZE_14,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                const SizedBox(width: 4),
+                              ],
+                              Expanded(
+                                child: CustomTextLabel(
+                                  '$voiceName - ($locale)',
+                                  fontSize: AppDimens.SIZE_14,
+                                  color:
+                                      Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge?.color ??
+                                      AppColors.colorTitle,
+                                ),
+                              ),
+                            ],
+                          ),
+                          trailing:
+                              isSelected
+                                  ? Icon(
+                                    Icons.check_circle,
+                                    color: Theme.of(context).primaryColor,
+                                  )
+                                  : null,
+                          onTap: () async {
+                            final Map<String, String> voiceMap = {
+                              'name': voiceName,
+                              'locale': locale,
+                              'identifier':
+                                  Platform.isIOS
+                                      ? (voice['identifier'] as String? ?? '')
+                                      : '',
+                              'quality': quality,
+                            };
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setString(
+                              'tts_voice',
+                              jsonEncode(voiceMap),
+                            );
+                            await _ttsService.setVoice(voiceMap);
+                            setState(() {
+                              _selectedVoice = voiceMap;
+                            });
+                          },
+                        );
+                      },
+                    ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Banner hướng dẫn tải giọng nâng cao
+  Widget _buildDownloadVoiceBanner() {
+    return GestureDetector(
+      onTap: _showDownloadVoiceDialog,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimens.SIZE_12,
+          vertical: AppDimens.SIZE_10,
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(AppDimens.SIZE_10),
+          border: Border.all(
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.25),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.download_rounded,
+              size: AppDimens.SIZE_16,
+              color: Theme.of(context).primaryColor,
+            ),
+            const SizedBox(width: AppDimens.SIZE_8),
+            Expanded(
+              child: CustomTextLabel(
+                Platform.isIOS
+                    ? AppLocalizations.current.ttsDownloadMoreVoicesIos
+                    : AppLocalizations.current.ttsDownloadMoreVoicesAndroid,
+                fontSize: AppDimens.SIZE_12,
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: AppDimens.SIZE_12,
+              color: Theme.of(context).primaryColor,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVoiceFilterChips() {
+    final filters = [
+      (
+        id: 'enhanced',
+        label: '✨ ${AppLocalizations.current.advanced}',
+        icon: Icons.auto_awesome,
+      ),
+      (
+        id: 'locale',
+        label: '🌐 ${AppLocalizations.current.language}',
+        icon: Icons.language,
+      ),
+      (
+        id: 'all',
+        label: '📋 ${AppLocalizations.current.all}',
+        icon: Icons.list,
+      ),
+    ];
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children:
+            filters.map((f) {
+              final isActive = _voiceFilter == f.id;
+              return Padding(
+                padding: const EdgeInsets.only(right: AppDimens.SIZE_8),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _voiceFilter = f.id;
+                      _filteredVoices = _filterVoices(_availableVoices, f.id);
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimens.SIZE_12,
+                      vertical: AppDimens.SIZE_6,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          isActive
+                              ? Theme.of(context).primaryColor
+                              : Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(AppDimens.SIZE_20),
+                      border: Border.all(
+                        color:
+                            isActive
+                                ? Theme.of(context).primaryColor
+                                : Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: CustomTextLabel(
+                      f.label,
+                      fontSize: AppDimens.SIZE_12,
+                      fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                      color:
+                          isActive
+                              ? Colors.white
+                              : Theme.of(context).textTheme.bodyMedium?.color ??
+                                  AppColors.colorTitle,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
       ),
     );
   }

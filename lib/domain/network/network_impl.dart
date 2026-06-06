@@ -50,7 +50,7 @@ class Network {
           final locale = ui.PlatformDispatcher.instance.locale;
           if (locale.countryCode != null && locale.countryCode!.isNotEmpty) {
             myOption.headers["x-country-code"] = locale.countryCode;
-            myOption.headers["x-region"] = locale.countryCode;
+            myOption.headers["x-region"] = locale.toLanguageTag();
           }
 
           return handler.next(myOption);

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter/foundation.dart';
 import 'package:readbox/utils/language_detector.dart';
@@ -19,14 +20,17 @@ class TextToSpeechService {
   Function(String)? onSpeechComplete;
   Function(String)? onSpeechError;
   Function(double)? onSpeechProgress;
+
   /// Gọi khi TTS đọc đến từ/cụm: text (toàn bộ), start/end (vị trí ký tự), word (từ đang đọc)
-  void Function(String text, int start, int end, String word)? onSpeechWordProgress;
+  void Function(String text, int start, int end, String word)?
+  onSpeechWordProgress;
 
   // Settings
   String _language = 'vi-VN';
   double _speechRate = 0.5; // 0.0 to 1.0
   double _volume = 1.0; // 0.0 to 1.0
   double _pitch = 1.0; // 0.5 to 2.0
+  Map<String, String>? _selectedVoice;
 
   bool get isInitialized => _isInitialized;
   bool get isSpeaking => _isSpeaking;
@@ -35,6 +39,7 @@ class TextToSpeechService {
   double get speechRate => _speechRate;
   double get volume => _volume;
   double get pitch => _pitch;
+  Map<String, String>? get selectedVoice => _selectedVoice;
 
   /// Khởi tạo TTS service
   Future<void> initialize() async {
@@ -42,7 +47,7 @@ class TextToSpeechService {
 
     try {
       _flutterTts = FlutterTts();
-      await loadSettings();
+
       // Setup callbacks
       _flutterTts!.setStartHandler(() {
         _isSpeaking = true;
@@ -64,7 +69,12 @@ class TextToSpeechService {
       });
 
       // Đánh dấu từ đang đọc (word boundary)
-      _flutterTts!.setProgressHandler((String text, int start, int end, String word) {
+      _flutterTts!.setProgressHandler((
+        String text,
+        int start,
+        int end,
+        String word,
+      ) {
         onSpeechWordProgress?.call(text, start, end, word);
       });
 
@@ -83,9 +93,9 @@ class TextToSpeechService {
       }
 
       // Kiểm tra ngôn ngữ có sẵn
-      final languages = await _flutterTts!.getLanguages; 
+      final languages = await _flutterTts!.getLanguages;
       debugPrint('Available languages: $languages');
-      
+
       // Thử set tiếng Việt, nếu không có thì fallback sang tiếng Anh
       bool viSupported = languages.toString().contains('vi');
       if (viSupported) {
@@ -97,8 +107,8 @@ class TextToSpeechService {
         debugPrint('Vietnamese not available, fallback to English');
       }
 
-      // set voice 
-      
+      // Load và apply toàn bộ settings (bao gồm voice) sau khi language đã được set
+      await loadSettings();
 
       _isInitialized = true;
       debugPrint('TTS Service initialized successfully');
@@ -109,14 +119,31 @@ class TextToSpeechService {
     }
   }
 
+  /// Load và apply toàn bộ settings từ SharedPreferences vào FlutterTts
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
+
+    // Apply speech rate, volume, pitch
     _speechRate = prefs.getDouble('tts_speech_rate') ?? 0.5;
     _volume = prefs.getDouble('tts_volume') ?? 1.0;
     _pitch = prefs.getDouble('tts_pitch') ?? 1.0;
     await _flutterTts!.setSpeechRate(_speechRate);
     await _flutterTts!.setVolume(_volume);
     await _flutterTts!.setPitch(_pitch);
+
+    // Load và apply voice trực tiếp
+    final voiceJson = prefs.getString('tts_voice');
+    if (voiceJson != null) {
+      try {
+        final decoded = jsonDecode(voiceJson) as Map<String, dynamic>;
+        _selectedVoice = Map<String, String>.from(decoded);
+        await _flutterTts!.setVoice(_selectedVoice!);
+        debugPrint('Applied saved voice: ${_selectedVoice!["name"]}');
+      } catch (e) {
+        debugPrint('Cannot apply saved voice: $e');
+        _selectedVoice = null;
+      }
+    }
   }
 
   /// Đọc text
@@ -311,15 +338,21 @@ class TextToSpeechService {
   }
 
   /// Đọc danh sách text liên tục (dùng cho đọc nhiều trang)
-  Future<void> speakMultiple(List<String> texts, {Function(int)? onPageComplete}) async {
+  Future<void> speakMultiple(
+    List<String> texts, {
+    Function(int)? onPageComplete,
+  }) async {
     if (texts.isEmpty) return;
 
     for (int i = 0; i < texts.length; i++) {
       if (!_isSpeaking) break; // Dừng nếu user đã stop
 
-      await speakWithCallback(texts[i], onComplete: () {
-        onPageComplete?.call(i);
-      });
+      await speakWithCallback(
+        texts[i],
+        onComplete: () {
+          onPageComplete?.call(i);
+        },
+      );
 
       // Chờ đến khi hoàn thành trước khi đọc tiếp
       while (_isSpeaking) {
@@ -339,4 +372,3 @@ class TextToSpeechService {
     _isPaused = false;
   }
 }
-

@@ -2436,4 +2436,71 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get askToAiDescription =>
       'Look up words, explain meanings, ask questions about the content you\'re reading...';
+
+  @override
+  String get published_date => 'Published date';
+
+  @override
+  String get parent_category => 'Parent category';
+
+  @override
+  String get posted_by => 'Posted by';
+
+  @override
+  String get advanced => 'Advanced';
+
+  @override
+  String get noVoiceAvailable => 'No voice available';
+
+  @override
+  String get ttsDownloadAdvancedVoiceIos => 'Download enhanced voices (iOS)';
+
+  @override
+  String get ttsDownloadAdvancedVoiceAndroid =>
+      'Download enhanced voices (Android)';
+
+  @override
+  String get ttsDownloadVoiceInstructionIos =>
+      'To download high-quality enhanced voices:';
+
+  @override
+  String get ttsDownloadVoiceInstructionAndroid => 'To download more voices:';
+
+  @override
+  String get ttsDownloadVoiceStepIos1 => '1. Settings → Accessibility';
+
+  @override
+  String get ttsDownloadVoiceStepIos2 => '2. Spoken Content';
+
+  @override
+  String get ttsDownloadVoiceStepIos3 => '3. Voices';
+
+  @override
+  String get ttsDownloadVoiceStepIos4 =>
+      '4. Choose language → Download desired voice';
+
+  @override
+  String get ttsDownloadVoiceStepAndroid1 =>
+      '1. Settings → General app management';
+
+  @override
+  String get ttsDownloadVoiceStepAndroid2 => '2. Text-to-speech output';
+
+  @override
+  String get ttsDownloadVoiceStepAndroid3 => '3. Voice data → Settings';
+
+  @override
+  String get ttsDownloadVoiceRefreshHint =>
+      'After installing, tap Refresh to update the list.';
+
+  @override
+  String get ttsOpenSettings => 'Open Settings';
+
+  @override
+  String get ttsDownloadMoreVoicesIos =>
+      'Download more enhanced voices from System Settings';
+
+  @override
+  String get ttsDownloadMoreVoicesAndroid =>
+      'Download more voices from TTS Settings';
 }

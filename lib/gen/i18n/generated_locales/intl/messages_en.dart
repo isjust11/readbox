@@ -60,6 +60,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Add new book to library",
     ),
     "added": MessageLookupByLibrary.simpleMessage("Added"),
+    "advanced": MessageLookupByLibrary.simpleMessage("Advanced"),
     "agree": MessageLookupByLibrary.simpleMessage("Agree"),
     "ai_assistant": MessageLookupByLibrary.simpleMessage("AI Assistant"),
     "all": MessageLookupByLibrary.simpleMessage("All"),
@@ -714,6 +715,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "noSubscriptionPlans": MessageLookupByLibrary.simpleMessage(
       "No plans available at the moment.",
     ),
+    "noVoiceAvailable": MessageLookupByLibrary.simpleMessage(
+      "No voice available",
+    ),
     "no_account": MessageLookupByLibrary.simpleMessage("No account? "),
     "no_ads": MessageLookupByLibrary.simpleMessage("Ad-free experience"),
     "no_available_camera": MessageLookupByLibrary.simpleMessage(
@@ -803,6 +807,7 @@ class MessageLookup extends MessageLookupByLibrary {
         ),
     "over_limit": MessageLookupByLibrary.simpleMessage("Over Limit"),
     "pages": MessageLookupByLibrary.simpleMessage("Pages"),
+    "parent_category": MessageLookupByLibrary.simpleMessage("Parent category"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
     "password_must_be_at_least_6_characters":
         MessageLookupByLibrary.simpleMessage(
@@ -1079,6 +1084,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "popular": MessageLookupByLibrary.simpleMessage("Popular"),
     "popular_ebooks": MessageLookupByLibrary.simpleMessage("Popular ebooks"),
+    "posted_by": MessageLookupByLibrary.simpleMessage("Posted by"),
     "premium_feature_desc": MessageLookupByLibrary.simpleMessage(
       "Watch a short video ad to use this feature for free.",
     ),
@@ -1100,6 +1106,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
     "public": MessageLookupByLibrary.simpleMessage("Public"),
     "public_books": MessageLookupByLibrary.simpleMessage("Public books"),
+    "published_date": MessageLookupByLibrary.simpleMessage("Published date"),
     "publisher": MessageLookupByLibrary.simpleMessage("Publisher"),
     "pull_to_refresh": MessageLookupByLibrary.simpleMessage(
       "Pull down to refresh",
@@ -1430,6 +1437,48 @@ class MessageLookup extends MessageLookupByLibrary {
     "try_different_search": MessageLookupByLibrary.simpleMessage(
       "Try a different search term",
     ),
+    "ttsDownloadAdvancedVoiceAndroid": MessageLookupByLibrary.simpleMessage(
+      "Download enhanced voices (Android)",
+    ),
+    "ttsDownloadAdvancedVoiceIos": MessageLookupByLibrary.simpleMessage(
+      "Download enhanced voices (iOS)",
+    ),
+    "ttsDownloadMoreVoicesAndroid": MessageLookupByLibrary.simpleMessage(
+      "Download more voices from TTS Settings",
+    ),
+    "ttsDownloadMoreVoicesIos": MessageLookupByLibrary.simpleMessage(
+      "Download more enhanced voices from System Settings",
+    ),
+    "ttsDownloadVoiceInstructionAndroid": MessageLookupByLibrary.simpleMessage(
+      "To download more voices:",
+    ),
+    "ttsDownloadVoiceInstructionIos": MessageLookupByLibrary.simpleMessage(
+      "To download high-quality enhanced voices:",
+    ),
+    "ttsDownloadVoiceRefreshHint": MessageLookupByLibrary.simpleMessage(
+      "After installing, tap Refresh to update the list.",
+    ),
+    "ttsDownloadVoiceStepAndroid1": MessageLookupByLibrary.simpleMessage(
+      "1. Settings → General app management",
+    ),
+    "ttsDownloadVoiceStepAndroid2": MessageLookupByLibrary.simpleMessage(
+      "2. Text-to-speech output",
+    ),
+    "ttsDownloadVoiceStepAndroid3": MessageLookupByLibrary.simpleMessage(
+      "3. Voice data → Settings",
+    ),
+    "ttsDownloadVoiceStepIos1": MessageLookupByLibrary.simpleMessage(
+      "1. Settings → Accessibility",
+    ),
+    "ttsDownloadVoiceStepIos2": MessageLookupByLibrary.simpleMessage(
+      "2. Spoken Content",
+    ),
+    "ttsDownloadVoiceStepIos3": MessageLookupByLibrary.simpleMessage(
+      "3. Voices",
+    ),
+    "ttsDownloadVoiceStepIos4": MessageLookupByLibrary.simpleMessage(
+      "4. Choose language → Download desired voice",
+    ),
     "ttsLanguageSettings": MessageLookupByLibrary.simpleMessage(
       "TTS Language Settings",
     ),
@@ -1437,6 +1486,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "ttsNotInitialized": MessageLookupByLibrary.simpleMessage(
       "TTS not initialized",
     ),
+    "ttsOpenSettings": MessageLookupByLibrary.simpleMessage("Open Settings"),
     "ttsPitch": MessageLookupByLibrary.simpleMessage("Voice pitch"),
     "ttsSettings": MessageLookupByLibrary.simpleMessage("TTS Settings"),
     "ttsSpeed": MessageLookupByLibrary.simpleMessage("Reading speed"),
