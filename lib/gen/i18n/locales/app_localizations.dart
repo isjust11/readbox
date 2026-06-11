@@ -4887,6 +4887,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Download more voices from TTS Settings'**
   String get ttsDownloadMoreVoicesAndroid;
+
+  /// No description provided for @policy_agreement_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Policy'**
+  String get policy_agreement_title;
+
+  /// No description provided for @policy_agreement_part1.
+  ///
+  /// In en, this message translates to:
+  /// **'By using this application, you agree to our '**
+  String get policy_agreement_part1;
+
+  /// No description provided for @policy_agreement_part2.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get policy_agreement_part2;
+
+  /// No description provided for @policy_agreement_part3.
+  ///
+  /// In en, this message translates to:
+  /// **'.'**
+  String get policy_agreement_part3;
+
+  /// No description provided for @policy_agreement_message.
+  ///
+  /// In en, this message translates to:
+  /// **'By using this application, you agree to our Terms of Service and Privacy Policy.'**
+  String get policy_agreement_message;
+
+  /// No description provided for @policy_decline.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get policy_decline;
+
+  /// No description provided for @policy_agree.
+  ///
+  /// In en, this message translates to:
+  /// **'Agree'**
+  String get policy_agree;
+
+  /// No description provided for @policy_decline_message.
+  ///
+  /// In en, this message translates to:
+  /// **'You must agree to the application\'s policy to continue.'**
+  String get policy_decline_message;
 }
 
 class _AppLocalizationsDelegate

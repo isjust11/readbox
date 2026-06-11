@@ -30,7 +30,7 @@ class PrivacySecurityBody extends StatefulWidget {
 
 class _PrivacySecurityBodyState extends State<PrivacySecurityBody> {
   WebViewController? _webViewController;
-  bool _isLoading = true;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -40,6 +40,7 @@ class _PrivacySecurityBodyState extends State<PrivacySecurityBody> {
 
   void _initWebView(String linkPages) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final languageCode = Localizations.localeOf(context).languageCode;
 
     _webViewController =
         WebViewController()
@@ -48,11 +49,14 @@ class _PrivacySecurityBodyState extends State<PrivacySecurityBody> {
           ..setNavigationDelegate(
             NavigationDelegate(
               onPageFinished: (_) {
-                if (mounted) setState(() => _isLoading = false);
+                if (mounted) setState(() => isLoading = false);
               },
             ),
           )
-          ..loadRequest(Uri.parse(linkPages));
+          ..loadRequest(
+            Uri.parse(linkPages),
+            headers: {'Accept-Language': languageCode},
+          );
   }
 
   @override

@@ -2506,4 +2506,31 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get ttsDownloadMoreVoicesAndroid => 'Tải thêm giọng từ Cài đặt TTS';
+
+  @override
+  String get policy_agreement_title => 'Điều khoản & Chính sách';
+
+  @override
+  String get policy_agreement_part1 =>
+      'Bằng việc sử dụng ứng dụng, bạn đồng ý với ';
+
+  @override
+  String get policy_agreement_part2 => ' và ';
+
+  @override
+  String get policy_agreement_part3 => ' của chúng tôi.';
+
+  @override
+  String get policy_agreement_message =>
+      'Bằng việc sử dụng ứng dụng, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi.';
+
+  @override
+  String get policy_decline => 'Từ chối';
+
+  @override
+  String get policy_agree => 'Đồng ý';
+
+  @override
+  String get policy_decline_message =>
+      'Bạn cần đồng ý với chính sách của ứng dụng để tiếp tục sử dụng.';
 }

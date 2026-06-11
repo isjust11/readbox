@@ -2503,4 +2503,31 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ttsDownloadMoreVoicesAndroid =>
       'Download more voices from TTS Settings';
+
+  @override
+  String get policy_agreement_title => 'Terms & Policy';
+
+  @override
+  String get policy_agreement_part1 =>
+      'By using this application, you agree to our ';
+
+  @override
+  String get policy_agreement_part2 => ' and ';
+
+  @override
+  String get policy_agreement_part3 => '.';
+
+  @override
+  String get policy_agreement_message =>
+      'By using this application, you agree to our Terms of Service and Privacy Policy.';
+
+  @override
+  String get policy_decline => 'Decline';
+
+  @override
+  String get policy_agree => 'Agree';
+
+  @override
+  String get policy_decline_message =>
+      'You must agree to the application\'s policy to continue.';
 }
