@@ -3,6 +3,7 @@ import 'package:readbox/blocs/base_bloc/base.dart';
 import 'package:readbox/blocs/utils.dart';
 import 'package:readbox/domain/repositories/repositories.dart';
 import 'package:readbox/domain/data/models/models.dart';
+import 'package:readbox/services/secure_storage_service.dart';
 
 class UserSubscriptionCubit extends Cubit<BaseState> {
   final UserSubscriptionRepository repository;
@@ -23,6 +24,13 @@ class UserSubscriptionCubit extends Cubit<BaseState> {
   Future<void> loadMe() async {
     try {
       emit(LoadingState());
+      // Check if user is logged in before calling the API
+      final token = await SecureStorageService().getToken();
+      if (token == null || token.isEmpty) {
+        emit(EmptyState());
+        return;
+      }
+
       final me = await repository.getMe();
       if (me == null) {
         emit(EmptyState());

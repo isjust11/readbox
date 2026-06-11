@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,6 +50,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
   Timer? _autoScrollTimer;
   int _currentFeaturePage = 0;
   bool _isFirstLogin = false;
+  bool _hasAgreedPolicy = false;
 
   bool _isReady = false;
   String? _nextRoute;
@@ -492,10 +494,107 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
 
   void _navigate() {
     if (!mounted || _nextRoute == null) return;
+    if (!_hasAgreedPolicy) {
+      _showPolicyModal();
+      return;
+    }
     Navigator.pushNamedAndRemoveUntil(context, _nextRoute!, (route) => false);
   }
 
+  void _showPolicyModal() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            AppLocalizations.current.policy_agreement_title,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+          content: RichText(
+            text: TextSpan(
+              style: Theme.of(context).textTheme.bodyMedium,
+              children: [
+                TextSpan(text: AppLocalizations.current.policy_agreement_part1),
+                TextSpan(
+                  text: AppLocalizations.current.terms_of_use,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  recognizer:
+                      TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.privacySecurityScreen,
+                          );
+                        },
+                ),
+                // TextSpan(text: AppLocalizations.current.policy_agreement_part2),
+                // TextSpan(
+                //   text: AppLocalizations.current.privacy_policy,
+                //   style: TextStyle(
+                //     color: Theme.of(context).colorScheme.primary,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                //   recognizer:
+                //       TapGestureRecognizer()
+                //         ..onTap = () {
+                //           Navigator.pushNamed(
+                //             context,
+                //             Routes.privacySecurityScreen,
+                //           );
+                //         },
+                // ),
+                TextSpan(text: AppLocalizations.current.policy_agreement_part3),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      AppLocalizations.current.policy_decline_message,
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              },
+              child: Text(
+                AppLocalizations.current.policy_decline,
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
+            FilledButton(
+              onPressed: () async {
+                await SharedPreferenceUtil.setAgreedPolicy(true);
+                if (mounted) {
+                  setState(() {
+                    _hasAgreedPolicy = true;
+                  });
+                  Navigator.pop(context);
+                  _navigate();
+                }
+              },
+              child: Text(AppLocalizations.current.policy_agree),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _prepareNavigation(BuildContext context) async {
+    _isFirstLogin = await SharedPreferenceUtil.getFirstLogin();
+    _hasAgreedPolicy = await SharedPreferenceUtil.hasAgreedPolicy();
+
     // Migrate dữ liệu cũ từ SharedPreferences sang SecureStorage (chỉ chạy 1 lần)
     try {
       await _secureStorage.migrateFromSharedPreferences();
@@ -527,12 +626,14 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
     final isTokenValid = await context.read<AuthCubit>().verifyToken();
     if (!mounted) return;
     if (_isFirstLogin == false && isTokenValid) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        Routes.mainScreen,
-        (route) => false,
-      );
-      return;
+      if (_hasAgreedPolicy) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Routes.mainScreen,
+          (route) => false,
+        );
+        return;
+      }
     }
     SharedPreferenceUtil.saveFirstLogin(false);
     setState(() {

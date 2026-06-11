@@ -855,5 +855,13 @@
   "ttsDownloadVoiceRefreshHint": "After installing, tap Refresh to update the list.",
   "ttsOpenSettings": "Open Settings",
   "ttsDownloadMoreVoicesIos": "Download more enhanced voices from System Settings",
-  "ttsDownloadMoreVoicesAndroid": "Download more voices from TTS Settings"
+  "ttsDownloadMoreVoicesAndroid": "Download more voices from TTS Settings",
+  "policy_agreement_title": "Terms & Policy",
+  "policy_agreement_part1": "By using this application, you agree to our ",
+  "policy_agreement_part2": " and ",
+  "policy_agreement_part3": ".",
+  "policy_agreement_message": "By using this application, you agree to our Terms of Service and Privacy Policy.",
+  "policy_decline": "Decline",
+  "policy_agree": "Agree",
+  "policy_decline_message": "You must agree to the application's policy to continue."
 }

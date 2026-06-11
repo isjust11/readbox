@@ -1082,6 +1082,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "pls_input_username": MessageLookupByLibrary.simpleMessage(
       "Please enter username",
     ),
+    "policy_agree": MessageLookupByLibrary.simpleMessage("Agree"),
+    "policy_agreement_message": MessageLookupByLibrary.simpleMessage(
+      "By using this application, you agree to our Terms of Service and Privacy Policy.",
+    ),
+    "policy_agreement_part1": MessageLookupByLibrary.simpleMessage(
+      "By using this application, you agree to our ",
+    ),
+    "policy_agreement_part2": MessageLookupByLibrary.simpleMessage(" and "),
+    "policy_agreement_part3": MessageLookupByLibrary.simpleMessage("."),
+    "policy_agreement_title": MessageLookupByLibrary.simpleMessage(
+      "Terms & Policy",
+    ),
+    "policy_decline": MessageLookupByLibrary.simpleMessage("Decline"),
+    "policy_decline_message": MessageLookupByLibrary.simpleMessage(
+      "You must agree to the application\'s policy to continue.",
+    ),
     "popular": MessageLookupByLibrary.simpleMessage("Popular"),
     "popular_ebooks": MessageLookupByLibrary.simpleMessage("Popular ebooks"),
     "posted_by": MessageLookupByLibrary.simpleMessage("Posted by"),

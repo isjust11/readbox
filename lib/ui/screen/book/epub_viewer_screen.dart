@@ -139,8 +139,6 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     }
   }
 
-
-
   void _loadCurrentUser() {
     final user = context.read<AppCubit>().getUser();
     if (user != null) {
@@ -190,7 +188,6 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     }
   }
 
-
   Future<void> _downloadAndLoadEpub(String url) async {
     try {
       final response = await _dio.get<List<int>>(
@@ -207,7 +204,6 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
           _isLoading = false;
         });
       }
-
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -231,7 +227,6 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     }
   }
 
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -248,7 +243,6 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
         _isReadingContinuous &&
         _parsedParagraphs.isNotEmpty &&
         _currentReadingParagraphIndex < _parsedParagraphs.length;
-
 
     if (shouldContinueTtsInBackground) {
       final paragraphsText =
@@ -955,7 +949,6 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     }
   }
 
-
   AppBar _buildDefaultAppBar() {
     return AppBar(
       title: Text(widget.title, style: const TextStyle(fontSize: 16)),
@@ -984,22 +977,21 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
                   Colors.orange,
                   isPro: true,
                 ),
-                if (isOwner || _isLocal)
+                if (!_isLocal)
                   _buildMenuItem(
                     'share',
                     Icons.share_rounded,
                     AppLocalizations.current.pdf_share,
                     Colors.blue,
                     isEnabled: _actionStatus?['canUseShare'] ?? false,
-                  )
-                else
-                  _buildMenuItem(
-                    'download',
-                    Icons.download_rounded,
-                    AppLocalizations.current.download,
-                    Colors.green,
-                    isEnabled: _actionStatus?['canUseDownload'] ?? false,
                   ),
+                _buildMenuItem(
+                  'download',
+                  Icons.download_rounded,
+                  AppLocalizations.current.download,
+                  Colors.green,
+                  isEnabled: _actionStatus?['canUseDownload'] ?? false,
+                ),
               ],
         ),
       ],
@@ -1892,7 +1884,6 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     }
   }
 }
-
 
 class EpubSearchResult {
   final int paragraphIndex;

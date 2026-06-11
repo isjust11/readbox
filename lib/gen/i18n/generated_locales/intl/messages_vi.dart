@@ -1133,6 +1133,24 @@ class MessageLookup extends MessageLookupByLibrary {
     "pls_input_username": MessageLookupByLibrary.simpleMessage(
       "Vui lòng nhập tên đăng nhập",
     ),
+    "policy_agree": MessageLookupByLibrary.simpleMessage("Đồng ý"),
+    "policy_agreement_message": MessageLookupByLibrary.simpleMessage(
+      "Bằng việc sử dụng ứng dụng, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi.",
+    ),
+    "policy_agreement_part1": MessageLookupByLibrary.simpleMessage(
+      "Bằng việc sử dụng ứng dụng, bạn đồng ý với ",
+    ),
+    "policy_agreement_part2": MessageLookupByLibrary.simpleMessage(" và "),
+    "policy_agreement_part3": MessageLookupByLibrary.simpleMessage(
+      " của chúng tôi.",
+    ),
+    "policy_agreement_title": MessageLookupByLibrary.simpleMessage(
+      "Điều khoản & Chính sách",
+    ),
+    "policy_decline": MessageLookupByLibrary.simpleMessage("Từ chối"),
+    "policy_decline_message": MessageLookupByLibrary.simpleMessage(
+      "Bạn cần đồng ý với chính sách của ứng dụng để tiếp tục sử dụng.",
+    ),
     "popular": MessageLookupByLibrary.simpleMessage("Phổ biến"),
     "popular_ebooks": MessageLookupByLibrary.simpleMessage(
       "Ebook được yêu thích",

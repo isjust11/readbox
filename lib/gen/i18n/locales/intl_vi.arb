@@ -878,5 +878,13 @@
   "ttsDownloadVoiceRefreshHint": "Sau khi cài xong, nhấn nút Làm mới để cập nhật danh sách.",
   "ttsOpenSettings": "Mở Cài đặt",
   "ttsDownloadMoreVoicesIos": "Tải thêm giọng nâng cao từ Cài đặt hệ thống",
-  "ttsDownloadMoreVoicesAndroid": "Tải thêm giọng từ Cài đặt TTS"
+  "ttsDownloadMoreVoicesAndroid": "Tải thêm giọng từ Cài đặt TTS",
+  "policy_agreement_title": "Điều khoản & Chính sách",
+  "policy_agreement_part1": "Bằng việc sử dụng ứng dụng, bạn đồng ý với ",
+  "policy_agreement_part2": " và ",
+  "policy_agreement_part3": " của chúng tôi.",
+  "policy_agreement_message": "Bằng việc sử dụng ứng dụng, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi.",
+  "policy_decline": "Từ chối",
+  "policy_agree": "Đồng ý",
+  "policy_decline_message": "Bạn cần đồng ý với chính sách của ứng dụng để tiếp tục sử dụng."
 }

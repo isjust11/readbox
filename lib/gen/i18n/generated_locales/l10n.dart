@@ -7227,6 +7227,76 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Điều khoản & Chính sách`
+  String get policy_agreement_title {
+    return Intl.message(
+      'Điều khoản & Chính sách',
+      name: 'policy_agreement_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bằng việc sử dụng ứng dụng, bạn đồng ý với `
+  String get policy_agreement_part1 {
+    return Intl.message(
+      'Bằng việc sử dụng ứng dụng, bạn đồng ý với ',
+      name: 'policy_agreement_part1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` và `
+  String get policy_agreement_part2 {
+    return Intl.message(
+      ' và ',
+      name: 'policy_agreement_part2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// ` của chúng tôi.`
+  String get policy_agreement_part3 {
+    return Intl.message(
+      ' của chúng tôi.',
+      name: 'policy_agreement_part3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bằng việc sử dụng ứng dụng, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi.`
+  String get policy_agreement_message {
+    return Intl.message(
+      'Bằng việc sử dụng ứng dụng, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi.',
+      name: 'policy_agreement_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Từ chối`
+  String get policy_decline {
+    return Intl.message('Từ chối', name: 'policy_decline', desc: '', args: []);
+  }
+
+  /// `Đồng ý`
+  String get policy_agree {
+    return Intl.message('Đồng ý', name: 'policy_agree', desc: '', args: []);
+  }
+
+  /// `Bạn cần đồng ý với chính sách của ứng dụng để tiếp tục sử dụng.`
+  String get policy_decline_message {
+    return Intl.message(
+      'Bạn cần đồng ý với chính sách của ứng dụng để tiếp tục sử dụng.',
+      name: 'policy_decline_message',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

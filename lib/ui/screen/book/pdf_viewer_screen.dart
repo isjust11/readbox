@@ -1311,7 +1311,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                                 false,
                                             isPro: true,
                                           ),
-                                        if (isOwner || _isLocal)
+                                        if (!_isLocal)
                                           _buildMenuItem(
                                             'share',
                                             Icons.share_rounded,
@@ -1320,17 +1320,16 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                             isEnabled:
                                                 _actionStatus?['canUseShare'] ??
                                                 false,
-                                          )
-                                        else
-                                          _buildMenuItem(
-                                            'download',
-                                            Icons.download_rounded,
-                                            AppLocalizations.current.download,
-                                            Colors.green,
-                                            isEnabled:
-                                                _actionStatus?['canUseDownload'] ??
-                                                false,
                                           ),
+                                        _buildMenuItem(
+                                          'download',
+                                          Icons.download_rounded,
+                                          AppLocalizations.current.download,
+                                          Colors.green,
+                                          isEnabled:
+                                              _actionStatus?['canUseDownload'] ??
+                                              false,
+                                        ),
                                       ],
                                 ),
                               )

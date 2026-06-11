@@ -15,6 +15,7 @@ class SPrefCache {
   static const String PREF_KEY_REMEMBER_PASSWORD = "pref_key_remember_password";
   static const String PREF_KEY_THEME = "pref_key_theme";
   static const String PREF_KEY_FIRST_LOGIN = "pref_key_first_login";
+  static const String PREF_KEY_AGREED_POLICY = "pref_key_agreed_policy";
   // DEPRECATED - Đã chuyển sang SecureStorage
   @Deprecated('Use SecureStorageService.saveToken() instead')
   static const String KEY_TOKEN = "auth_token";
@@ -219,6 +220,17 @@ class SharedPreferenceUtil {
   static Future<bool> getFirstLogin() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(SPrefCache.PREF_KEY_FIRST_LOGIN) ?? false;
+  }
+
+  // policy agreement
+  static Future<bool> setAgreedPolicy(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setBool(SPrefCache.PREF_KEY_AGREED_POLICY, value);
+  }
+
+  static Future<bool> hasAgreedPolicy() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(SPrefCache.PREF_KEY_AGREED_POLICY) ?? false;
   }
 
   /// Lấy trang đã lưu của PDF, trả về null nếu chưa có
