@@ -7,7 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:readbox/routes.dart';
 import 'package:readbox/utils/html_content_processor.dart';
+import 'package:readbox/utils/navigator.dart';
 
 /// Key for flag: app nhận thông báo khi ở background (dùng để refresh khi resume)
 const String _keyNewNotificationInBackground = 'fcm_new_notification_in_background';
@@ -395,16 +397,89 @@ class FCMService {
   void _onNotificationTapped(NotificationResponse response) {
     debugPrint('Local notification tapped: ${response.payload}');
     _notifyNewNotificationReceived();
-    // Handle navigation based on payload
+    // Navigate dựa trên payload JSON
+    if (response.payload != null && response.payload!.isNotEmpty) {
+      try {
+        final data = jsonDecode(response.payload!) as Map<String, dynamic>;
+        _navigateToScreen(data);
+      } catch (e) {
+        debugPrint('❌ Error parsing local notification payload: $e');
+      }
+    }
   }
 
-  /// Navigate to specific screen based on message data
+  /// Navigate to specific screen based on message data.
+  /// Backend gửi [type] dạng UPPERCASE (e.g. 'CONTINUE_READING', 'EBOOK').
+  /// Các key quan trọng trong [data]:
+  ///   - type: loại thông báo
+  ///   - bookId: ID của sách (dạng String)
+  ///   - bookIds: danh sách IDs cách nhau bởi dấu phẩy (hot books)
   void _navigateToScreen(Map<String, dynamic> data) {
-    // TODO: Implement navigation logic based on message data
-    // Example:
-    // if (data['screen'] == 'profile') {
-    //   Get.toNamed('/profile');
-    // }
+    final navigator = NavigationService.instance.navigatorKey.currentState;
+    if (navigator == null) {
+      debugPrint('❌ Navigator not ready');
+      return;
+    }
+
+    final type = (data['type'] as String?)?.toUpperCase();
+    final bookId = data['bookId'] as String?;
+
+    debugPrint('🔔 Navigate from notification — type=$type, bookId=$bookId');
+
+    switch (type) {
+      // Nhắc tiếp tục đọc → mở thẳng BookDetail của cuốn sách đó
+      case 'CONTINUE_READING':
+        if (bookId != null) {
+          navigator.pushNamed(Routes.bookDetailScreen, arguments: bookId);
+        } else {
+          navigator.pushNamed(Routes.notificationScreen);
+        }
+        break;
+
+      // Ebook hot / gợi ý → mở màn hình thông báo để user xem danh sách
+      case 'HOT_BOOKS':
+        navigator.pushNamed(Routes.notificationScreen);
+        break;
+
+      // Thông báo về ebook cụ thể → BookDetail
+      case 'EBOOK':
+        if (bookId != null) {
+          navigator.pushNamed(Routes.bookDetailScreen, arguments: bookId);
+        } else {
+          navigator.pushNamed(Routes.notificationScreen);
+        }
+        break;
+
+      // Tương tác (like, rate, comment...) → BookDetail nếu có bookId
+      case 'INTERACTION':
+        if (bookId != null) {
+          navigator.pushNamed(Routes.bookDetailScreen, arguments: bookId);
+        } else {
+          navigator.pushNamed(Routes.notificationScreen);
+        }
+        break;
+
+      // Thanh toán → màn hình lịch sử thanh toán
+      case 'PAYMENT':
+        navigator.pushNamed(Routes.paymentHistoryScreen);
+        break;
+
+      // Feedback → màn hình feedback
+      case 'FEEDBACK':
+        navigator.pushNamed(Routes.feedbackScreen);
+        break;
+
+      // Bài viết mới / System → màn hình thông báo
+      case 'NEW_ARTICLE':
+      case 'SYSTEM':
+        navigator.pushNamed(Routes.notificationScreen);
+        break;
+
+      default:
+        debugPrint('⚠️ Unknown notification type: $type, navigating to notifications');
+        navigator.pushNamed(Routes.notificationScreen);
+        break;
+    }
   }
 
   /// Subscribe to topic

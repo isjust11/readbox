@@ -23,7 +23,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final FCMService _fcmService = FCMService();
   final LocalNotificationService _localNotificationService = LocalNotificationService();
-  final NotificationHandler _notificationHandler = NotificationHandler();
   bool _isInitialized = false;
 
   @override
@@ -100,15 +99,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               initialRoute: Routes.initScreen(),
               onGenerateRoute: Routes.generateRoute,
               builder: (context, child) {
-                // Set notification handler context when navigator is ready
-                if (_isInitialized) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    final navigatorContext = NavigationService.instance.navigatorKey.currentContext;
-                    if (navigatorContext != null) {
-                      _notificationHandler.setContext(navigatorContext);
-                    }
-                  });
-                }
                 final scaledChild = MediaQuery(
                   data: MediaQuery.of(context).copyWith(
                     textScaler: TextScaler.linear(themeState.textScaleFactor),
