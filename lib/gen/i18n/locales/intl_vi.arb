@@ -1,5 +1,5 @@
 {
-  "app_name": "ReadBox",
+  "app_name": "Readbox",
   "google": "Google",
   "facebook": "Facebook",
   "loading": "Đang tải...",
@@ -837,6 +837,8 @@
   "splash_feature_read_desc": "Hỗ trợ PDF, EPUB với giao diện đọc sách tối ưu, dễ chịu mắt",
   "splash_feature_ai_title": "Tra cứu bằng AI",
   "splash_feature_ai_desc": "Tóm tắt, giải thích nội dung và dịch thuật tức thì với AI",
+  "splash_feature_ai_tts_title": "AI Text-to-Speech",
+  "splash_feature_ai_tts_desc": "Nghe sách nói với giọng AI tự nhiên",
   "splash_feature_offline_title": "Đọc sách offline",
   "splash_feature_offline_desc": "Lưu sách về thiết bị,\nđọc mọi lúc không cần internet",
   "splash_feature_library_title": "Thư viện cá nhân",

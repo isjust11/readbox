@@ -51,6 +51,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
   int _currentFeaturePage = 0;
   bool _isFirstLogin = false;
   bool _hasAgreedPolicy = false;
+  bool _isPolicyChecked = false;
 
   bool _isReady = false;
   String? _nextRoute;
@@ -75,7 +76,14 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
         description: l.splash_feature_read_desc,
       ),
       _FeatureItem(
-        svgPath: Assets.icons.icTools,
+        svgPath: Assets.icons.icAiBrain,
+        iconColor: Colors.lightBlueAccent,
+        iconBg: Colors.white,
+        title: l.splash_feature_ai_tts_title,
+        description: l.splash_feature_ai_tts_desc,
+      ),
+      _FeatureItem(
+        svgPath: Assets.icons.icRobotic,
         iconColor: Color(0xFF8E24AA),
         iconBg: Color(0xFFF3E5F5),
         title: l.splash_feature_ai_title,
@@ -135,8 +143,8 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
       if (mounted) _contentController.forward();
     });
 
-    // Auto-scroll features every 2.2s
-    _autoScrollTimer = Timer.periodic(const Duration(milliseconds: 2200), (_) {
+    // Auto-scroll features every 6.4s
+    _autoScrollTimer = Timer.periodic(const Duration(milliseconds: 6400), (_) {
       if (!mounted) return;
       final next = (_currentFeaturePage + 1) % _features.length;
       _pageController.animateToPage(
@@ -197,7 +205,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
                 children: [
                   const Spacer(flex: 2),
                   _buildLogoSection(colorScheme),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
                   _buildAppName(colorScheme),
                   const SizedBox(height: 36),
                   _buildFeatureCarousel(colorScheme),
@@ -292,13 +300,20 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
       opacity: _logoFade,
       child: Column(
         children: [
-          Text(
-            AppLocalizations.current.app_name,
-            style: TextStyle(
-              fontSize: 38,
-              fontWeight: FontWeight.w800,
-              color: cs.onSurface,
-              letterSpacing: 1.5,
+          BaseShaderMask(
+            colors: [cs.primary, cs.secondary],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            child: Text(
+              AppLocalizations.current.app_name,
+              style: const TextStyle(
+                fontSize: 38,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.5,
+                color:
+                    Colors
+                        .white, // Cần có màu (thường là trắng) để blendMode hoạt động đúng
+              ),
             ),
           ),
           const SizedBox(height: 6),
@@ -471,124 +486,94 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildContinueButton(ColorScheme cs) {
-    return SizedBox(
+    return Column(
       key: const ValueKey('button'),
-      width: 220,
-      child: FilledButton.icon(
-        onPressed: _navigate,
-        icon: const Icon(Icons.arrow_forward_rounded, size: 20),
-        label: Text(
-          AppLocalizations.current.splash_get_started,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-        style: FilledButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(99),
-          ),
-          elevation: 0,
-        ),
-      ),
-    );
-  }
-
-  void _navigate() {
-    if (!mounted || _nextRoute == null) return;
-    if (!_hasAgreedPolicy) {
-      _showPolicyModal();
-      return;
-    }
-    Navigator.pushNamedAndRemoveUntil(context, _nextRoute!, (route) => false);
-  }
-
-  void _showPolicyModal() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: Text(
-            AppLocalizations.current.policy_agreement_title,
-            style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
-          content: RichText(
-            text: TextSpan(
-              style: Theme.of(context).textTheme.bodyMedium,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (!_hasAgreedPolicy)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextSpan(text: AppLocalizations.current.policy_agreement_part1),
-                TextSpan(
-                  text: AppLocalizations.current.terms_of_use,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
+                SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: Checkbox(
+                    value: _isPolicyChecked,
+                    onChanged: (val) {
+                      setState(() {
+                        _isPolicyChecked = val ?? false;
+                      });
+                    },
                   ),
-                  recognizer:
-                      TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.privacySecurityScreen,
-                          );
-                        },
                 ),
-                // TextSpan(text: AppLocalizations.current.policy_agreement_part2),
-                // TextSpan(
-                //   text: AppLocalizations.current.privacy_policy,
-                //   style: TextStyle(
-                //     color: Theme.of(context).colorScheme.primary,
-                //     fontWeight: FontWeight.bold,
-                //   ),
-                //   recognizer:
-                //       TapGestureRecognizer()
-                //         ..onTap = () {
-                //           Navigator.pushNamed(
-                //             context,
-                //             Routes.privacySecurityScreen,
-                //           );
-                //         },
-                // ),
-                TextSpan(text: AppLocalizations.current.policy_agreement_part3),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: RichText(
+                    text: TextSpan(
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(fontSize: 12),
+                      children: [
+                        TextSpan(
+                          text: AppLocalizations.current.policy_agreement_part1,
+                        ),
+                        TextSpan(
+                          text: AppLocalizations.current.terms_of_use,
+                          style: TextStyle(
+                            color: cs.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          recognizer:
+                              TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.privacySecurityScreen,
+                                  );
+                                },
+                        ),
+                        TextSpan(
+                          text: AppLocalizations.current.policy_agreement_part3,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      AppLocalizations.current.policy_decline_message,
-                    ),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              },
-              child: Text(
-                AppLocalizations.current.policy_decline,
-                style: const TextStyle(color: Colors.red),
+        SizedBox(
+          width: 220,
+          child: FilledButton.icon(
+            onPressed:
+                (!_hasAgreedPolicy && !_isPolicyChecked) ? null : _navigate,
+            icon: const Icon(Icons.arrow_forward_rounded, size: 20),
+            label: Text(
+              AppLocalizations.current.splash_get_started,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(99),
               ),
+              elevation: 0,
             ),
-            FilledButton(
-              onPressed: () async {
-                await SharedPreferenceUtil.setAgreedPolicy(true);
-                if (mounted) {
-                  setState(() {
-                    _hasAgreedPolicy = true;
-                  });
-                  Navigator.pop(context);
-                  _navigate();
-                }
-              },
-              child: Text(AppLocalizations.current.policy_agree),
-            ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
+  }
+
+  void _navigate() async {
+    if (!mounted || _nextRoute == null) return;
+    if (!_hasAgreedPolicy) {
+      await SharedPreferenceUtil.setAgreedPolicy(true);
+      _hasAgreedPolicy = true;
+    }
+    Navigator.pushNamedAndRemoveUntil(context, _nextRoute!, (route) => false);
   }
 
   Future<void> _prepareNavigation(BuildContext context) async {

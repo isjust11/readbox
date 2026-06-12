@@ -277,8 +277,10 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
       _isSearching = !_isSearching;
       _showSearchRecent = false;
       if (_isSearching) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _searchFocusNode.requestFocus();
+        Future.delayed(const Duration(milliseconds: 200), () {
+          if (mounted) {
+            _searchFocusNode.requestFocus();
+          }
         });
       } else {
         _debounceTimer?.cancel();
@@ -833,7 +835,6 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
             _isSearching
                 ? TextField(
                   controller: _searchController,
-                  autofocus: true,
                   focusNode: _searchFocusNode,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.search,
@@ -879,12 +880,17 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
                     );
                   },
                 )
-                : Text(
-                  title,
-                  style: TextStyle(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 20,
+                : BaseShaderMask(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    colorScheme.primary,
+                    colorScheme.tertiary,
+                    Colors.orangeAccent,
+                  ],
+                  child: Text(
+                    title,
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
                   ),
                 ),
         actions: [
@@ -1078,8 +1084,9 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
                                       index - (index ~/ (adInterval + 1));
                                 }
 
-                                if (bookIndex >= filteredBooks.length)
+                                if (bookIndex >= filteredBooks.length) {
                                   return const SizedBox.shrink();
+                                }
                                 final book = filteredBooks[bookIndex];
 
                                 return BookCard(
@@ -1132,8 +1139,8 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    if (!_isSearching && categories.isNotEmpty)
-                      _buildCategoryBar(colorScheme),
+                    // if (!_isSearching && categories.isNotEmpty)
+                    _buildCategoryBar(colorScheme),
                     Expanded(child: widgetView),
                   ],
                 );

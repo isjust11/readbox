@@ -153,4 +153,63 @@ class PopupAdWidget {
           ),
     );
   }
+
+  /// Hiển thị quảng cáo toàn màn hình (Interstitial Ad) sau một khoảng thời gian delay.
+  /// Gọi hàm này khi bắt đầu load màn hình. Quảng cáo sẽ được tải ngầm.
+  /// Khi vừa tải xong VÀ hết thời gian delay, quảng cáo sẽ tự động bật lên.
+  static void showInterstitialAdWithDelay({
+    required BuildContext context,
+    Duration delay = const Duration(seconds: 3),
+    VoidCallback? onAdClosed,
+  }) {
+    InterstitialAd? loadedAd;
+    bool isAdReady = false;
+    bool isTimeReady = false;
+    bool isAdShown = false;
+
+    void tryShowAd() {
+      if (isAdReady && isTimeReady && !isAdShown && loadedAd != null) {
+        if (!context.mounted) {
+          loadedAd?.dispose();
+          onAdClosed?.call();
+          return;
+        }
+        isAdShown = true;
+        loadedAd!.fullScreenContentCallback = FullScreenContentCallback(
+          onAdDismissedFullScreenContent: (ad) {
+            ad.dispose();
+            onAdClosed?.call();
+          },
+          onAdFailedToShowFullScreenContent: (ad, error) {
+            ad.dispose();
+            onAdClosed?.call();
+          },
+        );
+        loadedAd!.show();
+      }
+    }
+
+    // 1. Bắt đầu tải quảng cáo ngay lập tức
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          loadedAd = ad;
+          isAdReady = true;
+          tryShowAd();
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          isAdReady = false;
+          onAdClosed?.call();
+        },
+      ),
+    );
+
+    // 2. Bắt đầu đếm ngược delay
+    Future.delayed(delay, () {
+      isTimeReady = true;
+      tryShowAd();
+    });
+  }
 }

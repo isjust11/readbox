@@ -185,6 +185,7 @@ class LoginScreenState extends State<LoginBody>
   }
 
   Widget _buildHeader() {
+    final cs = Theme.of(context).colorScheme;
     return Column(
       children: [
         // App Icon/Logo
@@ -200,13 +201,20 @@ class LoginScreenState extends State<LoginBody>
         SizedBox(height: 12),
 
         // App Title
-        Text(
-          AppLocalizations.current.app_name,
-          style: TextStyle(
-            fontSize: 36,
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).primaryColor,
-            letterSpacing: 1.5,
+        BaseShaderMask(
+          colors: [cs.primary, cs.secondary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          child: Text(
+            AppLocalizations.current.app_name,
+            style: const TextStyle(
+              fontSize: 38,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.5,
+              color:
+                  Colors
+                      .white, // Cần có màu (thường là trắng) để blendMode hoạt động đúng
+            ),
           ),
         ),
         Text(
@@ -287,7 +295,6 @@ class LoginScreenState extends State<LoginBody>
           children: [
             Checkbox(
               value: _rememberMe,
-              activeColor: AppColors.baseColor,
               checkColor: AppColors.white,
               onChanged: (value) {
                 setState(() {
@@ -466,8 +473,6 @@ class LoginScreenState extends State<LoginBody>
               letterSpacing: 0.5,
             ),
           ),
-          SizedBox(width: 8),
-          Icon(Icons.arrow_forward_rounded, size: 20),
         ],
       ),
     );

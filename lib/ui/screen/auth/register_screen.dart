@@ -187,6 +187,7 @@ class RegisterScreenState extends State<RegisterBody>
   }
 
   Widget _buildHeader() {
+    final cs = Theme.of(context).colorScheme;
     return Column(
       children: [
         // Icon
@@ -211,13 +212,20 @@ class RegisterScreenState extends State<RegisterBody>
         ),
         SizedBox(height: AppDimens.SIZE_16),
         // Title
-        Text(
-          AppLocalizations.current.create_new_account,
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            letterSpacing: 1.0,
+        BaseShaderMask(
+          colors: [cs.primary, cs.secondary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          child: Center(
+            child: Text(
+              AppLocalizations.current.create_new_account,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 1.5,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ],

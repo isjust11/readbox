@@ -54,9 +54,9 @@ class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  /// `ReadBox`
+  /// `Readbox`
   String get app_name {
-    return Intl.message('ReadBox', name: 'app_name', desc: '', args: []);
+    return Intl.message('Readbox', name: 'app_name', desc: '', args: []);
   }
 
   /// `Google`
@@ -6823,6 +6823,26 @@ class AppLocalizations {
     return Intl.message(
       'Tóm tắt, giải thích nội dung và dịch thuật tức thì với AI',
       name: 'splash_feature_ai_desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `AI Text-to-Speech`
+  String get splash_feature_ai_tts_title {
+    return Intl.message(
+      'AI Text-to-Speech',
+      name: 'splash_feature_ai_tts_title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nghe sách nói với giọng AI tự nhiên`
+  String get splash_feature_ai_tts_desc {
+    return Intl.message(
+      'Nghe sách nói với giọng AI tự nhiên',
+      name: 'splash_feature_ai_tts_desc',
       desc: '',
       args: [],
     );
