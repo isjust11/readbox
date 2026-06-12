@@ -11,6 +11,7 @@ import 'package:readbox/blocs/cubit.dart';
 import 'package:readbox/constants.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/pdf_cache_manager.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -50,8 +51,7 @@ class PdfViewerScreen extends StatefulWidget {
 
 class PdfViewerScreenState extends State<PdfViewerScreen> {
   final PdfViewerController _pdfController = PdfViewerController();
-  late final File
-  _localFile; // Cache File object, tránh tạo mới mỗi lần rebuild
+  late File _localFile; // Cache File object, tránh tạo mới mỗi lần rebuild
   final TextEditingController _searchQueryController = TextEditingController();
   bool _isLoading = true;
   bool _isLoadingText = false;
@@ -118,7 +118,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   int _wordHighlightCount = 0;
   final ValueNotifier<String?> _selectedTextNotifier = ValueNotifier(null);
   // ValueNotifier cho (currentPage, totalPages) → tránh rebuild Scaffold mỗi lần cuộn trang
-  late final ValueNotifier<(int, int)> _pageStateNotifier;
+  late ValueNotifier<(int, int)> _pageStateNotifier;
 
   void _startPerfMonitors() {
     // Memory log mỗi 5 giây
@@ -162,14 +162,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
             });
           }
         });
-    _localFile = File(widget.fileUrl);
-    _isLocal = _localFile.existsSync();
-    if (_isLocal) {
-      setState(() => _isLoading = false);
-    } else {
-      // Network: dùng SfPdfViewer.network() stream, không tải full trước
-      setState(() => _isLoading = false);
-    }
+    _checkCacheAndInit();
+
     _loadUserDataSettings();
     _initializeTTS();
     // Optional reading progress (only when bookId + cubit available)
@@ -183,6 +177,12 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
 
     // _pdfBytes được lazy-load khi user bắt đầu TTS (không load sẵn để tránh block main thread)
+    
+    // Tải và hiển thị quảng cáo toàn màn hình sau một khoảng delay (cho tài khoản Free)
+    final isFree = context.read<UserSubscriptionCubit>().userSubscription?.isFree ?? true;
+    if (!isSuperAdmin && isFree) {
+      PopupAdWidget.showInterstitialAdWithDelay(context: context);
+    }
   }
 
   @override
@@ -221,6 +221,41 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
   }
 
+  Future<void> _checkCacheAndInit() async {
+    _localFile = File(widget.fileUrl);
+    _isLocal = _localFile.existsSync();
+
+    if (_isLocal) {
+      if (mounted) setState(() => _isLoading = false);
+      return;
+    }
+
+    try {
+      final fileInfo = await PdfCacheManager.instance.getFileFromCache(
+        _networkPdfUrl,
+      );
+      if (fileInfo != null && fileInfo.file.existsSync()) {
+        _localFile = fileInfo.file;
+        _isLocal = true; // Sử dụng file đã cache như file local
+        if (mounted) setState(() => _isLoading = false);
+        return;
+      }
+    } catch (e) {
+      debugPrint('Error checking cache: $e');
+    }
+
+    // Nếu chưa có trong cache, cho phép hiển thị qua network stream
+    if (mounted) setState(() => _isLoading = false);
+
+    // Bắt đầu cache ngầm cho các file từ Google Drive
+    if (widget.fileUrl.contains('google-drive')) {
+      PdfCacheManager.instance
+          .downloadFile(_networkPdfUrl)
+          .then((_) {})
+          .catchError((_) {});
+    }
+  }
+
   String get _networkPdfUrl {
     if (widget.fileUrl.startsWith('http')) return widget.fileUrl;
     // Google Drive proxy: đi qua API server (port 4000), không phải storage (port 3005)
@@ -232,7 +267,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
   /// Tải bytes PDF khi cần (TTS, Share, Download) — chỉ gọi cho file network
   Future<Uint8List?> _ensurePdfBytesForNetwork() async {
-    if (_isLocal || _pdfBytes != null) return _pdfBytes;
+    if (_pdfBytes != null) return _pdfBytes;
+    if (_isLocal && _localFile.existsSync()) {
+      return await _localFile.readAsBytes();
+    }
     try {
       final bytes = await _downloadPdf();
       if (mounted) setState(() => _pdfBytes = bytes);
@@ -254,8 +292,8 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
 
   Future<void> _downloadAndSavePdf() async {
     try {
-      // Nếu file đã là local thì coi như đã có trên máy
-      if (_isLocal) {
+      // Nếu file đã là local thực sự (không phải cache) thì coi như đã có trên máy
+      if (_isLocal && !widget.fileUrl.startsWith('http')) {
         if (!mounted) return;
         AppSnackBar.show(
           context,
@@ -265,8 +303,15 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         return;
       }
 
-      // Tải PDF từ server (nếu chưa có bytes trong bộ nhớ)
-      final bytes = _pdfBytes ?? await _downloadPdf();
+      // Lấy bytes từ bộ nhớ, hoặc từ file cache, hoặc tải mới
+      late Uint8List bytes;
+      if (_pdfBytes != null) {
+        bytes = _pdfBytes!;
+      } else if (_isLocal && _localFile.existsSync()) {
+        bytes = await _localFile.readAsBytes();
+      } else {
+        bytes = await _downloadPdf();
+      }
 
       // Lưu file: Android dùng Downloads công khai, iOS dùng Documents của app
       final Directory downloadsDir;
@@ -355,11 +400,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     final total = details.document.pages.count;
     dev.log('documentLoaded: ${loadMs}ms | pages: $total', name: 'PdfPerf');
     _totalPages = total;
-    _pageStateNotifier.value = (_currentPage, total);
 
-    // Scale page to fill viewport width
+    // Đưa việc cập nhật UI vào PostFrameCallback để tránh lỗi 'setState() called during build'
+    // có thể xảy ra khi SfPdfViewer gọi hàm này ngay trong quá trình render đầu tiên.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _fitPageToViewportWidth(details);
+      if (mounted) {
+        _pageStateNotifier.value = (_currentPage, total);
+        // _fitPageToViewportWidth(details);
+      }
     });
 
     // Local reading position (SharedPreference)

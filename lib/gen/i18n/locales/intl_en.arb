@@ -1,5 +1,5 @@
 {
-  "app_name": "ReadBox",
+  "app_name": "Readbox",
   "google": "Google",
   "facebook": "Facebook",
   "loading": "Loading...",
@@ -814,6 +814,8 @@
   "splash_feature_read_desc": "PDF, EPUB support with an optimized reading interface easy on the eyes",
   "splash_feature_ai_title": "AI-Powered Search",
   "splash_feature_ai_desc": "Summarize, explain content and instant translation with AI",
+  "splash_feature_ai_tts_title": "AI Text-to-Speech",
+  "splash_feature_ai_tts_desc": "Listen to books read aloud with natural AI voices",
   "splash_feature_offline_title": "Read Offline",
   "splash_feature_offline_desc": "Save books to your device, read anytime without internet",
   "splash_feature_library_title": "Personal Library",

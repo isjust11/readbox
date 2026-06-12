@@ -137,6 +137,12 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
     if (widget.bookId != null) {
       _loadReadingProgressFromServer();
     }
+
+    // Tải và hiển thị quảng cáo toàn màn hình sau một khoảng delay (cho tài khoản Free)
+    final isFree = context.read<UserSubscriptionCubit>().userSubscription?.isFree ?? true;
+    if (!isSuperAdmin && isFree) {
+      PopupAdWidget.showInterstitialAdWithDelay(context: context);
+    }
   }
 
   void _loadCurrentUser() {

@@ -879,12 +879,17 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
                     );
                   },
                 )
-                : Text(
-                  title,
-                  style: TextStyle(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 20,
+                : BaseShaderMask(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    colorScheme.primary,
+                    colorScheme.tertiary,
+                    Colors.orangeAccent,
+                  ],
+                  child: Text(
+                    title,
+                    style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
                   ),
                 ),
         actions: [

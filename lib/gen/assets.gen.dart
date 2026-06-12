@@ -71,11 +71,11 @@ class $AssetsIconsGen {
   /// File path: assets/icons/Wallet_empty.svg
   String get walletEmpty => 'assets/icons/Wallet_empty.svg';
 
+  /// File path: assets/icons/ic_ai_brain.svg
+  String get icAiBrain => 'assets/icons/ic_ai_brain.svg';
+
   /// File path: assets/icons/ic_avatar.svg
   String get icAvatar => 'assets/icons/ic_avatar.svg';
-
-  /// File path: assets/icons/ic_calendar.svg
-  String get icCalendar => 'assets/icons/ic_calendar.svg';
 
   /// File path: assets/icons/ic_category.svg
   String get icCategory => 'assets/icons/ic_category.svg';
@@ -155,9 +155,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_news.svg
   String get icNews => 'assets/icons/ic_news.svg';
 
-  /// File path: assets/icons/ic_no_document.svg
-  String get icNoDocument => 'assets/icons/ic_no_document.svg';
-
   /// File path: assets/icons/ic_notification.png
   AssetGenImage get icNotification =>
       const AssetGenImage('assets/icons/ic_notification.png');
@@ -168,14 +165,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_pdf_cover.svg
   String get icPdfCover => 'assets/icons/ic_pdf_cover.svg';
 
-  /// File path: assets/icons/ic_qrcode.svg
-  String get icQrcode => 'assets/icons/ic_qrcode.svg';
-
   /// File path: assets/icons/ic_remove.svg
   String get icRemove => 'assets/icons/ic_remove.svg';
 
   /// File path: assets/icons/ic_ring.svg
   String get icRing => 'assets/icons/ic_ring.svg';
+
+  /// File path: assets/icons/ic_robotic.svg
+  String get icRobotic => 'assets/icons/ic_robotic.svg';
 
   /// File path: assets/icons/ic_setting.svg
   String get icSetting => 'assets/icons/ic_setting.svg';
@@ -228,8 +225,8 @@ class $AssetsIconsGen {
     uploadEmpty,
     userEmpty,
     walletEmpty,
+    icAiBrain,
     icAvatar,
-    icCalendar,
     icCategory,
     icChartStorage,
     icCloseCircle,
@@ -256,13 +253,12 @@ class $AssetsIconsGen {
     icLockPassword,
     icMobi,
     icNews,
-    icNoDocument,
     icNotification,
     icPdf,
     icPdfCover,
-    icQrcode,
     icRemove,
     icRing,
+    icRobotic,
     icSetting,
     icShare,
     icStar,
@@ -361,13 +357,11 @@ class Assets {
   const Assets._();
 
   static const String aEnv = '.env';
-  static const String aEnvDev = '.env.dev';
-  static const String aEnvProd = '.env.prod';
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 
   /// List of all assets
-  static List<String> get values => [aEnv, aEnv, aEnv];
+  static List<String> get values => [aEnv];
 }
 
 class AssetGenImage {

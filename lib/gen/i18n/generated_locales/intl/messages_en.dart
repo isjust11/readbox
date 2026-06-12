@@ -67,7 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "all_categories": MessageLookupByLibrary.simpleMessage("All Categories"),
     "all_data_loaded": MessageLookupByLibrary.simpleMessage("All data loaded"),
     "all_ebooks": MessageLookupByLibrary.simpleMessage("All ebooks"),
-    "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
+    "app_name": MessageLookupByLibrary.simpleMessage("Readbox"),
     "app_version": MessageLookupByLibrary.simpleMessage("App Version"),
     "appearance": MessageLookupByLibrary.simpleMessage("Appearance"),
     "appearance_description": MessageLookupByLibrary.simpleMessage(
@@ -1295,6 +1295,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "splash_feature_ai_title": MessageLookupByLibrary.simpleMessage(
       "AI-Powered Search",
+    ),
+    "splash_feature_ai_tts_desc": MessageLookupByLibrary.simpleMessage(
+      "Listen to books read aloud with natural AI voices",
+    ),
+    "splash_feature_ai_tts_title": MessageLookupByLibrary.simpleMessage(
+      "AI Text-to-Speech",
     ),
     "splash_feature_discover_desc": MessageLookupByLibrary.simpleMessage(
       "Thousands of ebooks across all genres waiting to be discovered every day",

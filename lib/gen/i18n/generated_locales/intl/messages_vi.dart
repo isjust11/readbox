@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Đã tải hết dữ liệu",
     ),
     "all_ebooks": MessageLookupByLibrary.simpleMessage("Tất cả ebook"),
-    "app_name": MessageLookupByLibrary.simpleMessage("ReadBox"),
+    "app_name": MessageLookupByLibrary.simpleMessage("Readbox"),
     "app_version": MessageLookupByLibrary.simpleMessage("Phiên bản ứng dụng"),
     "appearance": MessageLookupByLibrary.simpleMessage("Giao diện"),
     "appearance_description": MessageLookupByLibrary.simpleMessage(
@@ -1356,6 +1356,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "splash_feature_ai_title": MessageLookupByLibrary.simpleMessage(
       "Tra cứu bằng AI",
+    ),
+    "splash_feature_ai_tts_desc": MessageLookupByLibrary.simpleMessage(
+      "Nghe sách nói với giọng AI tự nhiên",
+    ),
+    "splash_feature_ai_tts_title": MessageLookupByLibrary.simpleMessage(
+      "AI Text-to-Speech",
     ),
     "splash_feature_discover_desc": MessageLookupByLibrary.simpleMessage(
       "Hàng nghìn ebook đa thể loại chờ bạn khám phá mỗi ngày",
