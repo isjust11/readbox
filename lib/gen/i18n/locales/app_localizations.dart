@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @app_name.
   ///
   /// In en, this message translates to:
-  /// **'ReadBox'**
+  /// **'Readbox'**
   String get app_name;
 
   /// No description provided for @google.
@@ -4635,6 +4635,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Summarize, explain content and instant translation with AI'**
   String get splash_feature_ai_desc;
+
+  /// No description provided for @splash_feature_ai_tts_title.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Text-to-Speech'**
+  String get splash_feature_ai_tts_title;
+
+  /// No description provided for @splash_feature_ai_tts_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to books read aloud with natural AI voices'**
+  String get splash_feature_ai_tts_desc;
 
   /// No description provided for @splash_feature_offline_title.
   ///

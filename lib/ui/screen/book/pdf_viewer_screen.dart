@@ -177,9 +177,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
 
     // _pdfBytes được lazy-load khi user bắt đầu TTS (không load sẵn để tránh block main thread)
-    
+
     // Tải và hiển thị quảng cáo toàn màn hình sau một khoảng delay (cho tài khoản Free)
-    final isFree = context.read<UserSubscriptionCubit>().userSubscription?.isFree ?? true;
+    final isFree =
+        context.read<UserSubscriptionCubit>().userSubscription?.isFree ?? true;
     if (!isSuperAdmin && isFree) {
       PopupAdWidget.showInterstitialAdWithDelay(context: context);
     }
@@ -1262,35 +1263,38 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                 color: Colors.white,
                               ),
                             ),
-                            if (_totalPages > 0)
-                              Container(
-                                margin: EdgeInsets.only(top: 4),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: ValueListenableBuilder<(int, int)>(
-                                  valueListenable: _pageStateNotifier,
-                                  builder:
-                                      (_, pageState, __) => Text(
-                                        AppLocalizations.current.pdf_page_of(
-                                          pageState.$1,
-                                          pageState.$2,
-                                        ),
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.white.withValues(
-                                            alpha: 0.9,
-                                          ),
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                            ValueListenableBuilder<(int, int)>(
+                              valueListenable: _pageStateNotifier,
+                              builder: (_, pageState, __) {
+                                if (pageState.$2 == 0) {
+                                  return const SizedBox.shrink();
+                                }
+                                return Container(
+                                  margin: EdgeInsets.only(top: 4),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.current.pdf_page_of(
+                                      pageState.$1,
+                                      pageState.$2,
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.white.withValues(
+                                        alpha: 0.9,
                                       ),
-                                ),
-                              ),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                 actions:
