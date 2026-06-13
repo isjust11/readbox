@@ -75,12 +75,6 @@ class BookDetailBodyState extends State<BookDetailBody> {
     );
   }
 
-  String _getImageUrl(String? imagePath) {
-    if (imagePath == null || imagePath.isEmpty) return '';
-    if (imagePath.startsWith('http')) return imagePath;
-    return '${ApiConstant.apiHostStorage}$imagePath';
-  }
-
   void _toggleFavorite() {
     if (widget.bookId.isEmpty) return;
 

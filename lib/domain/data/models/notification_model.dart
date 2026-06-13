@@ -7,20 +7,23 @@ class NotificationModel extends NotificationEntity {
   NotificationModel.fromJson(Map<String, dynamic> json) : super.fromJson(json);
 
   // Helper methods - decode HTML entities (&amp;, &lt;, &quot;, ...) để hiển thị đúng
-  String get displayTitle =>
-      _htmlUnescape.convert(title ?? 'Thông báo');
+  String get displayTitle => _htmlUnescape.convert(title ?? 'Thông báo');
   String get displayBody =>
       _htmlUnescape.convert(message ?? body ?? 'Không có nội dung');
 
   String get formattedDate {
     if (createdAt == null) return '';
-    
+
     final now = DateTime.now();
     // Tính từ 0h của mỗi ngày
     final todayStart = DateTime(now.year, now.month, now.day);
-    final createdAtStart = DateTime(createdAt!.year, createdAt!.month, createdAt!.day);
+    final createdAtStart = DateTime(
+      createdAt!.year,
+      createdAt!.month,
+      createdAt!.day,
+    );
     final difference = todayStart.difference(createdAtStart).inDays;
-    
+
     if (difference == 0) {
       // Today
       final hour = createdAt!.hour.toString().padLeft(2, '0');
@@ -55,10 +58,12 @@ class NotificationModel extends NotificationEntity {
         return 'Ebook';
       case NotificationType.feedback:
         return 'Phản hồi';
-      case NotificationType.new_article:
-        return 'Bài viết mới';
       case NotificationType.system:
         return 'Hệ thống';
+      case NotificationType.hot_books:
+        return 'Hot book';
+      case NotificationType.continue_reading:
+        return 'Continue reading';
       default:
         return 'Khác';
     }

@@ -43,7 +43,10 @@ class BookRemoteDataSource {
   }
 
   /// Discover - Ebook mới (sort theo createdAt desc).
-  Future<List<BookModel>> getDiscoverNewest({int page = 1, int size = 10}) async {
+  Future<List<BookModel>> getDiscoverNewest({
+    int page = 1,
+    int size = 10,
+  }) async {
     return _fetchDiscoverList(
       ApiConstant.getDiscoverNewest,
       page: page,
@@ -52,7 +55,10 @@ class BookRemoteDataSource {
   }
 
   /// Discover - Ebook được yêu thích nhiều (sort theo số favorite desc).
-  Future<List<BookModel>> getDiscoverPopular({int page = 1, int size = 10}) async {
+  Future<List<BookModel>> getDiscoverPopular({
+    int page = 1,
+    int size = 10,
+  }) async {
     return _fetchDiscoverList(
       ApiConstant.getDiscoverPopular,
       page: page,
@@ -61,7 +67,10 @@ class BookRemoteDataSource {
   }
 
   /// Discover - Gợi ý cho bạn (dựa trên lịch sử tương tác của user).
-  Future<List<BookModel>> getDiscoverRecommended({int page = 1, int size = 10}) async {
+  Future<List<BookModel>> getDiscoverRecommended({
+    int page = 1,
+    int size = 10,
+  }) async {
     return _fetchDiscoverList(
       ApiConstant.getDiscoverRecommended,
       page: page,
@@ -136,7 +145,9 @@ class BookRemoteDataSource {
     );
 
     if (apiResponse.isSuccess) {
-      return BookModel.fromJson(apiResponse.data['data'] as Map<String, dynamic>);
+      return BookModel.fromJson(
+        apiResponse.data['data'] as Map<String, dynamic>,
+      );
     }
     return Future.error(apiResponse.errMessage);
   }
@@ -222,30 +233,37 @@ class BookRemoteDataSource {
   }
 
   // Reading progress methods
-  Future<ReadingProgressModel> saveReadingProgress(ReadingProgressModel progress) async {
+  Future<ReadingProgressModel> saveReadingProgress(
+    ReadingProgressModel progress,
+  ) async {
     ApiResponse apiResponse = await network.post(
       url: '${ApiConstant.apiHost}${ApiConstant.saveReadingProgress}',
       body: progress.toJson(),
     );
 
     if (apiResponse.isSuccess) {
-      return ReadingProgressModel.fromJson(apiResponse.data as Map<String, dynamic>);
+      return ReadingProgressModel.fromJson(
+        apiResponse.data as Map<String, dynamic>,
+      );
     }
     return Future.error(apiResponse.errMessage);
   }
 
-  Future<ReadingProgressModel?> getReadingProgressByBookId(String bookId) async {
+  Future<ReadingProgressModel?> getReadingProgressByBookId(
+    String bookId,
+  ) async {
     ApiResponse apiResponse = await network.get(
       url: '${ApiConstant.apiHost}${ApiConstant.getReadingProgress}/$bookId',
     );
 
     if (apiResponse.isSuccess) {
       if (apiResponse.data != null) {
-        return ReadingProgressModel.fromJson(apiResponse.data as Map<String, dynamic>);
+        return ReadingProgressModel.fromJson(
+          apiResponse.data as Map<String, dynamic>,
+        );
       }
       return null;
     }
     return Future.error(apiResponse.errMessage);
   }
 }
-

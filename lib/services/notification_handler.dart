@@ -13,7 +13,7 @@ class NotificationHandler {
   factory NotificationHandler() => _instance;
   NotificationHandler._internal();
 
-/// Handle notification tap when app is opened
+  /// Handle notification tap when app is opened
   Future<void> handleNotificationTap(RemoteMessage message) async {
     debugPrint('🔔 Handling notification tap...');
     debugPrint('   Message ID: ${message.messageId}');
@@ -179,6 +179,10 @@ class NotificationHandler {
         return Icons.payment;
       case 'interaction':
         return Icons.chat_bubble;
+      case "continue_reading":
+        return Icons.auto_stories;
+      case "hot_books":
+        return Icons.trending_up;
       default:
         return Icons.notifications;
     }
@@ -201,6 +205,10 @@ class NotificationHandler {
         return Colors.amber;
       case 'interaction':
         return Colors.blue;
+      case "continue_reading":
+        return Colors.cyan;
+      case "hot_books":
+        return Colors.orange;
       default:
         return Colors.grey;
     }

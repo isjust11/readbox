@@ -426,39 +426,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     });
   }
 
-  /// Tính toán và đặt zoom sao cho chiều rộng trang PDF khớp với viewport.
-  /// SfPdfViewer ở zoom=1.0 dùng "contain" (hiển thị toàn trang), nên khi trang
-  /// hẹp hơn viewport sẽ xuất hiện dải xám hai bên. Phương thức này zoom vào
-  /// để lấp đầy chiều rộng.
-  void _fitPageToViewportWidth(PdfDocumentLoadedDetails details) {
-    final pageWidth = details.document.pages[0].size.width;
-    final pageHeight = details.document.pages[0].size.height;
-    final mq = MediaQuery.of(context);
-    final viewportWidth = mq.size.width;
-    // Dùng chiều cao màn hình trừ safe-area (statusBar + bottomInset)
-    final viewportHeight = mq.size.height - mq.padding.top - mq.padding.bottom;
-
-    // Tỉ lệ scale để vừa chiều rộng / chiều cao
-    final scaleX = viewportWidth / pageWidth;
-    final scaleY = viewportHeight / pageHeight;
-
-    // zoom=1.0 = contain fit → scale nhỏ nhất trong hai chiều
-    final containScale = scaleX < scaleY ? scaleX : scaleY;
-
-    // Zoom cần thiết để lấp đầy chiều rộng
-    final zoomToFitWidth = scaleX / containScale;
-
-    if (zoomToFitWidth > 1.01) {
-      _pdfController.zoomLevel = zoomToFitWidth;
-      dev.log(
-        'fitWidth: zoom=${zoomToFitWidth.toStringAsFixed(3)} '
-        '(page ${pageWidth.toInt()}×${pageHeight.toInt()}pt, '
-        'viewport ${viewportWidth.toInt()}×${viewportHeight.toInt()}px)',
-        name: 'PdfZoom',
-      );
-    }
-  }
-
   void _onPageChanged(PdfPageChangedDetails details) {
     final page = details.newPageNumber;
     // Cập nhật field trực tiếp + notifier, KHÔNG setState → không rebuild Scaffold
@@ -467,15 +434,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, page);
     _onServerPageChanged(page);
     // _flashPageCupertinoLoading();
-  }
-
-  void _flashPageCupertinoLoading() {
-    if (_isLoading || !mounted) return;
-    _pageLoadingTimer?.cancel();
-    setState(() => _showPageCupertinoLoading = true);
-    _pageLoadingTimer = Timer(const Duration(milliseconds: 500), () {
-      if (mounted) setState(() => _showPageCupertinoLoading = false);
-    });
   }
 
   void _onDocumentLoadFailed(PdfDocumentLoadFailedDetails details) {
