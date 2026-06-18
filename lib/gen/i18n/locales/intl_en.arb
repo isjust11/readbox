@@ -865,5 +865,6 @@
   "policy_agreement_message": "By using this application, you agree to our Terms of Service and Privacy Policy.",
   "policy_decline": "Decline",
   "policy_agree": "Agree",
-  "policy_decline_message": "You must agree to the application's policy to continue."
+  "policy_decline_message": "You must agree to the application's policy to continue.",
+  "restoreDefault": "Restore default"
 }

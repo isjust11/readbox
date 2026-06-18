@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.7+2
+version: 1.0.8+1
 
 environment:
   sdk: ^3.7.2
@@ -91,6 +91,7 @@ dependencies:
   purchases_flutter: ^9.15.1
   purchases_ui_flutter: ^9.15.1
   url_launcher: ^6.3.2
+  upgrader: ^11.3.1
   epub_view: ^3.2.0
   lucide_icons_flutter: ^3.1.13
   epubx: ^4.0.0
@@ -133,10 +134,12 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/app_logo.png"
+  image_path: "assets/images/logo.png"
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/images/app_logo.png"
+  adaptive_icon_foreground: "assets/images/logo.png"
   remove_alpha_ios: true
+  # `dart run flutter_launcher_icons` conflicts with dependency_overrides (image 3.3.0).
+  # Regenerate icons: dart --packages=.dart_tool/package_config.json tool/generate_launcher_icons.dart
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

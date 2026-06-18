@@ -191,9 +191,9 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              colorScheme.primary.withValues(alpha: 0.08),
+              const Color.fromARGB(255, 121, 209, 200).withValues(alpha: 0.08),
               colorScheme.surface,
-              colorScheme.primaryContainer.withValues(alpha: 0.18),
+              const Color.fromARGB(255, 183, 247, 240).withValues(alpha: 0.18),
             ],
           ),
         ),
@@ -234,7 +234,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
             height: 220,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: cs.primary.withValues(alpha: 0.07),
+              color: const Color(0xFF00897B).withValues(alpha: 0.07),
             ),
           ),
         ),
@@ -246,7 +246,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
             height: 280,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: cs.tertiary.withValues(alpha: 0.06),
+              color: const Color(0xFF00897B).withValues(alpha: 0.06),
             ),
           ),
         ),
@@ -258,7 +258,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
             height: 140,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: cs.secondary.withValues(alpha: 0.05),
+              color: const Color(0xFF00897B).withValues(alpha: 0.05),
             ),
           ),
         ),
@@ -289,7 +289,7 @@ class _SplashState extends State<SplashScreen> with TickerProviderStateMixin {
               ),
             ],
           ),
-          child: Image.asset(Assets.images.appLogo.path, width: 70, height: 70),
+          child: ClipRRect(borderRadius: BorderRadius.circular(4), child: Image.asset(Assets.images.logo.path, width: 70, height: 70)),
         ),
       ),
     );

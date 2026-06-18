@@ -11,7 +11,7 @@ import 'package:readbox/ui/widget/locale_widget.dart';
 import 'package:readbox/utils/navigator.dart';
 import 'package:readbox/services/services.dart';
 
-RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+final RouteObserver<PageRoute> routeObserver = appRouteObserver;
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -105,7 +105,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   ),
                   child: child ?? const SizedBox.shrink(),
                 );
-                return scaledChild;
+                return AppUpgraderService.wrapIfSupported(
+                  context: context,
+                  child: scaledChild,
+                );
               },
             );
           },

@@ -1265,6 +1265,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_password_success": MessageLookupByLibrary.simpleMessage(
       "Đặt lại mật khẩu thành công",
     ),
+    "restoreDefault": MessageLookupByLibrary.simpleMessage(
+      "Khôi phục mặc định",
+    ),
     "restore_purchases": MessageLookupByLibrary.simpleMessage(
       "Khôi phục giao dịch",
     ),

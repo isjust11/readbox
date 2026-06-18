@@ -4947,6 +4947,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You must agree to the application\'s policy to continue.'**
   String get policy_decline_message;
+
+  /// No description provided for @restoreDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore default'**
+  String get restoreDefault;
 }
 
 class _AppLocalizationsDelegate

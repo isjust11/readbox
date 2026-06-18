@@ -80,7 +80,7 @@ class ThemeCustomizationScreen extends StatelessWidget {
                       );
                     },
                     icon: const Icon(Icons.restore),
-                    label: const Text('Khôi phục mặc định'),
+                    label: Text(AppLocalizations.current.restoreDefault),
                     style: TextButton.styleFrom(
                       foregroundColor: theme.colorScheme.error,
                     ),

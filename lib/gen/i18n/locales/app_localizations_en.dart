@@ -2537,4 +2537,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get policy_decline_message =>
       'You must agree to the application\'s policy to continue.';
+
+  @override
+  String get restoreDefault => 'Restore default';
 }

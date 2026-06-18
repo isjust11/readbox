@@ -299,6 +299,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_search.svg
   String get icSearch => 'assets/images/ic_search.svg';
 
+  /// File path: assets/images/logo.png
+  AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
+
   /// File path: assets/images/mainbg_dart.webp
   AssetGenImage get mainbgDart =>
       const AssetGenImage('assets/images/mainbg_dart.webp');
@@ -341,6 +344,7 @@ class $AssetsImagesGen {
     icBack,
     icBackSvg,
     icSearch,
+    logo,
     mainbgDart,
     mainbgLight,
     mainbgStyle2,
@@ -361,7 +365,7 @@ class Assets {
   static const $AssetsImagesGen images = $AssetsImagesGen();
 
   /// List of all assets
-  static List<String> get values => [aEnv];
+  static List<String> get values => [aEnv, aEnv, aEnv];
 }
 
 class AssetGenImage {

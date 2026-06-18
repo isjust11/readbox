@@ -25,3 +25,7 @@ class NavigationService {
   }
 
 }
+
+/// Global route observer — ẩn banner ad khi màn khác được push lên.
+final RouteObserver<PageRoute<dynamic>> appRouteObserver =
+    RouteObserver<PageRoute<dynamic>>();

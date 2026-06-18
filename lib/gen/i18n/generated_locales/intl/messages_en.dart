@@ -1208,6 +1208,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reset_password_success": MessageLookupByLibrary.simpleMessage(
       "Reset password success",
     ),
+    "restoreDefault": MessageLookupByLibrary.simpleMessage("Restore default"),
     "restore_purchases": MessageLookupByLibrary.simpleMessage(
       "Restore Purchases",
     ),

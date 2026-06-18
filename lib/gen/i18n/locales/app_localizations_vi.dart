@@ -2540,4 +2540,7 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get policy_decline_message =>
       'Bạn cần đồng ý với chính sách của ứng dụng để tiếp tục sử dụng.';
+
+  @override
+  String get restoreDefault => 'Khôi phục mặc định';
 }

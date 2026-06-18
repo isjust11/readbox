@@ -888,5 +888,6 @@
   "policy_agreement_message": "Bằng việc sử dụng ứng dụng, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi.",
   "policy_decline": "Từ chối",
   "policy_agree": "Đồng ý",
-  "policy_decline_message": "Bạn cần đồng ý với chính sách của ứng dụng để tiếp tục sử dụng."
+  "policy_decline_message": "Bạn cần đồng ý với chính sách của ứng dụng để tiếp tục sử dụng.",
+  "restoreDefault": "Khôi phục mặc định"
 }

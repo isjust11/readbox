@@ -190,9 +190,9 @@ class LoginScreenState extends State<LoginBody>
       children: [
         // App Icon/Logo
         ClipRRect(
-          borderRadius: BorderRadius.circular(42),
+          borderRadius: BorderRadius.circular(8),
           child: Image.asset(
-            Assets.images.appLogo.path,
+            Assets.images.logo.path,
             width: 84,
             height: 84,
             fit: BoxFit.cover,

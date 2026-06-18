@@ -285,6 +285,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         // Bottom CTA & Footer
         SafeArea(
           top: false,
+          bottom: false,
           child: _buildBottomCTA(context, selectedPlan, isCurrent),
         ),
       ],
@@ -861,54 +862,57 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
               ),
               const SizedBox(height: 12),
               // Footer Links
-              Wrap(
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 0,
-                runSpacing: 4,
-                children: [
-                  if (Platform.isIOS || Platform.isAndroid) ...[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 0,
+                  runSpacing: 4,
+                  children: [
+                    if (Platform.isIOS || Platform.isAndroid) ...[
+                      _buildFooterLink(
+                        context,
+                        AppLocalizations.current.restore_purchases,
+                        () {
+                          context
+                              .read<SubscriptionPlanCubit>()
+                              .restorePurchases();
+                        },
+                      ),
+                      _buildDivider(theme),
+                    ],
                     _buildFooterLink(
                       context,
-                      AppLocalizations.current.restore_purchases,
-                      () {
-                        context
-                            .read<SubscriptionPlanCubit>()
-                            .restorePurchases();
+                      AppLocalizations.current.terms_of_use,
+                      () async {
+                        // Theo yêu cầu của Apple, nếu dùng Standard EULA, hãy dẫn thẳng ra link web của họ.
+                        const url =
+                            'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
+                        try {
+                          final uri = Uri.parse(url);
+                          await launchUrl(
+                            uri,
+                            mode: LaunchMode.externalApplication,
+                          );
+                        } catch (e) {
+                          debugPrint('Could not launch $url');
+                        }
                       },
                     ),
                     _buildDivider(theme),
-                  ],
-                  _buildFooterLink(
-                    context,
-                    AppLocalizations.current.terms_of_use,
-                    () async {
-                      // Theo yêu cầu của Apple, nếu dùng Standard EULA, hãy dẫn thẳng ra link web của họ.
-                      const url =
-                          'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
-                      try {
-                        final uri = Uri.parse(url);
-                        await launchUrl(
-                          uri,
-                          mode: LaunchMode.externalApplication,
+                    _buildFooterLink(
+                      context,
+                      AppLocalizations.current.privacy_policy,
+                      () {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.privacySecurityScreen,
                         );
-                      } catch (e) {
-                        debugPrint('Could not launch $url');
-                      }
-                    },
-                  ),
-                  _buildDivider(theme),
-                  _buildFooterLink(
-                    context,
-                    AppLocalizations.current.privacy_policy,
-                    () {
-                      Navigator.pushNamed(
-                        context,
-                        Routes.privacySecurityScreen,
-                      );
-                    },
-                  ),
-                ],
+                      },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

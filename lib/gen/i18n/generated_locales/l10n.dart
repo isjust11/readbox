@@ -7317,6 +7317,16 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Khôi phục mặc định`
+  String get restoreDefault {
+    return Intl.message(
+      'Khôi phục mặc định',
+      name: 'restoreDefault',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {
