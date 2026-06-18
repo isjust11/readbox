@@ -283,7 +283,10 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
         ),
 
         // Bottom CTA & Footer
-        _buildBottomCTA(context, selectedPlan, isCurrent),
+        SafeArea(
+          top: false,
+          child: _buildBottomCTA(context, selectedPlan, isCurrent),
+        ),
       ],
     );
   }
@@ -768,12 +771,7 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
-          padding: EdgeInsets.fromLTRB(
-            20,
-            24,
-            20,
-            MediaQuery.of(context).padding.bottom + 16,
-          ),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
           decoration: BoxDecoration(
             color:
                 Theme.of(context).brightness == Brightness.dark
@@ -861,64 +859,56 @@ class _SubscriptionPlanScreenState extends State<SubscriptionPlanScreen> {
                           ),
                         ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
               // Footer Links
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (Platform.isIOS || Platform.isAndroid) ...[
-                      _buildFooterLink(
-                        context,
-                        AppLocalizations.current.restore_purchases,
-                        () {
-                          context
-                              .read<SubscriptionPlanCubit>()
-                              .restorePurchases();
-                        },
-                      ),
-                      _buildDivider(theme),
-                    ],
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 0,
+                runSpacing: 4,
+                children: [
+                  if (Platform.isIOS || Platform.isAndroid) ...[
                     _buildFooterLink(
                       context,
-                      AppLocalizations.current.terms_of_use,
-                      () async {
-                        // Theo yêu cầu của Apple, nếu dùng Standard EULA, hãy dẫn thẳng ra link web của họ.
-                        const url =
-                            'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
-                        try {
-                          final uri = Uri.parse(url);
-                          // Nếu bạn đã cài package url_launcher, hãy dùng code dưới đây.
-                          await launchUrl(
-                            uri,
-                            mode: LaunchMode.externalApplication,
-                          );
-
-                          // Tạm thời nếu chưa import url_launcher thì vẫn dẫn về trang nội bộ nhưng
-                          // BẠN PHẢI ĐẢM BẢO trong màn hình này có ĐẦY ĐỦ TEXT của Apple Standard EULA.
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   Routes.privacySecurityScreen,
-                          // );
-                        } catch (e) {
-                          debugPrint('Could not launch $url');
-                        }
+                      AppLocalizations.current.restore_purchases,
+                      () {
+                        context
+                            .read<SubscriptionPlanCubit>()
+                            .restorePurchases();
                       },
                     ),
                     _buildDivider(theme),
-                    _buildFooterLink(
-                      context,
-                      AppLocalizations.current.privacy_policy,
-                      () {
-                        Navigator.pushNamed(
-                          context,
-                          Routes.privacySecurityScreen,
-                        );
-                      },
-                    ),
                   ],
-                ),
+                  _buildFooterLink(
+                    context,
+                    AppLocalizations.current.terms_of_use,
+                    () async {
+                      // Theo yêu cầu của Apple, nếu dùng Standard EULA, hãy dẫn thẳng ra link web của họ.
+                      const url =
+                          'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
+                      try {
+                        final uri = Uri.parse(url);
+                        await launchUrl(
+                          uri,
+                          mode: LaunchMode.externalApplication,
+                        );
+                      } catch (e) {
+                        debugPrint('Could not launch $url');
+                      }
+                    },
+                  ),
+                  _buildDivider(theme),
+                  _buildFooterLink(
+                    context,
+                    AppLocalizations.current.privacy_policy,
+                    () {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.privacySecurityScreen,
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),
