@@ -147,13 +147,13 @@ class ProfileScreen extends StatelessWidget {
                       icon: Icons.person_outline,
                       isFirst: true,
                     ),
-                    _buildSectionItem(
-                      context,
-                      title: AppLocalizations.current.roles,
-                      value:
-                          userModel?.roles.map((e) => e.name).join(', ') ?? '',
-                      icon: Icons.admin_panel_settings_outlined,
-                    ),
+                    // _buildSectionItem(
+                    //   context,
+                    //   title: AppLocalizations.current.roles,
+                    //   value:
+                    //       userModel?.roles.map((e) => e.name).join(', ') ?? '',
+                    //   icon: Icons.admin_panel_settings_outlined,
+                    // ),
                     _buildSectionItem(
                       context,
                       title: AppLocalizations.current.birth_date,

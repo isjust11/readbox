@@ -177,9 +177,10 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     }
 
     // _pdfBytes được lazy-load khi user bắt đầu TTS (không load sẵn để tránh block main thread)
-    
+
     // Tải và hiển thị quảng cáo toàn màn hình sau một khoảng delay (cho tài khoản Free)
-    final isFree = context.read<UserSubscriptionCubit>().userSubscription?.isFree ?? true;
+    final isFree =
+        context.read<UserSubscriptionCubit>().userSubscription?.isFree ?? true;
     if (!isSuperAdmin && isFree) {
       PopupAdWidget.showInterstitialAdWithDelay(context: context);
     }
@@ -425,39 +426,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     });
   }
 
-  /// Tính toán và đặt zoom sao cho chiều rộng trang PDF khớp với viewport.
-  /// SfPdfViewer ở zoom=1.0 dùng "contain" (hiển thị toàn trang), nên khi trang
-  /// hẹp hơn viewport sẽ xuất hiện dải xám hai bên. Phương thức này zoom vào
-  /// để lấp đầy chiều rộng.
-  void _fitPageToViewportWidth(PdfDocumentLoadedDetails details) {
-    final pageWidth = details.document.pages[0].size.width;
-    final pageHeight = details.document.pages[0].size.height;
-    final mq = MediaQuery.of(context);
-    final viewportWidth = mq.size.width;
-    // Dùng chiều cao màn hình trừ safe-area (statusBar + bottomInset)
-    final viewportHeight = mq.size.height - mq.padding.top - mq.padding.bottom;
-
-    // Tỉ lệ scale để vừa chiều rộng / chiều cao
-    final scaleX = viewportWidth / pageWidth;
-    final scaleY = viewportHeight / pageHeight;
-
-    // zoom=1.0 = contain fit → scale nhỏ nhất trong hai chiều
-    final containScale = scaleX < scaleY ? scaleX : scaleY;
-
-    // Zoom cần thiết để lấp đầy chiều rộng
-    final zoomToFitWidth = scaleX / containScale;
-
-    if (zoomToFitWidth > 1.01) {
-      _pdfController.zoomLevel = zoomToFitWidth;
-      dev.log(
-        'fitWidth: zoom=${zoomToFitWidth.toStringAsFixed(3)} '
-        '(page ${pageWidth.toInt()}×${pageHeight.toInt()}pt, '
-        'viewport ${viewportWidth.toInt()}×${viewportHeight.toInt()}px)',
-        name: 'PdfZoom',
-      );
-    }
-  }
-
   void _onPageChanged(PdfPageChangedDetails details) {
     final page = details.newPageNumber;
     // Cập nhật field trực tiếp + notifier, KHÔNG setState → không rebuild Scaffold
@@ -466,15 +434,6 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     SharedPreferenceUtil.savePdfReadingPosition(widget.fileUrl, page);
     _onServerPageChanged(page);
     // _flashPageCupertinoLoading();
-  }
-
-  void _flashPageCupertinoLoading() {
-    if (_isLoading || !mounted) return;
-    _pageLoadingTimer?.cancel();
-    setState(() => _showPageCupertinoLoading = true);
-    _pageLoadingTimer = Timer(const Duration(milliseconds: 500), () {
-      if (mounted) setState(() => _showPageCupertinoLoading = false);
-    });
   }
 
   void _onDocumentLoadFailed(PdfDocumentLoadFailedDetails details) {
@@ -1262,35 +1221,38 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
                                 color: Colors.white,
                               ),
                             ),
-                            if (_totalPages > 0)
-                              Container(
-                                margin: EdgeInsets.only(top: 4),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: ValueListenableBuilder<(int, int)>(
-                                  valueListenable: _pageStateNotifier,
-                                  builder:
-                                      (_, pageState, __) => Text(
-                                        AppLocalizations.current.pdf_page_of(
-                                          pageState.$1,
-                                          pageState.$2,
-                                        ),
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.white.withValues(
-                                            alpha: 0.9,
-                                          ),
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                            ValueListenableBuilder<(int, int)>(
+                              valueListenable: _pageStateNotifier,
+                              builder: (_, pageState, __) {
+                                if (pageState.$2 == 0) {
+                                  return const SizedBox.shrink();
+                                }
+                                return Container(
+                                  margin: EdgeInsets.only(top: 4),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.2),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.current.pdf_page_of(
+                                      pageState.$1,
+                                      pageState.$2,
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.white.withValues(
+                                        alpha: 0.9,
                                       ),
-                                ),
-                              ),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         ),
                 actions:

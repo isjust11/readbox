@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get app_name => 'ReadBox';
+  String get app_name => 'Readbox';
 
   @override
   String get google => 'Google';
@@ -2363,6 +2363,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get splash_feature_ai_desc =>
       'Summarize, explain content and instant translation with AI';
+
+  @override
+  String get splash_feature_ai_tts_title => 'AI Text-to-Speech';
+
+  @override
+  String get splash_feature_ai_tts_desc =>
+      'Listen to books read aloud with natural AI voices';
 
   @override
   String get splash_feature_offline_title => 'Read Offline';

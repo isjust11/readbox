@@ -9,7 +9,7 @@ class AppLocalizationsVi extends AppLocalizations {
   AppLocalizationsVi([String locale = 'vi']) : super(locale);
 
   @override
-  String get app_name => 'ReadBox';
+  String get app_name => 'Readbox';
 
   @override
   String get google => 'Google';
@@ -2366,6 +2366,13 @@ class AppLocalizationsVi extends AppLocalizations {
   @override
   String get splash_feature_ai_desc =>
       'Tóm tắt, giải thích nội dung và dịch thuật tức thì với AI';
+
+  @override
+  String get splash_feature_ai_tts_title => 'AI Text-to-Speech';
+
+  @override
+  String get splash_feature_ai_tts_desc =>
+      'Nghe sách nói với giọng AI tự nhiên';
 
   @override
   String get splash_feature_offline_title => 'Đọc sách offline';

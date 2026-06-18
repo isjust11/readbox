@@ -352,7 +352,32 @@ class _NotificationBodyScreenState extends State<NotificationBodyScreen> {
                 arguments: notification,
               );
               break;
-            case NotificationType.new_article:
+            case NotificationType.hot_books:
+              final metadata = jsonDecode(notification.metadata ?? '{}');
+              final bookIds = metadata['bookIds'] as String;
+              if (bookIds.isNotEmpty) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.bookDetailScreen,
+                  arguments: bookIds.split(',')[0],
+                );
+              }
+              break;
+            case NotificationType.continue_reading:
+              final metadata = jsonDecode(notification.metadata ?? '{}');
+              if (metadata.containsKey('bookId')) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.bookDetailScreen,
+                  arguments: metadata['bookId'],
+                );
+              } else {
+                Navigator.pushNamed(
+                  context,
+                  Routes.notificationDetailScreen,
+                  arguments: notification,
+                );
+              }
               break;
             case NotificationType.system:
               break;

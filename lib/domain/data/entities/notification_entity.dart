@@ -3,10 +3,11 @@ import 'base_entity.dart';
 enum NotificationType {
   ebook,
   feedback,
-  new_article,
   system,
   payment,
   interaction,
+  hot_books,
+  continue_reading,
 }
 
 enum NotificationStatus { READ, UNREAD }
@@ -79,14 +80,16 @@ class NotificationEntity extends BaseEntity {
         return NotificationType.ebook;
       case 'feedback':
         return NotificationType.feedback;
-      case 'reminder':
-        return NotificationType.new_article;
       case 'system':
         return NotificationType.system;
       case 'payment':
         return NotificationType.payment;
       case 'interaction':
         return NotificationType.interaction;
+      case 'hot_books':
+        return NotificationType.hot_books;
+      case 'continue_reading':
+        return NotificationType.continue_reading;
       default:
         return NotificationType.system;
     }

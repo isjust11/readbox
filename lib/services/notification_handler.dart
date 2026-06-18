@@ -5,19 +5,13 @@ import 'package:readbox/gen/i18n/generated_locales/l10n.dart';
 import 'package:readbox/res/enum.dart';
 import 'package:readbox/routes.dart';
 import 'package:readbox/ui/widget/widget.dart';
+import 'package:readbox/utils/navigator.dart';
 
 /// Handles notification navigation and actions
 class NotificationHandler {
   static final NotificationHandler _instance = NotificationHandler._internal();
   factory NotificationHandler() => _instance;
   NotificationHandler._internal();
-
-  BuildContext? _context;
-
-  /// Set the navigation context
-  void setContext(BuildContext context) {
-    _context = context;
-  }
 
   /// Handle notification tap when app is opened
   Future<void> handleNotificationTap(RemoteMessage message) async {
@@ -64,43 +58,66 @@ class NotificationHandler {
     String? type,
     Map<String, dynamic> data,
   ) async {
-    if (_context == null) {
-      debugPrint('❌ Navigation context not set');
+    final navigator = NavigationService.instance.navigatorKey.currentState;
+    if (navigator == null) {
+      debugPrint('❌ Navigator not ready');
       return;
     }
 
-    if (id == null) {
-      debugPrint('⚠️ No screen specified in notification');
-      return;
-    }
+    // Normalize về UPPERCASE để khớp với enum backend
+    final normalizedType = (type ?? '').toUpperCase();
+    // bookId có thể đến từ 'id' hoặc 'bookId'
+    final bookId = id ?? data['bookId'] as String?;
+
+    debugPrint('   Navigating: type=$normalizedType, bookId=$bookId');
 
     try {
-      switch (type) {
-        case 'ebook':
-          // Navigate to book detail screen
-          debugPrint('📖 Navigating to book detail: $id');
-          Navigator.of(
-            _context!,
-          ).pushNamed(Routes.bookDetailScreen, arguments: id);
+      switch (normalizedType) {
+        case 'CONTINUE_READING':
+          if (bookId != null) {
+            navigator.pushNamed(Routes.bookDetailScreen, arguments: bookId);
+          } else {
+            navigator.pushNamed(Routes.notificationScreen);
+          }
           break;
 
-        case 'feedback':
-          debugPrint('📚 Navigating to library');
-          Navigator.of(_context!).pushNamed(Routes.feedbackScreen);
+        case 'HOT_BOOKS':
+          navigator.pushNamed(Routes.notificationScreen);
           break;
 
-        case 'new_article':
-          debugPrint('⚙️ Navigating to settings');
-          Navigator.of(_context!).pushNamed(Routes.settingsScreen);
+        case 'EBOOK':
+          if (bookId != null) {
+            navigator.pushNamed(Routes.bookDetailScreen, arguments: bookId);
+          } else {
+            navigator.pushNamed(Routes.notificationScreen);
+          }
           break;
 
-        case 'system':
-          debugPrint('👤 Navigating to profile');
-          Navigator.of(_context!).pushNamed(Routes.profileScreen);
+        case 'INTERACTION':
+          if (bookId != null) {
+            navigator.pushNamed(Routes.bookDetailScreen, arguments: bookId);
+          } else {
+            navigator.pushNamed(Routes.notificationScreen);
+          }
+          break;
+
+        case 'PAYMENT':
+          navigator.pushNamed(Routes.paymentHistoryScreen);
+          break;
+
+        case 'FEEDBACK':
+          navigator.pushNamed(Routes.feedbackScreen);
+          break;
+
+        case 'NEW_ARTICLE':
+        case 'SYSTEM':
+          navigator.pushNamed(Routes.notificationScreen);
           break;
 
         default:
-          debugPrint('⚠️ Unknown type: $type');
+          debugPrint('⚠️ Unknown type: $normalizedType');
+          navigator.pushNamed(Routes.notificationScreen);
+          break;
       }
     } catch (e) {
       debugPrint('❌ Error navigating to screen: $e');
@@ -162,6 +179,10 @@ class NotificationHandler {
         return Icons.payment;
       case 'interaction':
         return Icons.chat_bubble;
+      case "continue_reading":
+        return Icons.auto_stories;
+      case "hot_books":
+        return Icons.trending_up;
       default:
         return Icons.notifications;
     }
@@ -184,6 +205,10 @@ class NotificationHandler {
         return Colors.amber;
       case 'interaction':
         return Colors.blue;
+      case "continue_reading":
+        return Colors.cyan;
+      case "hot_books":
+        return Colors.orange;
       default:
         return Colors.grey;
     }
