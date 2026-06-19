@@ -151,6 +151,7 @@ class Routes {
             bookId: args.id,
             title: args.displayTitle,
             userIdCreate: args.createById,
+            thumbnailUrl: args.coverImageUrl,
           ),
           type: PageTransitionType.rightToLeft,
         );
@@ -162,6 +163,7 @@ class Routes {
             bookId: args.id,
             title: args.displayTitle,
             userIdCreate: args.createById,
+            thumbnailUrl: args.coverImageUrl,
           ),
           type: PageTransitionType.rightToLeft,
         );

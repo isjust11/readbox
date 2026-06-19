@@ -36,6 +36,7 @@ class EpubViewerScreen extends StatefulWidget {
   final String title;
   final String? bookId;
   final String? userIdCreate;
+  final String? thumbnailUrl;
 
   const EpubViewerScreen({
     super.key,
@@ -43,6 +44,7 @@ class EpubViewerScreen extends StatefulWidget {
     required this.title,
     this.bookId,
     this.userIdCreate,
+    this.thumbnailUrl,
   });
 
   @override
@@ -389,9 +391,25 @@ class EpubViewerScreenState extends State<EpubViewerScreen> {
         '${AppLocalizations.current.pdf_share_text(widget.title)}\n\n$shareLink';
 
     try {
-      await SharePlus.instance.share(
-        ShareParams(text: shareText, subject: widget.title),
-      );
+      if (widget.thumbnailUrl != null && widget.thumbnailUrl!.isNotEmpty) {
+        // Download thumbnail
+        final tempDir = await getTemporaryDirectory();
+        final fileExtension = widget.thumbnailUrl!.split('.').last.split('?').first;
+        final tempFile = File('${tempDir.path}/share_thumbnail.$fileExtension');
+        
+        await Dio().download(widget.thumbnailUrl!, tempFile.path);
+        
+        await Share.shareXFiles(
+          [XFile(tempFile.path)],
+          text: shareText,
+          subject: widget.title,
+        );
+      } else {
+        await Share.share(
+          shareText,
+          subject: widget.title,
+        );
+      }
     } catch (e) {
       if (mounted) {
         AppSnackBar.show(

@@ -36,6 +36,7 @@ class PdfViewerScreen extends StatefulWidget {
   final String title;
   final String? bookId;
   final String? userIdCreate;
+  final String? thumbnailUrl;
 
   const PdfViewerScreen({
     super.key,
@@ -43,6 +44,7 @@ class PdfViewerScreen extends StatefulWidget {
     required this.title,
     this.bookId,
     this.userIdCreate,
+    this.thumbnailUrl,
   });
 
   @override
@@ -530,19 +532,45 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
         '${AppLocalizations.current.pdf_share_text(widget.title)}\n\n$shareLink';
 
     try {
-      final result = await SharePlus.instance.share(
-        ShareParams(text: shareText, subject: widget.title),
-      );
+      if (widget.thumbnailUrl != null && widget.thumbnailUrl!.isNotEmpty) {
+        // Download thumbnail
+        final tempDir = await getTemporaryDirectory();
+        final fileExtension = widget.thumbnailUrl!.split('.').last.split('?').first;
+        final tempFile = File('${tempDir.path}/share_thumbnail.$fileExtension');
+        
+        await Dio().download(widget.thumbnailUrl!, tempFile.path);
+        
+        final result = await Share.shareXFiles(
+          [XFile(tempFile.path)],
+          text: shareText,
+          subject: widget.title,
+        );
+        
+        if (!mounted) return;
+        if (result.status == ShareResultStatus.success) {
+          context.read<UserInteractionCubit>().incrementUsage(
+            usage: IncrementUsageModel(shareCount: 1),
+          );
+          context.read<UserInteractionCubit>().share(
+            targetType: InteractionType.share,
+            targetId: widget.bookId,
+          );
+        }
+      } else {
+        final result = await SharePlus.instance.share(
+          ShareParams(text: shareText, subject: widget.title),
+        );
 
-      if (!mounted) return;
-      if (result.status == ShareResultStatus.success) {
-        context.read<UserInteractionCubit>().incrementUsage(
-          usage: IncrementUsageModel(shareCount: 1),
-        );
-        context.read<UserInteractionCubit>().share(
-          targetType: InteractionType.share,
-          targetId: widget.bookId,
-        );
+        if (!mounted) return;
+        if (result.status == ShareResultStatus.success) {
+          context.read<UserInteractionCubit>().incrementUsage(
+            usage: IncrementUsageModel(shareCount: 1),
+          );
+          context.read<UserInteractionCubit>().share(
+            targetType: InteractionType.share,
+            targetId: widget.bookId,
+          );
+        }
       }
     } catch (e) {
       if (!mounted) return;
