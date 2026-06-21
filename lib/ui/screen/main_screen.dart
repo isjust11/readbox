@@ -115,10 +115,13 @@ class AllEbooksBodyState extends State<AllEbooksBody> {
       final deepLinkId = await SharedPreferenceUtil.getDeepLinkId();
       if (deepLinkId != null && deepLinkId.isNotEmpty) {
         await SharedPreferenceUtil.removeDeepLinkId();
-        final navigator = NavigationService.instance.navigatorKey.currentState;
-        if (navigator == null) return;
-        // Nếu đang ở màn hình chi tiết sách khác → replace để tránh stack chồng
-        navigator.pushNamed(Routes.bookDetailScreen, arguments: deepLinkId);
+        // addPostFrameCallback đảm bảo frame hiện tại đã build xong mới navigate
+        // tránh màn hình đen khi push giữa quá trình render
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final navigator = NavigationService.instance.navigatorKey.currentState;
+          if (navigator == null) return;
+          navigator.pushNamed(Routes.bookDetailScreen, arguments: deepLinkId);
+        });
       }
     } catch (e) {
       debugPrint('❌ Error navigating to book from deeplink: $e');

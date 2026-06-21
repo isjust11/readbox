@@ -51,10 +51,14 @@ class Routes {
   //init screen name
   static String initScreen() => splashScreen;
 
+  /// Truyền [settings] vào PageTransition để route.settings.name
+  /// không bị null — cần thiết cho _DeepLinkRouteObserver trong app.dart
+  /// để biết màn hình đang hiển thị là gì.
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case mainScreen:
         return PageTransition(
+          settings: settings,
           child: const DiscoverScreen(),
           type: PageTransitionType.fade,
         );
@@ -65,44 +69,52 @@ class Routes {
             ? settings.arguments as FilterType
             : null;
         return PageTransition(
+          settings: settings,
           child: AllEbooksScreen(initialFilter: filter),
           type: PageTransitionType.fade,
         );
       case splashScreen:
         return PageTransition(
+          settings: settings,
           child: SplashScreen(),
           type: PageTransitionType.fade,
         );
       case loginScreen:
         return PageTransition(
+          settings: settings,
           child: LoginScreen(),
           type: PageTransitionType.fade,
         );
       case registerScreen:
         return PageTransition(
+          settings: settings,
           child: RegisterScreen(),
           type: PageTransitionType.fade,
         );
       case forgotPassword:
         final username = settings.arguments as String?;
         return PageTransition(
+          settings: settings,
           child: ForgotPasswordScreen(username: username),
           type: PageTransitionType.rightToLeft,
         );
       case confirmPinScreen:
         final email = settings.arguments as String?;
         return PageTransition(
+          settings: settings,
           child: ConfirmPinScreen(email: email ?? ''),
           type: PageTransitionType.rightToLeft,
         );
       case localLibraryScreen:
         return PageTransition(
+          settings: settings,
           child: LocalLibraryScreen(),
           type: PageTransitionType.fade,
         );
       case adminUploadScreen:
         if (settings.arguments == null) {
           return PageTransition(
+            settings: settings,
             child: BlocProvider(
               create:
                   (context) => LibraryCubit(
@@ -116,6 +128,7 @@ class Routes {
         }
         final book = settings.arguments as BookModel;
         return PageTransition(
+          settings: settings,
           child: BlocProvider(
             create:
                 (context) => LibraryCubit(
@@ -129,23 +142,27 @@ class Routes {
       case bookDetailScreen:
         final bookId = settings.arguments as String;
         return PageTransition(
+          settings: settings,
           child: BookDetailScreen(bookId: bookId),
           type: PageTransitionType.rightToLeft,
         );
       case settingsScreen:
         final user = settings.arguments as UserModel;
         return PageTransition(
+          settings: settings,
           child: SettingScreen(user: user),
           type: PageTransitionType.rightToLeft,
         );
       case feedbackScreen:
         return PageTransition(
+          settings: settings,
           child: FeedbackScreen(),
           type: PageTransitionType.rightToLeft,
         );
       case pdfViewerScreen:
         final args = settings.arguments as BookModel;
         return PageTransition(
+          settings: settings,
           child: PdfViewerScreen(
             fileUrl: args.fileUrl!,
             bookId: args.id,
@@ -158,6 +175,7 @@ class Routes {
       case epubViewerScreen:
         final args = settings.arguments as BookModel;
         return PageTransition(
+          settings: settings,
           child: EpubViewerScreen(
             fileUrl: args.fileUrl!,
             bookId: args.id,
@@ -169,58 +187,69 @@ class Routes {
         );
       case editProfile:
         return PageTransition(
+          settings: settings,
           child: UpdateProfileScreen(),
           type: PageTransitionType.rightToLeft,
         );
       case privacySecurityScreen:
         return PageTransition(
+          settings: settings,
           child: PrivacySecurityScreen(),
           type: PageTransitionType.rightToLeft,
         );
       case supportCenterScreen:
         return PageTransition(
+          settings: settings,
           child: SupportCenterScreen(),
           type: PageTransitionType.rightToLeft,
         );
       case profileScreen:
         return PageTransition(
+          settings: settings,
           child: ProfileScreen(user: settings.arguments as UserModel?),
           type: PageTransitionType.rightToLeft,
         );
       case translateScreen:
         return PageTransition(
+          settings: settings,
           child: TranslateScreen(),
           type: PageTransitionType.rightToLeft,
         );
       case textToSpeechSettingScreen:
         return PageTransition(
+          settings: settings,
           child: TextToSpeechSettingScreen(),
           type: PageTransitionType.rightToLeft,
         );
       // case notificationSettingsScreen:
       //   return PageTransition(
+      //     settings: settings,
       //     child: NotificationSettingsScreen(),
       //     type: PageTransitionType.rightToLeft,
       //   );
       case notificationDetailScreen:
         final notification = settings.arguments as NotificationModel;
         return PageTransition(
+          settings: settings,
           child: NotificationDetailScreen(notification: notification),
           type: PageTransitionType.rightToLeft,
         );
       case notificationScreen:
         return PageTransition(
+          settings: settings,
           child: NotificationScreen(),
           type: PageTransitionType.rightToLeft,
         );
       case toolsScreen:
         return PageTransition(
+          settings: settings,
           child: ToolsScreen(),
           type: PageTransitionType.rightToLeft,
         );
       case reviewsScreen:
         final args = settings.arguments as Map<String, dynamic>?;
         return PageTransition(
+          settings: settings,
           child: ReviewsScreen(
             bookId: args?['bookId'] as String? ?? '',
             bookTitle: args?['bookTitle'] as String?,
@@ -231,21 +260,25 @@ class Routes {
         );
       case dataStorageScreen:
         return PageTransition(
+          settings: settings,
           child: DataStorageScreen(),
           type: PageTransitionType.rightToLeft,
         );
       case subscriptionPlanScreen:
         return PageTransition(
+          settings: settings,
           child: SubscriptionPlanScreen(),
           type: PageTransitionType.rightToLeft,
         );
       case paymentHistoryScreen:
         return PageTransition(
+          settings: settings,
           child: PaymentHistoryScreen(),
           type: PageTransitionType.rightToLeft,
         );
       case themeCustomizationScreen:
         return PageTransition(
+          settings: settings,
           child: const ThemeCustomizationScreen(),
           type: PageTransitionType.rightToLeft,
         );
