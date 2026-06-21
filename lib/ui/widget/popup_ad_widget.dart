@@ -154,21 +154,17 @@ class PopupAdWidget {
     );
   }
 
-  /// Hiển thị quảng cáo toàn màn hình (Interstitial Ad) sau một khoảng thời gian delay.
-  /// Gọi hàm này khi bắt đầu load màn hình. Quảng cáo sẽ được tải ngầm.
-  /// Khi vừa tải xong VÀ hết thời gian delay, quảng cáo sẽ tự động bật lên.
-  static void showInterstitialAdWithDelay({
+  /// Hiển thị quảng cáo toàn màn hình (Interstitial Ad) ngay khi tải xong.
+  static void showInterstitialAd({
     required BuildContext context,
-    Duration delay = const Duration(seconds: 3),
     VoidCallback? onAdClosed,
   }) {
     InterstitialAd? loadedAd;
     bool isAdReady = false;
-    bool isTimeReady = false;
     bool isAdShown = false;
 
     void tryShowAd() {
-      if (isAdReady && isTimeReady && !isAdShown && loadedAd != null) {
+      if (isAdReady && !isAdShown && loadedAd != null) {
         if (!context.mounted) {
           loadedAd?.dispose();
           onAdClosed?.call();
@@ -189,27 +185,23 @@ class PopupAdWidget {
       }
     }
 
-    // 1. Bắt đầu tải quảng cáo ngay lập tức
+    // Bắt đầu tải quảng cáo và show ngay khi xong
     InterstitialAd.load(
       adUnitId: AdHelper.interstitialAdUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
+          debugPrint('✅ InterstitialAd loaded successfully.');
           loadedAd = ad;
           isAdReady = true;
           tryShowAd();
         },
         onAdFailedToLoad: (LoadAdError error) {
+          debugPrint('❌ InterstitialAd failed to load: $error');
           isAdReady = false;
           onAdClosed?.call();
         },
       ),
     );
-
-    // 2. Bắt đầu đếm ngược delay
-    Future.delayed(delay, () {
-      isTimeReady = true;
-      tryShowAd();
-    });
   }
 }
