@@ -331,6 +331,10 @@ class AdminUploadBodyState extends State<AdminUploadBody> {
 
     // Cập nhật: có thể dùng file hiện tại từ server hoặc upload file mới
     if (isEditMode) {
+      // upload cover ebook
+      if (_coverImageFile != null) {
+        await cubit.uploadCoverImageInternal(_coverImageFile!);
+      }
       await cubit.updateBook(
         bookId: widget.book.id!,
         title: _titleController.text,
