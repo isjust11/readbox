@@ -184,7 +184,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
     final isFree =
         context.read<UserSubscriptionCubit>().userSubscription?.isFree ?? true;
     if (!isSuperAdmin && isFree) {
-      PopupAdWidget.showInterstitialAdWithDelay(context: context);
+      PopupAdWidget.showInterstitialAd(context: context);
     }
   }
 
@@ -204,8 +204,14 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   // load user data settings
   Future<void> _loadUserDataSettings() async {
     final hideNavigationBar = await SharedPreferenceUtil.getHideNavigationBar();
+    final dirString = await SharedPreferenceUtil.getPdfScrollDirection();
+    final direction = PdfScrollDirection.values.firstWhere(
+      (e) => e.name == dirString,
+      orElse: () => PdfScrollDirection.vertical,
+    );
     setState(() {
       showNavigationBar = !hideNavigationBar;
+      _pdfScrollDirection = direction;
     });
   }
 
@@ -845,6 +851,7 @@ class PdfViewerScreenState extends State<PdfViewerScreen> {
   void _setPdfScrollDirection(PdfScrollDirection direction) {
     if (_pdfScrollDirection == direction) return;
     setState(() => _pdfScrollDirection = direction);
+    SharedPreferenceUtil.savePdfScrollDirection(direction.name);
   }
 
   Widget _buildPdfViewer() {

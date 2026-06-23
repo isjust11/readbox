@@ -51,19 +51,35 @@ class DeepLinkService {
 
   void _navigateToBook(String bookId) async {
     final token = await SecureStorageService().getToken();
-    if (token == null || token.isEmpty) {
-      final navigator = NavigationService.instance.navigatorKey.currentState;
-      if (navigator == null) return;
-      // Nếu đang ở màn hình chi tiết sách khác → replace để tránh stack chồng
-      // save deeplink id
-      await SharedPreferenceUtil.saveDeepLinkId(bookId);
-      navigator.pushNamed(Routes.loginScreen);
-    } else {
-      final navigator = NavigationService.instance.navigatorKey.currentState;
-      if (navigator == null) return;
-      // đi từ main để push back không bị lỗi đen màn hình
-      await SharedPreferenceUtil.saveDeepLinkId(bookId);
-      navigator.pushNamed(Routes.mainScreen);
+    
+    // Luôn lưu lại deepLinkId để các màn hình chính (Discover/AllEbooks) bắt được nếu đang cold start
+    await SharedPreferenceUtil.saveDeepLinkId(bookId);
+
+    final navigator = NavigationService.instance.navigatorKey.currentState;
+    if (navigator == null) return;
+
+    // Kiểm tra xem app có đang ở SplashScreen không
+    bool isSplash = false;
+    navigator.popUntil((route) {
+      if (route.settings.name == Routes.splashScreen || route.settings.name == '/') {
+        isSplash = true;
+      }
+      return true; // Trả về true để không thực sự pop bất kỳ màn hình nào
+    });
+
+    if (!isSplash) {
+      // Hot/Warm Start: App đã chạy qua Splash.
+      // Chúng ta navigate thẳng tới màn hình sách (hoặc login nếu chưa có token).
+      await SharedPreferenceUtil.removeDeepLinkId(); // Xóa ID để mainScreen không đẩy thêm lần nữa
+      
+      if (token == null || token.isEmpty) {
+        // Cần lưu lại để sau khi login xong, màn hình main sẽ push
+        await SharedPreferenceUtil.saveDeepLinkId(bookId);
+        navigator.pushNamed(Routes.loginScreen);
+      } else {
+        // Push thẳng BookDetailScreen đè lên màn hình hiện tại
+        navigator.pushNamed(Routes.bookDetailScreen, arguments: bookId);
+      }
     }
   }
 }

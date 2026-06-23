@@ -25,6 +25,8 @@ class SPrefCache {
       "pref_key_hide_navigation_bar";
   static const String PREF_KEY_PDF_READING_POSITIONS =
       "pref_key_pdf_reading_positions";
+  static const String PREF_KEY_PDF_SCROLL_DIRECTION =
+      "pref_key_pdf_scroll_direction";
   static const String PREF_KEY_EPUB_READING_POSITIONS =
       "pref_key_epub_reading_positions";
   static const String PREF_KEY_PDF_DRAWINGS = "pref_key_pdf_drawings";
@@ -244,6 +246,18 @@ class SharedPreferenceUtil {
     if (v is int) return v;
     if (v is num) return v.toInt();
     return null;
+  }
+
+  /// Lưu hướng cuộn trang PDF
+  static Future<bool> savePdfScrollDirection(String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString(SPrefCache.PREF_KEY_PDF_SCROLL_DIRECTION, value);
+  }
+
+  /// Lấy hướng cuộn trang PDF đã lưu
+  static Future<String?> getPdfScrollDirection() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(SPrefCache.PREF_KEY_PDF_SCROLL_DIRECTION);
   }
 
   /// Xóa một sách local
