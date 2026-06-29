@@ -185,7 +185,7 @@ class LibraryCubit extends Cubit<BaseState> {
     throw Exception(BlocUtils.getMessageError(response.errMessage));
   }
 
-  Future<void> _uploadCoverImageInternal(File file) async {
+  Future<void> uploadCoverImageInternal(File file) async {
     final response = await adminRemoteDataSource.uploadCoverImage(
       file,
       cancelToken: _uploadCancelToken,
@@ -217,7 +217,7 @@ class LibraryCubit extends Cubit<BaseState> {
     try {
       await _uploadEbookInternal(ebookFile);
       if (coverImageFile != null) {
-        await _uploadCoverImageInternal(coverImageFile);
+        await uploadCoverImageInternal(coverImageFile);
       }
       _isUploading = false;
       await createBook(
